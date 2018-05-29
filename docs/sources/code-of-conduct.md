@@ -13,21 +13,21 @@ To keep an healthy developing environment, it's stickily banned:
 - B03. Inflated ego comments.   
 - B04. Confined space solutions, alas any comment that is only applied to a certain region,
 status quo, wealth or human language.   
-
   
-Anyone who transgress these rules, risks itself of having is post or work removed 
+Anyone who transgresses these rules, risks itself of having is post or work removed 
 and banned from future interactions.
 
 ## Reporting bugs
 
-To prevent any kind of friction with the developers, keep it simple and use following template:
-'
-Under these circumstances. 
- <Version/OS/etc...>
- 
-This issue occurs: 
-<Describe the issue>
-'
+To prevent any kind of friction with the developers, keep it simple and use following template:  
+
+
+> Under these circumstances.  
+> (Version/OS/etc...)  
+>  
+>This issue occurs:  
+>(Describe the issue)  
+
 Reporting problems without defining the circumstances can lead to a long process 
 of discovering which will delay the solution.
 

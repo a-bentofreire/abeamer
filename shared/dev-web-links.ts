@@ -6,11 +6,13 @@
 // Licensed under the MIT License+uuid License. See License.txt for details
 // ------------------------------------------------------------------------
 
-// List of all the external web links mostly github repos
-// Edit
+/** @module developer | This module won't be part of release version */
 
-// @WARN: This is a developer only module
-
+/**
+ * ## Description
+ *
+ * List of all the external web links mostly GitHub Repositories.
+ */
 export namespace DevWebLinks {
 
   const IS_LOCAL = false;

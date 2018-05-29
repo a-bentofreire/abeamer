@@ -28,6 +28,10 @@
  * 3. Uni-dimensional paths. Unlike paths, the oscillators have their value stored
  * in the Action Link, allowing to link the end value to the next animation.
  *
+ * An oscillator if it's used together with an easing will if it's in the same dimension
+ * deform the wave and if it's in different dimensions the easing will define 
+ * the speed of oscillator.
+ *
  * The oscillators shares the namespace with [](easings), allowing any easing function
  * to operate also as a oscillator.
  * Since the main function of an oscillator is to return to its original position

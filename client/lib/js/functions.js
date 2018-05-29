@@ -13,7 +13,7 @@
  * into another value.
  * Functions are used inside an expression, and support remote rendering.
  * The user can create its own custom functions but only built-in functions
- * and official plugins can create functions that support [](remote-rendering).
+ * and official plugins can create functions that support [](teleportable).
  *
  * ## Built-in Functions
  *

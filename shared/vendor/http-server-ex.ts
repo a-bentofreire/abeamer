@@ -66,10 +66,17 @@ export namespace HttpServerEx {
       });
       /* spell-checker: disable */
       const html = '<html>\n<head>\n'
+      // this sytle used in html output of the markdown is designed to be similar
+      // to the github markdown rendered in order to have a good simulation of
+      // how the user will see the documentation.
         + (this.highlightJs ? `
     <link rel="stylesheet" href="/node_modules/highlight.js/styles/github.css">
     <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.css">
     <style>
+    body {
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,
+        sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    }
     pre {
       background-color: #1b1f230d;
       padding: 0.2em 0.4em;

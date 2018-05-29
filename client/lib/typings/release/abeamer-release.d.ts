@@ -1119,7 +1119,7 @@ declare namespace ABeamer {
      * @example  '5fps'
      * @example  50
      * @example  2.5   (use only if the DefaultUnit is 's' or 'ms')
-     * @example  (args) => '2s'  (JavaScript functions don't support remote-rendering)
+     * @example  (args) => '2s'  (JavaScript functions aren't teleportable)
      * @example '=round(fps/2)'
      */
     duration?: TimeHandler;
@@ -1134,7 +1134,7 @@ declare namespace ABeamer {
      *
      * @example '-10fps'  (starts the animation 10 frames before the expected starting point)
      * @example '+2ms'  (starts the animation 2 milliseconds after the expected starting point
-     * @example (args) => '4ms' (JavaScript functions don't support remote-rendering)
+     * @example (args) => '4ms' (JavaScript functions aren't teleportable)
      */
     position?: TimeHandler;
 
@@ -1506,6 +1506,7 @@ declare namespace ABeamer {
     copyrights?: string;
     categories?: string[];
     keywords?: string[];
+    comments?: string[];
     rating?: uint;
     /** ISO DateTime stamp of the creation time. */
     createdDateTime?: string;
@@ -1669,7 +1670,6 @@ declare namespace ABeamer {
     rectangle,
     line,
     circle,
-    // arrow,
     speech,
   }
 
@@ -1680,7 +1680,6 @@ declare namespace ABeamer {
     | RectangleShapeTaskParams
     | LineShapeTaskParams
     | CircleShapeTaskParams
-    // | ArrowShapeTaskParams
     | SpeechShapeTaskParams
     ;
 
@@ -1711,16 +1710,6 @@ declare namespace ABeamer {
 
   export interface CircleShapeTaskParams extends BaseShapeTaskParams {
     radius?: number | ExprString;
-  }
-
-
-  export const DEFAULT_ARROW_LENGTH = 10;
-  export const DEFAULT_ARROW_WIDTH = 10;
-
-
-  export interface ArrowShapeTaskParams extends LineShapeTaskParams {
-    arrowLength?: uint;
-    arrowWidth?: uint;
   }
 
 

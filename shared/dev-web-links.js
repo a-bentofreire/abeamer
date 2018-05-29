@@ -5,9 +5,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License+uuid License. See License.txt for details
 // ------------------------------------------------------------------------
-// List of all the external web links mostly github repos
-// Edit
-// @WARN: This is a developer only module
+/** @module developer | This module won't be part of release version */
+/**
+ * ## Description
+ *
+ * List of all the external web links mostly GitHub Repositories.
+ */
 var DevWebLinks;
 (function (DevWebLinks) {
     var IS_LOCAL = false;

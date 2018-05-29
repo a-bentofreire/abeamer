@@ -49,8 +49,8 @@ alive and help to tell your story or to grow your business:
 * Free and Open-source.
 * Simple and intuitive design.
 * Extensively documented: [End-User Documentation](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/) and
- [Developer Documentation](https://a-bentofreire.github.io/abeamer-docs/developer/versions/latest/en/site/)
-* Absolutely minimum dependencies.
+ [Developer Documentation](https://a-bentofreire.github.io/abeamer-docs/developer/versions/latest/en/site/).
+* Absolutely minimum [dependencies](#requirements).
 * Highly Extensible via [plugins](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/plugin-manager/) including: easings, oscillators, paths.
 * [Task](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/tasks/) support to allow complex animations 
 and [special effects](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/tasks/special-effects).
@@ -114,8 +114,8 @@ or if that information is given via `valueStart`.
 ABeamer provides several interpolators, which can be defined by:
 
 - Built-in interpolators. These are accessed by name and support teleportation.
-- [Expressions](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/expressions/) and are also teleportable.
-- [Plugins](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/plugin-manager/). Only official plugins can be teleportable;
+- [Expressions](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/expressions/) are also teleportable.
+- [Plugins](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/plugin-manager/). Only official plugins can be teleportable.
 - Code Handlers due security reasons aren't teleportable.
 
 ABeamer has following interpolators:
@@ -137,7 +137,7 @@ The interpolators are chained in the following order: easing→oscillator→path
 
 ## Toolset
 
-ABeamer has a rich toolset and extensibility and teleportation are key features of these tools.
+ABeamer has a rich toolset and extensibility and teleportation are key features of these tools.  
 Unless is noticed all the built-in tools support teleportation.  
 Just like the interpolators, Code Handlers aren't teleported, and the tools can be extended
 via plugins but only official plugins are teleportable.  
@@ -185,6 +185,7 @@ ABeamer has the following tools:
 ## Getting started
 
 Start by creating a new project using the ABeamer command line utility:  
+  
 `abeamer create myproject`
 
 ABeamer web browser library root is ABeamer.Story.  
@@ -262,16 +263,18 @@ You can add multiple properties in parallel or off-sync with the `position` para
 
 For further documentation, read: [Command Line Utility](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/abeamer-cli/)
 Read [Requirements](#requirements) for details about the necessary software 
-to install if you need to render, create gifs or movies in the local machine.
+to install if you need to render, create gifs or movies on the local machine.
 
 ## Requirements
 
-To create animations, only is required to run the `web browser library`.
+To create animations, only It's required to have the `web browser library` without needing
+and software installed in the computer.  
+
 However to render, gifs and movies, it requires:
 1. [nodejs](https://nodejs.org/en/).
 2. to render, it requires a render server [puppeteer](https://www.npmjs.com/package/puppeteer) `npm install -g puppeteer`.
-3. to generate gifs, it requires to have [imagemagick](https://www.imagemagick.org) on system path: `ImageMagick`.
-4. to create movies, it requires to have on the system path: [ffmpeg](https://www.ffmpeg.org/).
+3. to generate gifs, it requires to have [imagemagick](https://www.imagemagick.org) on system path.
+4. to create movies, it requires to have [ffmpeg](https://www.ffmpeg.org/) on the system path.
 
 
 ## Documentation
@@ -308,15 +311,22 @@ after an animation.
 - Glitch attack task.
 - Color band attack task.
 
+## GitHub Repositories
+
+* [Developer version](https://github.com/a-bentofreire/abeamer)
+* [Release version](https://github.com/a-bentofreire/abeamer-release)
+* [Documentation](https://github.com/a-bentofreire/abeamer-docs)
+* [Gallery Release version](https://github.com/a-bentofreire/abeamer-gallery-release)
+
 ## Contribute
 
-<i class="fa fa-exclamation-triangle fa-lg"></i>ABeamer is still in **beta** stage,
+<i class="fa fa-exclamation-triangle fa-lg"></i> ABeamer is still in **beta** stage,
 and before the first GitHub commit it went through multiple redesigns both the 
 code and the documentation as well, although it has now reach a mature phase, 
 now is in a process of harmonize the code and documentation created during the multiple designs.   
 It still has bugs and inconsistences to tackle.
 
-<i class="fa fa-exclamation-triangle fa-lg"></i>ABeamer was built on Linux/Chrome/Puppeteer and tested on Windows.  
+<i class="fa fa-exclamation-triangle fa-lg"></i> ABeamer was built on Linux/Chrome/Puppeteer and tested on Windows.  
 There is still a lot of work to support other web browsers, OSes and render servers.
 
 To keep an healthy cooperation environment, before posting an issue, please read 

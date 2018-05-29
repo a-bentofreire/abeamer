@@ -104,15 +104,20 @@ This will a series of parallel animations.
   
 ## Understanding the pipeline
 
-When the user adds an animation to the scene, ABeamer will first determine the start value of the [attribute](faq.md#why-addanimation-uses-properties-naming-and-not-attributes-), if the user doesn't provides the `startValue`, it will compute from the current element's attribute value.  
-Then it will transform the duration into frames, and for each frame, it will compute and store the interpolated value for that element.  
-If a new `addAnimations` is added that modifies the same elements' attribute, the last stored value is used as the new starting value.  
+When the user adds an animation to the scene, ABeamer will first determine 
+the start value of the [property](faq.md#why-addanimation-uses-properties-naming-and-not-attributes-), 
+if the user doesn't provides the `startValue`, it will compute from the current element's attribute value.  
+Then it will transform the duration into frames, and for each frame, 
+it will compute and store the interpolated value for that element.  
+If a new `addAnimations` is added that modifies the same elements' property, 
+the last stored value is used as the new starting value.  
   
-In essence, the animation pipeline **doesn't modifies** the current elements' attributes, only computes the expected values for each frame.  
+In essence, the animation pipeline **doesn't modifies** the current elements' property, 
+only computes the expected values for each frame.  
 This method has the benefit of:  
   
 - Supports [teleporting](teleporter.md).   
-- Allow off-sync animations, where a new animation can insert at any point in the pipeline.   
+- Allow [off-sync](glossary.md#off-sync) animations, where a new animation can insert at any point in the pipeline.   
 - Generate complex computations not built for rendering.   
 - Bypass parts of the animation, where only segments of the whole animation are rendered.   
 - Support reverse rendering.   

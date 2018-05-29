@@ -26,7 +26,7 @@ $(window).on("load", function () {
                             },
                             {
                                 name: 'style',
-                                // applies a random color. Supports remote-rendering
+                                // applies a random color. Teleportable!
                                 value: "='opacity: ' + random() + ';'",
                                 isFormatted: true,
                             },
@@ -64,7 +64,7 @@ $(window).on("load", function () {
                             },
                             {
                                 name: 'style',
-                                // applies a random color. supports remote-rendering
+                                // applies a random color. Teleportable!
                                 value: "='opacity: ' + random() + ';'",
                                 isFormatted: true,
                             },

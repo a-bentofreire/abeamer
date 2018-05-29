@@ -91,7 +91,7 @@ namespace ABeamer {
      * @example  '5fps'
      * @example  50
      * @example  2.5   (use only if the DefaultUnit is 's' or 'ms')
-     * @example  (args) => '2s'  (JavaScript functions don't support remote-rendering)
+     * @example  (args) => '2s'  (JavaScript functions aren't teleportable)
      * @example '=round(fps/2)'
      */
     duration?: TimeHandler;
@@ -106,7 +106,7 @@ namespace ABeamer {
      *
      * @example '-10fps'  (starts the animation 10 frames before the expected starting point)
      * @example '+2ms'  (starts the animation 2 milliseconds after the expected starting point
-     * @example (args) => '4ms' (JavaScript functions don't support remote-rendering)
+     * @example (args) => '4ms' (JavaScript functions aren't teleportable)
      */
     position?: TimeHandler;
 

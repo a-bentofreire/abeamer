@@ -66,7 +66,10 @@ var HttpServerEx;
             });
             /* spell-checker: disable */
             var html = '<html>\n<head>\n'
-                + (this.highlightJs ? "\n    <link rel=\"stylesheet\" href=\"/node_modules/highlight.js/styles/github.css\">\n    <link rel=\"stylesheet\" href=\"/node_modules/font-awesome/css/font-awesome.css\">\n    <style>\n    pre {\n      background-color: #1b1f230d;\n      padding: 0.2em 0.4em;\n    }\n    #__page {\n       max-width: 980px;\n       padding: 45px;\n       border: 1px solid #ddd;\n       border-bottom-right-radius: 3px;\n       border-bottom-left-radius: 3px;\n       margin-left: 20px;\n    }\n    code {\n      background-color: #1b1f230d;\n      padding: 0.2em 0.4em;\n    }\n    pre code {\n      background-color: transparent;\n      padding: 0;\n    }\n\n    </style>\n    <script src=\"/node_modules/highlight.js/lib/highlight.js\"></script>\n    <script>hljs.initHighlightingOnLoad();</script>\n" : '')
+                // this sytle used in html output of the markdown is designed to be similar
+                // to the github markdown rendered in order to have a good simulation of
+                // how the user will see the documentation.
+                + (this.highlightJs ? "\n    <link rel=\"stylesheet\" href=\"/node_modules/highlight.js/styles/github.css\">\n    <link rel=\"stylesheet\" href=\"/node_modules/font-awesome/css/font-awesome.css\">\n    <style>\n    body {\n      font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Helvetica,Arial,\n        sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\";\n    }\n    pre {\n      background-color: #1b1f230d;\n      padding: 0.2em 0.4em;\n    }\n    #__page {\n       max-width: 980px;\n       padding: 45px;\n       border: 1px solid #ddd;\n       border-bottom-right-radius: 3px;\n       border-bottom-left-radius: 3px;\n       margin-left: 20px;\n    }\n    code {\n      background-color: #1b1f230d;\n      padding: 0.2em 0.4em;\n    }\n    pre code {\n      background-color: transparent;\n      padding: 0;\n    }\n\n    </style>\n    <script src=\"/node_modules/highlight.js/lib/highlight.js\"></script>\n    <script>hljs.initHighlightingOnLoad();</script>\n" : '')
                 + '</head>\n<body>\n<div id=__page>'
                 + this.markdownCompiler(sourceMarkdown)
                 + '</div></body>\n</html>';
