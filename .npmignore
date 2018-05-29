@@ -1,9 +1,0 @@
-*.ts
-*.js.map
-tsconfig.json
-node_modules/@types
-release/
-gallery/
-docs/
-private/
-.vscode/

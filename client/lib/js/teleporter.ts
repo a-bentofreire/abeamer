@@ -51,7 +51,7 @@
  * With the current technology still has following limitations,
  * some of them imposed due security reasons:
  *
- * - No ()[Code Handlers] are allowed.
+ * - No [](Code Handlers) are allowed.
  * - Only default scenes are allowed.
  * - Scenes can't be removed during the execution.
  * - Only fixed remote assets are allowed.
