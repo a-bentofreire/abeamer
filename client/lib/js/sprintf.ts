@@ -42,14 +42,6 @@ namespace ABeamer {
   //                               Round Functions
   // ------------------------------------------------------------------------
 
-  export enum RoundFuncName {
-    none,
-    round,
-    ceil,
-    floor,
-    downRound,
-  }
-
   /**
    * Performs a math round where the 0.5 is always rounded down.
    */

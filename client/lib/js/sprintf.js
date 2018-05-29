@@ -37,14 +37,6 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Round Functions
     // ------------------------------------------------------------------------
-    var RoundFuncName;
-    (function (RoundFuncName) {
-        RoundFuncName[RoundFuncName["none"] = 0] = "none";
-        RoundFuncName[RoundFuncName["round"] = 1] = "round";
-        RoundFuncName[RoundFuncName["ceil"] = 2] = "ceil";
-        RoundFuncName[RoundFuncName["floor"] = 3] = "floor";
-        RoundFuncName[RoundFuncName["downRound"] = 4] = "downRound";
-    })(RoundFuncName = ABeamer.RoundFuncName || (ABeamer.RoundFuncName = {}));
     /**
      * Performs a math round where the 0.5 is always rounded down.
      */

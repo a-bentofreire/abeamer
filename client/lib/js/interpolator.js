@@ -82,7 +82,7 @@ var ABeamer;
      * and if it's a function it computes the function.
      */
     function _parseStartValueHandler(value, args) {
-        return ABeamer.parseHandler(value, undefined, undefined, ABeamer.HandlerType.FuncOrValue, args);
+        return ABeamer.parseHandler(value, undefined, undefined, args);
     }
     // ------------------------------------------------------------------------
     //                               PropInterpolator

@@ -5,7 +5,6 @@ html,
 .abeamer-scene {
   width: $abeamer-width + px;
   height: $abeamer-height + px;
-  clip-path: polygon(0 0, 0 $abeamer-height + px, $abeamer-width + px $abeamer-height + px, $abeamer-width + px 0px);
 }
 
 #hello {

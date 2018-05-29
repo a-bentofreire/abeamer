@@ -53,7 +53,11 @@ var Gulp;
     var gulpZip = require('gulp-zip');
     var gulpSequence = require('gulp-sequence');
     var mergeStream = require('merge-stream');
+    // @TODO: Discover why if I remove `abeamer-logo`, it doesn't creates `hello-world` correctly.
     var RELEASE_DEMOS = ['hello-world', 'abeamer-logo'];
+    // this line is not solving the problem above.
+    var releaseDemosRegEx = RELEASE_DEMOS.length > 1 ?
+        "{" + RELEASE_DEMOS.join(',') + "}" : RELEASE_DEMOS[0];
     var modulesList = fsix_js_1.fsix.loadJsonSync(dev_paths_js_1.DevPaths.MODULES_LIST_FILE);
     var libModules = modulesList.libModules;
     var pluginModules = modulesList.pluginModules;
@@ -183,7 +187,7 @@ var Gulp;
     });
     gulp.task('rel:gallery', function () {
         return gulp.src([
-            dev_paths_js_1.DevPaths.GALLERY_PATH + "/{" + RELEASE_DEMOS.join(',') + "}/**",
+            dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + releaseDemosRegEx + "/**",
             "!" + dev_paths_js_1.DevPaths.GALLERY_PATH + "/**/*.html",
             "!" + dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/out/*",
         ])
@@ -201,7 +205,7 @@ var Gulp;
             .pipe(gulpPreserveTime());
     });
     gulp.task('rel:gallery-html', function () {
-        return mergeStream(updateHtmlPages(dev_paths_js_1.DevPaths.GALLERY_PATH + "/{" + RELEASE_DEMOS.join(',') + "}/*.html", RELEASE_PATH + "/gallery", ["../../" + dev_paths_js_1.DevPaths.JS_PATH + "/abeamer.min"])
+        return mergeStream(updateHtmlPages(dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + releaseDemosRegEx + "/*.html", RELEASE_PATH + "/gallery", ["../../" + dev_paths_js_1.DevPaths.JS_PATH + "/abeamer.min"])
             .pipe(gulpPreserveTime()));
     });
     gulp.task('rel:cli-minify', function () {

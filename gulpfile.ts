@@ -63,7 +63,11 @@ namespace Gulp {
   const gulpSequence = require('gulp-sequence');
   const mergeStream = require('merge-stream');
 
+  // @TODO: Discover why if I remove `abeamer-logo`, it doesn't creates `hello-world` correctly.
   const RELEASE_DEMOS = ['hello-world', 'abeamer-logo'];
+  // this line is not solving the problem above.
+  const releaseDemosRegEx = RELEASE_DEMOS.length > 1 ?
+    `{${RELEASE_DEMOS.join(',')}}` : RELEASE_DEMOS[0];
 
   const modulesList = fsix.loadJsonSync(DevPaths.MODULES_LIST_FILE) as Shared.ModulesList;
   const libModules = modulesList.libModules;
@@ -265,7 +269,7 @@ namespace Gulp {
 
   gulp.task('rel:gallery', () => {
     return gulp.src([
-      `${DevPaths.GALLERY_PATH}/{${RELEASE_DEMOS.join(',')}}/**`,
+      `${DevPaths.GALLERY_PATH}/${releaseDemosRegEx}/**`,
       `!${DevPaths.GALLERY_PATH}/**/*.html`,
       `!${DevPaths.GALLERY_PATH}/*/out/*`,
     ])
@@ -288,7 +292,7 @@ namespace Gulp {
 
   gulp.task('rel:gallery-html', () => {
     return mergeStream(
-      updateHtmlPages(`${DevPaths.GALLERY_PATH}/{${RELEASE_DEMOS.join(',')}}/*.html`,
+      updateHtmlPages(`${DevPaths.GALLERY_PATH}/${releaseDemosRegEx}/*.html`,
         `${RELEASE_PATH}/gallery`,
         [`../../${DevPaths.JS_PATH}/abeamer.min`])
         .pipe(gulpPreserveTime()));

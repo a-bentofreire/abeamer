@@ -87,7 +87,7 @@ namespace ABeamer {
     args: ABeamerArgs): PropValueHandler {
 
     return parseHandler<PropValueStartHandler, PropValueHandler>(value,
-      undefined, undefined, HandlerType.FuncOrValue, args);
+      undefined, undefined, args);
   }
 
   // ------------------------------------------------------------------------

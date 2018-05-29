@@ -84,15 +84,25 @@ declare namespace ABeamer {
 
   export function i8nMsg(msg: string, params?: I8nParams): string;
 
+
+  export enum RoundFuncName {
+    none,
+    round,
+    ceil,
+    floor,
+    downRound,
+  }
+
+
+  export type RoundFunc = (v: number) => number;
+
+  export type RoundHandlerFunc = string | RoundFuncName | RoundFunc;
+
+
   export function parseRoundFunc(handler: RoundHandlerFunc): RoundFunc;
 
-  export function parseHandler<T, TO>(handler: T, defaultHandler: T, mapper: any,
-    handlerType: HandlerType,
-    args: ABeamerArgs): TO;
-
-  export function parseHandler1<T, TO>(handler: T, defaultHandler: T, mapper: any,
-    handlerType: HandlerType,
-    args: ABeamerArgs): TO;
+  export function parseHandler<T, TO>(handler: T, defaultHandler: T,
+    mapper: any, args: ABeamerArgs): TO;
 
   export function throwErr(msg: string): void;
 
