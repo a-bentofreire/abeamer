@@ -1,0 +1,5 @@
+Copyright (c) 2018 Alexandre Bento Freire
+
+The images inside this folder can only be used for the purpose of demonstrating
+ABeamer features.
+It's forbidden to have any other usage or distribution of these images.

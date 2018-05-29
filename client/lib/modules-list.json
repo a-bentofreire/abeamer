@@ -1,0 +1,45 @@
+{
+    "__msg1": "This file contains the modules sorted by order used by",
+    "__msg2": "./gulpfile.js to join the library pieces into one single file",
+    "__msg3": " and to rebuild the <script> references on test /*/index.html",
+    "__msg4": "Also used by `gulp build-docs` and `gulp build-release`",
+
+    "pluginModules": [
+        "text-tasks",
+        "shape-tasks",
+        "attack-tasks",
+        "chart-tasks"
+    ],
+
+    "libModules": [
+        "version",
+        "sprintf",
+        "consts",
+        "server-consts",
+        "server-features",
+        "i18n",
+        "utilities",
+        "validators",
+        "time",
+        "functions",
+        "expressions",
+        "easings",
+        "oscillators",
+        "paths",
+        "tasks",
+        "flyovers",
+        "adapters",
+        "transitions",
+        "plugin-manager",
+        "wrapper-tasks",
+        "actions",
+        "item-delay",
+        "animation-direction",
+        "animations",
+        "interpolator",
+        "teleporter",
+        "pels",
+        "scene",
+        "story"
+    ]
+}

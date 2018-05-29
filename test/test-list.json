@@ -1,0 +1,22 @@
+{
+  "disabled": [
+    "test-phantomjs"
+  ],
+  "active": [
+    "test-sanity",
+    "test-move-pixels",
+    "test-props",
+    "test-direction",
+    "test-action-ranges",
+    "test-stills",
+    "test-missing-selector",
+    "test-easings",
+    "test-gen-story-frames",
+    "test-multiple-scenes",
+    "test-duration",
+    "test-flyovers",
+    "test-action-ranges",
+    "test-render-frame-options",
+    "test-expressions"
+  ]
+}

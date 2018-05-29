@@ -1,0 +1,25 @@
+{
+    "authors": "Jed Hunsaker <https://github.com/jedhunsaker>, Mike Keesey <https://github.com/keesey>",
+    "libraryDependencies": [],
+    "moduleDependencies": [],
+    "libraryMajorVersion": 1,
+    "libraryMinorVersion": 9,
+    "typeScriptVersion": "2.0",
+    "libraryName": "PhantomJS API",
+    "typingsPackageName": "phantomjs",
+    "projectName": "https://github.com/ariya/phantomjs/wiki/API-Reference",
+    "sourceRepoURL": "https://www.github.com/DefinitelyTyped/DefinitelyTyped",
+    "sourceBranch": "master",
+    "globals": [
+        "phantom",
+        "require"
+    ],
+    "declaredModules": [
+        "webpage"
+    ],
+    "files": [
+        "index.d.ts"
+    ],
+    "hasPackageJson": false,
+    "contentHash": "8e0c593be661429c256d2df3a8918d2c30530e7f36afcb7507f04aa819dd5847"
+}

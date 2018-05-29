@@ -1,0 +1,37 @@
+body,
+html,
+.abeamer-story,
+.abeamer-scene {
+  width: 250px;
+  height: 100px;
+}
+#scene1 {
+  background: black;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#scene1 #script span {
+  position: absolute;
+}
+#scene1 #type {
+  left: 40px;
+  top: -35px;
+}
+#scene1 #java {
+  top: 30px;
+  left: 40px;
+}
+#scene1 #script {
+  left: 108px;
+  top: 30px;
+}
+#scene1 #less {
+  position: relative;
+  left: 170px;
+  display: none;
+}

@@ -1,0 +1,62 @@
+// uuid: 574550b9-31a5-4128-9fe6-5817c695ae7d
+//
+// ------------------------------------------------------------------------
+// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License+uuid License. See License.txt for details
+// ------------------------------------------------------------------------
+//
+@import "./../abeamer.ini";
+body,
+html,
+.abeamer-story,
+.abeamer-scene {
+  width: $abeamer-width + px;
+  height: $abeamer-height + px;
+}
+
+// #developer-start
+@font-face {
+  font-family: 'Creepster';
+  font-style: normal;
+  src: url("../assets/fonts/Creepster/Creepster-Regular.ttf");
+}
+
+// #developer-end
+#scene1 {
+  background: #000;
+  padding: 10px;
+  color: #fff;
+  font-family: Creepster;
+  font-weight: bold;
+  font-size: 30px;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#img {
+  position: absolute;
+  right: -18px;
+  top: 10px;
+  opacity: 0;
+}
+
+p {
+  // z-index: 5;
+  // margin: 6px;
+  // color: transparent;
+  // background: linear-gradient(to bottom, #f85032 0%,#f16f5c 50%,#f6290c 51%,#f02f17 71%,#e73827 100%);
+  // background-clip: text;
+  // -webkit-background-clip: text;
+  // text-shadow: 0 0 13px white;
+  // position: relative;
+  z-index: 5;
+  margin: 6px;
+  color: transparent;
+  background: linear-gradient(to bottom, #747474 0%, #e73827 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  text-shadow: 0 0 13px #fb5444;
+  position: relative;
+}

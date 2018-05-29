@@ -1,0 +1,50 @@
+// uuid: 6066c2fe-0a44-45ae-a6f7-c340ea0d4261
+//
+// ------------------------------------------------------------------------
+// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License+uuid License. See License.txt for details
+// ------------------------------------------------------------------------
+//
+@import "./../abeamer.ini";
+body,
+html,
+.abeamer-story,
+.abeamer-scene {
+  width: $abeamer-width + px;
+  height: $abeamer-height + px;
+}
+
+// #developer-start
+@font-face {
+  font-family: 'OpenSans';
+  font-style: normal;
+  src: url("../assets/fonts/Open_Sans/OpenSans-ExtraBold.ttf");
+}
+
+// #developer-end
+#scene1,
+#scene2 {
+  text-align: left;
+  background: rgb(44, 44, 44);
+  color: rgb(230, 230, 230);
+  font-family: OpenSans;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgb(0, 0, 0);
+  padding: 5px;
+}
+
+#bkg {
+  transform: rotate(5deg);
+  transform-origin: center;
+  left: -66px;
+  top: -14px;
+  width: 400px;
+  height: 300px;
+}
+
+#message, #message2 {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1;
+}

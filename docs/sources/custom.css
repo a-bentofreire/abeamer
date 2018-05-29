@@ -1,0 +1,86 @@
+.code-badge {
+    background: black;
+    color: white;
+    text-shadow: 1px 1px 1px grey;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.badge-export {
+    background: #22a516;
+}
+
+.badge-const {
+    background: #788da1;
+}
+
+.badge-enum {
+    background: #3e4750;
+}
+
+.badge-type {
+    background: #81b7e9;
+}
+
+.badge-interface {
+    background: #1d87eb;
+}
+
+.badge-class {
+    background: #125492;
+}
+
+.badge-abstract {
+    background: red;
+}
+
+.badge-public {
+    background: green;
+}
+
+.badge-protected {
+    background: rgb(158, 184, 46);
+}
+
+.badge-internal {
+    background: rgb(148, 121, 60);
+}
+
+.badge-private {
+    background: rgb(156, 50, 8);
+}
+
+.badge-method {
+    background: rgb(125, 42, 133);
+}
+
+.badge-getter {
+    background: rgb(68, 0, 100);
+}
+
+.badge-setter {
+    background: rgb(110, 0, 161);
+}
+
+.badge-constructor {
+    background: rgb(24, 0, 36);
+}
+
+.badge-property {
+    background: rgb(206, 141, 0);
+}
+
+.badge-function {
+    background: rgb(136, 85, 141);
+}
+
+.class-interface-header {
+    border-top: 1px solid #efefef;
+    height: 10px;
+}
+
+.api-header {
+    border-top: 2px solid #a9a6a6;
+    border-top-style: dashed;
+    height: 10px;
+}

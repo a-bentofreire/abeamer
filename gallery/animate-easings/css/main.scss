@@ -1,0 +1,59 @@
+// uuid: 712948ed-fe83-48c7-a87c-387741fb5404
+//
+// ------------------------------------------------------------------------
+// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License+uuid License. See License.txt for details
+// ------------------------------------------------------------------------
+//
+@import "./../abeamer.ini";
+body,
+html,
+.abeamer-story,
+.abeamer-scene {
+  width: $abeamer-width + px;
+  height: $abeamer-height + px;
+}
+
+// #developer-start
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  src: url("../assets/fonts/Space_Mono/SpaceMono-Regular.ttf");
+}
+
+// #developer-end
+#scene1 {
+  background: black;
+  background-image: url('../assets/pixabay/doors-1587329_640.jpg');
+  color: white;
+  font-family: 'Space Mono';
+  font-weight: bold;
+  font-size: 60px;
+  text-align: center;
+}
+
+#text,
+#text2,
+#text3,
+#text4 {
+  position: absolute;
+  left: 295px;
+  top: 106px;
+  width: 300px;
+  font-size: 40px;
+  transform: rotateX(124deg);
+  text-shadow: 0 0 8px #dfdfdf;
+}
+
+#site {
+  font-size: 20px;
+}
+
+#text2 {
+  font-size: 32px;
+}
+
+#p-text {
+  perspective: 81px;
+  text-align: center;
+}

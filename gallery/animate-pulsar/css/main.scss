@@ -1,0 +1,62 @@
+// uuid: 574550b9-31a5-4128-9fe6-5817c695ae7d
+//
+// ------------------------------------------------------------------------
+// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License+uuid License. See License.txt for details
+// ------------------------------------------------------------------------
+//
+@import "./../abeamer.ini";
+body,
+html,
+.abeamer-story,
+.abeamer-scene {
+  width: $abeamer-width + px;
+  height: $abeamer-height + px;
+}
+
+body,
+html {
+  background: rgb(87, 87, 87);
+}
+
+#scene1 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #073101;
+  background-image: url('../assets/a-bentofreire/dash-grid.svg');
+  background-repeat: repeat;
+  color: rgb(255, 255, 255);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+#pulsar {
+  position: absolute;
+  top: (($abeamer-height - 12) / 2) + px;
+  left: 0px;
+}
+
+#msg1 {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  opacity: 0;
+}
+
+#msg2 {
+  position: absolute;
+  right: 10px;
+  top: 150px;
+  opacity: 0;
+}
+
+#heart {
+  position: absolute;
+  left: 21px;
+  top: 19px;
+  font-size: 22px;
+  color: #d60000;
+  text-shadow: 0 0 5px #4f0000;
+}

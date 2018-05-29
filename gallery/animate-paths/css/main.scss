@@ -1,0 +1,45 @@
+// uuid: 5b68cb03-feb4-431f-84d5-e7c8c80233e1
+//
+// ------------------------------------------------------------------------
+// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License+uuid License. See License.txt for details
+// ------------------------------------------------------------------------
+//
+@import "./../abeamer.ini";
+body,
+html,
+.abeamer-story,
+.abeamer-scene {
+  width: $abeamer-width + px;
+  height: $abeamer-height + px;
+}
+
+#scene1 {
+  display: flex;
+  position: absolute;
+  background-image: url('../assets/pixabay/wood-3346811_1920.jpg');
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  p {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 58px;
+    margin: 6px;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: url('../assets/pixabay/salad-791891_1280.jpg');
+    background-size: contain;
+    opacity: 0;
+    z-index: 1;
+    text-shadow: 6px 6px 9px rgba(0, 0, 0, 0.53);
+  }
+  position: relative;
+}
+
+img {
+  position: absolute;
+}

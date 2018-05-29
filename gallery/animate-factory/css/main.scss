@@ -1,0 +1,40 @@
+// uuid: 2e0c7f74-1fc2-470c-a1dd-3bf130baaa0a
+//
+// ------------------------------------------------------------------------
+// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License+uuid License. See License.txt for details
+// ------------------------------------------------------------------------
+//
+@import "./../abeamer.ini";
+body,
+html,
+.abeamer-story,
+.abeamer-scene {
+  width: $abeamer-width + px;
+  height: $abeamer-height + px;
+}
+
+#scene1 {
+  text-align: center;
+  background: white;
+  border: 1px solid rgb(211, 210, 210);
+  color: rgb(44, 44, 44);
+  padding-left: 5px;
+  padding-top: 25px;
+}
+
+#star-container {
+  img {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+  }
+}
+
+#ball-container {
+  img {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+}

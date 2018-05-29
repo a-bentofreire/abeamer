@@ -1,0 +1,46 @@
+// uuid: 3f35d941-58f6-4c8e-a741-964ef150b8a6
+//
+// ------------------------------------------------------------------------
+// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License+uuid License. See License.txt for details
+// ------------------------------------------------------------------------
+//
+@import "./../abeamer.ini";
+body,
+html,
+.abeamer-story,
+.abeamer-scene {
+  width: $abeamer-width + px;
+  height: $abeamer-height + px;
+}
+
+// #developer-start
+@font-face {
+  font-family: 'Indie Flower';
+  font-style: normal;
+  src: url("../assets/fonts/Indie_Flower/IndieFlower.ttf");
+}
+
+// #developer-end
+#scene1 {
+  background: black;
+  padding-top: 5px;
+}
+
+img {
+  position: absolute;
+  left: 20px;
+  top: 0;
+  opacity: 0.6;
+}
+
+p {
+  color: white;
+  margin: 0;
+  position: sticky;
+  text-align: center;
+  font-family: 'Indie Flower', cursive;
+  font-size: 34px;
+  margin-bottom: -10px;
+  letter-spacing: 2px;
+}

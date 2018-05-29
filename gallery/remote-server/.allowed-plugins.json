@@ -1,0 +1,34 @@
+{
+    "_warn-msg1": "This file contains the list of authorized plugins",
+    "_warn-msg2": "This file is used by abeamer cli --allowed-plugins",
+    "_warn-msg3": "For security reasons:",
+    "_warn-msg4": "1. The filename should start with a dot",
+    "_warn-msg5": "2. It should be placed outside the project file access",
+    "_warn-msg6": "3. Only the urls defined in this file are allowed",
+
+    "plugins": [{
+            "id": "abeamer.text-tasks",
+            "uuid": "8b547eff-a0de-446a-9753-fb8b39d8031a",
+            "jsUrls": ["plugins/text-tasks/text-tasks.js"],
+            "cssUrls": []
+        },
+        {
+            "id": "abeamer.shape-tasks",
+            "uuid": "3e5d5813-348a-4eb1-a8b5-9c87c3988923",
+            "jsUrls": ["plugins/shape-tasks/shape-tasks.js"],
+            "cssUrls": []
+        },
+        {
+            "id": "abeamer.attack-tasks",
+            "uuid": "e98cfe21-ec23-4545-88eb-829a0e9add39",
+            "jsUrls": ["plugins/attack-tasks/attack-tasks.js"],
+            "cssUrls": []
+        },
+        {
+            "id": "abeamer.chart-tasks",
+            "uuid": "73631f28-df71-4b4d-88e1-c99a858e0fd3",
+            "jsUrls": ["plugins/chart-tasks/chart-tasks.js"],
+            "cssUrls": []
+        }
+    ]
+}

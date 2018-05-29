@@ -1,0 +1,42 @@
+/*
+  This file is a .css template generated for each test
+  The usage of non-standard font allows to enforce the testing of frames output
+  and what is expected
+*/
+@font-face {
+    font-family: 'Cagliostro';
+    font-style: normal;
+    src: url("../../assets/fonts/vendor/Cagliostro/Cagliostro-Regular.ttf");
+}
+
+body,
+html {
+    width: __WIDTH__px;
+    height: __HEIGHT__px;
+    font-family: 'Cagliostro';
+    font-size: 14px;
+    color: black;
+    background: transparent;
+}
+
+.abeamer-story,
+.abeamer-scene {
+    position: absolute;
+    width: __WIDTH__px;
+    height: __HEIGHT__px;
+}
+
+.abslf {
+    position: relative;
+    left: 0;
+    top: 0;
+}
+
+#test-square {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: #ffbbbb;
+}
+
+__CSS__

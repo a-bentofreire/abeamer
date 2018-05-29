@@ -1,0 +1,2 @@
+body,html{width:100px;height:100px}body,html{background:white}#scene1{width:100px;height:100px;position:relative}#down,#updown{font-family:sans-serif;font-size:26px;color:rgba(13,13,248,0.32);position:absolute;top:40px}#down{left:10px}#updown{right:10px}#ball1{position:absolute;left:0px;top:0}#ball2{position:absolute;right:0px;top:0}#basket1{position:absolute;left:0px;bottom:0px}#basket2{position:absolute;right:0px;bottom:0px;transform:scaleX(-1)}
+/*# sourceMappingURL=main.min.css.map */

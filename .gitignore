@@ -1,0 +1,14 @@
+private/
+node_modules/
+gallery-updated/
+gallery-release/
+gallery/*/*.gif
+gallery/animate-video-sync/assets/a-bentofreire/*.mp4
+gallery/remote-server/assets/**
+gallery/**/story-frames/
+test/tests.run/
+docs/build
+shared/dev-builders/output
+release/*
+*.js.map
+**/*.bak.*

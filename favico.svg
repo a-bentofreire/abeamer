@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1024"
+   height="1024"
+   viewBox="0 0 1024 1024"
+   id="svg"
+   version="1.1"
+   inkscape:version="0.92.3 (unknown)"
+   sodipodi:docname="favico.svg"
+   inkscape:export-xdpi="6"
+   inkscape:export-ydpi="6"
+   inkscape:export-filename="./favico.png">
+  <title
+     id="title1500">ABeamer Icon</title>
+  <defs
+     id="defs">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient1506">
+      <stop
+         style="stop-color:#5e5e5e;stop-opacity:0.04329005"
+         offset="0"
+         id="stop1502" />
+      <stop
+         id="stop884"
+         offset="0.76243579"
+         style="stop-color:#5e5e5e;stop-opacity:0.63137255;" />
+      <stop
+         style="stop-color:#5e5e5e;stop-opacity:0.2857143"
+         offset="0.81530052"
+         id="stop886" />
+      <stop
+         style="stop-color:#5e5e5e;stop-opacity:0"
+         offset="1"
+         id="stop1504" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient1496">
+      <stop
+         style="stop-color:#636371;stop-opacity:0"
+         offset="0"
+         id="stop1492" />
+      <stop
+         style="stop-color:#636371;stop-opacity:0.98678416"
+         offset="1"
+         id="stop1494" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1496"
+       id="linearGradient1498"
+       x1="52.768039"
+       y1="512"
+       x2="971.23196"
+       y2="512"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1,0,0,0.2181901,1.7467394e-6,41.254575)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1506"
+       id="linearGradient1508"
+       x1="-6.2584877e-07"
+       y1="511.99998"
+       x2="684.75671"
+       y2="511.99998"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.98886076,0,0,0.98886076,-820.53574,-0.21669342)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1496"
+       id="linearGradient1498-8"
+       x1="52.76804"
+       y1="512"
+       x2="971.23193"
+       y2="512"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1,0,0,0.2181901,-1.1751583e-5,730.24223)" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#dfe5ff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.79101564"
+     inkscape:cx="510.7358"
+     inkscape:cy="567.64327"
+     inkscape:document-units="px"
+     inkscape:current-layer="svg"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1020"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>ABeamer Icon</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by/4.0/" />
+        <dc:date>2018-03-29</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Alexandre Bento Freire</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer"
+     inkscape:groupmode="layer"
+     id="layer"
+     transform="translate(0,-28.362161)" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;line-height:1000px;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:27.6099987px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="389.37283"
+     y="482.92346"
+     id="text1457"><tspan
+       sodipodi:role="line"
+       id="tspan1455"
+       x="389.37283"
+       y="987.84332" /></text>
+  <path
+     style="opacity:1;fill:url(#linearGradient1498-8);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.7423265;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+     d="M 524.61718,741.79352 A 459.23163,100.1998 0 0 0 52.941388,839.20262 459.23163,100.1998 0 0 0 499.3828,942.11759 459.23163,100.1998 0 0 0 971.05861,844.70851 459.23163,100.1998 0 0 0 524.61718,741.79352 Z m -1.96289,15.57886 a 387.80447,84.615094 0 0 1 377.00392,86.90785 387.80447,84.615094 0 0 1 -398.31252,82.2585 387.80447,84.615094 0 0 1 -377.0039,-86.90783 387.80447,84.615094 0 0 1 398.3125,-82.25852 z m -1.09375,8.68542 A 347.98233,75.926299 0 0 0 164.14843,839.86955 347.98233,75.926299 0 0 0 502.43944,917.85332 347.98233,75.926299 0 0 0 859.85151,844.04159 347.98233,75.926299 0 0 0 521.56054,766.0578 Z m -1.48633,11.80485 a 293.85846,64.117007 0 0 1 285.6738,65.85463 293.85846,64.117007 0 0 1 -301.82224,62.33119 293.85846,64.117007 0 0 1 -285.67383,-65.85462 293.85846,64.117007 0 0 1 301.82227,-62.3312 z m -0.96289,7.63409 a 258.85647,56.479917 0 0 0 -265.8711,54.9072 258.85647,56.479917 0 0 0 251.64844,58.01043 258.85647,56.479917 0 0 0 265.8711,-54.90718 258.85647,56.479917 0 0 0 -251.64844,-58.01045 z m -1.10547,8.78173 a 218.5949,47.695243 0 0 1 212.50586,48.98751 218.5949,47.695243 0 0 1 -224.51758,46.36667 218.5949,47.695243 0 0 1 -212.50586,-48.9875 218.5949,47.695243 0 0 1 224.51758,-46.36668 z"
+     id="path1397-9"
+     inkscape:connector-curvature="0" />
+  <path
+     style="opacity:1;fill:url(#linearGradient1498);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.7423265;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+     d="M 524.61719,52.805866 A 459.23163,100.1998 0 0 0 52.941408,150.21496 459.23163,100.1998 0 0 0 499.38281,253.12994 459.23163,100.1998 0 0 0 971.05859,155.72085 459.23163,100.1998 0 0 0 524.61719,52.805866 Z M 522.6543,68.384725 A 387.80447,84.615094 0 0 1 899.6582,155.29257 387.80447,84.615094 0 0 1 501.3457,237.55108 387.80447,84.615094 0 0 1 124.3418,150.64324 387.80447,84.615094 0 0 1 522.6543,68.384725 Z m -1.09375,8.685415 A 347.98233,75.926299 0 0 0 164.14844,150.88189 347.98233,75.926299 0 0 0 502.43945,228.86567 347.98233,75.926299 0 0 0 859.85156,155.05393 347.98233,75.926299 0 0 0 521.56055,77.07014 Z m -1.48633,11.804849 A 293.85846,64.117007 0 0 1 805.74805,154.72962 293.85846,64.117007 0 0 1 503.92578,217.06082 293.85846,64.117007 0 0 1 218.25195,151.20619 293.85846,64.117007 0 0 1 520.07422,88.874989 Z m -0.96289,7.634097 a 258.85647,56.479917 0 0 0 -265.8711,54.907194 258.85647,56.479917 0 0 0 251.64844,58.01044 258.85647,56.479917 0 0 0 265.8711,-54.90719 258.85647,56.479917 0 0 0 -251.64844,-58.010444 z m -1.10547,8.781724 A 218.5949,47.695243 0 0 1 730.51172,154.27832 218.5949,47.695243 0 0 1 505.99414,200.645 218.5949,47.695243 0 0 1 293.48828,151.65749 218.5949,47.695243 0 0 1 518.00586,105.29081 Z"
+     id="path1397"
+     inkscape:connector-curvature="0" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:925.12359619px;line-height:4818.35205078px;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:133.03471375px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient1508);fill-opacity:1;stroke:none;stroke-width:4.8183527px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="-873.38708"
+     y="796.08453"
+     id="text1461"
+     transform="matrix(0,-0.98886077,1.0112647,0,0,0)"><tspan
+       sodipodi:role="line"
+       id="tspan1459"
+       x="-873.38708"
+       y="796.08453"
+       style="fill:url(#linearGradient1508);fill-opacity:1;stroke-width:4.8183527px">↠</tspan></text>
+</svg>
