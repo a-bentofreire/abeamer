@@ -68,7 +68,7 @@
  *
  * 1. create a folder called `gallery`.
  *
- * 2. download [gallery-client](gallery-client), and unzip it as a new sub-folder.
+ * 2. download [animate-transitions](https://a-bentofreire.github.io/abeamer-gallery-release/animate-transitions/code.zip), and unzip it as a new sub-folder.
  * This is just a complete example of story ready to teleport.
  * The following steps are for testing purposes, for production mode will be
  * described after.
@@ -84,7 +84,7 @@
  * ```
  * This will create a file called `story.json` on the current folder.
  *
- * 5. Download [gallery-server](gallery-server), and unzip it as a new sub-folder.
+ * 5. Download [remote-server](https://a-bentofreire.github.io/abeamer-gallery-release/remote-server/code.zip), and unzip it as a new sub-folder.
  *
  * 4. Copy the previous file into the file `gallery/remote-server/story.json`
  *
