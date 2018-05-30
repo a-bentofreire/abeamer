@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Lists command line utility options in the dash format.
 - abeamer serve --list-dir also prints the link with `http://localhost:${port}/?dir`
 - abeamer serve --list-dir sorts the listing, and places directory names first.
+- Class property animation.
 ### Fixed
 - Fixes gallery/localization text label.
 

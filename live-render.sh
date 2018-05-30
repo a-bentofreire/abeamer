@@ -27,5 +27,5 @@ else
   echo "URL=$URL"
   echo "CONFIG=$CONFIG"
 
-  node ./cli/abeamer-cli.js render --url $URL --config $CONFIG $@
+  node ./cli/abeamer-cli.js render --dp --url $URL --config $CONFIG $@
 fi

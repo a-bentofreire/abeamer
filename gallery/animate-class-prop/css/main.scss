@@ -1,0 +1,59 @@
+// uuid: 75fec87f-07e8-4bc5-a533-4b18e56a0415
+//
+// ------------------------------------------------------------------------
+// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License+uuid License. See License.txt for details
+// ------------------------------------------------------------------------
+//
+@import "./../abeamer.ini";
+body,
+html,
+.abeamer-story,
+.abeamer-scene {
+  width: $abeamer-width + px;
+  height: $abeamer-height + px;
+}
+
+// #developer-start
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: bold;
+  src: url("../assets/fonts/Titillium_Web/TitilliumWeb-Bold.ttf");
+}
+
+// #developer-end
+#scene1 {
+  background: #000;
+  color: #c0c2c3;
+  font-family: 'Titillium Web';
+  letter-spacing: 1px;
+  font-size: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#text {
+  padding: 3px;
+}
+
+.step1 {
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: url('../assets/pixabay/schilthorn-3033448_640.jpg');
+}
+
+.step1a {
+  font-weight: bold;
+}
+
+.step2 {
+  text-shadow: 0px 0px 16px #ebdf59;
+  -webkit-text-stroke: 2px #5cc6e5;
+  color: transparent !important;
+}
+
+.step3 {
+  box-shadow: 0px 0px 13px white;
+}

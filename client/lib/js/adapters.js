@@ -62,7 +62,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Implementation
     // ------------------------------------------------------------------------
-    /* ---- Property Type ---- */
+    /* ---- Animation Property Type ---- */
     ABeamer.DPT_ID = 0;
     ABeamer.DPT_VISIBLE = 1;
     ABeamer.DPT_ATTR = 2;
@@ -70,6 +70,7 @@ var ABeamer;
     ABeamer.DPT_STYLE = 4;
     ABeamer.DPT_PIXEL = 5;
     ABeamer.DPT_DUAL_PIXELS = 6;
+    ABeamer.DPT_CLASS = 7;
     /**
      * Maps user property names to DOM property names.
      *
@@ -86,6 +87,7 @@ var ABeamer;
         'textContent': [ABeamer.DPT_ATTR, 'textContent'],
         'currentTime': [ABeamer.DPT_ATTR, 'currentTime'],
         'src': [ABeamer.DPT_ATTR_FUNC, 'src'],
+        'class': [ABeamer.DPT_CLASS, 'className'],
         'visible': [ABeamer.DPT_VISIBLE, ''],
         'left': [ABeamer.DPT_PIXEL, 'left'],
         'right': [ABeamer.DPT_PIXEL, 'right'],
@@ -148,43 +150,62 @@ var ABeamer;
     function _setDOMProp(adapter, propName, value) {
         var _a = domPropMapper[propName]
             || [ABeamer.DPT_STYLE, propName], propType = _a[0], domPropName = _a[1];
+        var element = adapter.htmlElement;
         switch (propType) {
+            case ABeamer.DPT_CLASS:
+                if (value && value.search(/(?:^| )[\-+]/) !== -1) {
+                    value.split(/\s+/).forEach(function (aClass) {
+                        var first = aClass[0];
+                        if (first === '-') {
+                            element.classList.remove(aClass.substr(1));
+                        }
+                        else if (first === '+') {
+                            element.classList.add(aClass.substr(1));
+                        }
+                        else {
+                            element.classList.add(aClass);
+                        }
+                    });
+                    break;
+                }
+            // flows to `DPT_ID`.
             case ABeamer.DPT_ID:
+            // flows to `DPT_ATTR`.
             case ABeamer.DPT_ATTR:
-                adapter.htmlElement[domPropName] = value;
+                element[domPropName] = value;
                 break;
             case ABeamer.DPT_VISIBLE:
-                var defDisplay = adapter.htmlElement['data-abeamer-display'];
-                var curDisplay = adapter.htmlElement.style.display || adapter.getComputedStyle()['display'];
+                var defDisplay = element['data-abeamer-display'];
+                var curDisplay = element.style.display || adapter.getComputedStyle()['display'];
                 if (value !== false && value !== 'false' && value !== 0) {
                     if (curDisplay === 'none') {
-                        adapter.htmlElement.style.display =
-                            defDisplay || (adapter.htmlElement.tagName === 'SPAN'
+                        element.style.display =
+                            defDisplay || (element.tagName === 'SPAN'
                                 ? 'inline' : 'block');
                     }
                 }
                 else {
                     if (!defDisplay) {
-                        adapter.htmlElement['data-abeamer-display'] = curDisplay;
+                        element['data-abeamer-display'] = curDisplay;
                     }
-                    adapter.htmlElement.style.display = 'none';
+                    element.style.display = 'none';
                 }
                 break;
             case ABeamer.DPT_ATTR_FUNC:
-                adapter.htmlElement.setAttribute(domPropName, value);
+                element.setAttribute(domPropName, value);
                 break;
             case ABeamer.DPT_STYLE:
                 var cssPropName = cssPropNameMapper[domPropName] || domPropName;
-                adapter.htmlElement.style[cssPropName] = value;
+                element.style[cssPropName] = value;
                 break;
             case ABeamer.DPT_PIXEL:
-                adapter.htmlElement.style[domPropName] = typeof value === 'number'
+                element.style[domPropName] = typeof value === 'number'
                     ? value + 'px' : value;
                 break;
             case ABeamer.DPT_DUAL_PIXELS:
                 var values_1 = value.split(',');
                 domPropName.forEach(function (propNameXY, index) {
-                    adapter.htmlElement.style[propNameXY] = values_1[index] + 'px';
+                    element.style[propNameXY] = values_1[index] + 'px';
                 });
                 break;
         }
@@ -196,7 +217,10 @@ var ABeamer;
         var _a = domPropMapper[propName]
             || [ABeamer.DPT_STYLE, propName], propType = _a[0], domPropName = _a[1];
         switch (propType) {
+            case ABeamer.DPT_CLASS:
+            // flows to `DPT_ID`.
             case ABeamer.DPT_ID:
+            // flows to `DPT_ATTR`.
             case ABeamer.DPT_ATTR: return _NullToUnd(adapter.htmlElement[domPropName]);
             case ABeamer.DPT_VISIBLE:
                 var value = adapter.htmlElement.style.display || adapter.getComputedStyle()['display'];

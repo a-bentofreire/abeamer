@@ -63,20 +63,23 @@ namespace ABeamer {
   export type SpecialAdaptorPropName =
     // modifies the textContent property.
     'text'
-    // same as text. It's preferable to use 'text'
+    // same as text. It's preferable to use 'text'.
     | 'textContent'
 
-    // modifies the innerHTML property.
+    // modifies the innerHTML attribute.
     | 'html'
-    // same as html. It's preferable to use 'html'
+    // same as html. It's preferable to use 'html'.
     | 'innerHTML'
-    // modifies outerHTML property
+    // modifies outerHTML attribute.
     | 'outerHTML'
-    // changes the display property for DOM Elements/Scenes.
-    // Uses DOM attribute `data-abeamer-display`
+    // changes the style.display CSS property for DOM Elements/Scenes.
+    // Uses DOM attribute `data-abeamer-display`.
     | 'visible'
-    // modifies the element src
+    // modifies the attribute `src`.
     | 'src'
+    // modifies the `classList` if it has `+` or `-` if has it starts a class.
+    // otherwise it sets `className`.
+    | 'class'
     ;
 
 
@@ -247,7 +250,7 @@ namespace ABeamer {
   //                               Implementation
   // ------------------------------------------------------------------------
 
-  /* ---- Property Type ---- */
+  /* ---- Animation Property Type ---- */
   export const DPT_ID = 0;
   export const DPT_VISIBLE = 1;
   export const DPT_ATTR = 2;
@@ -255,6 +258,7 @@ namespace ABeamer {
   export const DPT_STYLE = 4;
   export const DPT_PIXEL = 5;
   export const DPT_DUAL_PIXELS = 6;
+  export const DPT_CLASS = 7;
 
 
   /**
@@ -273,6 +277,7 @@ namespace ABeamer {
     'textContent': [DPT_ATTR, 'textContent'],
     'currentTime': [DPT_ATTR, 'currentTime'],
     'src': [DPT_ATTR_FUNC, 'src'],
+    'class': [DPT_CLASS, 'className'],
     'visible': [DPT_VISIBLE, ''],
     'left': [DPT_PIXEL, 'left'],
     'right': [DPT_PIXEL, 'right'],
@@ -353,45 +358,62 @@ namespace ABeamer {
 
     const [propType, domPropName] = domPropMapper[propName]
       || [DPT_STYLE, propName];
+    const element = adapter.htmlElement;
 
     switch (propType) {
+      case DPT_CLASS:
+        if (value && (value as string).search(/(?:^| )[\-+]/) !== -1) {
+          (value as string).split(/\s+/).forEach(aClass => {
+            const first = aClass[0];
+            if (first === '-') {
+              element.classList.remove(aClass.substr(1));
+            } else if (first === '+') {
+              element.classList.add(aClass.substr(1));
+            } else {
+              element.classList.add(aClass);
+            }
+          });
+          break;
+        }
+      // flows to `DPT_ID`.
       case DPT_ID:
-      case DPT_ATTR: adapter.htmlElement[domPropName] = value; break;
+      // flows to `DPT_ATTR`.
+      case DPT_ATTR: element[domPropName] = value; break;
       case DPT_VISIBLE:
-        const defDisplay = adapter.htmlElement['data-abeamer-display'];
-        const curDisplay = adapter.htmlElement.style.display || adapter.getComputedStyle()['display'];
+        const defDisplay = element['data-abeamer-display'];
+        const curDisplay = element.style.display || adapter.getComputedStyle()['display'];
         if (value !== false && value !== 'false' && value !== 0) {
           if (curDisplay === 'none') {
-            adapter.htmlElement.style.display =
-              defDisplay || (adapter.htmlElement.tagName === 'SPAN'
+            element.style.display =
+              defDisplay || (element.tagName === 'SPAN'
                 ? 'inline' : 'block');
           }
         } else {
           if (!defDisplay) {
-            adapter.htmlElement['data-abeamer-display'] = curDisplay;
+            element['data-abeamer-display'] = curDisplay;
           }
-          adapter.htmlElement.style.display = 'none';
+          element.style.display = 'none';
         }
         break;
 
       case DPT_ATTR_FUNC:
-        adapter.htmlElement.setAttribute(domPropName, value as string);
+        element.setAttribute(domPropName, value as string);
         break;
 
       case DPT_STYLE:
         const cssPropName = cssPropNameMapper[domPropName] || domPropName;
-        adapter.htmlElement.style[cssPropName] = value as string;
+        element.style[cssPropName] = value as string;
         break;
 
       case DPT_PIXEL:
-        adapter.htmlElement.style[domPropName] = typeof value === 'number'
+        element.style[domPropName] = typeof value === 'number'
           ? value + 'px' : value as string;
         break;
 
       case DPT_DUAL_PIXELS:
         const values = (value as string).split(',');
         (domPropName as string[]).forEach((propNameXY, index) => {
-          adapter.htmlElement.style[propNameXY] = values[index] + 'px';
+          element.style[propNameXY] = values[index] + 'px';
         });
         break;
     }
@@ -409,7 +431,10 @@ namespace ABeamer {
       || [DPT_STYLE, propName];
 
     switch (propType) {
+      case DPT_CLASS:
+      // flows to `DPT_ID`.
       case DPT_ID:
+      // flows to `DPT_ATTR`.
       case DPT_ATTR: return _NullToUnd(adapter.htmlElement[domPropName]);
 
       case DPT_VISIBLE:
