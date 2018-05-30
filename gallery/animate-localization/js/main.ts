@@ -48,7 +48,7 @@ $(window).on("load", () => {
         prop: 'text',
         duration: 1,
         // Portuguese iff = se
-        valueText: "=se(elIndex==0,'Português', '=sen(t)')",
+        valueText: "=se(elIndex==0,'Português', '\\\'=sen(t)\\\'')",
       }],
     }, {
       selector: '#dot',

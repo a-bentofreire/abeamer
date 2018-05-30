@@ -136,6 +136,15 @@ It's a software based interpolator designed to be powerful, highly configurable
 and to allow to save images to the disk.   
 
 ---------------------
+## Animation
+
+### Can I have quotes on text inside expression?
+
+Yes, you can.  
+Double slash followed by slash-quote.  
+`"='\\\'=sen(t)\\\''`
+
+---------------------
 ## Rendering
 
 ### Why I do I need puppeteer to render, if ABeamer has a server?
