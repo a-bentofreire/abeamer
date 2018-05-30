@@ -12,6 +12,7 @@ var gulp = require("gulp");
 var rimraf = require("rimraf");
 var fsix_js_1 = require("./shared/vendor/fsix.js");
 var dev_paths_js_1 = require("./shared/dev-paths.js");
+var dev_web_links_js_1 = require("./shared/dev-web-links.js");
 var build_d_ts_abeamer_js_1 = require("./shared/dev-builders/build-d-ts-abeamer.js");
 var build_docs_js_1 = require("./shared/dev-builders/build-docs.js");
 var build_shared_js_1 = require("./shared/dev-builders/build-shared.js");
@@ -62,10 +63,24 @@ var Gulp;
     var libModules = modulesList.libModules;
     var pluginModules = modulesList.pluginModules;
     // ------------------------------------------------------------------------
+    //                               Setup WebLinks
+    // ------------------------------------------------------------------------
+    var args = sysProcess.argv;
+    var isLocal = false;
+    // this is a brute force process, that depends of task name and forces
+    // all tasks have same mode (isLocal)
+    // @TODO: Implement a non-task-name dependent code.
+    args.forEach(function (arg) {
+        if (arg.endsWith('-local')) {
+            isLocal = true;
+        }
+    });
+    dev_web_links_js_1.DevWebLinks.setup(isLocal);
+    // ------------------------------------------------------------------------
     //                               Print Usage
     // ------------------------------------------------------------------------
     gulp.task('default', function () {
-        console.log("gulp [task]\n  Where task is\n    bump-version - builds version files from package.json\n      when: before publishing a new version\n\n    clean - executes clean-gallery\n\n    build-release - builds the release files where all the files are compiled and minify\n      when: before publishing a new **stable** version and after testing\n\n    build-shared-lib - builds files from the client library to be used by server, tests and cli\n      when: every time a module tagged with @module shared or\n            constants that are useful for server and cli are modified\n\n    build-docs - builds both the end-user and developer documentation\n      when: before publishing a new **stable** version and after testing\n\n    build-definition-files - builds definition files for end-user and developer\n      when: after any public or shared member of a class is modified\n\n    build-gallery-gifs - builds all the animated gifs for each example in the gallery\n      when: before build-gallery-release\n      warn: this can be a long operation\n\n    build-gallery-release - builds release version of the gallery\n      when: before publishing a new gallery, after build-gallery-gifs\n\n    clean-gallery - deletes all the gallery story-frames files and folder\n      when: cleaning day!\n\n    update-gallery-scripts - builds a new version of " + dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/index.html with script list updated\n      when: every time there is a new module on the library or a module change its name\n            first must update on the " + dev_paths_js_1.DevPaths.CLIENT_PATH + "/lib/js/modules.json\n\n    update-test-list - updates test-list.json and package.json with the full list of tests\n      when: every time there is a new test or a test change its name\n\n    list-docs-files-as-links - outputs the console the list of document files in markdown link format\n  ");
+        console.log("gulp [task]\n  Where task is\n    bump-version - builds version files from package.json\n      when: before publishing a new version\n\n    clean - executes clean-gallery\n\n    build-release - builds the release files where all the files are compiled and minify\n      when: before publishing a new **stable** version and after testing\n\n    build-shared-lib - builds files from the client library to be used by server, tests and cli\n      when: every time a module tagged with @module shared or\n            constants that are useful for server and cli are modified\n\n    build-docs - builds both the end-user and developer documentation\n      when: before publishing a new **stable** version and after testing\n\n    build-docs-local - same as build-docs but uses local links\n\n    build-definition-files - builds definition files for end-user and developer\n      when: after any public or shared member of a class is modified\n\n    build-gallery-gifs - builds all the animated gifs for each example in the gallery\n      when: before build-gallery-release\n      warn: this can be a long operation\n\n    build-gallery-release - builds release version of the gallery\n      --local builds using local links\n      when: before publishing a new gallery, after build-gallery-gifs\n\n    build-gallery-release-local - same as build-gallery-release but uses local links\n\n    clean-gallery - deletes all the gallery story-frames files and folder\n      when: cleaning day!\n\n    update-gallery-scripts - builds a new version of " + dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/index.html with script list updated\n      when: every time there is a new module on the library or a module change its name\n            first must update on the " + dev_paths_js_1.DevPaths.CLIENT_PATH + "/lib/js/modules.json\n\n    update-test-list - updates test-list.json and package.json with the full list of tests\n      when: every time there is a new test or a test change its name\n\n    list-docs-files-as-links - outputs the console the list of document files in markdown link format\n  ");
     });
     // ------------------------------------------------------------------------
     //                               rimrafExcept
@@ -318,6 +333,7 @@ var Gulp;
     gulp.task('build-docs', function () {
         build_docs_js_1.BuildDocs.build(libModules, pluginModules);
     });
+    gulp.task('build-docs-local', ['build-docs']);
     // ------------------------------------------------------------------------
     //                               Builds Release Version Of The Gallery
     // ------------------------------------------------------------------------
@@ -359,6 +375,7 @@ var Gulp;
         cb();
     });
     gulp.task('build-gallery-release', ['gal-rel:process-readme']);
+    gulp.task('build-gallery-release-local', ['build-gallery-release']);
     // ------------------------------------------------------------------------
     //                               Deletes gallery story-frames folder
     // ------------------------------------------------------------------------

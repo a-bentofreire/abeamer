@@ -131,10 +131,10 @@ export namespace BuildGalleryRelease {
         + `${ex.description.join('  \n')}${'  '}`);
       if (!ex.noGifImage) {
         galleryLinks.push(`\n  `
-          + `\n![Image](${webLinks.GALLERY_RELEASE_REPO_RAW}${ex.folder}/story-frames/story.gif)${'  '}\n  `);
+          + `\n![Image](${webLinks.galleryReleaseRepoRaw}${ex.folder}/story-frames/story.gif)${'  '}\n  `);
       }
       galleryLinks.push(`
-Download code: [zip](${webLinks.GALLERY_RELEASE_REPO_RAW}${ex.folder}/${EXAMPLE_ZIP_FILE})${'  '}
+Download code: [zip](${webLinks.galleryReleaseRepoRaw}${ex.folder}/${EXAMPLE_ZIP_FILE})${'  '}
 ${ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n'}
 ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n'}
     `);
@@ -180,7 +180,7 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
       if (example.noGifImage) { return; }
       // if (example.folder === 'animate-attack-task') {
       runSpawn('npm', ['run', '--', 'render', '--url',
-        `${webLinks.MAIN_REPO}gallery/${example.folder}/`,
+        `${webLinks.mainRepo}gallery/${example.folder}/`,
         '--config', `./gallery/${example.folder}/abeamer.ini`,
       ], () => {
         runSpawn('npm', ['run', '--', 'gif', `gallery/${example.folder}/`],

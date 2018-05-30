@@ -102,9 +102,9 @@ var BuildGalleryRelease;
                 + ("" + ex.description.join('  \n') + '  '));
             if (!ex.noGifImage) {
                 galleryLinks.push("\n  "
-                    + ("\n![Image](" + dev_web_links_js_1.DevWebLinks.GALLERY_RELEASE_REPO_RAW + ex.folder + "/story-frames/story.gif)" + '  ' + "\n  "));
+                    + ("\n![Image](" + dev_web_links_js_1.DevWebLinks.galleryReleaseRepoRaw + ex.folder + "/story-frames/story.gif)" + '  ' + "\n  "));
             }
-            galleryLinks.push("\nDownload code: [zip](" + dev_web_links_js_1.DevWebLinks.GALLERY_RELEASE_REPO_RAW + ex.folder + "/" + BuildGalleryRelease.EXAMPLE_ZIP_FILE + ")" + '  ' + "\n" + (ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n') + "\n" + (!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n') + "\n    ");
+            galleryLinks.push("\nDownload code: [zip](" + dev_web_links_js_1.DevWebLinks.galleryReleaseRepoRaw + ex.folder + "/" + BuildGalleryRelease.EXAMPLE_ZIP_FILE + ")" + '  ' + "\n" + (ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n') + "\n" + (!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n') + "\n    ");
         });
         var outREADME = fsix_js_1.fsix.readUtf8Sync(BuildGalleryRelease.SRC_GALLERY_PATH + "/README-rel.md")
             + galleryLinks.join('');
@@ -139,7 +139,7 @@ var BuildGalleryRelease;
             }
             // if (example.folder === 'animate-attack-task') {
             runSpawn('npm', ['run', '--', 'render', '--url',
-                dev_web_links_js_1.DevWebLinks.MAIN_REPO + "gallery/" + example.folder + "/",
+                dev_web_links_js_1.DevWebLinks.mainRepo + "gallery/" + example.folder + "/",
                 '--config', "./gallery/" + example.folder + "/abeamer.ini",
             ], function () {
                 runSpawn('npm', ['run', '--', 'gif', "gallery/" + example.folder + "/"], function () {

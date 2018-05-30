@@ -494,7 +494,7 @@ var BuildDocs;
     //                               buildWebLinks
     // ------------------------------------------------------------------------
     function buildWebLinks() {
-        return { gallery: dev_web_links_js_1.DevWebLinks.GALLERY_RELEASE_REPO };
+        return { gallery: dev_web_links_js_1.DevWebLinks.galleryReleaseRepo };
     }
     // ------------------------------------------------------------------------
     //                               buildMarkdownFromSourceFile

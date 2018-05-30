@@ -74,6 +74,23 @@ namespace Gulp {
   const pluginModules = modulesList.pluginModules;
 
   // ------------------------------------------------------------------------
+  //                               Setup WebLinks
+  // ------------------------------------------------------------------------
+
+  const args = sysProcess.argv;
+  let isLocal = false;
+
+  // this is a brute force process, that depends of task name and forces
+  // all tasks have same mode (isLocal)
+  // @TODO: Implement a non-task-name dependent code.
+  args.forEach(arg => {
+    if (arg.endsWith('-local')) {
+      isLocal = true;
+    }
+  });
+  webLinks.setup(isLocal);
+
+  // ------------------------------------------------------------------------
   //                               Print Usage
   // ------------------------------------------------------------------------
 
@@ -95,6 +112,8 @@ namespace Gulp {
     build-docs - builds both the end-user and developer documentation
       when: before publishing a new **stable** version and after testing
 
+    build-docs-local - same as build-docs but uses local links
+
     build-definition-files - builds definition files for end-user and developer
       when: after any public or shared member of a class is modified
 
@@ -103,7 +122,10 @@ namespace Gulp {
       warn: this can be a long operation
 
     build-gallery-release - builds release version of the gallery
+      --local builds using local links
       when: before publishing a new gallery, after build-gallery-gifs
+
+    build-gallery-release-local - same as build-gallery-release but uses local links
 
     clean-gallery - deletes all the gallery story-frames files and folder
       when: cleaning day!
@@ -147,6 +169,7 @@ namespace Gulp {
 
   function updateHtmlPages(srcPath: string, destPath: string,
     newScriptFiles: string[]) {
+
     return gulp.src(srcPath)
       .pipe(gulpReplace(/<body>((?:.|\n)+)<\/body>/, (all, p: string) => {
         const lines = p.split('\n');
@@ -452,6 +475,8 @@ namespace Gulp {
     BuildDocs.build(libModules, pluginModules);
   });
 
+  (gulp as any).task('build-docs-local', ['build-docs']);
+
   // ------------------------------------------------------------------------
   //                               Builds Release Version Of The Gallery
   // ------------------------------------------------------------------------
@@ -509,6 +534,8 @@ namespace Gulp {
 
   (gulp as any).task('build-gallery-release', ['gal-rel:process-readme']);
 
+
+  (gulp as any).task('build-gallery-release-local', ['build-gallery-release']);
   // ------------------------------------------------------------------------
   //                               Deletes gallery story-frames folder
   // ------------------------------------------------------------------------

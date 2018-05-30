@@ -15,31 +15,44 @@
  */
 export namespace DevWebLinks {
 
-  const IS_LOCAL = false;
-  const LOCAL_PORT = 9000;
+  export let mainRepo: string;
+  export let mainRepoRaw: string;
 
-  const SERVER = !IS_LOCAL
-    ? 'https://github.com/a-bentofreire/__REPO__/blog/master/'
-    : `http://localhost:${LOCAL_PORT}/__REPO__/`;
+  export let releaseRepo: string;
+  export let releaseRepoRaw: string;
 
-  const RAW_SERVER = !IS_LOCAL
-    ? 'https://raw.githubusercontent.com/a-bentofreire/__REPO__/master/'
-    : `http://localhost:${LOCAL_PORT}/__REPO__/`;
+  export let galleryReleaseRepo: string;
+  export let galleryReleaseRepoRaw: string;
 
-    const GALLERY_RELEASE_SERVER = !IS_LOCAL
-    ? 'https://a-bentofreire.github.io/abeamer-gallery-release'
-    : `http://localhost:${LOCAL_PORT}/__REPO__/`;
+  /**
+   * Initializes the web links based if isLocal or not.
+   */
+  export function setup(isLocal: boolean) {
+    const LOCAL_PORT = 9000;
+
+    const server = !isLocal
+      ? 'https://github.com/a-bentofreire/__REPO__/blog/master/'
+      : `http://localhost:${LOCAL_PORT}/__REPO__/`;
+
+    const rawServer = !isLocal
+      ? 'https://raw.githubusercontent.com/a-bentofreire/__REPO__/master/'
+      : `http://localhost:${LOCAL_PORT}/__REPO__/`;
+
+    const galleryReleaseServer = !isLocal
+      ? 'https://a-bentofreire.github.io/abeamer-gallery-release'
+      : `http://localhost:${LOCAL_PORT}/gallery-release`;
 
 
-  const MAIN = !IS_LOCAL ? 'abeamer' : '';
-  const MAIN_PREFIX = !IS_LOCAL ? 'abeamer-' : '';
+    const main = !isLocal ? 'abeamer' : '';
+    const mainPrefix = !isLocal ? 'abeamer-' : '';
 
-  export const MAIN_REPO = SERVER.replace(/__REPO__/, MAIN).replace(/\/\/$/, '/');
-  export const MAIN_REPO_RAW = RAW_SERVER.replace(/__REPO__/, MAIN).replace(/\/\/$/, '/');
+    mainRepo = server.replace(/__REPO__/, main).replace(/\/\/$/, '/');
+    mainRepoRaw = rawServer.replace(/__REPO__/, main).replace(/\/\/$/, '/');
 
-  export const RELEASE_REPO = SERVER.replace(/__REPO__/, `${MAIN_PREFIX}release`);
-  export const RELEASE_REPO_RAW = RAW_SERVER.replace(/__REPO__/, `${MAIN_PREFIX}release`);
+    releaseRepo = server.replace(/__REPO__/, `${mainPrefix}release`);
+    releaseRepoRaw = rawServer.replace(/__REPO__/, `${mainPrefix}release`);
 
-  export const GALLERY_RELEASE_REPO = GALLERY_RELEASE_SERVER + '/';
-  export const GALLERY_RELEASE_REPO_RAW = GALLERY_RELEASE_REPO;
+    galleryReleaseRepo = galleryReleaseServer + '/';
+    galleryReleaseRepoRaw = galleryReleaseRepo;
+  }
 }
