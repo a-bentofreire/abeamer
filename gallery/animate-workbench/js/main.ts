@@ -26,11 +26,12 @@ $(window).on("load", () => {
   const tests: Test[] = [{
     enabled: true,
     label: 'easeInQuart',
-    easing: 'easeInQuart',
+    // easing by Id
+    easing: ABeamer.EasingName.easeInQuart,
   }, {
     label: 'Harmonic',
     oscillator: {
-      handler: 'harmonic',
+      handler:  ABeamer.OscillatorName.harmonic,
       params: {
         // shift: 0.25,
       } as ABeamer.OscillatorParams,
@@ -39,6 +40,7 @@ $(window).on("load", () => {
     enabled: true,
     label: 'Damped',
     oscillator: {
+      // oscillator by name
       handler: 'damped',
     },
   }, {

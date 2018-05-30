@@ -56,6 +56,41 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Easings
     // ------------------------------------------------------------------------
+    /** List of the built-in easings */
+    var EasingName;
+    (function (EasingName) {
+        EasingName[EasingName["linear"] = 0] = "linear";
+        EasingName[EasingName["easeInQuad"] = 1] = "easeInQuad";
+        EasingName[EasingName["easeOutQuad"] = 2] = "easeOutQuad";
+        EasingName[EasingName["easeInOutQuad"] = 3] = "easeInOutQuad";
+        EasingName[EasingName["easeInCubic"] = 4] = "easeInCubic";
+        EasingName[EasingName["easeOutCubic"] = 5] = "easeOutCubic";
+        EasingName[EasingName["easeInOutCubic"] = 6] = "easeInOutCubic";
+        EasingName[EasingName["easeInQuart"] = 7] = "easeInQuart";
+        EasingName[EasingName["easeOutQuart"] = 8] = "easeOutQuart";
+        EasingName[EasingName["easeInOutQuart"] = 9] = "easeInOutQuart";
+        EasingName[EasingName["easeInQuint"] = 10] = "easeInQuint";
+        EasingName[EasingName["easeOutQuint"] = 11] = "easeOutQuint";
+        EasingName[EasingName["easeInOutQuint"] = 12] = "easeInOutQuint";
+        EasingName[EasingName["easeInSine"] = 13] = "easeInSine";
+        EasingName[EasingName["easeOutSine"] = 14] = "easeOutSine";
+        EasingName[EasingName["easeInOutSine"] = 15] = "easeInOutSine";
+        EasingName[EasingName["easeInExpo"] = 16] = "easeInExpo";
+        EasingName[EasingName["easeOutExpo"] = 17] = "easeOutExpo";
+        EasingName[EasingName["easeInOutExpo"] = 18] = "easeInOutExpo";
+        EasingName[EasingName["easeInCirc"] = 19] = "easeInCirc";
+        EasingName[EasingName["easeOutCirc"] = 20] = "easeOutCirc";
+        EasingName[EasingName["easeInOutCirc"] = 21] = "easeInOutCirc";
+        EasingName[EasingName["easeInElastic"] = 22] = "easeInElastic";
+        EasingName[EasingName["easeOutElastic"] = 23] = "easeOutElastic";
+        EasingName[EasingName["easeInOutElastic"] = 24] = "easeInOutElastic";
+        EasingName[EasingName["easeInBack"] = 25] = "easeInBack";
+        EasingName[EasingName["easeOutBack"] = 26] = "easeOutBack";
+        EasingName[EasingName["easeInOutBack"] = 27] = "easeInOutBack";
+        EasingName[EasingName["easeInBounce"] = 28] = "easeInBounce";
+        EasingName[EasingName["easeOutBounce"] = 29] = "easeOutBounce";
+        EasingName[EasingName["easeInOutBounce"] = 30] = "easeInOutBounce";
+    })(EasingName = ABeamer.EasingName || (ABeamer.EasingName = {}));
     // #export-section-end: release
     // -------------------------------
     ABeamer._easingFunctions = {
@@ -63,6 +98,10 @@ var ABeamer;
             return t;
         },
     };
+    function _easingNumToStr(num) {
+        return EasingName[num];
+    }
+    ABeamer._easingNumToStr = _easingNumToStr;
     var excludeFunctions = ['linear', 'swing', '_default', 'def'];
     Object.keys($.easing).forEach(function (name) {
         if (excludeFunctions.indexOf(name) !== -1) {

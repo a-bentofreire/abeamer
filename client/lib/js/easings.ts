@@ -86,7 +86,7 @@ namespace ABeamer {
    *
    * The easing function interpolates from [0, 1].
    */
-  export type EasingHandler = EasingName | ExprString | EasingFunc;
+  export type EasingHandler = EasingName | string | ExprString | EasingFunc;
 
 
   /**
@@ -97,39 +97,40 @@ namespace ABeamer {
 
 
   /** List of the built-in easings */
-  export type EasingName = string
-    | 'linear'
+  export enum EasingName {
+    linear,
 
-    | 'easeInQuad'
-    | 'easeOutQuad'
-    | 'easeInOutQuad'
-    | 'easeInCubic'
-    | 'easeOutCubic'
-    | 'easeInOutCubic'
-    | 'easeInQuart'
-    | 'easeOutQuart'
-    | 'easeInOutQuart'
-    | 'easeInQuint'
-    | 'easeOutQuint'
-    | 'easeInOutQuint'
-    | 'easeInSine'
-    | 'easeOutSine'
-    | 'easeInOutSine'
-    | 'easeInExpo'
-    | 'easeOutExpo'
-    | 'easeInOutExpo'
-    | 'easeInCirc'
-    | 'easeOutCirc'
-    | 'easeInOutCirc'
-    | 'easeInElastic'
-    | 'easeOutElastic'
-    | 'easeInOutElastic'
-    | 'easeInBack'
-    | 'easeOutBack'
-    | 'easeInOutBack'
-    | 'easeInBounce'
-    | 'easeOutBounce'
-    | 'easeInOutBounce';
+    easeInQuad,
+    easeOutQuad,
+    easeInOutQuad,
+    easeInCubic,
+    easeOutCubic,
+    easeInOutCubic,
+    easeInQuart,
+    easeOutQuart,
+    easeInOutQuart,
+    easeInQuint,
+    easeOutQuint,
+    easeInOutQuint,
+    easeInSine,
+    easeOutSine,
+    easeInOutSine,
+    easeInExpo,
+    easeOutExpo,
+    easeInOutExpo,
+    easeInCirc,
+    easeOutCirc,
+    easeInOutCirc,
+    easeInElastic,
+    easeOutElastic,
+    easeInOutElastic,
+    easeInBack,
+    easeOutBack,
+    easeInOutBack,
+    easeInBounce,
+    easeOutBounce,
+    easeInOutBounce,
+  }
 
   // #export-section-end: release
   // -------------------------------
@@ -141,6 +142,12 @@ namespace ABeamer {
       return t;
     },
   };
+
+
+  export function _easingNumToStr(num: number) {
+    return EasingName[num];
+  }
+
 
   const excludeFunctions = ['linear', 'swing', '_default', 'def'];
 

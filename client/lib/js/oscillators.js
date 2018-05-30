@@ -69,6 +69,13 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Oscillators
     // ------------------------------------------------------------------------
+    /** List of the built-in oscillators */
+    var OscillatorName;
+    (function (OscillatorName) {
+        OscillatorName[OscillatorName["harmonic"] = 1000] = "harmonic";
+        OscillatorName[OscillatorName["damped"] = 1001] = "damped";
+        OscillatorName[OscillatorName["pulsar"] = 1002] = "pulsar";
+    })(OscillatorName = ABeamer.OscillatorName || (ABeamer.OscillatorName = {}));
     /**
      * List of Negative built-in functions:
      * - `abs` Math.abs
@@ -93,6 +100,10 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Implementation
     // ------------------------------------------------------------------------
+    function _oscillatorNumToStr(num) {
+        return OscillatorName[num] || ABeamer._easingNumToStr(num);
+    }
+    ABeamer._oscillatorNumToStr = _oscillatorNumToStr;
     /** Transforms the user `negativeHandler` value into a Code Handler. */
     function _parseNegativeHandler(negativeHander) {
         if (typeof negativeHander === 'string') {

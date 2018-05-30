@@ -29,7 +29,7 @@
  * in the Action Link, allowing to link the end value to the next animation.
  *
  * An oscillator if it's used together with an easing will if it's in the same dimension
- * deform the wave and if it's in different dimensions the easing will define 
+ * deform the wave and if it's in different dimensions the easing will define
  * the speed of oscillator.
  *
  * The oscillators shares the namespace with [](easings), allowing any easing function
@@ -94,7 +94,8 @@ namespace ABeamer {
    * oscillator function or a custom function (see oscillator function)
    * The oscillator function interpolates from [0, 1].
    */
-  export type OscillatorHandler = OscillatorName | ExprString | OscillatorFunc | EasingFunc;
+  export type OscillatorHandler = OscillatorName | number | ExprString
+    | OscillatorFunc | EasingFunc;
 
 
   /**
@@ -105,11 +106,11 @@ namespace ABeamer {
 
 
   /** List of the built-in oscillators */
-  export type OscillatorName = string
-    | 'harmonic'
-    | 'damped'
-    | 'pulsar'
-    ;
+  export enum OscillatorName {
+    harmonic = 1000,  // lower ids are for easings.
+    damped,
+    pulsar,
+  }
 
 
   /** Oscillator parameters defined in an Animation Property. */
@@ -208,6 +209,10 @@ namespace ABeamer {
   //                               Implementation
   // ------------------------------------------------------------------------
 
+  export function _oscillatorNumToStr(num: number) {
+    return OscillatorName[num] || _easingNumToStr(num);
+  }
+
   /** Transforms the user `negativeHandler` value into a Code Handler. */
   function _parseNegativeHandler(negativeHander?: NegativeBuiltInFuncs
     | string | NegativeFunc): NegativeFunc {
@@ -223,6 +228,7 @@ namespace ABeamer {
     }
     return negativeHander as NegativeFunc;
   }
+
 
   // ------------------------------------------------------------------------
   //                               Harmonic Oscillator

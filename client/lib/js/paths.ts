@@ -87,15 +87,16 @@ namespace ABeamer {
    * **WARNING** At the moment, path only supports uni-dimension expression paths.
    * _Coming soon_ Multi-dimension expression paths.
    */
-  export type PathHandler = PathName | ExprString | PathFunc;
+  export type PathHandler = PathName | string | ExprString | PathFunc;
 
 
   /** List of the built-in paths */
-  export type PathName = string
-    | 'line'
-    | 'rect'
-    | 'circle'
-    | 'ellipse';
+  export enum PathName {
+    line,
+    rect,
+    circle,
+    ellipse,
+  }
 
 
   /**
@@ -157,6 +158,11 @@ namespace ABeamer {
 
   /** Map of the built-in path functions, plus the ones added via plugins. */
   export const _pathFunctions: { [name: string]: PathFunc } = {};
+
+  export function _pathNumToStr(num: number) {
+    return PathName[num];
+  }
+
 
   export function _expressionPath(t: number, params: PathParams, stage: uint,
     args?: ABeamerArgs): number[] {

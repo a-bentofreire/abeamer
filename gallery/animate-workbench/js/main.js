@@ -13,11 +13,12 @@ $(window).on("load", function () {
     var tests = [{
             enabled: true,
             label: 'easeInQuart',
-            easing: 'easeInQuart',
+            // easing by Id
+            easing: ABeamer.EasingName.easeInQuart,
         }, {
             label: 'Harmonic',
             oscillator: {
-                handler: 'harmonic',
+                handler: ABeamer.OscillatorName.harmonic,
                 params: {
                 // shift: 0.25,
                 },
@@ -26,6 +27,7 @@ $(window).on("load", function () {
             enabled: true,
             label: 'Damped',
             oscillator: {
+                // oscillator by name
                 handler: 'damped',
             },
         }, {

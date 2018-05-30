@@ -470,7 +470,7 @@ namespace ABeamer {
 
 
   export interface _WorkMotion<THandler, TFunc, TParams> {
-    handler: THandler | TFunc | string;
+    handler: THandler | TFunc | string | number;
     func: TFunc;
     params: TParams;
   }
@@ -481,8 +481,9 @@ namespace ABeamer {
 
 
   function _parseMotion<THandler, TFunc, TParams>(
-    handler: THandler | TFunc | string, params: TParams,
+    handler: THandler | TFunc | string | number, params: TParams,
     exprMotionHandler: TFunc,
+    numToName: (num: number) => string,
     mapper: { [name: string]: TFunc },
     args: ABeamerArgs): _WorkMotion<THandler, TFunc, TParams> {
 
@@ -492,6 +493,9 @@ namespace ABeamer {
     switch (typeof handler) {
       case 'undefined':
         return undefined;
+      case 'number':
+        handler = numToName(handler as number);
+      // it flows to string case
       case 'string':
         if (isExpression(handler as string)) {
           func = exprMotionHandler;
@@ -512,6 +516,8 @@ namespace ABeamer {
       params,
     };
   }
+
+
 
   // ------------------------------------------------------------------------
   //                               _AbstractWorkAnimation
@@ -580,21 +586,24 @@ namespace ABeamer {
 
       if (acp.easing) {
         this.easing = _parseMotion<EasingHandler, EasingFunc, EasingParams>(
-          acp.easing, {}, _expressionEasing, _easingFunctions, story._args);
+          acp.easing, {}, _expressionEasing,
+          _easingNumToStr, _easingFunctions, story._args);
       } else if (parent) {
         this.easing = parent.easing;
       }
 
       if (acp.oscillator) {
         this.oscillator = _parseMotion<OscillatorHandler, OscillatorFunc, OscillatorParams>(
-          acp.oscillator.handler, acp.oscillator.params, _expressionEasing, _easingFunctions, story._args);
+          acp.oscillator.handler, acp.oscillator.params, _expressionEasing,
+          _oscillatorNumToStr, _easingFunctions, story._args);
       } else if (parent) {
         this.oscillator = parent.oscillator;
       }
 
       if (acp.path) {
         this.path = _parseMotion<PathHandler, PathFunc, PathParams>(
-          acp.path.handler, acp.path.params, undefined, _pathFunctions, story._args);
+          acp.path.handler, acp.path.params, undefined,
+          _pathNumToStr, _pathFunctions, story._args);
       } else if (parent) {
         this.path = parent.path;
       }

@@ -62,6 +62,14 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Paths
     // ------------------------------------------------------------------------
+    /** List of the built-in paths */
+    var PathName;
+    (function (PathName) {
+        PathName[PathName["line"] = 0] = "line";
+        PathName[PathName["rect"] = 1] = "rect";
+        PathName[PathName["circle"] = 2] = "circle";
+        PathName[PathName["ellipse"] = 3] = "ellipse";
+    })(PathName = ABeamer.PathName || (ABeamer.PathName = {}));
     // #export-section-end: release
     // -------------------------------
     // ------------------------------------------------------------------------
@@ -69,6 +77,10 @@ var ABeamer;
     // ------------------------------------------------------------------------
     /** Map of the built-in path functions, plus the ones added via plugins. */
     ABeamer._pathFunctions = {};
+    function _pathNumToStr(num) {
+        return PathName[num];
+    }
+    ABeamer._pathNumToStr = _pathNumToStr;
     function _expressionPath(t, params, stage, args) {
         ABeamer._vars.t = t;
         return [parseFloat(ABeamer._computeExpression(params.__expression, args))];
