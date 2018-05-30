@@ -36,14 +36,14 @@ var Tests;
     // console.log(transfCycle);
     var tests = [
         {
-            name: 'valueList:string',
+            name: 'valueText:string',
             prop: 'color',
             css: "color: " + colors[0],
             valueText: colors,
             expected: exact_js_1.Exact.interpolateList(colors, cycle),
         },
         {
-            name: 'valueList:function',
+            name: 'valueText:function',
             prop: 'color',
             css: "color: " + colors[0],
             valueText: func1Name,

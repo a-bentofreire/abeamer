@@ -7,9 +7,9 @@ of an element will change in a specific frame.
 Actions are the resulting tree of the `scene.addAnimations`,
 which transform user defined animations into frames.
 
-##  Adaptor
+##  Adapter
 
-An **adaptor** allows ABeamer to decouple from DOM by serving as an agent
+An **adapter** allows ABeamer to decouple from DOM by serving as an agent
 between the ABeamer library and elements and scenes.   
   
 For DOM adapters, ABeamer uses jQuery to query DOM and
@@ -19,12 +19,12 @@ maps special properties such `text` and `html` to
 DOM adapters map [DOM Properties](DOM Property) into either HtmlElement attributes
 or CSS properties, depending on the DOM Property name.   
   
-For HtmlElement attributes, the DOM Adaptor uses `element.getAttribute`.   
+For HtmlElement attributes, the DOM Adapter uses `element.getAttribute`.   
 For CSS Properties, it uses `element.style`, but if it's empty,
 it retrieves all the computed CSS properties via `window.getComputedStyle`
 and caches its content.   
   
-DOM Adaptors use the attribute `abeamer-display` if present to define which
+DOM Adapters use the attribute `abeamer-display` if present to define which
 value will be when visible is set to true.   
   
 'DOM Scenes' are typically a DIV. 'DOM Elements' can be any HtmlElement.   
@@ -75,7 +75,7 @@ to known what kind of unit is it.
 <a name="animation-properties"></a>
 
 List of parameters that are part of an animation, and define how an
-[](#Adaptor Property) will change over time.  
+[](#Adapter Property) will change over time.  
 An Animation property besides its own parameters can override the [](#Animation) parameters.  
 
 ## Code Handler
@@ -144,7 +144,7 @@ An easing can be defined by:
 2. Expression - It evaluate the expression for each frame, passing the variable `t`.   
 3. Code Handler - This function will receive the variable `t`.   
 
-**WARNING** Code Handlers aren't [teleported](teleporter),
+**WARNING** Code Handlers aren't [teleported](#teleporter),
 therefore it can't be used in remote rendering.   
 
 
@@ -198,7 +198,7 @@ representing the n-dimensions of a path.
 To reverse the direction path, set `value = -1` and `valueStart = 0`.   
 To follow only a segment of the path, set both `value` and `valueStart`.   
 
-Multi-dimension paths are mutual exclusive with textual `valueList`.   
+Multi-dimension paths are mutual exclusive with textual `valueText`.   
 
 Single-dimensions paths work similar to easings and oscillators.   
 These paths use the easing to define the speed and the path

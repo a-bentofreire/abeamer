@@ -275,9 +275,9 @@ namespace ABeamer {
         const count = _computeIfNumExpression(params.count as string,
           params.count as number, args);
         const needsClosing = ['img'].indexOf(tag) === -1;
-        const elAdaptors = args.scene.getElementAdapters(anime.selector);
+        const elAdapters = args.scene.getElementAdapters(anime.selector);
 
-        elAdaptors.forEach(elAdaptor => {
+        elAdapters.forEach(elAdapter => {
 
           const inTextHtml: string[] = [];
           for (let i = 0; i < count; i++) {
@@ -295,7 +295,7 @@ namespace ABeamer {
 
             inTextHtml.push(parts.join(''));
           }
-          elAdaptor.setProp('html', inTextHtml.join('\n'));
+          elAdapter.setProp('html', inTextHtml.join('\n'));
         });
         return TR_EXIT;
     }

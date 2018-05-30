@@ -67,15 +67,15 @@ var ABeamer;
         switch (stage) {
             case ABeamer.TS_INIT:
                 var inTextArray = _textSplitter(params);
-                var elAdaptors = args.scene.getElementAdapters(anime.selector);
+                var elAdapters = args.scene.getElementAdapters(anime.selector);
                 var inTextHtml_1 = inTextArray.map(function (item, index) {
                     return "<span data-index=\"" + index + "\" data=\"" + item.replace(/[\n"']/g, '') + "\">"
                         + (item.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>') + "</span>");
                 });
-                elAdaptors.forEach(function (elAdaptor) {
-                    elAdaptor.setProp('html', inTextHtml_1.join(''));
-                    if (params.realign && !elAdaptor.isVirtual) {
-                        var $spans = $(elAdaptor.htmlElement).find('span');
+                elAdapters.forEach(function (elAdapter) {
+                    elAdapter.setProp('html', inTextHtml_1.join(''));
+                    if (params.realign && !elAdapter.isVirtual) {
+                        var $spans = $(elAdapter.htmlElement).find('span');
                         var left_1 = 0;
                         $spans.each(function (index, domEl) {
                             domEl.style.left = left_1 + "px";

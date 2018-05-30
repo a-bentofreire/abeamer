@@ -200,7 +200,7 @@ namespace ABeamer {
     * To reverse the direction path, set `value = -1` and `valueStart = 0`.
     * To follow only a segment of the path, set both `value` and `valueStart`.
     *
-    * Multi-dimension paths are mutual exclusive with textual `valueList`.
+    * Multi-dimension paths are mutual exclusive with textual `valueText`.
     *
     * Single-dimensions paths work similar to easings and oscillators.
     * These paths use the easing to define the speed and the path
@@ -357,7 +357,7 @@ namespace ABeamer {
 
 
     /**
-     * **EXPERIMENTAL** Waits for the adaptor to be ready to deliver an asset before
+     * **EXPERIMENTAL** Waits for the adapter to be ready to deliver an asset before
      * instructing the render to move to the next frame or give the server order to store the image.
      * Used to wait for loading images or sync with videos.
      *
@@ -469,7 +469,7 @@ namespace ABeamer {
   _vars.defaultDuration = DEFAULT_DURATION;
 
 
-  export interface _WorkMotion<THandler, TFunc, TParams> {
+  export interface _WorkInterpolator<THandler, TFunc, TParams> {
     handler: THandler | TFunc | string | number;
     func: TFunc;
     params: TParams;
@@ -480,12 +480,12 @@ namespace ABeamer {
   }
 
 
-  function _parseMotion<THandler, TFunc, TParams>(
+  function _parseInterpolator<THandler, TFunc, TParams>(
     handler: THandler | TFunc | string | number, params: TParams,
     exprMotionHandler: TFunc,
     numToName: (num: number) => string,
     mapper: { [name: string]: TFunc },
-    args: ABeamerArgs): _WorkMotion<THandler, TFunc, TParams> {
+    args: ABeamerArgs): _WorkInterpolator<THandler, TFunc, TParams> {
 
     let func: TFunc;
     params = params || {} as TParams;
@@ -518,7 +518,6 @@ namespace ABeamer {
   }
 
 
-
   // ------------------------------------------------------------------------
   //                               _AbstractWorkAnimation
   // ------------------------------------------------------------------------
@@ -536,9 +535,9 @@ namespace ABeamer {
     framesPerCycle: int;
     positionFrame: int;
 
-    easing?: _WorkMotion<EasingHandler, EasingFunc, EasingParams>;
-    oscillator?: _WorkMotion<OscillatorHandler, OscillatorFunc, OscillatorParams>;
-    path?: _WorkMotion<PathHandler, PathFunc, PathParams>;
+    easing?: _WorkInterpolator<EasingHandler, EasingFunc, EasingParams>;
+    oscillator?: _WorkInterpolator<OscillatorHandler, OscillatorFunc, OscillatorParams>;
+    path?: _WorkInterpolator<PathHandler, PathFunc, PathParams>;
 
     itemDelay?: _ItemDelay;
 
@@ -585,7 +584,7 @@ namespace ABeamer {
       }
 
       if (acp.easing) {
-        this.easing = _parseMotion<EasingHandler, EasingFunc, EasingParams>(
+        this.easing = _parseInterpolator<EasingHandler, EasingFunc, EasingParams>(
           acp.easing, {}, _expressionEasing,
           _easingNumToStr, _easingFunctions, story._args);
       } else if (parent) {
@@ -593,7 +592,7 @@ namespace ABeamer {
       }
 
       if (acp.oscillator) {
-        this.oscillator = _parseMotion<OscillatorHandler, OscillatorFunc, OscillatorParams>(
+        this.oscillator = _parseInterpolator<OscillatorHandler, OscillatorFunc, OscillatorParams>(
           acp.oscillator.handler, acp.oscillator.params, _expressionEasing,
           _oscillatorNumToStr, _easingFunctions, story._args);
       } else if (parent) {
@@ -601,7 +600,7 @@ namespace ABeamer {
       }
 
       if (acp.path) {
-        this.path = _parseMotion<PathHandler, PathFunc, PathParams>(
+        this.path = _parseInterpolator<PathHandler, PathFunc, PathParams>(
           acp.path.handler, acp.path.params, undefined,
           _pathNumToStr, _pathFunctions, story._args);
       } else if (parent) {

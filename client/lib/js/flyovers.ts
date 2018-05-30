@@ -229,7 +229,7 @@ namespace ABeamer {
    * Internal properties used in Info Flyover.
    */
   interface _InfoFlyoverParams extends InfoFlyoverParams {
-    _elAdaptors: ElementAdapter[];
+    _elAdapters: ElementAdapter[];
   }
 
 
@@ -243,8 +243,8 @@ namespace ABeamer {
 
     switch (stage) {
       case TS_INIT:
-        if (!params._elAdaptors) {
-          params._elAdaptors = args.story.getElementAdapters(params.selector
+        if (!params._elAdapters) {
+          params._elAdapters = args.story.getElementAdapters(params.selector
             || '.info-flyover');
         }
         break;
@@ -254,7 +254,7 @@ namespace ABeamer {
         const format = params.format || '${storyFrameNr}';
         const story = args.story;
 
-        params._elAdaptors.forEach(elAdaptor => {
+        params._elAdapters.forEach(elAdapter => {
           const text = format.replace(/\$\{(\w+)\}/g, (p1, macro) => {
 
             switch (macro) {
@@ -279,7 +279,7 @@ namespace ABeamer {
           }
           // #debug-end
 
-          elAdaptor.setProp('text', text);
+          elAdapter.setProp('text', text);
         });
         break;
     }
@@ -299,7 +299,7 @@ namespace ABeamer {
    * Internal properties used Video Sync Flyover.
    */
   interface _VideoSyncFlyoverParams extends VideoSyncFlyoverParams {
-    _elAdaptors: ElementAdapter[];
+    _elAdapters: ElementAdapter[];
   }
 
 
@@ -314,8 +314,8 @@ namespace ABeamer {
     // setup
     switch (stage) {
       case TS_INIT:
-        if (!params._elAdaptors) {
-          params._elAdaptors = args.story.getElementAdapters(params.selector
+        if (!params._elAdapters) {
+          params._elAdapters = args.story.getElementAdapters(params.selector
             || '#video');
           break;
         }
@@ -324,7 +324,7 @@ namespace ABeamer {
         // rendering
         const storyFps = args.story.fps;
 
-        params._elAdaptors.forEach(elAdaptor => {
+        params._elAdapters.forEach(elAdapter => {
           const currentTime = args.story.renderFramePos / storyFps;
 
           // #debug-start
@@ -333,7 +333,7 @@ namespace ABeamer {
           }
           // #debug-end
 
-          elAdaptor.setProp('currentTime', currentTime);
+          elAdapter.setProp('currentTime', currentTime);
         });
         break;
     }

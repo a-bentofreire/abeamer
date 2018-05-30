@@ -60,14 +60,14 @@ namespace Tests {
     expected: string[],
   }[] = [
       {
-        name: 'valueList:string',
+        name: 'valueText:string',
         prop: 'color',
         css: `color: ${colors[0]}`,
         valueText: colors,
         expected: Exact.interpolateList(colors, cycle),
       },
       {
-        name: 'valueList:function',
+        name: 'valueText:function',
         prop: 'color',
         css: `color: ${colors[0]}`,
         valueText: func1Name,

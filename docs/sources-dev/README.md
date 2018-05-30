@@ -22,7 +22,8 @@ Before delve into the code, read:
 To understand how to install, use ABeamer and learn about its fundamental aspects.
 - [Code Of Conduct](code-of-conduct.md) - To keep an healthy cooperation environment.
 - [Developer Guidelines](dev-guidelines.md) - Coding, Formating and Documentation rules.
-- [Roadmap](../../../../../end-user/versions/latest/en/site/#roadmap) - To know about the top priority areas.
+- [Roadmap](roadmap.md) - To know about the top priority areas.
+- [Known Issues](known-issues.md) - To know about the known issues.
 
 This documentation contains information about the:
 

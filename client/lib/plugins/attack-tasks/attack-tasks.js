@@ -51,9 +51,9 @@ var ABeamer;
                     finalAttack = finalAttack.concat(attack);
                 }
                 if (endColor === undefined) {
-                    var elAdaptors = args.scene.getElementAdapters(anime.selector);
-                    if (elAdaptors.length) {
-                        endColor = elAdaptors[0].getProp(propName);
+                    var elAdapters = args.scene.getElementAdapters(anime.selector);
+                    if (elAdapters.length) {
+                        endColor = elAdapters[0].getProp(propName);
                     }
                 }
                 if (endColor !== undefined) {

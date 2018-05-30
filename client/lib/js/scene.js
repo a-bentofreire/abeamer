@@ -321,7 +321,7 @@ var ABeamer;
          * Adds a list of parallel animations to the render pipeline.
          * The animations can start off-sync from each other via Position parameter.
          *
-         * @see Animation
+         * @see animations
          */
         _Scene.prototype.addAnimations = function (animes) {
             var _this = this;

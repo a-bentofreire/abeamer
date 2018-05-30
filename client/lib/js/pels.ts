@@ -15,7 +15,7 @@
  * ## Description
  *
  * A **pEls** is a element container providing a functionality similar to jQuery
- *  but, unlike JQuery, pEls supports both DOM and virtual elements as.
+ *  but, unlike JQuery, pEls supports both DOM and virtual elements.
  *
  * pEls are useful when there are multiple animations on the same element set
  * or to users that are used to use jQuery.
@@ -109,7 +109,7 @@ namespace ABeamer {
 
     /**
      * Wrapper for scene.addAnimation with opacity moving to 0,
-     * followed by visible = false
+     * followed by `visible = false`.
      */
     fadeOut(duration?: TimeHandler): pEls {
 

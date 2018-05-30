@@ -102,9 +102,9 @@ namespace ABeamer {
         }
 
         if (endColor === undefined) {
-          const elAdaptors = args.scene.getElementAdapters(anime.selector);
-          if (elAdaptors.length) {
-            endColor = elAdaptors[0].getProp(propName) as string;
+          const elAdapters = args.scene.getElementAdapters(anime.selector);
+          if (elAdapters.length) {
+            endColor = elAdapters[0].getProp(propName) as string;
           }
         }
 

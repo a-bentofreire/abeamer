@@ -273,9 +273,9 @@ namespace ABeamer {
         if (sw) { inTextHtml.push(` stroke-width="${sw}"`); }
         inTextHtml.push('/></svg >');
 
-        const elAdaptors = args.scene.getElementAdapters(anime.selector);
-        elAdaptors.forEach(elAdaptor => {
-          elAdaptor.setProp('html', elAdaptor.getProp('html') + inTextHtml.join(''));
+        const elAdapters = args.scene.getElementAdapters(anime.selector);
+        elAdapters.forEach(elAdapter => {
+          elAdapter.setProp('html', elAdapter.getProp('html') + inTextHtml.join(''));
         });
 
         return TR_EXIT;

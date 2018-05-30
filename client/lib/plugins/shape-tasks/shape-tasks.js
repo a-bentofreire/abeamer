@@ -188,9 +188,9 @@ var ABeamer;
                     inTextHtml_1.push(" stroke-width=\"" + sw + "\"");
                 }
                 inTextHtml_1.push('/></svg >');
-                var elAdaptors = args.scene.getElementAdapters(anime.selector);
-                elAdaptors.forEach(function (elAdaptor) {
-                    elAdaptor.setProp('html', elAdaptor.getProp('html') + inTextHtml_1.join(''));
+                var elAdapters = args.scene.getElementAdapters(anime.selector);
+                elAdapters.forEach(function (elAdapter) {
+                    elAdapter.setProp('html', elAdapter.getProp('html') + inTextHtml_1.join(''));
                 });
                 return ABeamer.TR_EXIT;
         }

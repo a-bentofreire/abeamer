@@ -52,14 +52,14 @@ alive and help to tell your story or to grow your business:
  [Developer Documentation](https://a-bentofreire.github.io/abeamer-docs/developer/versions/latest/en/site/).
 * Absolutely minimum [dependencies](#requirements).
 * Highly Extensible via [plugins](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/plugin-manager/) including: easings, oscillators, paths.
-* [Task](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/tasks/) support to allow complex animations 
+* [Task](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/tasks/) to build complex animations 
 and [special effects](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/tasks/special-effects).
-* Large gallery of [Example projects](https://a-bentofreire.github.io/abeamer-gallery-release/README.md).
-* Support for Multiple scenes (only default scenes are teleportable).
-* Support for [expressions](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/expressions/), functions and variables.
-* Parallel and off-sync property animations.
-* Teleportable JQuery-like containers.
-* Teleportable [flyovers](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/flyovers/)
+* Large gallery of [example projects](https://a-bentofreire.github.io/abeamer-gallery-release/README.md).
+* Multiple scenes (only default scenes are teleportable).
+* [Expressions](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/expressions/), functions and variables.
+* Parallel and [off-sync](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/glossary/#off-sync) property animations.
+* Teleportable [JQuery-like containers](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/pels/).
+* Teleportable [flyovers](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/flyovers/).
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-rec-high-res/story-frames/story.gif)  
   
@@ -71,7 +71,7 @@ and [special effects](https://a-bentofreire.github.io/abeamer-docs/end-user/vers
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-virtual/story-frames/story.gif)  
   
-* Supports DOM and Virtual Elements and Scenes.
+* DOM and Virtual Elements and Scenes.
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-localization/story-frames/story.gif)  
   
@@ -91,32 +91,42 @@ ABeamer has a complex system that allows to interpolate pixels, numbers,
 text, colors and much more.
 ABeamer guesses the starting value and property type from CSS style information,
 or if that information is given via `valueStart`.
+* General CSS properties:   
+e.g  `prop: 'border-style'; valueText: ['dotted', 'dashed']`.
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-pixels/story-frames/story.gif)  
   
-* Pixel properties animations.
+* Pixel properties. e.g. `valueStart: 10px; value: 100;`
+* Dual-pixel properties via [paths](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/paths/).
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-colors/story-frames/story.gif)  
   
-* Color properties animation.
+* Color properties. e.g. `valueText: ['red', '#FF00AA'];`
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-counter/story-frames/story.gif)  
   
-* Formatted numerical properties animation.
+* Unformatted numerical properties.
+* Formatted numerical properties. e.g. `valueFormat: '%d%'; value: 100;`
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-images/story-frames/story.gif)  
   
-* Image properties animations.
-* Textual properties animation.
+* Image properties. e.g. `prop: 'src'; valueText: ['a.png', 'b.png'];`
+* Text properties.
+  
+![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-class-prop/story-frames/story.gif)  
+  
+* Class properties. `prop: 'class'; valueText: ['+class1 -class2'];`
+* Visible properties. `prop: 'visible'; duration: 1; value: 1;`
+* Transform properties: `prop: 'transform'; valueFormat: rotateX(%fdeg)`;
 
 ## Interpolators
 
 ABeamer provides several interpolators, which can be defined by:
 
-- Built-in interpolators. These are accessed by name and support teleportation.
-- [Expressions](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/expressions/) are also teleportable.
+- Built-in interpolators. Accessible by name and ID and are teleportation.
+- Teleportable [Expressions](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/expressions/).
 - [Plugins](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/plugin-manager/). Only official plugins can be teleportable.
-- Code Handlers due security reasons aren't teleportable.
+- [Code Handlers](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/glossary/#code-handler) due security reasons aren't teleportable.
 
 ABeamer has following interpolators:
 
@@ -282,41 +292,17 @@ However to render, gifs and movies, it requires:
 * [End-User Documentation](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/)
 * [Developer Documentation](https://a-bentofreire.github.io/abeamer-docs/developer/versions/latest/en/site/)
 
-## Roadmap
-
-At the moment, the top priorities are:  
-
-- Bug fixing.
-- Solve inconsistences created during the multiple designs.
-- Improve documentation.
-- Wait for assets load and sync support.
-- Reversibility.
-
-The list bellow are the features that are expected to come soon:  
-
-- Expressions with Numeric Array.
-- Expressions with 'AND', 'OR' operators.
-- Support for Expression in Paths Handlers.
-- `advance` parameter in Animation property to keep the pipeline in the same point 
-after an animation.
-- Improved Shape task with animation support.
-- Arrow shape task.
-- Chart tasks.
-- SVG adaptors.
-- Improved factory task.
-- Repeater task.
-- Segmenter path.
-- Polyline path.
-- Shift and cut parameters for harmonic oscillator.
-- Glitch attack task.
-- Color band attack task.
-
 ## GitHub Repositories
 
 * [Developer version](https://github.com/a-bentofreire/abeamer)
 * [Release version](https://github.com/a-bentofreire/abeamer-release)
 * [Documentation](https://github.com/a-bentofreire/abeamer-docs)
-* [Gallery Release version](https://github.com/a-bentofreire/abeamer-gallery-release)
+* [Gallery - Release version](https://github.com/a-bentofreire/abeamer-gallery-release)
+
+## Roadmap & Known Issues
+
+* [Roadmap](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/roadmap/)
+* [Known Issues](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/known-issues/)
 
 ## Contribute
 

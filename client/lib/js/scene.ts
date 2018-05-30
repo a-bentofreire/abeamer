@@ -386,7 +386,7 @@ namespace ABeamer {
      * Adds a list of parallel animations to the render pipeline.
      * The animations can start off-sync from each other via Position parameter.
      *
-     * @see Animation
+     * @see animations
      */
     addAnimations(animes: Animations): Scene {
 

@@ -67,7 +67,7 @@ var ABeamer;
      * it can't be initialized on _vars initialization.
      */
     ABeamer._vars.defaultDuration = ABeamer.DEFAULT_DURATION;
-    function _parseMotion(handler, params, exprMotionHandler, numToName, mapper, args) {
+    function _parseInterpolator(handler, params, exprMotionHandler, numToName, mapper, args) {
         var func;
         params = params || {};
         switch (typeof handler) {
@@ -143,19 +143,19 @@ var ABeamer;
                 }
             }
             if (acp.easing) {
-                this.easing = _parseMotion(acp.easing, {}, ABeamer._expressionEasing, ABeamer._easingNumToStr, ABeamer._easingFunctions, story._args);
+                this.easing = _parseInterpolator(acp.easing, {}, ABeamer._expressionEasing, ABeamer._easingNumToStr, ABeamer._easingFunctions, story._args);
             }
             else if (parent) {
                 this.easing = parent.easing;
             }
             if (acp.oscillator) {
-                this.oscillator = _parseMotion(acp.oscillator.handler, acp.oscillator.params, ABeamer._expressionEasing, ABeamer._oscillatorNumToStr, ABeamer._easingFunctions, story._args);
+                this.oscillator = _parseInterpolator(acp.oscillator.handler, acp.oscillator.params, ABeamer._expressionEasing, ABeamer._oscillatorNumToStr, ABeamer._easingFunctions, story._args);
             }
             else if (parent) {
                 this.oscillator = parent.oscillator;
             }
             if (acp.path) {
-                this.path = _parseMotion(acp.path.handler, acp.path.params, undefined, ABeamer._pathNumToStr, ABeamer._pathFunctions, story._args);
+                this.path = _parseInterpolator(acp.path.handler, acp.path.params, undefined, ABeamer._pathNumToStr, ABeamer._pathFunctions, story._args);
             }
             else if (parent) {
                 this.path = parent.path;

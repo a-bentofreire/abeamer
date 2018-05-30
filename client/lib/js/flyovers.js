@@ -114,8 +114,8 @@ var ABeamer;
     function _infoFlyover(wkFlyover, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_INIT:
-                if (!params._elAdaptors) {
-                    params._elAdaptors = args.story.getElementAdapters(params.selector
+                if (!params._elAdapters) {
+                    params._elAdapters = args.story.getElementAdapters(params.selector
                         || '.info-flyover');
                 }
                 break;
@@ -123,7 +123,7 @@ var ABeamer;
                 // rendering
                 var format_1 = params.format || '${storyFrameNr}';
                 var story_1 = args.story;
-                params._elAdaptors.forEach(function (elAdaptor) {
+                params._elAdapters.forEach(function (elAdapter) {
                     var text = format_1.replace(/\$\{(\w+)\}/g, function (p1, macro) {
                         switch (macro) {
                             case 'storyFrameNr':
@@ -142,7 +142,7 @@ var ABeamer;
                         args.story.logFrmt('info-flyover', [['text', text]]);
                     }
                     // #debug-end
-                    elAdaptor.setProp('text', text);
+                    elAdapter.setProp('text', text);
                 });
                 break;
         }
@@ -156,22 +156,22 @@ var ABeamer;
         // setup
         switch (stage) {
             case ABeamer.TS_INIT:
-                if (!params._elAdaptors) {
-                    params._elAdaptors = args.story.getElementAdapters(params.selector
+                if (!params._elAdapters) {
+                    params._elAdapters = args.story.getElementAdapters(params.selector
                         || '#video');
                     break;
                 }
             case ABeamer.TS_ANIME_LOOP:
                 // rendering
                 var storyFps_1 = args.story.fps;
-                params._elAdaptors.forEach(function (elAdaptor) {
+                params._elAdapters.forEach(function (elAdapter) {
                     var currentTime = args.story.renderFramePos / storyFps_1;
                     // #debug-start
                     if (args.isVerbose) {
                         args.story.logFrmt('video-sync', [['currentTime', currentTime]]);
                     }
                     // #debug-end
-                    elAdaptor.setProp('currentTime', currentTime);
+                    elAdapter.setProp('currentTime', currentTime);
                 });
                 break;
         }

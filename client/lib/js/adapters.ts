@@ -14,7 +14,7 @@
 /**
  * ## Description
  *
- * An **adaptor** allows ABeamer to decouple from DOM by serving as an agent
+ * An **adapter** allows ABeamer to decouple from DOM by serving as an agent
  * between the ABeamer library and elements and scenes.
  *
  * For DOM adapters, ABeamer uses `jQuery` to query DOM and
@@ -24,12 +24,12 @@
  * DOM adapters map [DOM Properties](DOM Property) into either HtmlElement attributes
  * or CSS properties, depending on the Animation Property name.
  *
- * For HtmlElement attributes, the DOM Adaptor uses `element.getAttribute`.
+ * For HtmlElement attributes, the DOM Adapter uses `element.getAttribute`.
  * For CSS Properties, it uses `element.style`, but if it's empty,
  * it retrieves all the computed CSS properties via `window.getComputedStyle`
  * and caches its content.
  *
- * DOM Adaptors use the attribute `data-abeamer-display` to define which
+ * DOM Adapters use the attribute `data-abeamer-display` to define which
  * value will be used in `display` when visible is set to true.
  * If it's not defined, it will be set to `inline` for `span` tags,
  * and `block` for all the other tags.
@@ -58,9 +58,9 @@ namespace ABeamer {
   // #export-section-start: release
 
   /**
-   * Defines the special names for [Adaptor properties](#Adaptor property) names.
+   * Defines the special names for [Adapter properties](#Adapter property) names.
    */
-  export type SpecialAdaptorPropName =
+  export type SpecialAdapterPropName =
     // modifies the textContent property.
     'text'
     // same as text. It's preferable to use 'text'.
@@ -136,7 +136,7 @@ namespace ABeamer {
     | ElPropName
     | ScenePropName
     | StoryPropName
-    | SpecialAdaptorPropName
+    | SpecialAdapterPropName
     | DualPropName
     ;
 

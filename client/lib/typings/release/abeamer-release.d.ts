@@ -205,10 +205,10 @@ declare namespace ABeamer {
      */
     defaultDuration?: string;
 
-    /** Element index of the active adaptor */
+    /** Element index of the active adapter */
     elIndex?: uint;
 
-    /** Number of elements inside defined by the active adaptor */
+    /** Number of elements inside defined by the active adapter */
     elCount?: uint;
 
     /** Computed Numerical `valueStart`. */
@@ -277,7 +277,7 @@ declare namespace ABeamer {
    *
    * The easing function interpolates from [0, 1].
    */
-  export type EasingHandler = EasingName | ExprString | EasingFunc;
+  export type EasingHandler = EasingName | string | ExprString | EasingFunc;
 
 
   /**
@@ -288,39 +288,40 @@ declare namespace ABeamer {
 
 
   /** List of the built-in easings */
-  export type EasingName = string
-    | 'linear'
+  export enum EasingName {
+    linear,
 
-    | 'easeInQuad'
-    | 'easeOutQuad'
-    | 'easeInOutQuad'
-    | 'easeInCubic'
-    | 'easeOutCubic'
-    | 'easeInOutCubic'
-    | 'easeInQuart'
-    | 'easeOutQuart'
-    | 'easeInOutQuart'
-    | 'easeInQuint'
-    | 'easeOutQuint'
-    | 'easeInOutQuint'
-    | 'easeInSine'
-    | 'easeOutSine'
-    | 'easeInOutSine'
-    | 'easeInExpo'
-    | 'easeOutExpo'
-    | 'easeInOutExpo'
-    | 'easeInCirc'
-    | 'easeOutCirc'
-    | 'easeInOutCirc'
-    | 'easeInElastic'
-    | 'easeOutElastic'
-    | 'easeInOutElastic'
-    | 'easeInBack'
-    | 'easeOutBack'
-    | 'easeInOutBack'
-    | 'easeInBounce'
-    | 'easeOutBounce'
-    | 'easeInOutBounce';
+    easeInQuad,
+    easeOutQuad,
+    easeInOutQuad,
+    easeInCubic,
+    easeOutCubic,
+    easeInOutCubic,
+    easeInQuart,
+    easeOutQuart,
+    easeInOutQuart,
+    easeInQuint,
+    easeOutQuint,
+    easeInOutQuint,
+    easeInSine,
+    easeOutSine,
+    easeInOutSine,
+    easeInExpo,
+    easeOutExpo,
+    easeInOutExpo,
+    easeInCirc,
+    easeOutCirc,
+    easeInOutCirc,
+    easeInElastic,
+    easeOutElastic,
+    easeInOutElastic,
+    easeInBack,
+    easeOutBack,
+    easeInOutBack,
+    easeInBounce,
+    easeOutBounce,
+    easeInOutBounce,
+  }
 
 
   // ------------------------------------------------------------------------
@@ -344,7 +345,8 @@ declare namespace ABeamer {
    * oscillator function or a custom function (see oscillator function)
    * The oscillator function interpolates from [0, 1].
    */
-  export type OscillatorHandler = OscillatorName | ExprString | OscillatorFunc | EasingFunc;
+  export type OscillatorHandler = OscillatorName | number | ExprString
+    | OscillatorFunc | EasingFunc;
 
 
   /**
@@ -355,11 +357,11 @@ declare namespace ABeamer {
 
 
   /** List of the built-in oscillators */
-  export type OscillatorName = string
-    | 'harmonic'
-    | 'damped'
-    | 'pulsar'
-    ;
+  export enum OscillatorName {
+    harmonic = 1000,  // lower ids are for easings.
+    damped,
+    pulsar,
+  }
 
 
   /** Oscillator parameters defined in an Animation Property. */
@@ -473,15 +475,16 @@ declare namespace ABeamer {
    * **WARNING** At the moment, path only supports uni-dimension expression paths.
    * _Coming soon_ Multi-dimension expression paths.
    */
-  export type PathHandler = PathName | ExprString | PathFunc;
+  export type PathHandler = PathName | string | ExprString | PathFunc;
 
 
   /** List of the built-in paths */
-  export type PathName = string
-    | 'line'
-    | 'rect'
-    | 'circle'
-    | 'ellipse';
+  export enum PathName {
+    line,
+    rect,
+    circle,
+    ellipse,
+  }
 
 
   /**
@@ -730,25 +733,28 @@ declare namespace ABeamer {
 
 
   /**
-   * Defines the special names for [Adaptor properties](#Adaptor property) names.
+   * Defines the special names for [Adapter properties](#Adapter property) names.
    */
-  export type SpecialAdaptorPropName =
+  export type SpecialAdapterPropName =
     // modifies the textContent property.
     'text'
-    // same as text. It's preferable to use 'text'
+    // same as text. It's preferable to use 'text'.
     | 'textContent'
 
-    // modifies the innerHTML property.
+    // modifies the innerHTML attribute.
     | 'html'
-    // same as html. It's preferable to use 'html'
+    // same as html. It's preferable to use 'html'.
     | 'innerHTML'
-    // modifies outerHTML property
+    // modifies outerHTML attribute.
     | 'outerHTML'
-    // changes the display property for DOM Elements/Scenes.
-    // Uses DOM attribute `data-abeamer-display`
+    // changes the style.display CSS property for DOM Elements/Scenes.
+    // Uses DOM attribute `data-abeamer-display`.
     | 'visible'
-    // modifies the element src
+    // modifies the attribute `src`.
     | 'src'
+    // modifies the `classList` if it has `+` or `-` if has it starts a class.
+    // otherwise it sets `className`.
+    | 'class'
     ;
 
 
@@ -805,7 +811,7 @@ declare namespace ABeamer {
     | ElPropName
     | ScenePropName
     | StoryPropName
-    | SpecialAdaptorPropName
+    | SpecialAdapterPropName
     | DualPropName
     ;
 
@@ -1238,7 +1244,7 @@ declare namespace ABeamer {
     * To reverse the direction path, set `value = -1` and `valueStart = 0`.
     * To follow only a segment of the path, set both `value` and `valueStart`.
     *
-    * Multi-dimension paths are mutual exclusive with textual `valueList`.
+    * Multi-dimension paths are mutual exclusive with textual `valueText`.
     *
     * Single-dimensions paths work similar to easings and oscillators.
     * These paths use the easing to define the speed and the path
@@ -1395,7 +1401,7 @@ declare namespace ABeamer {
 
 
     /**
-     * **EXPERIMENTAL** Waits for the adaptor to be ready to deliver an asset before
+     * **EXPERIMENTAL** Waits for the adapter to be ready to deliver an asset before
      * instructing the render to move to the next frame or give the server order to store the image.
      * Used to wait for loading images or sync with videos.
      *

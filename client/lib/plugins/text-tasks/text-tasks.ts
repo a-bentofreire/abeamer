@@ -144,16 +144,16 @@ namespace ABeamer {
     switch (stage) {
       case TS_INIT:
         const inTextArray = _textSplitter(params);
-        const elAdaptors = args.scene.getElementAdapters(anime.selector);
+        const elAdapters = args.scene.getElementAdapters(anime.selector);
         const inTextHtml = inTextArray.map((item, index) =>
           `<span data-index="${index}" data="${item.replace(/[\n"']/g, '')}">`
           + `${item.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>')}</span>`,
         );
 
-        elAdaptors.forEach(elAdaptor => {
-          elAdaptor.setProp('html', inTextHtml.join(''));
-          if (params.realign && !elAdaptor.isVirtual) {
-            const $spans = $((elAdaptor as _DOMElementAdapter).htmlElement).find('span');
+        elAdapters.forEach(elAdapter => {
+          elAdapter.setProp('html', inTextHtml.join(''));
+          if (params.realign && !elAdapter.isVirtual) {
+            const $spans = $((elAdapter as _DOMElementAdapter).htmlElement).find('span');
             let left = 0;
             $spans.each((index: uint, domEl: HTMLElement) => {
               domEl.style.left = `${left}px`;

@@ -152,8 +152,8 @@ var ABeamer;
                 var tag_1 = params.tag || 'div';
                 var count_1 = ABeamer._computeIfNumExpression(params.count, params.count, args);
                 var needsClosing_1 = ['img'].indexOf(tag_1) === -1;
-                var elAdaptors = args.scene.getElementAdapters(anime.selector);
-                elAdaptors.forEach(function (elAdaptor) {
+                var elAdapters = args.scene.getElementAdapters(anime.selector);
+                elAdapters.forEach(function (elAdapter) {
                     var inTextHtml = [];
                     var _loop_1 = function (i) {
                         var parts = ['<' + tag_1];
@@ -171,7 +171,7 @@ var ABeamer;
                     for (var i = 0; i < count_1; i++) {
                         _loop_1(i);
                     }
-                    elAdaptor.setProp('html', inTextHtml.join('\n'));
+                    elAdapter.setProp('html', inTextHtml.join('\n'));
                 });
                 return ABeamer.TR_EXIT;
         }

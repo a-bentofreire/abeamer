@@ -15,7 +15,7 @@
  * To reverse the direction path, set `value = -1` and `valueStart = 0`.
  * To follow only a segment of the path, set both `value` and `valueStart`.
  *
- * Multi-dimension paths are mutual exclusive with textual `valueList`.
+ * Multi-dimension paths are mutual exclusive with textual `valueText`.
  *
  * Single-dimensions paths work similar to easings and oscillators.
  * These paths use the easing to define the speed and the path
@@ -24,6 +24,7 @@
  * the oscillator.
  *
  * A multi-dimension path can be used in the following ways:
+ *
  * - via `valueFormat`. Allows to encode that path in a single property.
  *    Used in `text-shadow`, `transform`.
  * - via dual-properties.

@@ -98,10 +98,10 @@ namespace ABeamer {
      */
     defaultDuration?: string;
 
-    /** Element index of the active adaptor */
+    /** Element index of the active adapter */
     elIndex?: uint;
 
-    /** Number of elements inside defined by the active adaptor */
+    /** Number of elements inside defined by the active adapter */
     elCount?: uint;
 
     /** Computed Numerical `valueStart`. */

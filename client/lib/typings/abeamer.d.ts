@@ -121,7 +121,7 @@ declare namespace ABeamer {
 
     /**
      * Wrapper for scene.addAnimation with opacity moving to 0,
-     * followed by visible = false
+     * followed by `visible = false`.
      */
     fadeOut(duration?: TimeHandler): pEls;
 
@@ -213,7 +213,7 @@ declare namespace ABeamer {
      * Adds a list of parallel animations to the render pipeline.
      * The animations can start off-sync from each other via Position parameter.
      *
-     * @see Animation
+     * @see animations
      */
     addAnimations(animes: Animations): Scene;
 
