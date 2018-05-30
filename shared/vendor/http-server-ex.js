@@ -108,13 +108,25 @@ var HttpServerEx;
             var DIR_PREFIX = '?dir';
             if (this.allowDirListing && rp.search === DIR_PREFIX) {
                 sysFs.readdir(rp.path, function (err, files) {
+                    var filesInfo = files.map(function (file) {
+                        var filename = "" + rp.path + (rp.path.endsWith('/') ? '' : '/') + file;
+                        var url = filename.substr(1);
+                        var isDir = sysFs.statSync(filename).isDirectory();
+                        return {
+                            file: file,
+                            filename: filename,
+                            url: url,
+                            isDir: isDir,
+                        };
+                    });
+                    filesInfo.sort(function (fa, fb) {
+                        return fa.isDir === fb.isDir ? fa.file.localeCompare(fb.file) :
+                            (fa.isDir ? -1 : 1);
+                    });
                     var html = '<html>\n<head>\n</head><body>\n'
-                        + files.map(function (file) {
-                            var filename = "" + rp.path + (rp.path.endsWith('/') ? '' : '/') + file;
-                            var url = filename.substr(1);
-                            var isDir = sysFs.statSync(filename).isDirectory();
-                            return !isDir ? "<div><a href=\"" + url + "\">" + file + "</a></div>" :
-                                "<div>[<a href=\"" + url + DIR_PREFIX + "\">" + file + "</a>]</div>";
+                        + filesInfo.map(function (fileInf) {
+                            return !fileInf.isDir ? "<div><a href=\"" + fileInf.url + "\">" + fileInf.file + "</a></div>" :
+                                "<div>[<a href=\"" + fileInf.url + DIR_PREFIX + "\">" + fileInf.file + "</a>]</div>";
                         }).join('\n')
                         + '\n</body>\n</html>';
                     rp.res.setHeader('Content-type', 'text/html');

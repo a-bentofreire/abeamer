@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Easings, Oscillator and Path handlers by Id.
 - Lists command line utility options in the dash format.
+- abeamer serve --list-dir also prints the link with `http://localhost:${port}/?dir`
+- abeamer serve --list-dir sorts the listing, and places directory names first.
 ### Fixed
 - Fixes gallery/localization text label.
 

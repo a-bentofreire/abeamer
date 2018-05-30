@@ -66,9 +66,9 @@ export namespace HttpServerEx {
       });
       /* spell-checker: disable */
       const html = '<html>\n<head>\n'
-      // this sytle used in html output of the markdown is designed to be similar
-      // to the github markdown rendered in order to have a good simulation of
-      // how the user will see the documentation.
+        // this sytle used in html output of the markdown is designed to be similar
+        // to the github markdown rendered in order to have a good simulation of
+        // how the user will see the documentation.
         + (this.highlightJs ? `
     <link rel="stylesheet" href="/node_modules/highlight.js/styles/github.css">
     <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.css">
@@ -118,9 +118,7 @@ export namespace HttpServerEx {
         return false;
       }
 
-
       if (this.isVerbose) { console.log(`${req.method} ${req.url}`); }
-
 
       if (this.exitFile && req.url.indexOf(this.exitFile) !== -1) {
         if (this.isVerbose) { console.log('Closing the server'); }
@@ -147,13 +145,28 @@ export namespace HttpServerEx {
       if (this.allowDirListing && rp.search === DIR_PREFIX) {
 
         sysFs.readdir(rp.path, (err, files: string[]) => {
+
+          const filesInfo = files.map(file => {
+            const filename = `${rp.path}${rp.path.endsWith('/') ? '' : '/'}${file}`;
+            const url = filename.substr(1);
+            const isDir = sysFs.statSync(filename).isDirectory();
+            return {
+              file,
+              filename,
+              url,
+              isDir,
+            };
+          });
+
+          filesInfo.sort((fa, fb) => {
+            return fa.isDir === fb.isDir ? fa.file.localeCompare(fb.file) :
+              (fa.isDir ? -1 : 1);
+          });
+
           const html = '<html>\n<head>\n</head><body>\n'
-            + files.map(file => {
-              const filename = `${rp.path}${rp.path.endsWith('/') ? '' : '/'}${file}`;
-              const url = filename.substr(1);
-              const isDir = sysFs.statSync(filename).isDirectory();
-              return !isDir ? `<div><a href="${url}">${file}</a></div>` :
-                `<div>[<a href="${url}${DIR_PREFIX}">${file}</a>]</div>`;
+            + filesInfo.map(fileInf => {
+              return !fileInf.isDir ? `<div><a href="${fileInf.url}">${fileInf.file}</a></div>` :
+                `<div>[<a href="${fileInf.url}${DIR_PREFIX}">${fileInf.file}</a>]</div>`;
             }).join('\n')
             + '\n</body>\n</html>';
 

@@ -123,7 +123,6 @@ export namespace HttpServer {
       this.httpServer = sysHttp.createServer((req, res) => {
         this.serve(req, res);
       }).listen(this.port);
-      console.log(`Server listening on port ${this.port}`);
     }
   }
 }

@@ -97,7 +97,6 @@ var HttpServer;
             this.httpServer = sysHttp.createServer(function (req, res) {
                 _this.serve(req, res);
             }).listen(this.port);
-            console.log("Server listening on port " + this.port);
         };
         return Server;
     }());

@@ -362,15 +362,19 @@ The commands are:
       '../node_modules/highlight.js/lib/index.js'));
 
     const port = argOpts['port'].value as int || DEFAULT_PORT;
+    const allowDirListing = argOpts['listDir'].hasOption;
+
     new HttpServerEx.ServerEx(port, isVerbose, 'EXIT_SERVER',
-      argOpts['listDir'].hasOption,
-      hasMarked, hasHighlightJs).start();
+      allowDirListing, hasMarked, hasHighlightJs).start();
 
     if (logLevel >= Consts.LL_SILENT) {
       if (hasMarked) {
         console.log(`Using markdown compiler`);
       }
       console.log(`Serving on http://localhost:${port}/`);
+      if (allowDirListing) {
+        console.log(`Directory listing on http://localhost:${port}/?dir`);
+      }
     }
   }
 

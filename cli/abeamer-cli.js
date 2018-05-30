@@ -282,12 +282,16 @@ var Cli;
         var hasMarked = sysFs.existsSync(sysPath.posix.join(__dirname, '../node_modules/marked/bin/marked'));
         var hasHighlightJs = sysFs.existsSync(sysPath.posix.join(__dirname, '../node_modules/highlight.js/lib/index.js'));
         var port = argOpts['port'].value || DEFAULT_PORT;
-        new http_server_ex_js_1.HttpServerEx.ServerEx(port, isVerbose, 'EXIT_SERVER', argOpts['listDir'].hasOption, hasMarked, hasHighlightJs).start();
+        var allowDirListing = argOpts['listDir'].hasOption;
+        new http_server_ex_js_1.HttpServerEx.ServerEx(port, isVerbose, 'EXIT_SERVER', allowDirListing, hasMarked, hasHighlightJs).start();
         if (logLevel >= consts_js_1.Consts.LL_SILENT) {
             if (hasMarked) {
                 console.log("Using markdown compiler");
             }
             console.log("Serving on http://localhost:" + port + "/");
+            if (allowDirListing) {
+                console.log("Directory listing on http://localhost:" + port + "/?dir");
+            }
         }
     }
     // ------------------------------------------------------------------------
