@@ -636,7 +636,7 @@ export namespace BuildDocs {
   // ------------------------------------------------------------------------
 
   function buildWebLinks(): LocalWebLinks {
-    return { gallery: webLinks.galleryReleaseRepo };
+    return { gallery: webLinks.repos.galleryRelease };
   }
 
   // ------------------------------------------------------------------------

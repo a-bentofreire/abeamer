@@ -13,28 +13,41 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 var DevWebLinks;
 (function (DevWebLinks) {
+    DevWebLinks.repos = {
+        main: '',
+        mainRaw: '',
+        release: '',
+        releaseRaw: '',
+        galleryRelease: '',
+        galleryReleaseRaw: '',
+        docs: '',
+    };
     /**
      * Initializes the web links based if isLocal or not.
      */
     function setup(isLocal) {
         var LOCAL_PORT = 9000;
         var server = !isLocal
-            ? 'https://github.com/a-bentofreire/__REPO__/blog/master/'
+            ? 'https://github.com/a-bentofreire/__REPO__/' // blog/master/
             : "http://localhost:" + LOCAL_PORT + "/__REPO__/";
         var rawServer = !isLocal
-            ? 'https://raw.githubusercontent.com/a-bentofreire/__REPO__/master/'
+            ? 'https://raw.githubusercontent.com/a-bentofreire/__REPO__/' // master/
             : "http://localhost:" + LOCAL_PORT + "/__REPO__/";
         var galleryReleaseServer = !isLocal
             ? 'https://a-bentofreire.github.io/abeamer-gallery-release'
             : "http://localhost:" + LOCAL_PORT + "/gallery-release";
+        var docsServer = !isLocal
+            ? 'https://a-bentofreire.github.io/abeamer-docs'
+            : "http://localhost:" + LOCAL_PORT + "/docs/build";
         var main = !isLocal ? 'abeamer' : '';
         var mainPrefix = !isLocal ? 'abeamer-' : '';
-        DevWebLinks.mainRepo = server.replace(/__REPO__/, main).replace(/\/\/$/, '/');
-        DevWebLinks.mainRepoRaw = rawServer.replace(/__REPO__/, main).replace(/\/\/$/, '/');
-        DevWebLinks.releaseRepo = server.replace(/__REPO__/, mainPrefix + "release");
-        DevWebLinks.releaseRepoRaw = rawServer.replace(/__REPO__/, mainPrefix + "release");
-        DevWebLinks.galleryReleaseRepo = galleryReleaseServer + '/';
-        DevWebLinks.galleryReleaseRepoRaw = DevWebLinks.galleryReleaseRepo;
+        DevWebLinks.repos.main = server.replace(/__REPO__/, main).replace(/\/\/$/, '/');
+        DevWebLinks.repos.mainRaw = rawServer.replace(/__REPO__/, main).replace(/\/\/$/, '/');
+        DevWebLinks.repos.release = server.replace(/__REPO__/, mainPrefix + "release");
+        DevWebLinks.repos.releaseRaw = rawServer.replace(/__REPO__/, mainPrefix + "release");
+        DevWebLinks.repos.galleryRelease = galleryReleaseServer + '/';
+        DevWebLinks.repos.galleryReleaseRaw = DevWebLinks.repos.galleryRelease;
+        DevWebLinks.repos.docs = docsServer;
     }
     DevWebLinks.setup = setup;
 })(DevWebLinks = exports.DevWebLinks || (exports.DevWebLinks = {}));

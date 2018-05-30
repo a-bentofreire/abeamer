@@ -80,7 +80,7 @@ var Gulp;
     //                               Print Usage
     // ------------------------------------------------------------------------
     gulp.task('default', function () {
-        console.log("gulp [task]\n  Where task is\n    bump-version - builds version files from package.json\n      when: before publishing a new version\n\n    clean - executes clean-gallery\n\n    build-release - builds the release files where all the files are compiled and minify\n      when: before publishing a new **stable** version and after testing\n\n    build-shared-lib - builds files from the client library to be used by server, tests and cli\n      when: every time a module tagged with @module shared or\n            constants that are useful for server and cli are modified\n\n    build-docs - builds both the end-user and developer documentation\n      when: before publishing a new **stable** version and after testing\n\n    build-docs-local - same as build-docs but uses local links\n\n    build-definition-files - builds definition files for end-user and developer\n      when: after any public or shared member of a class is modified\n\n    build-gallery-gifs - builds all the animated gifs for each example in the gallery\n      when: before build-gallery-release\n      warn: this can be a long operation\n\n    build-gallery-release - builds release version of the gallery\n      --local builds using local links\n      when: before publishing a new gallery, after build-gallery-gifs\n\n    build-gallery-release-local - same as build-gallery-release but uses local links\n\n    clean-gallery - deletes all the gallery story-frames files and folder\n      when: cleaning day!\n\n    update-gallery-scripts - builds a new version of " + dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/index.html with script list updated\n      when: every time there is a new module on the library or a module change its name\n            first must update on the " + dev_paths_js_1.DevPaths.CLIENT_PATH + "/lib/js/modules.json\n\n    update-test-list - updates test-list.json and package.json with the full list of tests\n      when: every time there is a new test or a test change its name\n\n    list-docs-files-as-links - outputs the console the list of document files in markdown link format\n  ");
+        console.log("gulp [task]\n  Where task is\n    bump-version - builds version files from package.json\n      when: before publishing a new version\n\n    clean - executes clean-gallery\n\n    build-release - builds the release files where all the files are compiled and minify\n      when: before publishing a new **stable** version and after testing\n\n    build-shared-lib - builds files from the client library to be used by server, tests and cli\n      when: every time a module tagged with @module shared or\n            constants that are useful for server and cli are modified\n\n    build-docs - builds both the end-user and developer documentation\n      when: before publishing a new **stable** version and after testing\n\n    build-docs-local - same as build-docs but uses local links\n\n    build-definition-files - builds definition files for end-user and developer\n      when: after any public or shared member of a class is modified\n\n    build-gallery-gifs - builds all the animated gifs for each example in the gallery\n      when: before build-gallery-release\n      warn: this can be a long operation\n\n    build-gallery-release - builds release version of the gallery\n      --local builds using local links\n      when: before publishing a new gallery, after build-gallery-gifs\n\n    build-gallery-release-local - same as build-gallery-release but uses local links\n\n    clean-gallery - deletes all the gallery story-frames files and folder\n      when: cleaning day!\n\n    update-gallery-scripts - builds a new version of " + dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/index.html with script list updated\n      when: every time there is a new module on the library or a module change its name\n            first must update on the " + dev_paths_js_1.DevPaths.CLIENT_PATH + "/lib/js/modules.json\n\n    update-test-list - updates test-list.json and package.json with the full list of tests\n      when: every time there is a new test or a test change its name\n\n    list-docs-files-as-links - outputs the console the list of document files in markdown link format\n\n    README-to-online - converts all online README.md local links to online links\n\n    README-to-local - converts all online README.md online links to local links\n\n    ");
     });
     // ------------------------------------------------------------------------
     //                               rimrafExcept
@@ -447,6 +447,34 @@ var Gulp;
                 .replace(/\b(\w)/, function (all, firstChar) { return firstChar.toUpperCase(); });
             console.log("- [" + title + "](" + fileBase + ")");
         });
+    });
+    // ------------------------------------------------------------------------
+    //                               Lists ./docs Files As Links
+    // ------------------------------------------------------------------------
+    function changeReadmeLinks(isTargetLocal) {
+        var IN_FILE = './README.md';
+        var BAK_FILE = IN_FILE + '.bak.md';
+        dev_web_links_js_1.DevWebLinks.setup(!isTargetLocal);
+        var srcs = Object.keys(dev_web_links_js_1.DevWebLinks.repos).map(function (key) { return dev_web_links_js_1.DevWebLinks.repos[key]; });
+        srcs.reverse(); // makes long urls came at the bottom.
+        dev_web_links_js_1.DevWebLinks.setup(isTargetLocal);
+        var dsts = Object.keys(dev_web_links_js_1.DevWebLinks.repos).map(function (key) { return dev_web_links_js_1.DevWebLinks.repos[key]; });
+        dsts.reverse();
+        var content = fsix_js_1.fsix.readUtf8Sync(IN_FILE);
+        sysFs.writeFileSync(BAK_FILE, content);
+        content = content.replace(/http([^ \)]+)/g, function (all, p) {
+            srcs.forEach(function (src, index) {
+                all = all.replace(src, dsts[index]);
+            });
+            return all;
+        });
+        sysFs.writeFileSync(IN_FILE, content);
+    }
+    gulp.task('README-to-online', function () {
+        changeReadmeLinks(false);
+    });
+    gulp.task('README-to-local', function () {
+        changeReadmeLinks(true);
     });
 })(Gulp || (Gulp = {}));
 //# sourceMappingURL=gulpfile.js.map

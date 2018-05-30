@@ -138,7 +138,12 @@ namespace Gulp {
       when: every time there is a new test or a test change its name
 
     list-docs-files-as-links - outputs the console the list of document files in markdown link format
-  `);
+
+    README-to-online - converts all online README.md local links to online links
+
+    README-to-local - converts all online README.md online links to local links
+
+    `);
   });
 
   // ------------------------------------------------------------------------
@@ -626,5 +631,42 @@ namespace Gulp {
         .replace(/\b(\w)/, (all, firstChar: string) => firstChar.toUpperCase());
       console.log(`- [${title}](${fileBase})`);
     });
+  });
+
+  // ------------------------------------------------------------------------
+  //                               Lists ./docs Files As Links
+  // ------------------------------------------------------------------------
+
+  function changeReadmeLinks(isTargetLocal: boolean) {
+    const IN_FILE = './README.md';
+    const BAK_FILE = IN_FILE + '.bak.md';
+
+    webLinks.setup(!isTargetLocal);
+    const srcs = Object.keys(webLinks.repos).map(key => webLinks.repos[key]);
+    srcs.reverse(); // makes long urls came at the bottom.
+    webLinks.setup(isTargetLocal);
+    const dsts = Object.keys(webLinks.repos).map(key => webLinks.repos[key]);
+    dsts.reverse();
+
+    let content = fsix.readUtf8Sync(IN_FILE);
+    sysFs.writeFileSync(BAK_FILE, content);
+
+    content = content.replace(/http([^ \)]+)/g, (all, p) => {
+      srcs.forEach((src, index) => {
+        all = all.replace(src, dsts[index]);
+      });
+      return all;
+    });
+
+    sysFs.writeFileSync(IN_FILE, content);
+  }
+
+
+  gulp.task('README-to-online', () => {
+    changeReadmeLinks(false);
+  });
+
+  gulp.task('README-to-local', () => {
+    changeReadmeLinks(true);
   });
 }

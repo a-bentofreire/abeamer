@@ -12,3 +12,4 @@ shared/dev-builders/output
 release/*
 *.js.map
 **/*.bak.*
+*.bak.md

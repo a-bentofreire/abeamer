@@ -15,14 +15,18 @@
  */
 export namespace DevWebLinks {
 
-  export let mainRepo: string;
-  export let mainRepoRaw: string;
+  export const repos = {
+    main: '',
+    mainRaw: '',
 
-  export let releaseRepo: string;
-  export let releaseRepoRaw: string;
+    release: '',
+    releaseRaw: '',
 
-  export let galleryReleaseRepo: string;
-  export let galleryReleaseRepoRaw: string;
+    galleryRelease: '',
+    galleryReleaseRaw: '',
+
+    docs: '',
+  };
 
   /**
    * Initializes the web links based if isLocal or not.
@@ -31,28 +35,34 @@ export namespace DevWebLinks {
     const LOCAL_PORT = 9000;
 
     const server = !isLocal
-      ? 'https://github.com/a-bentofreire/__REPO__/blog/master/'
+      ? 'https://github.com/a-bentofreire/__REPO__/' // blog/master/
       : `http://localhost:${LOCAL_PORT}/__REPO__/`;
 
     const rawServer = !isLocal
-      ? 'https://raw.githubusercontent.com/a-bentofreire/__REPO__/master/'
+      ? 'https://raw.githubusercontent.com/a-bentofreire/__REPO__/'  // master/
       : `http://localhost:${LOCAL_PORT}/__REPO__/`;
 
     const galleryReleaseServer = !isLocal
       ? 'https://a-bentofreire.github.io/abeamer-gallery-release'
       : `http://localhost:${LOCAL_PORT}/gallery-release`;
 
+    const docsServer = !isLocal
+      ? 'https://a-bentofreire.github.io/abeamer-docs'
+      : `http://localhost:${LOCAL_PORT}/docs/build`;
+
 
     const main = !isLocal ? 'abeamer' : '';
     const mainPrefix = !isLocal ? 'abeamer-' : '';
 
-    mainRepo = server.replace(/__REPO__/, main).replace(/\/\/$/, '/');
-    mainRepoRaw = rawServer.replace(/__REPO__/, main).replace(/\/\/$/, '/');
+    repos.main = server.replace(/__REPO__/, main).replace(/\/\/$/, '/');
+    repos.mainRaw = rawServer.replace(/__REPO__/, main).replace(/\/\/$/, '/');
 
-    releaseRepo = server.replace(/__REPO__/, `${mainPrefix}release`);
-    releaseRepoRaw = rawServer.replace(/__REPO__/, `${mainPrefix}release`);
+    repos.release = server.replace(/__REPO__/, `${mainPrefix}release`);
+    repos.releaseRaw = rawServer.replace(/__REPO__/, `${mainPrefix}release`);
 
-    galleryReleaseRepo = galleryReleaseServer + '/';
-    galleryReleaseRepoRaw = galleryReleaseRepo;
+    repos.galleryRelease = galleryReleaseServer + '/';
+    repos.galleryReleaseRaw = repos.galleryRelease;
+
+    repos.docs = docsServer;
   }
 }
