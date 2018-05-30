@@ -21,6 +21,10 @@ var OptsParser;
     /** For security reasons, the user can't access this constant  */
     OptsParser.DEFAULT_MAX_FRAME_COUNT = 20 * 60 * 60 * 1; // limits to 1h at 20fps
     OptsParser.DEFAULT_PROGRESS = 25;
+    /**
+     * Map of all the common options to both the cli and the server agent.
+     * Each key represents an option in both camelCase and Dash format.
+     */
     OptsParser.argOpts = {
         ll: { param: 'int', desc: "log level. 0 has no verbosity" },
         version: { desc: "version" },
@@ -84,7 +88,8 @@ var OptsParser;
     // ------------------------------------------------------------------------
     //                               Iterate Arg Options
     // ------------------------------------------------------------------------
-    OptsParser.isOption = function (name) { return name.indexOf('--') === 0; };
+    /** Returns true, if the argument is an option */
+    OptsParser.isOption = function (arg) { return arg.indexOf('--') === 0; };
     function iterateArgOpts(toParseValue, getNext, callback) {
         do {
             var name_1 = (getNext() || '').trim();
@@ -134,14 +139,25 @@ var OptsParser;
     // ------------------------------------------------------------------------
     //                               Print Usage
     // ------------------------------------------------------------------------
+    /**
+     * Converts Options key to dash format, by replacing the uppercase to
+     * dash + lowercase.
+     */
+    function _getDashKey(key) {
+        return key.replace(/([A-Z])/g, function (all, p) {
+            return '-' + p.toLowerCase();
+        });
+    }
+    /** Outputs to the console the program usage */
     function printUsage() {
         var names = Object.keys(OptsParser.argOpts);
         var max = 0;
-        names.forEach(function (key) { max = Math.max(key.length, max); });
-        var fromKeyToDesc = max + 2;
+        names.forEach(function (key) { max = Math.max(_getDashKey(key).length, max); });
+        var fromKeyToDesc = max + 3;
         var descPos = 5 + fromKeyToDesc + 2;
         console.log("\n The options are:\n " + names.map(function (key) {
-            return "   --" + key + Array(fromKeyToDesc - key.length).join(' ')
+            var dashKey = _getDashKey(key);
+            return "   --" + dashKey + Array(fromKeyToDesc - dashKey.length).join(' ')
                 + (OptsParser.argOpts[key].desc.split('\n').map(function (line, lineIndex) {
                     return Array(lineIndex ? descPos : 0).join(' ') + line.trim();
                 }).join('\n') + "\n\n");

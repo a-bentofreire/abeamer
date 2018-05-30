@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.1.5] - 
 ### Added
-- Easings, Oscillator and Path handlers by Id
+- Easings, Oscillator and Path handlers by Id.
+- Lists command line utility options in the dash format.
 
 ## [0.1.4] - 
 ### Fixed

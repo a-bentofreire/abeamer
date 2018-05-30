@@ -27,6 +27,10 @@ export namespace OptsParser {
   export const DEFAULT_PROGRESS = 25;
 
 
+  /**
+   * Map of all the common options to both the cli and the server agent.
+   * Each key represents an option in both camelCase and Dash format.
+   */
   export let argOpts = {
 
     ll: { param: 'int', desc: `log level. 0 has no verbosity` },
@@ -146,7 +150,8 @@ export namespace OptsParser {
   //                               Iterate Arg Options
   // ------------------------------------------------------------------------
 
-  export const isOption = (name: string) => name.indexOf('--') === 0;
+  /** Returns true, if the argument is an option */
+  export const isOption = (arg: string) => arg.indexOf('--') === 0;
 
 
   export function iterateArgOpts(toParseValue: boolean,
@@ -205,16 +210,29 @@ export namespace OptsParser {
   //                               Print Usage
   // ------------------------------------------------------------------------
 
+  /**
+   * Converts Options key to dash format, by replacing the uppercase to
+   * dash + lowercase.
+   */
+  function _getDashKey(key: string): string {
+    return key.replace(/([A-Z])/g, (all, p: string) =>
+      '-' + p.toLowerCase());
+  }
+
+
+  /** Outputs to the console the program usage */
   export function printUsage() {
+
     const names = Object.keys(argOpts);
     let max = 0;
-    names.forEach(key => { max = Math.max(key.length, max); });
-    const fromKeyToDesc = max + 2;
+    names.forEach(key => { max = Math.max(_getDashKey(key).length, max); });
+    const fromKeyToDesc = max + 3;
     const descPos = 5 + fromKeyToDesc + 2;
     console.log(`
  The options are:
  ` + names.map(key => {
-        return `   --${key}${Array(fromKeyToDesc - key.length).join(' ')}`
+        const dashKey = _getDashKey(key);
+        return `   --${dashKey}${Array(fromKeyToDesc - dashKey.length).join(' ')}`
           + `${argOpts[key].desc.split('\n').map((line, lineIndex) =>
             Array(lineIndex ? descPos : 0).join(' ') + line.trim(),
           ).join('\n')}\n\n`;
