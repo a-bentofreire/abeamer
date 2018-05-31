@@ -70,6 +70,7 @@ var Gulp;
     // this is a brute force process, that depends of task name and forces
     // all tasks have same mode (isLocal)
     // @TODO: Implement a non-task-name dependent code.
+    // 'build-gallery-gifs' requires to be always running on local links.
     args.forEach(function (arg) {
         if (arg.endsWith('-local')) {
             isLocal = true;
@@ -391,7 +392,9 @@ var Gulp;
     //                               Creates gallery examples gif image
     // ------------------------------------------------------------------------
     gulp.task('build-gallery-gifs', ['clean-gallery'], function (cb) {
+        dev_web_links_js_1.DevWebLinks.setup(true);
         build_gallery_release_js_1.BuildGalleryRelease.buildGifs();
+        cb();
     });
     // ------------------------------------------------------------------------
     //                               Update Gallery Scripts

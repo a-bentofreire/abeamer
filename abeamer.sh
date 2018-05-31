@@ -6,6 +6,6 @@
 # Licensed under the MIT License+uuid License. See License.txt for details
 # ------------------------------------------------------------------------
 
-# this script is designed only for testing precise cli in a bash enviroment.
+# this script is designed only for testing abeamer cli in a bash enviroment.
 
 node ./cli/abeamer-cli.js $@

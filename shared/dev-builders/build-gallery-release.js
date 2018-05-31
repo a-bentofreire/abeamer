@@ -137,8 +137,8 @@ var BuildGalleryRelease;
             if (example.noGifImage) {
                 return;
             }
-            // if (example.folder === 'animate-attack-task') {
-            runSpawn('npm', ['run', '--', 'render', '--url',
+            // if (example.folder === 'animate-attack-task') { // use to test one example only
+            runSpawn('npm', ['run', '--', 'render', '--dp', '--url',
                 dev_web_links_js_1.DevWebLinks.repos.main + "gallery/" + example.folder + "/",
                 '--config', "./gallery/" + example.folder + "/abeamer.ini",
             ], function () {

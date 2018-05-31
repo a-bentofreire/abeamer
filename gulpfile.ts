@@ -83,6 +83,7 @@ namespace Gulp {
   // this is a brute force process, that depends of task name and forces
   // all tasks have same mode (isLocal)
   // @TODO: Implement a non-task-name dependent code.
+  // 'build-gallery-gifs' requires to be always running on local links.
   args.forEach(arg => {
     if (arg.endsWith('-local')) {
       isLocal = true;
@@ -560,7 +561,9 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   (gulp as any).task('build-gallery-gifs', ['clean-gallery'], (cb) => {
+    webLinks.setup(true);
     BuildGalRel.buildGifs();
+    cb();
   });
 
   // ------------------------------------------------------------------------

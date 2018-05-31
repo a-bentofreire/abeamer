@@ -14,7 +14,7 @@ and that is where it lies the talent of the creator.
 ## Guidelines
 
 Each example should have the following:
-- Base Files: precise.ini, index.html, js/main.(ts|js), css/main.(scss|.min.scc)
+- Base Files: abeamer.ini, index.html, js/main.(ts|js), css/main.(scss|.min.scc)
 - Asset Files: assets folder
 - All 3rd party files must be inside a folder named vendor
 - A small description inside abeamer.ini file, on the field called $abeamer-description

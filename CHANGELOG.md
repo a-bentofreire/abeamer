@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - removed `defaultDuration` from the gallery.
 ### Added
 - `DEFAULT_FADE_DURATION = '400ms'`
+### Fixed
+- fixed `gulp build-gallery-gifs` links.
 
 
 ## [0.1.6] -

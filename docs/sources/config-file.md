@@ -10,8 +10,10 @@ Due the fact that html page layout has its own quirks, it's many times necessary
 for the `.scss` files have access to the page dimensions to correctly position elements within the page.  
 Since scss can't import json files, it's thus required to have `.scss` file with information regarding page dimensions.  
 The server agent also requires to have access to such information as well.  
-Instead of having a complex communication system or different files (one `.json` and other `.scss`) format, having a solution with one single `.ini` file with a simple format that serves all purposes turn out to be one of the simplest solutions.  
-Although, it has `.scss` format, it was decided to have `.ini` extension to prevent from being compiled and from the user being tempted to add extra information making the parsing more complex.  
+Instead of having a complex communication system or different files (one `.json` and other `.scss`) format, 
+having a solution with one single `.ini` file with a simple format that serves all purposes turn out to be one of the simplest solutions.  
+Although, it has `.scss` format, it was decided to have `.ini` extension to prevent 
+from being compiled and from the user being tempted to add extra information making the parsing more complex.  
 
 ## "abeamer.ini" format
 
@@ -32,7 +34,7 @@ It supports:
 
 ## Extra information
 
-The `precise.ini` examples in the gallery have the following extra fields, 
+The `abeamer.ini` examples in the gallery have the following extra fields, 
 that have no meaning outside the scope of the gallery:  
   
 ```scss
@@ -46,7 +48,7 @@ $abeamer-description2: "<<2n line example description>>";
 ## LESS
 
 ABeamer was designed to use `.scss` format for stylesheets, however, it also support LESS.  
-In this case modify the `abeamer.ini` file from `$precise` to `@precise`.   
+In this case modify the `abeamer.ini` file from `$abeamer` to `@abeamer`.   
 
 ```less
     @abeamer-height: 150;
@@ -58,12 +60,13 @@ In this case modify the `abeamer.ini` file from `$precise` to `@precise`.
 ## "story.json" format
 
 When ABeamer was initially developer, the configuration files were `.json` files.  
-During the develop phase, it become clear, the necessity of the `.scss` files to have access to the information about `width` and `height`, as a result the `.ini` format replaced the `.json` format.  
+During the develop phase, it become clear, the necessity of the `.scss` files 
+to have access to the information about `width` and `height`, as a result the `.ini` format replaced the `.json` format.  
 But the concept wasn't abandoned since it allowed to load complete animations from a `.json` file, if there is a live server.  
-It was later, with the introduction of [teleportation](#teleporter.md) that its main usage become to store teleportable stories,
+It was later, with the introduction of [teleportation](teleporter.md) that its main usage become to store teleportable stories,
 and its importance was reinstated.  
 
-A bare-bones config file:  
+The bare-bones of a config file:  
 ```json
     {
         "config": {
@@ -76,7 +79,7 @@ A bare-bones config file:
     }
 ```    
   
-To load this config file use instead of `addAnimations`:
+To load this config file use the following instead of `addAnimations`:
 ```ts
 ABeamer.createStoryFromConfig('story.json',
   (story: ABeamer.Story) => {
@@ -90,6 +93,7 @@ A `story.json` is a config file with the extra information, including:
 - HTML text.
 - Animation data.
 - Plugins information.
+- Metadata.
 
 The easiest way to create a `story.json` is by running the `abeamer render --teleport`.
-Read more about on [teleporter](#teleporter.md)
+Read more about on [teleporter](teleporter.md)

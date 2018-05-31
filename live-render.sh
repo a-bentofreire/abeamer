@@ -6,15 +6,20 @@
 # Licensed under the MIT License+uuid License. See License.txt for details
 # ------------------------------------------------------------------------
 
-# this script is designed only for testing precise cli in a bash enviroment
+# this script is designed only for testing abeamer cli in a bash enviroment
 # using visual studio code live server.
 # e.g. ./live-render.sh 9000 gallery/animate-colors
 
 if [ "$1" == "" ]; then
-  echo "usage: ./live-render.sh (PORT) (FOLDER)"
+  echo "usage: ./live-render.sh [PORT] (FOLDER)"
 else
   PORT=$1
-  shift
+  PARAM_TEST=${PORT//[0-9]}
+  if [ "$PARAM_TEST" != "" ]; then
+    PORT=9000
+  else
+    shift
+  fi
   FOLDER=$1
 
   FOLDER=${FOLDER%/}

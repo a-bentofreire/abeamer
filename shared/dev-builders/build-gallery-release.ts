@@ -169,7 +169,6 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
     });
   }
 
-
   // ------------------------------------------------------------------------
   //                               buildGifs
   // ------------------------------------------------------------------------
@@ -178,16 +177,17 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
     populateReleaseExamples();
     releaseExamples.forEach((example, index) => {
       if (example.noGifImage) { return; }
-      // if (example.folder === 'animate-attack-task') {
-      runSpawn('npm', ['run', '--', 'render', '--url',
+      // if (example.folder === 'animate-attack-task') { // use to test one example only
+
+        runSpawn('npm', ['run', '--', 'render', '--dp', '--url',
         `${webLinks.repos.main}gallery/${example.folder}/`,
         '--config', `./gallery/${example.folder}/abeamer.ini`,
       ], () => {
-        runSpawn('npm', ['run', '--', 'gif', `gallery/${example.folder}/`],
-          () => {
-            console.log(`Done example: ${example.folder}`);
-          });
-      });
+          runSpawn('npm', ['run', '--', 'gif', `gallery/${example.folder}/`],
+            () => {
+              console.log(`Done example: ${example.folder}`);
+            });
+        });
       // }
       console.log(`example.folder: ${example.folder}`);
     });
