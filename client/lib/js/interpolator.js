@@ -118,7 +118,7 @@ var ABeamer;
             if (valueText) {
                 switch (typeof valueText) {
                     case 'string':
-                        if (!ABeamer.isExpression(valueText)) {
+                        if (!ABeamer.isExpr(valueText)) {
                             ABeamer.throwErr('Invalid valueText');
                         }
                         propType = ABeamer.PT_VALUE_TEXT_EXPR;
@@ -246,7 +246,7 @@ var ABeamer;
                         break;
                     case ABeamer.PT_VALUE_TEXT_EXPR:
                         ABeamer._vars.t = value;
-                        value = ABeamer._computeExpression(this.animProp.valueText, args).toString();
+                        value = ABeamer.calcExpr(this.animProp.valueText, args).toString();
                         break;
                     case ABeamer.PT_VALUE_TEXT_LIST:
                         var list = this.animProp.valueText;

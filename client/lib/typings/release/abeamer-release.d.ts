@@ -59,6 +59,7 @@ declare namespace ABeamer {
     MustNatPositive = 'The value of %p% must be a natural positive',
     MustNatNotNegative = 'The value of %p% must be a natural non-negative',
     MustBeANumber = 'The value of %p% must be a number',
+    MustBeANumberOrExpr = 'The value of %p% must be a number or an expression',
     Unknown = 'Unknown %p%',
     UnknownOf = 'Unknown "%type%" %p%',
     UnknownType = 'Unknown type of %p%',
@@ -255,10 +256,18 @@ declare namespace ABeamer {
 
   export function isCharacterOrNum(ch: string): boolean;
 
-  export function isExpression(text: string): boolean;
+  export function isExpr(text: string): boolean;
+
+  export function calcExpr(expr: string, args: ABeamerArgs): ExprResult;
+
+  export function ifExprCalc(expr: string,
+    args: ABeamerArgs): ExprResult | undefined;
+
+  export function ifExprCalcNum(expr: string, defNumber: number | undefined,
+    args: ABeamerArgs): number | undefined;
 
   export function ExprOrNumToNum(param: string | number,
-    defValue: number, args: ABeamerArgs);
+    defValue: number, args: ABeamerArgs): number | undefined;
 
   // ------------------------------------------------------------------------
   //                               Easings

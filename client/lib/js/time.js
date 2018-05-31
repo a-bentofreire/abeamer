@@ -74,7 +74,7 @@ var ABeamer;
         var defaultUnit = story.defaultUnit;
         var isStringTime = typeof timeOrFrame === 'string';
         if (isStringTime) {
-            var exprTime = ABeamer._computeIfExpression(timeOrFrame, args);
+            var exprTime = ABeamer.ifExprCalc(timeOrFrame, args);
             if (exprTime !== undefined) {
                 timeOrFrame = exprTime;
                 isStringTime = typeof timeOrFrame === 'string';

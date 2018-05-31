@@ -84,7 +84,7 @@ var ABeamer;
     ABeamer._pathNumToStr = _pathNumToStr;
     function _expressionPath(t, params, stage, args) {
         ABeamer._vars.t = t;
-        return [parseFloat(ABeamer._computeExpression(params.__expression, args))];
+        return [parseFloat(ABeamer.calcExpr(params.__expression, args))];
     }
     ABeamer._expressionPath = _expressionPath;
     ABeamer._pathFunctions['line'] = _linePath;

@@ -257,7 +257,7 @@ namespace ABeamer {
     if (!isFormatted) {
       return value as string;
     }
-    const exprValue = _computeIfExpression(value as string, args);
+    const exprValue = ifExprCalc(value as string, args);
     return exprValue !== undefined ? exprValue.toString() :
       sprintf(value as string, index);
   }
@@ -272,7 +272,7 @@ namespace ABeamer {
     switch (stage) {
       case TS_INIT:
         const tag = params.tag || 'div';
-        const count = _computeIfNumExpression(params.count as string,
+        const count = ifExprCalcNum(params.count as string,
           params.count as number, args);
         const needsClosing = ['img'].indexOf(tag) === -1;
         const elAdapters = args.scene.getElementAdapters(anime.selector);

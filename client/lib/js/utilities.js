@@ -62,7 +62,7 @@ var ABeamer;
             handler = defaultHandler;
         }
         if (typeof handler === 'string') {
-            var exprValue = ABeamer._computeIfExpression(handler, args);
+            var exprValue = ABeamer.ifExprCalc(handler, args);
             if (exprValue !== undefined) {
                 handler = exprValue;
             }

@@ -138,7 +138,7 @@ namespace ABeamer {
 
         switch (typeof valueText) {
           case 'string':
-            if (!isExpression(valueText as string)) {
+            if (!isExpr(valueText as string)) {
               throwErr('Invalid valueText');
             }
             propType = PT_VALUE_TEXT_EXPR;
@@ -292,7 +292,7 @@ namespace ABeamer {
 
           case PT_VALUE_TEXT_EXPR:
             _vars.t = value;
-            value = _computeExpression(this.animProp.valueText as string,
+            value = calcExpr(this.animProp.valueText as string,
               args).toString();
             break;
 

@@ -140,7 +140,7 @@ var ABeamer;
         if (!isFormatted) {
             return value;
         }
-        var exprValue = ABeamer._computeIfExpression(value, args);
+        var exprValue = ABeamer.ifExprCalc(value, args);
         return exprValue !== undefined ? exprValue.toString() :
             ABeamer.sprintf(value, index);
     }
@@ -150,7 +150,7 @@ var ABeamer;
         switch (stage) {
             case ABeamer.TS_INIT:
                 var tag_1 = params.tag || 'div';
-                var count_1 = ABeamer._computeIfNumExpression(params.count, params.count, args);
+                var count_1 = ABeamer.ifExprCalcNum(params.count, params.count, args);
                 var needsClosing_1 = ['img'].indexOf(tag_1) === -1;
                 var elAdapters = args.scene.getElementAdapters(anime.selector);
                 elAdapters.forEach(function (elAdapter) {

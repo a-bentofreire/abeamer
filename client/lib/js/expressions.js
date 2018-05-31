@@ -122,10 +122,10 @@ var ABeamer;
      * Tests if `text` is an expression.
      * Used by developers and plugin creators.
      */
-    function isExpression(text) {
+    function isExpr(text) {
         return text !== undefined && text[0] === '=';
     }
-    ABeamer.isExpression = isExpression;
+    ABeamer.isExpr = isExpr;
     var TokenType2Str;
     (function (TokenType2Str) {
         TokenType2Str[TokenType2Str["("] = 3] = "(";
@@ -591,10 +591,14 @@ var ABeamer;
         value1.numValue = v;
     }
     // ------------------------------------------------------------------------
-    //                               User Functions
+    //                               Public Functions
     // ------------------------------------------------------------------------
-    /** Computes an expression. */
-    function _computeExpression(expr, args) {
+    /**
+     * Calculates an expression.
+     * Expects the input to be an expression.
+     * Used mostly by plugin creators and developers.
+     */
+    function calcExpr(expr, args) {
         return _stateMachine({
             args: args,
             checkParams: _checkFuncParams,
@@ -602,35 +606,45 @@ var ABeamer;
             pos: 1,
         });
     }
-    ABeamer._computeExpression = _computeExpression;
+    ABeamer.calcExpr = calcExpr;
     /**
      * If it's an expression, it computes its value.
-     * @WARN: This function will be renamed soon, to be consistent with other names.
-     * After renaming, it will be made public by removing the '_'.
+     * Returns undefined if it's not an expression.
+     * Used mostly by plugin creators and developers.
      */
-    function _computeIfExpression(expr, args) {
-        return isExpression(expr) ? _computeExpression(expr, args) : undefined;
+    function ifExprCalc(expr, args) {
+        return isExpr(expr) ? calcExpr(expr, args) : undefined;
     }
-    ABeamer._computeIfExpression = _computeIfExpression;
+    ABeamer.ifExprCalc = ifExprCalc;
     /**
      * If it's an expression, it computes its value and returns its numerical value.
-     * @WARN: This function will be renamed soon, to be consistent with other names.
-     * After renaming, it will be made public by removing the '_'.
+     * Returns `defNumber` if it's not an expression.
+     * Used mostly by plugin creators and developers.
      */
-    function _computeIfNumExpression(expr, defNumber, args) {
-        if (!isExpression(expr)) {
+    function ifExprCalcNum(expr, defNumber, args) {
+        if (!isExpr(expr)) {
             return defNumber;
         }
-        var exprValue = _computeExpression(expr, args);
+        var exprValue = calcExpr(expr, args);
+        if (args.isStrict && exprValue !== undefined && typeof exprValue !== 'number') {
+            ABeamer.throwI8n(ABeamer.Msgs.MustBeANumber, { p: expr });
+        }
         return exprValue !== undefined ? parseFloat(exprValue) : defNumber;
     }
-    ABeamer._computeIfNumExpression = _computeIfNumExpression;
+    ABeamer.ifExprCalcNum = ifExprCalcNum;
     /**
      * Checks if it's an expression, if it is, it computes and returns
      * the value as a number. Otherwise, returns the parameter as a number.
+     * Used mostly by plugin creators and developers.
      */
     function ExprOrNumToNum(param, defValue, args) {
-        return _computeIfNumExpression(param, param !== undefined ? param : defValue, args);
+        if (args.isStrict && param !== undefined) {
+            var typeofP = typeof param;
+            if (typeofP !== 'string' && typeofP !== 'number') {
+                ABeamer.throwI8n(ABeamer.Msgs.MustBeANumberOrExpr, { p: param });
+            }
+        }
+        return ifExprCalcNum(param, param !== undefined ? param : defValue, args);
     }
     ABeamer.ExprOrNumToNum = ExprOrNumToNum;
 })(ABeamer || (ABeamer = {}));

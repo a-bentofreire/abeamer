@@ -6,9 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.2.0] -
 ### Breaking changes
+- `isExpression` becomes `isExpr`.
+
 ### Changed
 - Harmonization of internal call parameters.
 - `parseTimeHandler` becomes public.
+- `calcExpr`, `ifExprCalc`, `ifExprCalcNum` becomes public.
 
 ## [0.1.6] -
 ### Changed

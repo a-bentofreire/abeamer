@@ -76,7 +76,7 @@ namespace ABeamer {
     }
 
     if (typeof handler === 'string') {
-      const exprValue = _computeIfExpression(handler, args);
+      const exprValue = ifExprCalc(handler, args);
       if (exprValue !== undefined) {
         handler = exprValue as any;
       }

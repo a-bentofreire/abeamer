@@ -38,6 +38,7 @@ export namespace DevConsts {
     MustNatPositive = 'The value of %p% must be a natural positive',
     MustNatNotNegative = 'The value of %p% must be a natural non-negative',
     MustBeANumber = 'The value of %p% must be a number',
+    MustBeANumberOrExpr = 'The value of %p% must be a number or an expression',
     Unknown = 'Unknown %p%',
     UnknownOf = 'Unknown "%type%" %p%',
     UnknownType = 'Unknown type of %p%',

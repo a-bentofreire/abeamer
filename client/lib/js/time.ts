@@ -105,7 +105,7 @@ namespace ABeamer {
     let isStringTime = typeof timeOrFrame === 'string';
 
     if (isStringTime) {
-      const exprTime = _computeIfExpression(timeOrFrame as string, args);
+      const exprTime = ifExprCalc(timeOrFrame as string, args);
       if (exprTime !== undefined) {
         timeOrFrame = exprTime;
         isStringTime = typeof timeOrFrame === 'string';

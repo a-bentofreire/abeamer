@@ -497,7 +497,7 @@ namespace ABeamer {
         handler = numToName(handler as number);
       // it flows to string case
       case 'string':
-        if (isExpression(handler as string)) {
+        if (isExpr(handler as string)) {
           func = exprMotionHandler;
           ((params as any) as _WorkExprMotionParams).__expression = handler as any;
         } else {

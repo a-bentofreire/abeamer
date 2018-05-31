@@ -77,7 +77,7 @@ var ABeamer;
                 handler = numToName(handler);
             // it flows to string case
             case 'string':
-                if (ABeamer.isExpression(handler)) {
+                if (ABeamer.isExpr(handler)) {
                     func = exprMotionHandler;
                     params.__expression = handler;
                 }
