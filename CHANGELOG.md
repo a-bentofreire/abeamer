@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `calcExpr`, `ifExprCalc`, `ifExprCalcNum` becomes public.
 - Removed `defaultDuration` from the gallery.
 - (DEV)exact framework supports plugins.
+- Improved cross-browser CSS support.
 ### Added
 - Added `DEFAULT_FADE_DURATION = '400ms'`.
 - Added `color-functions` plugin with `rgb` and `rgba` functions.

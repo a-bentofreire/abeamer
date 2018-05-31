@@ -162,6 +162,7 @@ namespace ABeamer {
     text: string;
   }
 
+
   export class _Config {
     version?: string;
 
@@ -242,7 +243,7 @@ namespace ABeamer {
     }
 
 
-    _rebuildStory() {
+    _rebuildStory(): void {
       if (this._cfg.html) {
         this._story.storyAdapter.setProp('html', _sanitizeHtml(this._cfg.html.join('\n')));
         this._story.addDefaultScenes();
@@ -262,12 +263,12 @@ namespace ABeamer {
     }
 
 
-    _addScene() {
+    _addScene(): void {
       this._cfg.animations.push([]);
     }
 
 
-    _addAnimations(anime: Animations, sceneIndex: uint) {
+    _addAnimations(anime: Animations, sceneIndex: uint): void {
       this._cfg.animations[sceneIndex].push(_filteredDeepCopy(anime, []));
     }
 
@@ -344,28 +345,39 @@ namespace ABeamer {
   }
 
 
-  function _buildCssRulesFromConfig(cssRules: CSSRule[]) {
+  function _buildCssRulesFromConfig(cssRules: CSSRule[]): void {
     const pageRoot = _getPageRoot();
     const styleSheets = window.document.styleSheets;
     const lastSheet = styleSheets[styleSheets.length - 1] as CSSStyleSheet;
     for (let i = cssRules.length - 1; i >= 0; i--) {
       const cssRule = cssRules[i];
       lastSheet.insertRule(_remapCSSRuleLocalLink(pageRoot, cssRule.path,
-        cssRule.text), 0);
+        _handleVendorPrefixes(cssRule.text)), 0);
     }
   }
 
 
   /** Prevents scripts to be injected to the teleported story. */
-  function _sanitizeHtml(html: string) {
+  function _sanitizeHtml(html: string): string {
     return html.replace(/\<\s*script/gi, '');
   }
 
 
   /** Returns the url location of the current web page without the html file name. */
-  function _getPageRoot() {
+  function _getPageRoot(): string {
     const location = window.location;
     return location.origin + (location.pathname || '').replace(/\/[^/]*$/, '/');
+  }
+
+
+  /**
+   * Adds or removes vendor prefixes from the teleported story.
+   */
+  function _handleVendorPrefixes(text: string): string {
+    return text.replace(/([\w\-]+)\s*:([^;]*;)/g, (all, propName, propValue) => {
+      const propNames = _propNameToVendorProps(propName);
+      return propNames.map(name => `${name}: ${propValue}`).join(' ');
+    });
   }
 
 

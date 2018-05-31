@@ -300,7 +300,7 @@ var ABeamer;
         var lastSheet = styleSheets[styleSheets.length - 1];
         for (var i = cssRules.length - 1; i >= 0; i--) {
             var cssRule = cssRules[i];
-            lastSheet.insertRule(_remapCSSRuleLocalLink(pageRoot, cssRule.path, cssRule.text), 0);
+            lastSheet.insertRule(_remapCSSRuleLocalLink(pageRoot, cssRule.path, _handleVendorPrefixes(cssRule.text)), 0);
         }
     }
     /** Prevents scripts to be injected to the teleported story. */
@@ -311,6 +311,15 @@ var ABeamer;
     function _getPageRoot() {
         var location = window.location;
         return location.origin + (location.pathname || '').replace(/\/[^/]*$/, '/');
+    }
+    /**
+     * Adds or removes vendor prefixes from the teleported story.
+     */
+    function _handleVendorPrefixes(text) {
+        return text.replace(/([\w\-]+)\s*:([^;]*;)/g, function (all, propName, propValue) {
+            var propNames = ABeamer._propNameToVendorProps(propName);
+            return propNames.map(function (name) { return name + ": " + propValue; }).join(' ');
+        });
     }
     /**
      * When CSS rules are injected, the web browser has a different behavior
