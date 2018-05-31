@@ -43,7 +43,7 @@ var Exact;
     var DEFAULT_TEST_GEN_FRAMES_WIDTH = 100;
     var DEFAULT_TEST_GEN_FRAMES_HEIGHT = 100;
     var DEFAULT_EXPECTED_PATH = './expected/frames';
-    Exact._TEST_DIGIT_LIMIT = 10000; // same as interpolator.js
+    Exact._TEST_DIGIT_LIMIT = 1000; // same as interpolator.js
     var TestBuilder = /** @class */ (function () {
         function TestBuilder() {
             // default input params
@@ -521,6 +521,11 @@ var Exact;
                 .libModules.map(function (file) {
                 return "    <script src=\"../../../client/lib/js/" + file + ".js\"></script>\n";
             }).join('')]);
+        macros.push([/__PLUGINS__/,
+            params.plugins ?
+                params.plugins.map(function (plugin) {
+                    return "    <script src=\"../../../client/lib/plugins/" + plugin + "/" + plugin + ".js\"></script>\n";
+                }).join('') : '']);
         macros.push([/__ASSETS_PATH__/g, "../../" + ASSETS_PATH]);
         macros.push([/__IND_CASES__/,
             params.casesAreDependent !== true ? 'true' : 'false']);

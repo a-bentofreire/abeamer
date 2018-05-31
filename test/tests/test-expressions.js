@@ -25,7 +25,7 @@ var Tests;
                 || (eval(expr.substr(1))).toString(),
         });
         jsMacros.push(["\"f" + i + "\"",
-            "function (t) {\n          if (t === 0) var actual = ABeamer._computeExpression(\"" + expr + "\", 1, story._args);\n      return t;\n    }"]);
+            "function (t) {\n          if (t === 0) {\n            var actual = ABeamer.calcExpr(\"" + expr + "\", story._args);\n          }\n      return t;\n    }"]);
     }
     add('=  -5', 'simple value');
     add('= 4 -5', 'number sign');
@@ -101,6 +101,7 @@ var Tests;
         html: exact_js_1.Exact.genTestHtml(tests.length),
     }, {
         jsMacros: jsMacros,
+        plugins: ['color-functions'],
         tests: testParams,
         // toLogStdOut: true,
         onParseOutputLine: function (line) {

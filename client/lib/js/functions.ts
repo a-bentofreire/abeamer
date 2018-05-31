@@ -32,8 +32,6 @@
  * - `floor`- always rounds down.
  * - `sqrt` - square root.
  * - `random` - random number between [0, 1].
- * - `rgb` - returns the 6 characters lowercase hexadecimal of R, G, B.
- *  Each input goes from [0, 255]
  *
  * - `toNumber` - converts a textual parameter into a numerical parameter.
  * - `toString` - converts a numerical parameter into a textual parameter.
@@ -52,7 +50,7 @@
  * it returns the 2nd parameter, otherwise it returns the 3rd paramter.
  * This function doesn't supports 'lazy calculation'.
  *
- * - `case` - the 1st numerical parameter is a zero index to select which 
+ * - `case` - the 1st numerical parameter is a zero index to select which
  * parameters to return.
  * This function doesn't supports 'lazy calculation'.
  *
@@ -225,17 +223,6 @@ namespace ABeamer {
   };
 
 
-  _exFunctions['rgb'] = (params: ExprFuncParams, req?: ExFuncReq) => {
-    req.checkParams(req, 3, [ExFuncParamType.Number, ExFuncParamType.Number, ExFuncParamType.Number]);
-    req.res.paType = ExFuncParamType.String;
-    req.res.sValue =
-      params.map(pa => {
-        const v = pa.numValue.toString(16);
-        return v.length < 2 ? '0' + v : v;
-      }).join('');
-  };
-
-
   _exFunctions['iff'] = (params: ExprFuncParams, req?: ExFuncReq) => {
     req.checkParams(req, 3, [ExFuncParamType.Number, ExFuncParamType.Any, ExFuncParamType.Any]);
     const res = params[params[0].numValue ? 1 : 2];
@@ -243,6 +230,7 @@ namespace ABeamer {
     req.res.sValue = res.sValue;
     req.res.numValue = res.numValue;
   };
+
 
   _exFunctions['case'] = (params: ExprFuncParams, req?: ExFuncReq) => {
     // @TODO: check params

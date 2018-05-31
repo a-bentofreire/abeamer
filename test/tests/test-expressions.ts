@@ -41,7 +41,9 @@ namespace Tests {
     jsMacros.push(
       [`"f${i}"`,
       `function (t) {
-          if (t === 0) var actual = ABeamer._computeExpression("${expr}", 1, story._args);
+          if (t === 0) {
+            var actual = ABeamer.calcExpr("${expr}", story._args);
+          }
       return t;
     }`]);
   }
@@ -143,6 +145,7 @@ namespace Tests {
   },
     {
       jsMacros,
+      plugins: ['color-functions'],
       tests: testParams,
       // toLogStdOut: true,
       onParseOutputLine: (line: string) => {

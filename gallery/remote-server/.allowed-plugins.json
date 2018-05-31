@@ -29,6 +29,12 @@
             "uuid": "73631f28-df71-4b4d-88e1-c99a858e0fd3",
             "jsUrls": ["plugins/chart-tasks/chart-tasks.js"],
             "cssUrls": []
+        },
+        {
+            "id": "abeamer.color-functions",
+            "uuid": "ce739c9f-13ba-4742-b1c3-dec56624be7d",
+            "jsUrls": ["plugins/color-functions/color-functions.js"],
+            "cssUrls": []
         }
     ]
 }

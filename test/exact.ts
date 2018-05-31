@@ -56,7 +56,7 @@ export namespace Exact {
 
   const DEFAULT_EXPECTED_PATH = './expected/frames';
 
-  export let _TEST_DIGIT_LIMIT: int = 10000; // same as interpolator.js
+  export let _TEST_DIGIT_LIMIT: int = 1000; // same as interpolator.js
 
   // ------------------------------------------------------------------------
   //                               Types & Interfaces
@@ -66,6 +66,7 @@ export namespace Exact {
     | '@@no-wrap-add-animation'
     // sets the scene number. @default 1
     | '@@scene';
+
 
   export type AnimeArrayType = (object | string | [StringOrCommand, string | object])[];
   export type AnimesType = string | AnimeArrayType;
@@ -85,6 +86,8 @@ export namespace Exact {
 
   interface ExactParams {
     jsMacros?: [string, string][];
+
+    plugins?: string[];
 
     // render params
     exitRenderOnFinished?: boolean;
@@ -878,6 +881,14 @@ export namespace Exact {
           `    <script src="../../../client/lib/js/${file}.js"></script>\n`,
       ).join('')],
     );
+
+    macros.push([/__PLUGINS__/,
+      params.plugins ?
+        params.plugins.map(plugin =>
+          `    <script src="../../../client/lib/plugins/${plugin}/${plugin}.js"></script>\n`,
+        ).join('') : ''],
+    );
+
 
     macros.push([/__ASSETS_PATH__/g, `../../${ASSETS_PATH}`]);
 

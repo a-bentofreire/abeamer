@@ -9,14 +9,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `isExpression` becomes `isExpr`.
 - `vars.defaultDuration` removed.
 - `DEFAULT_DURATION` becomes immutable `1f`.
+- `rgb` function moves into color-functions plugin.
 
 ### Changed
-- Harmonization of internal call parameters.
+- (DEV)Harmonization of internal call parameters.
 - `parseTimeHandler` becomes public.
 - `calcExpr`, `ifExprCalc`, `ifExprCalcNum` becomes public.
 - removed `defaultDuration` from the gallery.
+- (DEV)exact framework supports plugins.
 ### Added
 - `DEFAULT_FADE_DURATION = '400ms'`
+- added `color-functions` plugin with `rgb` and `rgba` functions.
 ### Fixed
 - fixed `gulp build-gallery-gifs` links.
 

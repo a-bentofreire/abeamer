@@ -18,7 +18,7 @@ namespace ABeamer {
 
   const VALUE_MACRO = '__VALUE__';
   /** Var used only for internal testing via exact framework  */
-  export let _TEST_DIGIT_LIMIT: int = 10000;
+  export let _TEST_DIGIT_LIMIT: int = 1000;
 
   // ------------------------------------------------------------------------
   //                               Tools
@@ -374,11 +374,14 @@ namespace ABeamer {
         const actualNewValue = elementAdpt.getProp(propName);
         let isDifferent = newValue !== actualNewValue;
 
-        // compares numerical values taking into account the numeric precision errors
-        if (isDifferent && action.propType === PT_NUMBER) {
-          const actualFloat = Math.round(parseFloat(actualNewValue as string) * _TEST_DIGIT_LIMIT);
-          const newFloat = Math.round((newValue as number) * _TEST_DIGIT_LIMIT);
-          isDifferent = newFloat !== actualFloat;
+        if (isDifferent) {
+
+          // compares numerical values taking into account the numeric precision errors
+          if (isDifferent && action.propType === PT_NUMBER) {
+            const actualFloat = Math.round(parseFloat(actualNewValue as string) * _TEST_DIGIT_LIMIT);
+            const newFloat = Math.round((newValue as number) * _TEST_DIGIT_LIMIT);
+            isDifferent = newFloat !== actualFloat;
+          }
         }
 
         if (isDifferent) {

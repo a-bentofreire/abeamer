@@ -28,8 +28,6 @@
  * - `floor`- always rounds down.
  * - `sqrt` - square root.
  * - `random` - random number between [0, 1].
- * - `rgb` - returns the 6 characters lowercase hexadecimal of R, G, B.
- *  Each input goes from [0, 255]
  *
  * - `toNumber` - converts a textual parameter into a numerical parameter.
  * - `toString` - converts a numerical parameter into a textual parameter.
@@ -141,15 +139,6 @@ var ABeamer;
         req.checkParams(req, 3, [2 /* String */, 1 /* Number */, 1 /* Number */]);
         req.res.paType = 2 /* String */;
         req.res.sValue = params[0].sValue.substr(params[1].numValue, params[2].numValue < 0 ? undefined : params[2].numValue);
-    };
-    ABeamer._exFunctions['rgb'] = function (params, req) {
-        req.checkParams(req, 3, [1 /* Number */, 1 /* Number */, 1 /* Number */]);
-        req.res.paType = 2 /* String */;
-        req.res.sValue =
-            params.map(function (pa) {
-                var v = pa.numValue.toString(16);
-                return v.length < 2 ? '0' + v : v;
-            }).join('');
     };
     ABeamer._exFunctions['iff'] = function (params, req) {
         req.checkParams(req, 3, [1 /* Number */, 0 /* Any */, 0 /* Any */]);

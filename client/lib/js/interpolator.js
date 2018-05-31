@@ -25,7 +25,7 @@ var ABeamer;
 (function (ABeamer) {
     var VALUE_MACRO = '__VALUE__';
     /** Var used only for internal testing via exact framework  */
-    ABeamer._TEST_DIGIT_LIMIT = 10000;
+    ABeamer._TEST_DIGIT_LIMIT = 1000;
     // ------------------------------------------------------------------------
     //                               Tools
     // ------------------------------------------------------------------------
@@ -311,11 +311,13 @@ var ABeamer;
             if (isVerbose) {
                 var actualNewValue = elementAdpt.getProp(propName);
                 var isDifferent = newValue !== actualNewValue;
-                // compares numerical values taking into account the numeric precision errors
-                if (isDifferent && action.propType === ABeamer.PT_NUMBER) {
-                    var actualFloat = Math.round(parseFloat(actualNewValue) * ABeamer._TEST_DIGIT_LIMIT);
-                    var newFloat = Math.round(newValue * ABeamer._TEST_DIGIT_LIMIT);
-                    isDifferent = newFloat !== actualFloat;
+                if (isDifferent) {
+                    // compares numerical values taking into account the numeric precision errors
+                    if (isDifferent && action.propType === ABeamer.PT_NUMBER) {
+                        var actualFloat = Math.round(parseFloat(actualNewValue) * ABeamer._TEST_DIGIT_LIMIT);
+                        var newFloat = Math.round(newValue * ABeamer._TEST_DIGIT_LIMIT);
+                        isDifferent = newFloat !== actualFloat;
+                    }
                 }
                 if (isDifferent) {
                     story.logFrmt("action-update-warn: ", [['id', elementAdpt.getId()],
