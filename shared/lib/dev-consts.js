@@ -9,7 +9,7 @@ var DevConsts;
     // -------------
     // version
     // -------------
-    DevConsts.VERSION = "0.1.0";
+    DevConsts.VERSION = "0.1.6";
     // -------------
     // consts
     // -------------
@@ -25,6 +25,42 @@ var DevConsts;
     DevConsts.AS_RENDERING = 2;
     DevConsts.AS_STORY = 3;
     // -------------
+    // i18n
+    // -------------
+    var Msgs;
+    (function (Msgs) {
+        Msgs["MustNatPositive"] = "The value of %p% must be a natural positive";
+        Msgs["MustNatNotNegative"] = "The value of %p% must be a natural non-negative";
+        Msgs["MustBeANumber"] = "The value of %p% must be a number";
+        Msgs["Unknown"] = "Unknown %p%";
+        Msgs["UnknownOf"] = "Unknown \"%type%\" %p%";
+        Msgs["UnknownType"] = "Unknown type of %p%";
+        Msgs["NoEmptyField"] = "Field %p% can not be empty";
+        Msgs["NoEmptySelector"] = "Selector %p% can not be empty";
+        Msgs["NoCode"] = "Code Handler is not allowed";
+        Msgs["OutOfScope"] = "%p% out of scope";
+        Msgs["ExpHasErrors"] = "Expression %e% has errors: %err%";
+        Msgs["WrongNrParams"] = "Function %p% has the wrong number of input parameters";
+        Msgs["WrongParamType"] = "Function %p% has the wrong type in parameter: %i%";
+        Msgs["UnaryErr"] = "Unary operators only support numerical values";
+        Msgs["flyover"] = "flyover";
+        Msgs["task"] = "task";
+        Msgs["pos"] = "position";
+        Msgs["startScene"] = "startScene";
+        Msgs["endScene"] = "endScene";
+    })(Msgs = DevConsts.Msgs || (DevConsts.Msgs = {}));
+    // -------------
+    // utilities
+    // -------------
+    var RoundFuncName;
+    (function (RoundFuncName) {
+        RoundFuncName[RoundFuncName["none"] = 0] = "none";
+        RoundFuncName[RoundFuncName["round"] = 1] = "round";
+        RoundFuncName[RoundFuncName["ceil"] = 2] = "ceil";
+        RoundFuncName[RoundFuncName["floor"] = 3] = "floor";
+        RoundFuncName[RoundFuncName["downRound"] = 4] = "downRound";
+    })(RoundFuncName = DevConsts.RoundFuncName || (DevConsts.RoundFuncName = {}));
+    // -------------
     // time
     // -------------
     var TimeUnit;
@@ -36,12 +72,64 @@ var DevConsts;
         TimeUnit[TimeUnit["%"] = 4] = "%";
     })(TimeUnit = DevConsts.TimeUnit || (DevConsts.TimeUnit = {}));
     // -------------
+    // expressions
+    // -------------
+    DevConsts.CharRanges = [
+        ['A'.charCodeAt(0), 'Z'.charCodeAt(0)],
+        ['a'.charCodeAt(0), 'z'.charCodeAt(0)],
+    ];
+    // -------------
     // easings
     // -------------
-    DevConsts.DEFAULT_EASING = 'linear';
+    var EasingName;
+    (function (EasingName) {
+        EasingName[EasingName["linear"] = 0] = "linear";
+        EasingName[EasingName["easeInQuad"] = 1] = "easeInQuad";
+        EasingName[EasingName["easeOutQuad"] = 2] = "easeOutQuad";
+        EasingName[EasingName["easeInOutQuad"] = 3] = "easeInOutQuad";
+        EasingName[EasingName["easeInCubic"] = 4] = "easeInCubic";
+        EasingName[EasingName["easeOutCubic"] = 5] = "easeOutCubic";
+        EasingName[EasingName["easeInOutCubic"] = 6] = "easeInOutCubic";
+        EasingName[EasingName["easeInQuart"] = 7] = "easeInQuart";
+        EasingName[EasingName["easeOutQuart"] = 8] = "easeOutQuart";
+        EasingName[EasingName["easeInOutQuart"] = 9] = "easeInOutQuart";
+        EasingName[EasingName["easeInQuint"] = 10] = "easeInQuint";
+        EasingName[EasingName["easeOutQuint"] = 11] = "easeOutQuint";
+        EasingName[EasingName["easeInOutQuint"] = 12] = "easeInOutQuint";
+        EasingName[EasingName["easeInSine"] = 13] = "easeInSine";
+        EasingName[EasingName["easeOutSine"] = 14] = "easeOutSine";
+        EasingName[EasingName["easeInOutSine"] = 15] = "easeInOutSine";
+        EasingName[EasingName["easeInExpo"] = 16] = "easeInExpo";
+        EasingName[EasingName["easeOutExpo"] = 17] = "easeOutExpo";
+        EasingName[EasingName["easeInOutExpo"] = 18] = "easeInOutExpo";
+        EasingName[EasingName["easeInCirc"] = 19] = "easeInCirc";
+        EasingName[EasingName["easeOutCirc"] = 20] = "easeOutCirc";
+        EasingName[EasingName["easeInOutCirc"] = 21] = "easeInOutCirc";
+        EasingName[EasingName["easeInElastic"] = 22] = "easeInElastic";
+        EasingName[EasingName["easeOutElastic"] = 23] = "easeOutElastic";
+        EasingName[EasingName["easeInOutElastic"] = 24] = "easeInOutElastic";
+        EasingName[EasingName["easeInBack"] = 25] = "easeInBack";
+        EasingName[EasingName["easeOutBack"] = 26] = "easeOutBack";
+        EasingName[EasingName["easeInOutBack"] = 27] = "easeInOutBack";
+        EasingName[EasingName["easeInBounce"] = 28] = "easeInBounce";
+        EasingName[EasingName["easeOutBounce"] = 29] = "easeOutBounce";
+        EasingName[EasingName["easeInOutBounce"] = 30] = "easeInOutBounce";
+    })(EasingName = DevConsts.EasingName || (DevConsts.EasingName = {}));
     // -------------
     // oscillators
     // -------------
+    var OscillatorName;
+    (function (OscillatorName) {
+        OscillatorName[OscillatorName["harmonic"] = 1000] = "harmonic";
+        OscillatorName[OscillatorName["damped"] = 1001] = "damped";
+        OscillatorName[OscillatorName["pulsar"] = 1002] = "pulsar";
+    })(OscillatorName = DevConsts.OscillatorName || (DevConsts.OscillatorName = {}));
+    var NegativeBuiltInFuncs;
+    (function (NegativeBuiltInFuncs) {
+        NegativeBuiltInFuncs[NegativeBuiltInFuncs["none"] = 0] = "none";
+        NegativeBuiltInFuncs[NegativeBuiltInFuncs["clip"] = 1] = "clip";
+        NegativeBuiltInFuncs[NegativeBuiltInFuncs["abs"] = 2] = "abs";
+    })(NegativeBuiltInFuncs = DevConsts.NegativeBuiltInFuncs || (DevConsts.NegativeBuiltInFuncs = {}));
     var PulsarType;
     (function (PulsarType) {
         PulsarType[PulsarType["normal"] = 0] = "normal";
@@ -50,6 +138,16 @@ var DevConsts;
         PulsarType[PulsarType["positiveRandom"] = 3] = "positiveRandom";
     })(PulsarType = DevConsts.PulsarType || (DevConsts.PulsarType = {}));
     // -------------
+    // paths
+    // -------------
+    var PathName;
+    (function (PathName) {
+        PathName[PathName["line"] = 0] = "line";
+        PathName[PathName["rect"] = 1] = "rect";
+        PathName[PathName["circle"] = 2] = "circle";
+        PathName[PathName["ellipse"] = 3] = "ellipse";
+    })(PathName = DevConsts.PathName || (DevConsts.PathName = {}));
+    // -------------
     // tasks
     // -------------
     DevConsts.TR_EXIT = 0;
@@ -57,28 +155,18 @@ var DevConsts;
     DevConsts.TR_INTERACTIVE = 2;
     DevConsts.TS_INIT = 0;
     DevConsts.TS_ANIME_LOOP = 1;
+    DevConsts.TS_TELEPORT = 2;
     // -------------
-    // shape-tasks
+    // adapters
     // -------------
-    var Shapes;
-    (function (Shapes) {
-        Shapes[Shapes["rectangle"] = 0] = "rectangle";
-        Shapes[Shapes["line"] = 1] = "line";
-        Shapes[Shapes["circle"] = 2] = "circle";
-        Shapes[Shapes["arrow"] = 3] = "arrow";
-        Shapes[Shapes["speech"] = 4] = "speech";
-    })(Shapes = DevConsts.Shapes || (DevConsts.Shapes = {}));
-    DevConsts.DEFAULT_ARROW_LENGTH = 10;
-    DevConsts.DEFAULT_ARROW_WIDTH = 10;
-    DevConsts.DEFAULT_SPEECH_START = 10;
-    DevConsts.DEFAULT_SPEECH_WIDTH = 10;
-    DevConsts.DEFAULT_SPEECH_HEIGHT = 10;
-    DevConsts.DEFAULT_SPEECH_SHIFT = 0;
-    var SpeechPosition;
-    (function (SpeechPosition) {
-        SpeechPosition[SpeechPosition["left"] = 0] = "left";
-        SpeechPosition[SpeechPosition["right"] = 1] = "right";
-    })(SpeechPosition = DevConsts.SpeechPosition || (DevConsts.SpeechPosition = {}));
+    DevConsts.DPT_ID = 0;
+    DevConsts.DPT_VISIBLE = 1;
+    DevConsts.DPT_ATTR = 2;
+    DevConsts.DPT_ATTR_FUNC = 3;
+    DevConsts.DPT_STYLE = 4;
+    DevConsts.DPT_PIXEL = 5;
+    DevConsts.DPT_DUAL_PIXELS = 6;
+    DevConsts.DPT_CLASS = 7;
     // -------------
     // transitions
     // -------------
@@ -86,20 +174,27 @@ var DevConsts;
     DevConsts.TRS_AT_OUT = 1;
     DevConsts.TRS_AT_IN = 2;
     DevConsts.DEFAULT_TRANSITION_DURATION = '1s';
-    var StdTransition;
-    (function (StdTransition) {
-        StdTransition[StdTransition["slideLeft"] = 0] = "slideLeft";
-        StdTransition[StdTransition["slideRight"] = 1] = "slideRight";
-        StdTransition[StdTransition["dissolve"] = 2] = "dissolve";
-    })(StdTransition = DevConsts.StdTransition || (DevConsts.StdTransition = {}));
+    var StdTransitions;
+    (function (StdTransitions) {
+        StdTransitions[StdTransitions["slideLeft"] = 0] = "slideLeft";
+        StdTransitions[StdTransitions["slideRight"] = 1] = "slideRight";
+        StdTransitions[StdTransitions["slideTop"] = 2] = "slideTop";
+        StdTransitions[StdTransitions["slideBottom"] = 3] = "slideBottom";
+        StdTransitions[StdTransitions["dissolve"] = 4] = "dissolve";
+    })(StdTransitions = DevConsts.StdTransitions || (DevConsts.StdTransitions = {}));
     // -------------
-    // adapters
+    // plugin-manager
     // -------------
-    DevConsts.PT_ID = 0;
-    DevConsts.PT_VISIBLE = 1;
-    DevConsts.PT_ATTR = 2;
-    DevConsts.PT_ATTR_FUNC = 3;
-    DevConsts.PT_STYLE = 4;
+    var Functionalities;
+    (function (Functionalities) {
+        Functionalities[Functionalities["easings"] = 0] = "easings";
+        Functionalities[Functionalities["oscillators"] = 1] = "oscillators";
+        Functionalities[Functionalities["paths"] = 2] = "paths";
+        Functionalities[Functionalities["transitions"] = 3] = "transitions";
+        Functionalities[Functionalities["tasks"] = 4] = "tasks";
+        Functionalities[Functionalities["flyovers"] = 5] = "flyovers";
+        Functionalities[Functionalities["functions"] = 6] = "functions";
+    })(Functionalities = DevConsts.Functionalities || (DevConsts.Functionalities = {}));
     // -------------
     // animation-direction
     // -------------
@@ -110,24 +205,25 @@ var DevConsts;
         Directions[Directions["alternate"] = 2] = "alternate";
         Directions[Directions["alternate-reverse"] = 3] = "alternate-reverse";
     })(Directions = DevConsts.Directions || (DevConsts.Directions = {}));
-    DevConsts.DIRECTION_TO_DIR_PAIR = [[1, 1], [-1, -1], [1, -1],
-        [-1, 1]];
     // -------------
     // animations
     // -------------
     DevConsts.BP_FIRST_INSIDE = 0;
     DevConsts.BP_INSIDE = 1;
     DevConsts.BP_ALL = 2;
+    DevConsts.FS_PREPARE = 0;
+    DevConsts.FS_TELEPORT = 1;
+    DevConsts.FS_RUN = 2;
     DevConsts.DEFAULT_DURATION = '400ms';
     // -------------
     // interpolator
     // -------------
-    DevConsts.VALUE_MACRO = '__VALUE__';
-    DevConsts.PT_PIXEL = 0;
+    DevConsts.PT_BOOLEAN = 0;
     DevConsts.PT_NUMBER = 1;
-    DevConsts.PT_STR_MAP = 2;
-    DevConsts.PT_STYLE_IN_STR_VALUE = 3;
-    DevConsts.PT_STR = 4;
-    DevConsts.PT_BOOLEAN = 5;
+    DevConsts.PT_PIXEL = 2;
+    DevConsts.PT_STR = 3;
+    DevConsts.PT_VALUE_TEXT_LIST = 4;
+    DevConsts.PT_VALUE_TEXT_FUNC = 5;
+    DevConsts.PT_VALUE_TEXT_EXPR = 6;
 })(DevConsts = exports.DevConsts || (exports.DevConsts = {}));
 //# sourceMappingURL=dev-consts.js.map

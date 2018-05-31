@@ -24,11 +24,10 @@
  *
  * This module will generate a node module,
  * therefore it can't contain external references.
- *
  */
 export namespace ServerConsts {
 
-  export const _SRV_CNT  = {
+  export const _SRV_CNT = {
 
     MESSAGE_PREFIX: 'ABEAMER_',
     CMD_VALUE_SEP: '___',

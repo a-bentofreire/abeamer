@@ -151,7 +151,11 @@ var Gulp;
             .pipe(gulpRename('version.ts'))
             .pipe(gulpReplace(SRC_REG_EX, WARN_MSG + ("namespace ABeamer {\n  " + VERSION_OUT + "\n}\n")))
             .pipe(gulp.dest(dev_paths_js_1.DevPaths.JS_PATH));
-        console.log('\n\nWARN: Don\'t forget to compile!\n\n');
+        fsix_js_1.fsix.runExternal('gulp build-shared-lib', function () {
+            fsix_js_1.fsix.runExternal('tsc -p ./', function () {
+                console.log('Version bumped');
+            });
+        });
     });
     // ------------------------------------------------------------------------
     //                               Build Release

@@ -10,7 +10,7 @@ export namespace DevConsts {
   // version
   // -------------
 
-  export const VERSION = "0.1.0";
+  export const VERSION = "0.1.6";
 
   // -------------
   // consts
@@ -31,6 +31,45 @@ export namespace DevConsts {
   export const AS_STORY = 3;
 
   // -------------
+  // i18n
+  // -------------
+
+  export enum Msgs {
+    MustNatPositive = 'The value of %p% must be a natural positive',
+    MustNatNotNegative = 'The value of %p% must be a natural non-negative',
+    MustBeANumber = 'The value of %p% must be a number',
+    Unknown = 'Unknown %p%',
+    UnknownOf = 'Unknown "%type%" %p%',
+    UnknownType = 'Unknown type of %p%',
+    NoEmptyField = 'Field %p% can not be empty',
+    NoEmptySelector = 'Selector %p% can not be empty',
+    NoCode = 'Code Handler is not allowed',
+    OutOfScope = '%p% out of scope',
+    ExpHasErrors = 'Expression %e% has errors: %err%',
+    WrongNrParams = 'Function %p% has the wrong number of input parameters',
+    WrongParamType = 'Function %p% has the wrong type in parameter: %i%',
+    UnaryErr = 'Unary operators only support numerical values',
+
+    flyover = 'flyover',
+    task = 'task',
+    pos = 'position',
+    startScene = 'startScene',
+    endScene = 'endScene',
+  }
+
+  // -------------
+  // utilities
+  // -------------
+
+  export enum RoundFuncName {
+    none,
+    round,
+    ceil,
+    floor,
+    downRound,
+  }
+
+  // -------------
   // time
   // -------------
 
@@ -43,20 +82,85 @@ export namespace DevConsts {
   }
 
   // -------------
+  // expressions
+  // -------------
+
+  export const CharRanges = [
+    ['A'.charCodeAt(0), 'Z'.charCodeAt(0)],
+    ['a'.charCodeAt(0), 'z'.charCodeAt(0)],
+  ];
+
+  // -------------
   // easings
   // -------------
 
-  export const DEFAULT_EASING = 'linear';
+  export enum EasingName {
+    linear,
+
+    easeInQuad,
+    easeOutQuad,
+    easeInOutQuad,
+    easeInCubic,
+    easeOutCubic,
+    easeInOutCubic,
+    easeInQuart,
+    easeOutQuart,
+    easeInOutQuart,
+    easeInQuint,
+    easeOutQuint,
+    easeInOutQuint,
+    easeInSine,
+    easeOutSine,
+    easeInOutSine,
+    easeInExpo,
+    easeOutExpo,
+    easeInOutExpo,
+    easeInCirc,
+    easeOutCirc,
+    easeInOutCirc,
+    easeInElastic,
+    easeOutElastic,
+    easeInOutElastic,
+    easeInBack,
+    easeOutBack,
+    easeInOutBack,
+    easeInBounce,
+    easeOutBounce,
+    easeInOutBounce,
+  }
 
   // -------------
   // oscillators
   // -------------
+
+  export enum OscillatorName {
+    harmonic = 1000,  // lower ids are for easings.
+    damped,
+    pulsar,
+  }
+
+  export enum NegativeBuiltInFuncs {
+    none,
+    clip,
+    abs,
+  }
 
   export enum PulsarType {
     normal,
     sine,
     random,
     positiveRandom,
+  }
+
+  // -------------
+  // paths
+  // -------------
+
+  export enum PathName {
+    line,
+    rect,
+    circle,
+    ellipse,
   }
 
   // -------------
@@ -69,30 +173,20 @@ export namespace DevConsts {
 
   export const TS_INIT = 0;
   export const TS_ANIME_LOOP = 1;
+  export const TS_TELEPORT = 2;
 
   // -------------
-  // shape-tasks
+  // adapters
   // -------------
 
-  export enum Shapes {
-    rectangle,
-    line,
-    circle,
-    arrow,
-    speech,
-  }
-
-  export const DEFAULT_ARROW_LENGTH = 10;
-  export const DEFAULT_ARROW_WIDTH = 10;
-  export const DEFAULT_SPEECH_START = 10;
-  export const DEFAULT_SPEECH_WIDTH = 10;
-  export const DEFAULT_SPEECH_HEIGHT = 10;
-  export const DEFAULT_SPEECH_SHIFT = 0;
-
-  export enum SpeechPosition {
-    left,
-    right,
-  }
+  export const DPT_ID = 0;
+  export const DPT_VISIBLE = 1;
+  export const DPT_ATTR = 2;
+  export const DPT_ATTR_FUNC = 3;
+  export const DPT_STYLE = 4;
+  export const DPT_PIXEL = 5;
+  export const DPT_DUAL_PIXELS = 6;
+  export const DPT_CLASS = 7;
 
   // -------------
   // transitions
@@ -104,21 +198,27 @@ export namespace DevConsts {
 
   export const DEFAULT_TRANSITION_DURATION = '1s';
 
-  export enum StdTransition {
+  export enum StdTransitions {
     slideLeft,
     slideRight,
+    slideTop,
+    slideBottom,
     dissolve,
   }
 
   // -------------
-  // adapters
+  // plugin-manager
   // -------------
 
-  export const PT_ID = 0;
-  export const PT_VISIBLE = 1;
-  export const PT_ATTR = 2;
-  export const PT_ATTR_FUNC = 3;
-  export const PT_STYLE = 4;
+  export enum Functionalities {
+    easings,
+    oscillators,
+    paths,
+    transitions,
+    tasks,
+    flyovers,
+    functions,
+  }
 
   // -------------
   // animation-direction
@@ -131,9 +231,6 @@ export namespace DevConsts {
     'alternate-reverse',
   }
 
-  export const DIRECTION_TO_DIR_PAIR = [[1, 1], [-1, -1], [1, -1],
-  [-1, 1]];
-
   // -------------
   // animations
   // -------------
@@ -142,18 +239,21 @@ export namespace DevConsts {
   export const BP_INSIDE = 1;
   export const BP_ALL = 2;
 
+  export const FS_PREPARE = 0;
+  export const FS_TELEPORT = 1;
+  export const FS_RUN = 2;
+
   export const DEFAULT_DURATION = '400ms';
 
   // -------------
   // interpolator
   // -------------
 
-  export const VALUE_MACRO = '__VALUE__';
-
-  export const PT_PIXEL = 0;
+  export const PT_BOOLEAN = 0;
   export const PT_NUMBER = 1;
-  export const PT_STR_MAP = 2;
-  export const PT_STYLE_IN_STR_VALUE = 3;
-  export const PT_STR = 4;
-  export const PT_BOOLEAN = 5;
+  export const PT_PIXEL = 2;
+  export const PT_STR = 3;
+  export const PT_VALUE_TEXT_LIST = 4;
+  export const PT_VALUE_TEXT_FUNC = 5;
+  export const PT_VALUE_TEXT_EXPR = 6;
 }

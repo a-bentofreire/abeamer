@@ -46,7 +46,7 @@ export namespace fsix {
 
   export function runExternal(cmd: string, callback: (error, stdout, stderr) => void) {
     sysExec(cmd, (error, stdout, stderr) => {
-      callback(error, stdout, stderr);
+      if (callback) { callback(error, stdout, stderr); }
     });
   }
 }

@@ -231,7 +231,12 @@ namespace Gulp {
       .pipe(gulpReplace(SRC_REG_EX, WARN_MSG + `namespace ABeamer {\n  ${VERSION_OUT}\n}\n`))
       .pipe(gulp.dest(DevPaths.JS_PATH));
 
-    console.log('\n\nWARN: Don\'t forget to compile!\n\n');
+
+    fsix.runExternal('gulp build-shared-lib', () => {
+      fsix.runExternal('tsc -p ./', () => {
+        console.log('Version bumped');
+      });
+    });
   });
 
   // ------------------------------------------------------------------------

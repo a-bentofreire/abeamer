@@ -40,7 +40,9 @@ var fsix;
     fsix.mkdirpSync = mkdirpSync;
     function runExternal(cmd, callback) {
         child_process_1.exec(cmd, function (error, stdout, stderr) {
-            callback(error, stdout, stderr);
+            if (callback) {
+                callback(error, stdout, stderr);
+            }
         });
     }
     fsix.runExternal = runExternal;

@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * ## Description
  *
- * Defines global constants
+ * Defines global constants.
  *
  * This module will generate a node module,
  * therefore it can't contain external references.

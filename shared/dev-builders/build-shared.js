@@ -43,7 +43,7 @@ var BuildShared;
                 sharedConsts.push('  export ' + line);
             }
             // scans for consts and enums
-            content.replace(/(const\s+[A-Z]\w+\s*=\s*[^;]+;|enum\s+\w+\s*{[^}]+})/g, function (all, p) {
+            content.replace(/export\s+(const\s+[A-Z]\w+\s*=\s*[^;]+;|enum\s+\w+\s*{[^}]+})/g, function (all, p) {
                 addConst(p.replace(/ as.*;/, ';'));
                 return all;
             });

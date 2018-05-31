@@ -19,7 +19,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
  *
  * This module will generate a node module,
  * therefore it can't contain external references.
- *
  */
 var ServerConsts;
 (function (ServerConsts) {

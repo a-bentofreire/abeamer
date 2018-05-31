@@ -64,7 +64,7 @@ export namespace BuildShared {
       }
 
       // scans for consts and enums
-      content.replace(/(const\s+[A-Z]\w+\s*=\s*[^;]+;|enum\s+\w+\s*{[^}]+})/g, (all, p) => {
+      content.replace(/export\s+(const\s+[A-Z]\w+\s*=\s*[^;]+;|enum\s+\w+\s*{[^}]+})/g, (all, p) => {
         addConst(p.replace(/ as.*;/, ';'));
         return all;
       });
