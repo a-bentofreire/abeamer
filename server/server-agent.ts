@@ -343,6 +343,7 @@ export namespace ServerAgent {
 
           case 'injectPage':
             PluginInjector.injectPage = value;
+            if (self.isVerbose) { console.log(`injectPage: ${value}`); }
             break;
 
           case 'teleport':

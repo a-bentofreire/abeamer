@@ -58,7 +58,6 @@ var PluginInjector;
         });
         // inject css links
         content = content.replace(/(#plugins-css-block-start.*\n)((?:.|\n)*)(\n.*#plugins-css-block-end)/, function (all, before, replaceArea, after) {
-            console.log("before: " + before);
             var output = [];
             PluginInjector.plugins.forEach(function (plugin) {
                 (plugin.cssUrls || []).forEach(function (url) {

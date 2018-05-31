@@ -15,13 +15,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - (DEV)Harmonization of internal call parameters.
 - `parseTimeHandler` becomes public.
 - `calcExpr`, `ifExprCalc`, `ifExprCalcNum` becomes public.
-- removed `defaultDuration` from the gallery.
+- Removed `defaultDuration` from the gallery.
 - (DEV)exact framework supports plugins.
 ### Added
-- `DEFAULT_FADE_DURATION = '400ms'`
-- added `color-functions` plugin with `rgb` and `rgba` functions.
+- Added `DEFAULT_FADE_DURATION = '400ms'`.
+- Added `color-functions` plugin with `rgb` and `rgba` functions.
+- (DEV)Added `teleport.sh` test script.
 ### Fixed
-- fixed `gulp build-gallery-gifs` links.
+- Fixed `gulp build-gallery-gifs` links.
 
 
 ## [0.1.6] -

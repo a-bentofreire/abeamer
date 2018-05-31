@@ -3,6 +3,7 @@ node_modules/
 gallery-updated/
 gallery-release/
 gallery/*/*.gif
+gallery/*/story.json
 gallery/animate-video-sync/assets/a-bentofreire/*.mp4
 gallery/remote-server/assets/**
 gallery/**/story-frames/

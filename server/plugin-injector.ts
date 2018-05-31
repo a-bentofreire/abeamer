@@ -95,7 +95,6 @@ export namespace PluginInjector {
     // inject css links
     content = content.replace(/(#plugins-css-block-start.*\n)((?:.|\n)*)(\n.*#plugins-css-block-end)/,
       (all, before, replaceArea, after) => {
-        console.log(`before: ${before}`);
         const output = [];
         plugins.forEach(plugin => {
           (plugin.cssUrls || []).forEach(url => {

@@ -308,6 +308,9 @@ var ServerAgent;
                         break;
                     case 'injectPage':
                         plugin_injector_js_1.PluginInjector.injectPage = value;
+                        if (self.isVerbose) {
+                            console.log("injectPage: " + value);
+                        }
                         break;
                     case 'teleport':
                         self.toTeleport = true;

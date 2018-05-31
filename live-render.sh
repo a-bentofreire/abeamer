@@ -7,8 +7,8 @@
 # ------------------------------------------------------------------------
 
 # this script is designed only for testing abeamer cli in a bash enviroment
-# using visual studio code live server.
-# e.g. ./live-render.sh 9000 gallery/animate-colors
+# using `abeamer serve` as a live server.
+# e.g. ./live-render.sh ./gallery/animate-colors
 
 if [ "$1" == "" ]; then
   echo "usage: ./live-render.sh [PORT] (FOLDER)"
@@ -21,16 +21,18 @@ else
     shift
   fi
   FOLDER=$1
+  shift
 
   FOLDER=${FOLDER%/}
-  FOLDER=${FOLDER//\.\//}
-  URL="http://localhost:$PORT/$FOLDER/"
-  CONFIG="./$FOLDER/abeamer.ini"
+  DFOLDER=${FOLDER//\.\//}
+  URL="http://localhost:$PORT/$DFOLDER/"
+  CONFIG="./$DFOLDER/abeamer.ini"
 
   echo "PORT=$PORT"
-  echo "FOLDER=$FOLDER"
+  echo "FOLDER=$DFOLDER"
   echo "URL=$URL"
   echo "CONFIG=$CONFIG"
 
-  node ./cli/abeamer-cli.js render --dp --url $URL --config $CONFIG $@
+  echo "node ./cli/abeamer-cli.js render $@ --dp --url $URL --config $CONFIG"
+  node ./cli/abeamer-cli.js render $@ --dp --url $URL --config $CONFIG
 fi

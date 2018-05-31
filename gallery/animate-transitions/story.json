@@ -4,13 +4,17 @@
       "fps": 20,
       "width": 200,
       "height": 160,
-      "version": "0.1.0",
+      "version": "0.2.0",
       "locale": "en",
       "file": "__PROJDIR__/index.html",
       "renderPos": 0,
       "renderCount": 170,
-      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/66.0.3359.181 Safari/537.36",
-      "metadata": {},
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/67.0.3396.62 Safari/537.36",
+      "metadata": {
+        "comments": [
+          "My first project"
+        ]
+      },
       "plugins": [
         {
           "id": "abeamer.text-tasks",

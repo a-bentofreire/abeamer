@@ -117,7 +117,7 @@ e.g  `prop: 'border-style'; valueText: ['dotted', 'dashed']`.
   
 * Class properties. `prop: 'class'; valueText: ['+class1 -class2'];`
 * Visible properties. `prop: 'visible'; duration: 1; value: 1;`
-* Transform properties: `prop: 'transform'; valueFormat: rotateX(%fdeg)`;
+* Transform properties: `prop: 'transform'; valueFormat: 'rotateX(%fdeg)'`;
 
 ## Interpolators
 
