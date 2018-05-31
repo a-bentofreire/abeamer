@@ -82,8 +82,8 @@ $(window).on("load", () => {
   };
 
 
-  scene1.addAnimations(
-    [{
+  scene1
+    .addAnimations([{
       selector: '%android',
       duration: '1s',
       props: [
@@ -181,8 +181,8 @@ $(window).on("load", () => {
 
   const scene2 = story.addScene(new myVirtualScene('scene2'));
 
-  scene2.addAnimations(
-    [{
+  scene2
+    .addAnimations([{
       selector: '#field',
       duration: '1s',
       props: [
@@ -202,8 +202,7 @@ $(window).on("load", () => {
         },
       ],
     },
-    ],
-  );
+    ]);
 
   story.render(story.bestPlaySpeed());
 });

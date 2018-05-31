@@ -7,17 +7,19 @@
 // ------------------------------------------------------------------------
 
 $(window).on("load", () => {
+
   const story = ABeamer.createStory(/*FPS:*/20);
 
   // ------------------------------------------------------------------------
   //                               Scene1
   // ------------------------------------------------------------------------
+  const d = '2s';
 
   const scene1 = story.scenes[0];
   scene1
     .addAnimations([{
       selector: '#text',
-      duration: '2s',
+      duration: d,
       props: [{
         prop: 'left',
         value: 9,
@@ -27,7 +29,7 @@ $(window).on("load", () => {
     .addStills('1s')
     .addAnimations([{
       selector: '#text',
-      duration: '2s',
+      duration: d,
       props: [{
         prop: 'left',
         value: -270,
@@ -35,7 +37,7 @@ $(window).on("load", () => {
       }],
     }, {
       selector: '#text2',
-      duration: '2s',
+      duration: d,
       props: [{
         prop: 'left',
         value: 10,
@@ -45,7 +47,7 @@ $(window).on("load", () => {
     .addStills('1s')
     .addAnimations([{
       selector: '#text2',
-      duration: '2s',
+      duration: d,
       props: [{
         prop: 'left',
         value: -280,
@@ -53,7 +55,7 @@ $(window).on("load", () => {
       }],
     }, {
       selector: '#text3',
-      duration: '2s',
+      duration: d,
       props: [{
         prop: 'left',
         value: 4,
@@ -63,7 +65,7 @@ $(window).on("load", () => {
     .addStills('1s')
     .addAnimations([{
       selector: '#text3',
-      duration: '2s',
+      duration: d,
       props: [{
         prop: 'left',
         value: -280,
@@ -71,7 +73,7 @@ $(window).on("load", () => {
       }],
     }, {
       selector: '#text4',
-      duration: '2s',
+      duration: d,
       props: [{
         prop: 'left',
         value: 4,

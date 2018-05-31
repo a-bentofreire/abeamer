@@ -15,22 +15,23 @@ $(window).on("load", () => {
   // ------------------------------------------------------------------------
 
   const scene1 = story.scenes[0];
-  scene1.addAnimations([{
-    selector: '#type, #java',
-    duration: '3s',
-    props: [
-      {
-        prop: 'top',
-        oscillator: {
-          handler: 'damped',
-          params: {
-            frequency: 2,
-          } as ABeamer.DampedOscillatorParams,
+  scene1
+    .addAnimations([{
+      selector: '#type, #java',
+      duration: '3s',
+      props: [
+        {
+          prop: 'top',
+          oscillator: {
+            handler: 'damped',
+            params: {
+              frequency: 2,
+            } as ABeamer.DampedOscillatorParams,
+          },
+          value: '=iff(elIndex==0, 30, 100)',
         },
-        value: '=iff(elIndex==0, 30, 100)',
-      },
-    ],
-  }])
+      ],
+    }])
     .addStills('0.5s')
     .addAnimations([{
       selector: '#type, #java',
@@ -90,5 +91,6 @@ $(window).on("load", () => {
           valueText: ['SCSS', 'LESS'],
         }],
     }]);
+
   story.render(story.bestPlaySpeed());
 });

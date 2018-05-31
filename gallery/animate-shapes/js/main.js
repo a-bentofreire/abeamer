@@ -70,7 +70,8 @@ $(window).on("load", function () {
                     },
                 },
             ],
-        }]).addStills(2);
+        }])
+        .addStills(2);
     story.render(story.bestPlaySpeed());
 });
 //# sourceMappingURL=main.js.map

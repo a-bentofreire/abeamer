@@ -42,8 +42,9 @@ $(window).on("load", () => {
 
   const scene1 = story.scenes[0];
 
-  scene1.addAnimations(
-    [{ // pac-man
+  scene1
+    .addAnimations([{
+      // pac-man
       selector: '#scene1-img',
       duration: '2s',
       props: [
@@ -84,41 +85,42 @@ $(window).on("load", () => {
   // ------------------------------------------------------------------------
 
   const scene2 = story.scenes[1];
-  scene2.addAnimations([{
-    selector: '#scene2-img1',
-    duration: '2s',
-    props: [
-      {
-        prop: 'left',
-        duration: '1s',
-        value: 133,
-        iterationCount: 2,
-        direction: ABeamer.Directions.alternate,
-      }, {
-        prop: 'top',
-        duration: 1,
-        position: '1s',
-        value: '+5',
-      }, {
-        prop: 'src',
-        duration: 5,
-        iterationCount: 10,
-        valueText: ['assets/pixabay/invader-42007_640-A.png', 'assets/pixabay/invader-42007_640-AB.png'],
-      },
-    ],
-  },
-  {
-    selector: '#scene2-img2',
-    props: [
-      {
-        prop: 'left',
-        duration: '1s',
-        value: 5,
-        iterationCount: 2,
-        direction: ABeamer.Directions.alternate,
-      },
-    ],
-  }]);
+  scene2
+    .addAnimations([{
+      selector: '#scene2-img1',
+      duration: '2s',
+      props: [
+        {
+          prop: 'left',
+          duration: '1s',
+          value: 133,
+          iterationCount: 2,
+          direction: ABeamer.Directions.alternate,
+        }, {
+          prop: 'top',
+          duration: 1,
+          position: '1s',
+          value: '+5',
+        }, {
+          prop: 'src',
+          duration: 5,
+          iterationCount: 10,
+          valueText: ['assets/pixabay/invader-42007_640-A.png', 'assets/pixabay/invader-42007_640-AB.png'],
+        },
+      ],
+    },
+    {
+      selector: '#scene2-img2',
+      props: [
+        {
+          prop: 'left',
+          duration: '1s',
+          value: 5,
+          iterationCount: 2,
+          direction: ABeamer.Directions.alternate,
+        },
+      ],
+    }]);
 
   // ------------------------------------------------------------------------
   //                               Scene3
@@ -167,17 +169,18 @@ $(window).on("load", () => {
 
 
   // same as above, using a wrapper task to demonstrate if the story is loaded from a config file.
-  scene2.addAnimations([{
-    tasks: [
-      {
-        handler: 'scene-transition',
-        params: {
-          handler: ABeamer.StdTransitions.slideTop,
-          duration: '1s',
-        } as ABeamer.SceneTransitionTaskParams,
-      },
-    ],
-  }]);
+  scene2
+    .addAnimations([{
+      tasks: [
+        {
+          handler: 'scene-transition',
+          params: {
+            handler: ABeamer.StdTransitions.slideTop,
+            duration: '1s',
+          } as ABeamer.SceneTransitionTaskParams,
+        },
+      ],
+    }]);
 
 
   // using textual selectors instead of numbers.

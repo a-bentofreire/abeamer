@@ -15,6 +15,8 @@ $(window).on("load", () => {
   // ------------------------------------------------------------------------
 
   const d1 = '5s';
+  const d2 = '1s';
+
   const scene1 = story.scenes[0];
   scene1
     // move the bug to the left and the letters to the bottom
@@ -42,7 +44,7 @@ $(window).on("load", () => {
       ],
     }, {
       selector: '#paypal',
-      duration: '1s',
+      duration: d2,
       props: [
         {
           prop: 'left',
@@ -58,7 +60,7 @@ $(window).on("load", () => {
       ],
     }, {
       selector: '#bitcoin',
-      duration: '1s',
+      duration: d2,
       props: [
         {
           prop: 'left',

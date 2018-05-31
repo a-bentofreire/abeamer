@@ -14,11 +14,13 @@ $(window).on("load", () => {
   //                               Scene1
   // ------------------------------------------------------------------------
 
+  const d = '1s';
+
   const scene1 = story.scenes[0];
-  scene1.addAnimations(
-    [{
+  scene1
+    .addAnimations([{
       selector: '#life',
-      duration: '1s',
+      duration: d,
       props: [
         {
           prop: 'color',
@@ -35,7 +37,7 @@ $(window).on("load", () => {
     },
     {
       selector: '#rainbow',
-      duration: '1s',
+      duration: d,
       props: [
         {
           prop: 'color',

@@ -9,13 +9,15 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
+    var d = '4s';
     var scene1 = story.scenes[0];
-    scene1.addAnimations([{
+    scene1
+        .addAnimations([{
             selector: '#bkg',
             props: [
                 {
                     prop: 'src',
-                    duration: '4s',
+                    duration: d,
                     valueText: [
                         'assets/pixabay/barley-field-1684052_640.jpg',
                         'assets/pixabay/field-533541_640.jpg',
@@ -27,7 +29,7 @@ $(window).on("load", function () {
         },
         {
             selector: '#text',
-            duration: '4s',
+            duration: d,
             // enabled: false,
             props: [
                 {

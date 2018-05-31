@@ -10,7 +10,8 @@ $(window).on("load", function () {
     //                               Scene1
     // ------------------------------------------------------------------------
     var scene1 = story.scenes[0];
-    scene1.addAnimations([{
+    scene1
+        .addAnimations([{
             selector: '#ball1',
             duration: '1s',
             props: [

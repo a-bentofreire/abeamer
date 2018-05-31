@@ -7,23 +7,21 @@
 // ------------------------------------------------------------------------
 
 $(window).on("load", () => {
+
   const story = ABeamer.createStory(/*FPS:*/20);
 
   // ------------------------------------------------------------------------
   //                               Scene1
   // ------------------------------------------------------------------------
 
+  const d = '2s';
+
   const scene1 = story.scenes[0];
   scene1
-    .addAnimations([{
-      tasks: [{
-        handler: 'add-vars',
-        params: { vars: { defaultDuration: '2s' } } as ABeamer.AddVarsTaskParams,
-      }],
-    }])
     .addAnimations(
       [{
         selector: '#broccoli1',
+        duration: d,
         props: [
           {
             prop: 'left-top',
@@ -43,6 +41,7 @@ $(window).on("load", () => {
 
       {
         selector: '#tomato1',
+        duration: d,
         props: [
           {
             prop: 'left-top',
@@ -61,6 +60,7 @@ $(window).on("load", () => {
       },
       {
         selector: '#tomato2',
+        duration: d,
         props: [
           {
             prop: 'right-top',
@@ -80,6 +80,7 @@ $(window).on("load", () => {
       },
       {
         selector: '#carrot1',
+        duration: d,
         props: [
           {
             prop: 'left-top',

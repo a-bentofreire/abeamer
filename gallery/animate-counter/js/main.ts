@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------
 
 $(window).on("load", () => {
+
   const story = ABeamer.createStory(/*FPS:*/20);
 
   // ------------------------------------------------------------------------
@@ -14,8 +15,8 @@ $(window).on("load", () => {
   // ------------------------------------------------------------------------
 
   const scene1 = story.scenes[0];
-  scene1.addAnimations(
-    [{
+  scene1
+    .addAnimations([{
       tasks: [{
         handler: 'add-vars',
         params: {

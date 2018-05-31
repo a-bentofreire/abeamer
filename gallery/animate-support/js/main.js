@@ -10,6 +10,7 @@ $(window).on("load", function () {
     //                               Scene1
     // ------------------------------------------------------------------------
     var d1 = '5s';
+    var d2 = '1s';
     var scene1 = story.scenes[0];
     scene1
         // move the bug to the left and the letters to the bottom
@@ -37,7 +38,7 @@ $(window).on("load", function () {
             ],
         }, {
             selector: '#paypal',
-            duration: '1s',
+            duration: d2,
             props: [
                 {
                     prop: 'left',
@@ -53,7 +54,7 @@ $(window).on("load", function () {
             ],
         }, {
             selector: '#bitcoin',
-            duration: '1s',
+            duration: d2,
             props: [
                 {
                     prop: 'left',

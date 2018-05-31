@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------
 
 $(window).on("load", () => {
+
   // only 1 frame per second, since it's only a test, no need to have many large images.
   const story = ABeamer.createStory(/*FPS:*/1);
 

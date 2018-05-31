@@ -10,7 +10,8 @@ $(window).on("load", function () {
     //                               Scene1
     // ------------------------------------------------------------------------
     var scene1 = story.scenes[0];
-    scene1.addAnimations([{
+    scene1
+        .addAnimations([{
             selector: "#speech",
             tasks: [
                 {
@@ -39,9 +40,8 @@ $(window).on("load", function () {
                     value: 1,
                     duration: '1s',
                 }],
-        }]);
-    scene1.addAnimations([
-        {
+        }])
+        .addAnimations([{
             selector: "#circle",
             tasks: [
                 {

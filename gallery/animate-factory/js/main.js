@@ -10,7 +10,8 @@ $(window).on("load", function () {
     //                               Scene1
     // ------------------------------------------------------------------------
     var scene1 = story.scenes[0];
-    scene1.addAnimations([{
+    scene1
+        .addAnimations([{
             // [TOPIC] Uses a factory to build 20 stars
             selector: "#star-container",
             tasks: [
@@ -86,7 +87,8 @@ $(window).on("load", function () {
                     value: '=250+random()*200',
                 },
             ],
-        }]).addStills('1s');
+        }])
+        .addStills('1s');
     story.render(story.bestPlaySpeed());
 });
 //# sourceMappingURL=main.js.map

@@ -9,16 +9,12 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
+    var d = '2s';
     var scene1 = story.scenes[0];
     scene1
         .addAnimations([{
-            tasks: [{
-                    handler: 'add-vars',
-                    params: { vars: { defaultDuration: '2s' } },
-                }],
-        }])
-        .addAnimations([{
             selector: '#broccoli1',
+            duration: d,
             props: [
                 {
                     prop: 'left-top',
@@ -38,6 +34,7 @@ $(window).on("load", function () {
         },
         {
             selector: '#tomato1',
+            duration: d,
             props: [
                 {
                     prop: 'left-top',
@@ -57,6 +54,7 @@ $(window).on("load", function () {
         },
         {
             selector: '#tomato2',
+            duration: d,
             props: [
                 {
                     prop: 'right-top',
@@ -76,6 +74,7 @@ $(window).on("load", function () {
         },
         {
             selector: '#carrot1',
+            duration: d,
             props: [
                 {
                     prop: 'left-top',

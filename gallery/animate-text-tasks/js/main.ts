@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------
 
 $(window).on("load", () => {
+
   const story = ABeamer.createStory(/*FPS:*/20);
 
   // ------------------------------------------------------------------------
@@ -15,8 +16,8 @@ $(window).on("load", () => {
 
   const scene1 = story.scenes[0];
 
-  scene1.addAnimations(
-    [{
+  scene1
+    .addAnimations([{
       selector: "#bkg",
       duration: '2s',
       props: [
@@ -38,9 +39,8 @@ $(window).on("load", () => {
         },
       }],
     }],
-  );
-
-  scene1.addStills('0.5s');
+  )
+    .addStills('0.5s');
 
   scene1.transition = {
     handler: ABeamer.StdTransitions.dissolve,
@@ -49,37 +49,32 @@ $(window).on("load", () => {
 
   const scene2 = story.scenes[1];
 
-  scene2.addAnimations(
-    [
-      {
-        selector: '#message2',
-        tasks: [
-          {
-            handler: 'text-split',
-            params: {
-              text: '08:49 Kaohsiung',
-              splitBy: 'char',
-            },
+  scene2
+    .addAnimations([{
+      selector: '#message2',
+      tasks: [
+        {
+          handler: 'text-split',
+          params: {
+            text: '08:49 Kaohsiung',
+            splitBy: 'char',
           },
-        ],
+        },
+      ],
+    }],
+  )
+    .addAnimations([{
+      selector: '#message2 span',
+      duration: '2s',
+      props: [{
+        prop: 'margin-right',
+        valueStart: '50px',
+        value: 0,
       }],
-  );
+    }],
+  )
+    .addStills('2s');
 
-  scene2.addAnimations(
-    [
-      {
-        selector: '#message2 span',
-        duration: '2s',
-        props: [{
-          prop: 'margin-right',
-          valueStart: '50px',
-          value: 0,
-        }],
-      }],
-  );
 
-  scene2.addStills('2s');
-
- 
   story.render(story.bestPlaySpeed());
 });

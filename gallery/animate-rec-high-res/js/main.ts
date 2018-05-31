@@ -7,17 +7,20 @@
 // ------------------------------------------------------------------------
 
 $(window).on("load", () => {
+
   const story = ABeamer.createStory(/*FPS:*/10);
 
   // ------------------------------------------------------------------------
   //                               Scene1
   // ------------------------------------------------------------------------
 
+  const d = '1s';
+
   const scene1 = story.scenes[0];
-  scene1.addAnimations(
-    [{
+  scene1
+    .addAnimations([{
       selector: '#bkg1',
-      duration: '1s',
+      duration: d,
       props: [
         {
           prop: 'opacity',
@@ -30,7 +33,7 @@ $(window).on("load", () => {
     },
     {
       selector: '#rec',
-      duration: '1s',
+      duration: d,
       props: [
         {
           prop: 'opacity',

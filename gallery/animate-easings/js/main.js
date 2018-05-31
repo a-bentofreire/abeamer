@@ -9,11 +9,12 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
+    var d = '2s';
     var scene1 = story.scenes[0];
     scene1
         .addAnimations([{
             selector: '#text',
-            duration: '2s',
+            duration: d,
             props: [{
                     prop: 'left',
                     value: 9,
@@ -23,7 +24,7 @@ $(window).on("load", function () {
         .addStills('1s')
         .addAnimations([{
             selector: '#text',
-            duration: '2s',
+            duration: d,
             props: [{
                     prop: 'left',
                     value: -270,
@@ -31,7 +32,7 @@ $(window).on("load", function () {
                 }],
         }, {
             selector: '#text2',
-            duration: '2s',
+            duration: d,
             props: [{
                     prop: 'left',
                     value: 10,
@@ -41,7 +42,7 @@ $(window).on("load", function () {
         .addStills('1s')
         .addAnimations([{
             selector: '#text2',
-            duration: '2s',
+            duration: d,
             props: [{
                     prop: 'left',
                     value: -280,
@@ -49,7 +50,7 @@ $(window).on("load", function () {
                 }],
         }, {
             selector: '#text3',
-            duration: '2s',
+            duration: d,
             props: [{
                     prop: 'left',
                     value: 4,
@@ -59,7 +60,7 @@ $(window).on("load", function () {
         .addStills('1s')
         .addAnimations([{
             selector: '#text3',
-            duration: '2s',
+            duration: d,
             props: [{
                     prop: 'left',
                     value: -280,
@@ -67,7 +68,7 @@ $(window).on("load", function () {
                 }],
         }, {
             selector: '#text4',
-            duration: '2s',
+            duration: d,
             props: [{
                     prop: 'left',
                     value: 4,

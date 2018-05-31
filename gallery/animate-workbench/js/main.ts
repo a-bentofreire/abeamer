@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------
 
 $(window).on("load", () => {
+
   const story: ABeamer.Story = ABeamer.createStory(/*FPS:*/10);
 
   // ------------------------------------------------------------------------
@@ -31,7 +32,7 @@ $(window).on("load", () => {
   }, {
     label: 'Harmonic',
     oscillator: {
-      handler:  ABeamer.OscillatorName.harmonic,
+      handler: ABeamer.OscillatorName.harmonic,
       params: {
         // shift: 0.25,
       } as ABeamer.OscillatorParams,
@@ -69,33 +70,33 @@ $(window).on("load", () => {
 
   tests.forEach(test => {
 
-    scene1.addAnimations([{
-      selector: '#dot',
-      duration: `${d}s`,
-      enabled: test.enabled,
-      props: [{
-        prop: 'left',
-        easing: test.easingX,
-        valueStart: `${margin}px`,
-        value: story.width - 2 * margin,
-      }, {
-        prop: 'top',
-        easing: test.easing,
-        oscillator: test.oscillator,
-        valueStart: `${h / 2}px`,
-        value: `${h / 8}px`,
-      }],
-    },
-    {
-      selector: '#label',
-      duration: 1,
-      props: [{
-        prop: 'text',
-        valueFormat: test.label,
-      }],
-    }]);
+    scene1
+      .addAnimations([{
+        selector: '#dot',
+        duration: `${d}s`,
+        enabled: test.enabled,
+        props: [{
+          prop: 'left',
+          easing: test.easingX,
+          valueStart: `${margin}px`,
+          value: story.width - 2 * margin,
+        }, {
+          prop: 'top',
+          easing: test.easing,
+          oscillator: test.oscillator,
+          valueStart: `${h / 2}px`,
+          value: `${h / 8}px`,
+        }],
+      },
+      {
+        selector: '#label',
+        duration: 1,
+        props: [{
+          prop: 'text',
+          valueFormat: test.label,
+        }],
+      }]);
   });
-
 
   story.render(story.bestPlaySpeed());
 });

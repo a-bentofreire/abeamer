@@ -7,17 +7,20 @@
 // ------------------------------------------------------------------------
 
 $(window).on("load", () => {
+
   const story = ABeamer.createStory(/*FPS:*/20);
 
   // ------------------------------------------------------------------------
   //                               Scene1
   // ------------------------------------------------------------------------
 
+  const d = '5s';
+
   const scene1 = story.scenes[0];
-  scene1.addAnimations(
-    [{
+  scene1
+    .addAnimations([{
       selector: '#img',
-      duration: '5s',
+      duration: d,
       props: [
         {
           prop: 'opacity',
@@ -33,7 +36,7 @@ $(window).on("load", () => {
     },
     {
       selector: '#t3',
-      duration: '5s',
+      duration: d,
       props: [
         {
           prop: 'left',

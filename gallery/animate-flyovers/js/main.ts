@@ -7,16 +7,17 @@
 // ------------------------------------------------------------------------
 
 $(window).on("load", () => {
+
   const story = ABeamer.createStory(/*FPS:*/20);
 
   // ------------------------------------------------------------------------
   //                               Scene1
   // ------------------------------------------------------------------------
 
-  // opening the text
   const scene1 = story.scenes[0];
-  scene1.addAnimations(
-    [{
+  scene1
+    .addAnimations([{
+      // opening the text
       selector: '#cntr',
       props: [
         {
@@ -28,11 +29,9 @@ $(window).on("load", () => {
         },
       ],
     }],
-  );
-
-  // slide-up and down
-  scene1.addAnimations(
-    [{
+  )
+    .addAnimations([{
+      // slide-up and down
       selector: '#text',
       tasks: [{
         handler: 'add-vars',
@@ -65,24 +64,6 @@ $(window).on("load", () => {
     }],
   );
 
-        //   prop: 'top',
-        //   duration: "=d + 's'",
-        //   oscillator: {
-        //     handler: 'pulsar',
-        //     params: {
-        //       spread: 0.4,
-        //     } as ABeamer.PulsarOscillatorParams,
-        //   },
-        //   iterationCount: 4,
-        //   value: 36,
-        // }, {
-
-        //   position: "='+' + (d/2) + 's'",
-        //   prop: 'text',
-        //   duration: "=d*4+'s'",
-        //   valueText: ['IN 2017', 'RECEIVED', '12 MILLION', 'TOURISTS'],
-
-
 
   // [TOPIC] Adding a flyover using a ABeamer command
   story.addFlyover('info', {
@@ -92,18 +73,19 @@ $(window).on("load", () => {
 
 
   // [TOPIC] Adding a flyover using a task wrapper
-  scene1.addAnimations([{
-    tasks: [{
-      handler: 'add-flyover',
-      params: {
-        handler: 'info',
+  scene1
+    .addAnimations([{
+      tasks: [{
+        handler: 'add-flyover',
         params: {
-          selector: '#flyover2',
-          format: 'story-time: ${storyElapsedS}',
-        },
-      } as ABeamer.AddFlyoverTaskParams,
-    }],
-  }]);
+          handler: 'info',
+          params: {
+            selector: '#flyover2',
+            format: 'story-time: ${storyElapsedS}',
+          },
+        } as ABeamer.AddFlyoverTaskParams,
+      }],
+    }]);
 
   story.render(story.bestPlaySpeed());
 });

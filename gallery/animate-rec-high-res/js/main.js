@@ -9,10 +9,12 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
+    var d = '1s';
     var scene1 = story.scenes[0];
-    scene1.addAnimations([{
+    scene1
+        .addAnimations([{
             selector: '#bkg1',
-            duration: '1s',
+            duration: d,
             props: [
                 {
                     prop: 'opacity',
@@ -25,7 +27,7 @@ $(window).on("load", function () {
         },
         {
             selector: '#rec',
-            duration: '1s',
+            duration: d,
             props: [
                 {
                     prop: 'opacity',

@@ -18,14 +18,16 @@ $(window).on("load", () => {
       MustNatPositive: 'O valor de %p% tem de ser um número natural positivo',
     },
   });
+
   const story = ABeamer.createStory(/*FPS:*/8);
 
   // ------------------------------------------------------------------------
   //                               Scene1
   // ------------------------------------------------------------------------
 
-  const scene1 = story.scenes[0];
   const d = '2s';
+
+  const scene1 = story.scenes[0];
   scene1
     .addAnimations([{
       selector: '#dot',

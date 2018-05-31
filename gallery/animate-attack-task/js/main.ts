@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------
 
 $(window).on("load", () => {
+
   const story = ABeamer.createStory(/*FPS:*/20);
 
   // ------------------------------------------------------------------------
@@ -14,8 +15,8 @@ $(window).on("load", () => {
   // ------------------------------------------------------------------------
 
   const scene1 = story.scenes[0];
-  scene1.addSerialAnimations([
-    [{
+  scene1
+    .addSerialAnimations([[{
       selector: '#only',
       props: [
         {
@@ -80,7 +81,8 @@ $(window).on("load", () => {
         } as ABeamer.ColorAttackTaskParams,
       }],
     }],
-  ]).addStills('0.5s');
+    ])
+    .addStills('0.5s');
 
   story.render(story.bestPlaySpeed());
 });

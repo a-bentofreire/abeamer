@@ -20,8 +20,8 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
-    var scene1 = story.scenes[0];
     var d = '2s';
+    var scene1 = story.scenes[0];
     scene1
         .addAnimations([{
             selector: '#dot',

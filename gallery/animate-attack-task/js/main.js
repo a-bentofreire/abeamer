@@ -10,8 +10,8 @@ $(window).on("load", function () {
     //                               Scene1
     // ------------------------------------------------------------------------
     var scene1 = story.scenes[0];
-    scene1.addSerialAnimations([
-        [{
+    scene1
+        .addSerialAnimations([[{
                 selector: '#only',
                 props: [
                     {
@@ -76,7 +76,8 @@ $(window).on("load", function () {
                         },
                     }],
             }],
-    ]).addStills('0.5s');
+    ])
+        .addStills('0.5s');
     story.render(story.bestPlaySpeed());
 });
 //# sourceMappingURL=main.js.map

@@ -53,7 +53,8 @@ $(window).on("load", function () {
     var margin = 10;
     var d = 4;
     tests.forEach(function (test) {
-        scene1.addAnimations([{
+        scene1
+            .addAnimations([{
                 selector: '#dot',
                 duration: d + "s",
                 enabled: test.enabled,

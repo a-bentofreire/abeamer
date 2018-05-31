@@ -10,7 +10,8 @@ $(window).on("load", function () {
     //                               Scene1
     // ------------------------------------------------------------------------
     var scene1 = story.scenes[0];
-    scene1.addAnimations([{
+    scene1
+        .addAnimations([{
             selector: "#bkg",
             duration: '2s',
             props: [
@@ -32,15 +33,15 @@ $(window).on("load", function () {
                         cursor: true,
                     },
                 }],
-        }]);
-    scene1.addStills('0.5s');
+        }])
+        .addStills('0.5s');
     scene1.transition = {
         handler: ABeamer.StdTransitions.dissolve,
         duration: '1s',
     };
     var scene2 = story.scenes[1];
-    scene2.addAnimations([
-        {
+    scene2
+        .addAnimations([{
             selector: '#message2',
             tasks: [
                 {
@@ -51,10 +52,8 @@ $(window).on("load", function () {
                     },
                 },
             ],
-        }
-    ]);
-    scene2.addAnimations([
-        {
+        }])
+        .addAnimations([{
             selector: '#message2 span',
             duration: '2s',
             props: [{
@@ -62,9 +61,8 @@ $(window).on("load", function () {
                     valueStart: '50px',
                     value: 0,
                 }],
-        }
-    ]);
-    scene2.addStills('2s');
+        }])
+        .addStills('2s');
     story.render(story.bestPlaySpeed());
 });
 //# sourceMappingURL=main.js.map

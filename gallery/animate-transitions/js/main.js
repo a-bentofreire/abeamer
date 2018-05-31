@@ -27,7 +27,9 @@ $(window).on("load", function () {
     //                               Scene1
     // ------------------------------------------------------------------------
     var scene1 = story.scenes[0];
-    scene1.addAnimations([{
+    scene1
+        .addAnimations([{
+            // pac-man
             selector: '#scene1-img',
             duration: '2s',
             props: [
@@ -65,7 +67,8 @@ $(window).on("load", function () {
     //                               Scene2
     // ------------------------------------------------------------------------
     var scene2 = story.scenes[1];
-    scene2.addAnimations([{
+    scene2
+        .addAnimations([{
             selector: '#scene2-img1',
             duration: '2s',
             props: [
@@ -140,7 +143,8 @@ $(window).on("load", function () {
         duration: '1s',
     };
     // same as above, using a wrapper task to demonstrate if the story is loaded from a config file.
-    scene2.addAnimations([{
+    scene2
+        .addAnimations([{
             tasks: [
                 {
                     handler: 'scene-transition',
