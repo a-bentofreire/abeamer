@@ -59,8 +59,10 @@ namespace ABeamer {
   export type FuncParams = AnyParams;
 
   /** Value used, if no duration is defined for an animation. */
-  export const DEFAULT_DURATION = '400ms';
+  export const DEFAULT_DURATION = '1f';
 
+  /** Value used, if no duration is defined for a fade in/out. */
+  export const DEFAULT_FADE_DURATION = '400ms';
 
   /**
    * Defines parameters used both by `Animation` and `AnimationProp`.
@@ -462,13 +464,6 @@ namespace ABeamer {
   //                               Implementation
   // ------------------------------------------------------------------------
 
-  /**
-   * Since animations script is executed after expressions.
-   * it can't be initialized on _vars initialization.
-   */
-  _vars.defaultDuration = DEFAULT_DURATION;
-
-
   export interface _WorkInterpolator<THandler, TFunc, TParams> {
     handler: THandler | TFunc | string | number;
     func: TFunc;
@@ -553,7 +548,7 @@ namespace ABeamer {
       const args = story._args;
 
       this.framesPerCycle = parseTimeHandler(acp.duration,
-        args, parent ? parent.framesPerCycle : _vars.defaultDuration, 0);
+        args, parent ? parent.framesPerCycle : DEFAULT_DURATION, 0);
 
       this.itemDelay = _parseItemDelay(acp, args);
 

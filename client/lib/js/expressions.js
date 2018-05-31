@@ -42,8 +42,6 @@
  * `frameHeight` - frame output height = generated file image height.
  *
  *  `isTeleporting` - Is True, if it's teleporting.
- *  `defaultDuration` - Value used if the duration is not set on the `addAnimation`.
- *      Modify this value, via task `add-vars` to set a different default duration.
  *
  *  `v0` - Computed Numerical `valueStart`.
  *  `v1` - Computed Numerical `value`.

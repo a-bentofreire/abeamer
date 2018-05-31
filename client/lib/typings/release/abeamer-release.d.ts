@@ -207,11 +207,6 @@ declare namespace ABeamer {
 
     /** Is True, if it's teleporting. */
     isTeleporting?: boolean;
-    /**
-     * Value used if the duration is not set on the `addAnimation`.
-     * Modify this value, via task `add-vars` to set a different default duration.
-     */
-    defaultDuration?: string;
 
     /** Element index of the active adapter */
     elIndex?: uint;
@@ -1119,8 +1114,10 @@ declare namespace ABeamer {
   export type FuncParams = AnyParams;
 
   /** Value used, if no duration is defined for an animation. */
-  export const DEFAULT_DURATION = '400ms';
+  export const DEFAULT_DURATION = '1f';
 
+  /** Value used, if no duration is defined for a fade in/out. */
+  export const DEFAULT_FADE_DURATION = '400ms';
 
   /**
    * Defines parameters used both by `Animation` and `AnimationProp`.

@@ -244,7 +244,8 @@ export namespace DevConsts {
   export const FS_TELEPORT = 1;
   export const FS_RUN = 2;
 
-  export const DEFAULT_DURATION = '400ms';
+  export const DEFAULT_DURATION = '1f';
+  export const DEFAULT_FADE_DURATION = '400ms';
 
   // -------------
   // interpolator

@@ -77,7 +77,7 @@ var ABeamer;
                 [{
                         selector: selector,
                         position: '-1f',
-                        duration: duration || ABeamer.DEFAULT_DURATION,
+                        duration: duration || ABeamer.DEFAULT_FADE_DURATION,
                         props: [
                             {
                                 prop: 'opacity',
@@ -97,7 +97,7 @@ var ABeamer;
             this._scene.addSerialAnimations([
                 [{
                         selector: selector,
-                        duration: duration || ABeamer.DEFAULT_DURATION,
+                        duration: duration || ABeamer.DEFAULT_FADE_DURATION,
                         props: [
                             {
                                 prop: 'opacity',

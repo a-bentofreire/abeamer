@@ -215,7 +215,8 @@ var DevConsts;
     DevConsts.FS_PREPARE = 0;
     DevConsts.FS_TELEPORT = 1;
     DevConsts.FS_RUN = 2;
-    DevConsts.DEFAULT_DURATION = '400ms';
+    DevConsts.DEFAULT_DURATION = '1f';
+    DevConsts.DEFAULT_FADE_DURATION = '400ms';
     // -------------
     // interpolator
     // -------------

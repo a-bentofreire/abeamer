@@ -56,17 +56,9 @@ var ABeamer;
     ABeamer.FS_TELEPORT = 1;
     ABeamer.FS_RUN = 2;
     /** Value used, if no duration is defined for an animation. */
-    ABeamer.DEFAULT_DURATION = '400ms';
-    // #export-section-end: release
-    // -------------------------------
-    // ------------------------------------------------------------------------
-    //                               Implementation
-    // ------------------------------------------------------------------------
-    /**
-     * Since animations script is executed after expressions.
-     * it can't be initialized on _vars initialization.
-     */
-    ABeamer._vars.defaultDuration = ABeamer.DEFAULT_DURATION;
+    ABeamer.DEFAULT_DURATION = '1f';
+    /** Value used, if no duration is defined for a fade in/out. */
+    ABeamer.DEFAULT_FADE_DURATION = '400ms';
     function _parseInterpolator(handler, params, exprMotionHandler, numToName, mapper, args) {
         var func;
         params = params || {};
@@ -114,7 +106,7 @@ var ABeamer;
         }
         _AbstractWorkAnimation.prototype.assignValues = function (acp, story, scene, parent, nameTag) {
             var args = story._args;
-            this.framesPerCycle = ABeamer.parseTimeHandler(acp.duration, args, parent ? parent.framesPerCycle : ABeamer._vars.defaultDuration, 0);
+            this.framesPerCycle = ABeamer.parseTimeHandler(acp.duration, args, parent ? parent.framesPerCycle : ABeamer.DEFAULT_DURATION, 0);
             this.itemDelay = ABeamer._parseItemDelay(acp, args);
             if (!story._strictMode) {
                 if (this.framesPerCycle < 0 && (parent && !this.framesPerCycle)) {
