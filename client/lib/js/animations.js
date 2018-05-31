@@ -113,8 +113,9 @@ var ABeamer;
         function _AbstractWorkAnimation() {
         }
         _AbstractWorkAnimation.prototype.assignValues = function (acp, story, scene, parent, nameTag) {
-            this.framesPerCycle = ABeamer._parseTimeHandler(acp.duration, story, parent ? parent.framesPerCycle : ABeamer._vars.defaultDuration, 0);
-            this.itemDelay = ABeamer._parseItemDelay(acp, story);
+            var args = story._args;
+            this.framesPerCycle = ABeamer.parseTimeHandler(acp.duration, args, parent ? parent.framesPerCycle : ABeamer._vars.defaultDuration, 0);
+            this.itemDelay = ABeamer._parseItemDelay(acp, args);
             if (!story._strictMode) {
                 if (this.framesPerCycle < 0 && (parent && !this.framesPerCycle)) {
                     if (story._logLevel >= ABeamer.LL_ERROR) {
@@ -130,7 +131,7 @@ var ABeamer;
                 }
             }
             var refOrDef = parent ? parent.positionFrame : scene._frameInNr;
-            this.positionFrame = ABeamer._parseTimeHandler(acp.position, story, refOrDef, refOrDef);
+            this.positionFrame = ABeamer.parseTimeHandler(acp.position, args, refOrDef, refOrDef);
             if (!story._strictMode) {
                 if (this.positionFrame < 0) {
                     story.logMsg(nameTag + " has invalid position: " + this.positionFrame);
@@ -143,19 +144,19 @@ var ABeamer;
                 }
             }
             if (acp.easing) {
-                this.easing = _parseInterpolator(acp.easing, {}, ABeamer._expressionEasing, ABeamer._easingNumToStr, ABeamer._easingFunctions, story._args);
+                this.easing = _parseInterpolator(acp.easing, {}, ABeamer._expressionEasing, ABeamer._easingNumToStr, ABeamer._easingFunctions, args);
             }
             else if (parent) {
                 this.easing = parent.easing;
             }
             if (acp.oscillator) {
-                this.oscillator = _parseInterpolator(acp.oscillator.handler, acp.oscillator.params, ABeamer._expressionEasing, ABeamer._oscillatorNumToStr, ABeamer._easingFunctions, story._args);
+                this.oscillator = _parseInterpolator(acp.oscillator.handler, acp.oscillator.params, ABeamer._expressionEasing, ABeamer._oscillatorNumToStr, ABeamer._easingFunctions, args);
             }
             else if (parent) {
                 this.oscillator = parent.oscillator;
             }
             if (acp.path) {
-                this.path = _parseInterpolator(acp.path.handler, acp.path.params, undefined, ABeamer._pathNumToStr, ABeamer._pathFunctions, story._args);
+                this.path = _parseInterpolator(acp.path.handler, acp.path.params, undefined, ABeamer._pathNumToStr, ABeamer._pathFunctions, args);
             }
             else if (parent) {
                 this.path = parent.path;

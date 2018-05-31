@@ -61,19 +61,20 @@ var ABeamer;
      *
      * @param toInt rounds the nearest int. if the float part is 0.5, it rounds to the lower
      */
-    function _parseTimeHandler(timeOrFrame, story, defaultTimeOrFrame, referenceFrame, toInt) {
+    function parseTimeHandler(timeOrFrame, args, defaultTimeOrFrame, referenceFrame, toInt) {
         if (toInt === void 0) { toInt = true; }
         if (timeOrFrame === undefined || timeOrFrame === '') {
             timeOrFrame = defaultTimeOrFrame;
         }
         var shift = '';
+        var story = args.story;
         if (typeof timeOrFrame === 'function') {
-            timeOrFrame = timeOrFrame(story._args);
+            timeOrFrame = timeOrFrame(args);
         }
         var defaultUnit = story.defaultUnit;
         var isStringTime = typeof timeOrFrame === 'string';
         if (isStringTime) {
-            var exprTime = ABeamer._computeIfExpression(timeOrFrame, story._args);
+            var exprTime = ABeamer._computeIfExpression(timeOrFrame, args);
             if (exprTime !== undefined) {
                 timeOrFrame = exprTime;
                 isStringTime = typeof timeOrFrame === 'string';
@@ -116,6 +117,6 @@ var ABeamer;
         // which happens when there is a 0.5 and can overlap with the next animation
         return toInt ? ABeamer.downRound(res) : res;
     }
-    ABeamer._parseTimeHandler = _parseTimeHandler;
+    ABeamer.parseTimeHandler = parseTimeHandler;
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=time.js.map

@@ -41,17 +41,17 @@ namespace ABeamer {
 
 
   export function _parseItemDelay(values: AnimationCommonParams,
-    story: _StoryImpl): _ItemDelay {
+    args: ABeamerArgs): _ItemDelay {
 
     if (!values.itemDelayDuration) {
       return { duration: 0 };
     }
 
     return {
-      duration: _parseTimeHandler(values.itemDelayDuration, story, 0, 0, false),
+      duration: parseTimeHandler(values.itemDelayDuration, args, 0, 0, false),
       grouping: values.itemDelayGrouping,
       disturbance: values.itemDelayDisturbance
-        ? _parseTimeHandler(values.itemDelayDisturbance, story, 0, 0, false) : 0,
+        ? parseTimeHandler(values.itemDelayDisturbance, args, 0, 0, false) : 0,
     };
   }
 

@@ -301,7 +301,7 @@ namespace ABeamer {
         }]);
       }
 
-      const frameCount = _parseTimeHandler(duration, this._story, 0, 0);
+      const frameCount = parseTimeHandler(duration, this._story._args, 0, 0);
       if (frameCount <= 0) { return this; }
       const newFrameInNr = this._frameInNr + frameCount;
       if (newFrameInNr > this._frames.length) {

@@ -247,7 +247,7 @@ var ABeamer;
                         ],
                     }]);
             }
-            var frameCount = ABeamer._parseTimeHandler(duration, this._story, 0, 0);
+            var frameCount = ABeamer.parseTimeHandler(duration, this._story._args, 0, 0);
             if (frameCount <= 0) {
                 return this;
             }

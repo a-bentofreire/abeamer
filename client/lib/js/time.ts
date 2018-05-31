@@ -80,21 +80,24 @@ namespace ABeamer {
    *
    * @param toInt rounds the nearest int. if the float part is 0.5, it rounds to the lower
    */
-  export function _parseTimeHandler(
+  export function parseTimeHandler(
     timeOrFrame: TimeHandler | undefined,
-    story: _StoryImpl,
+    args: ABeamerArgs,
     defaultTimeOrFrame: string | int,
     referenceFrame: int,
     toInt: boolean = true): int | number {
+
 
     if (timeOrFrame === undefined || timeOrFrame === '') {
       timeOrFrame = defaultTimeOrFrame;
     }
 
     let shift = '';
+    const story = args.story as _StoryImpl;
+
 
     if (typeof timeOrFrame === 'function') {
-      timeOrFrame = (timeOrFrame as TimeFunc)(story._args);
+      timeOrFrame = (timeOrFrame as TimeFunc)(args);
     }
 
     let defaultUnit = story.defaultUnit;
@@ -102,7 +105,7 @@ namespace ABeamer {
     let isStringTime = typeof timeOrFrame === 'string';
 
     if (isStringTime) {
-      const exprTime = _computeIfExpression(timeOrFrame as string, story._args);
+      const exprTime = _computeIfExpression(timeOrFrame as string, args);
       if (exprTime !== undefined) {
         timeOrFrame = exprTime;
         isStringTime = typeof timeOrFrame === 'string';

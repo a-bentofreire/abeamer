@@ -4,10 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] -
+### Breaking changes
+### Changed
+- Harmonization of internal call parameters.
+- `parseTimeHandler` becomes public.
+
 ## [0.1.6] -
 ### Changed
 - Improved the bump-version gulp command.
-
+### Added
+- Added npm before-* commands to reduce the errors when abeamer is published.
 ## [0.1.5] -
 ### Added
 - Easings, Oscillator and Path handlers by Id.

@@ -124,7 +124,7 @@ namespace ABeamer {
 
       if (handler === undefined) { return false; }
 
-      const frameCount = _parseTimeHandler(duration, args.story as _StoryImpl,
+      const frameCount = parseTimeHandler(duration, args,
         DEFAULT_TRANSITION_DURATION, sceneFrameCount);
 
       if (frameCount === 0) { return false; }

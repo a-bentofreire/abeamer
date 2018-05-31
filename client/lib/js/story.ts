@@ -910,9 +910,9 @@ namespace ABeamer {
 
       this._calcFrameCount();
 
-      let renderFramePos = _parseTimeHandler(frameOpts.renderPos, this, 0, 0);
-      let renderFrameCount = _parseTimeHandler(frameOpts.renderCount,
-        this, this._frameCount, this._frameCount);
+      let renderFramePos = parseTimeHandler(frameOpts.renderPos, this._args, 0, 0);
+      let renderFrameCount = parseTimeHandler(frameOpts.renderCount,
+        this._args, this._frameCount, this._frameCount);
 
       if (frameOpts.startScene !== undefined) {
         const startScene = this._getSceneByHandler(frameOpts.startScene);

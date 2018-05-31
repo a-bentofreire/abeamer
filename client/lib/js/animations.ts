@@ -550,10 +550,12 @@ namespace ABeamer {
 
     ): boolean {
 
-      this.framesPerCycle = _parseTimeHandler(acp.duration,
-        story, parent ? parent.framesPerCycle : _vars.defaultDuration, 0);
+      const args = story._args;
 
-      this.itemDelay = _parseItemDelay(acp, story);
+      this.framesPerCycle = parseTimeHandler(acp.duration,
+        args, parent ? parent.framesPerCycle : _vars.defaultDuration, 0);
+
+      this.itemDelay = _parseItemDelay(acp, args);
 
       if (!story._strictMode) {
         if (this.framesPerCycle < 0 && (parent && !this.framesPerCycle)) {
@@ -570,7 +572,7 @@ namespace ABeamer {
       }
 
       const refOrDef = parent ? parent.positionFrame : scene._frameInNr;
-      this.positionFrame = _parseTimeHandler(acp.position, story, refOrDef, refOrDef);
+      this.positionFrame = parseTimeHandler(acp.position, args, refOrDef, refOrDef);
 
       if (!story._strictMode) {
         if (this.positionFrame < 0) {
@@ -586,7 +588,7 @@ namespace ABeamer {
       if (acp.easing) {
         this.easing = _parseInterpolator<EasingHandler, EasingFunc, EasingParams>(
           acp.easing, {}, _expressionEasing,
-          _easingNumToStr, _easingFunctions, story._args);
+          _easingNumToStr, _easingFunctions, args);
       } else if (parent) {
         this.easing = parent.easing;
       }
@@ -594,7 +596,7 @@ namespace ABeamer {
       if (acp.oscillator) {
         this.oscillator = _parseInterpolator<OscillatorHandler, OscillatorFunc, OscillatorParams>(
           acp.oscillator.handler, acp.oscillator.params, _expressionEasing,
-          _oscillatorNumToStr, _easingFunctions, story._args);
+          _oscillatorNumToStr, _easingFunctions, args);
       } else if (parent) {
         this.oscillator = parent.oscillator;
       }
@@ -602,7 +604,7 @@ namespace ABeamer {
       if (acp.path) {
         this.path = _parseInterpolator<PathHandler, PathFunc, PathParams>(
           acp.path.handler, acp.path.params, undefined,
-          _pathNumToStr, _pathFunctions, story._args);
+          _pathNumToStr, _pathFunctions, args);
       } else if (parent) {
         this.path = parent.path;
       }

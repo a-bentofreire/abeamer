@@ -660,8 +660,8 @@ var ABeamer;
         _Story.prototype._calcRenderFrameOptions = function (frameOpts) {
             frameOpts = frameOpts || {};
             this._calcFrameCount();
-            var renderFramePos = ABeamer._parseTimeHandler(frameOpts.renderPos, this, 0, 0);
-            var renderFrameCount = ABeamer._parseTimeHandler(frameOpts.renderCount, this, this._frameCount, this._frameCount);
+            var renderFramePos = ABeamer.parseTimeHandler(frameOpts.renderPos, this._args, 0, 0);
+            var renderFrameCount = ABeamer.parseTimeHandler(frameOpts.renderCount, this._args, this._frameCount, this._frameCount);
             if (frameOpts.startScene !== undefined) {
                 var startScene = this._getSceneByHandler(frameOpts.startScene);
                 renderFramePos += startScene.storyFrameStart;

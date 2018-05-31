@@ -139,6 +139,13 @@ declare namespace ABeamer {
   export function frame2Time(frame: uint, fps: uint, unit: TimeUnit,
     maxPrecision?: uint): string;
 
+  export function parseTimeHandler(
+    timeOrFrame: TimeHandler | undefined,
+    args: ABeamerArgs,
+    defaultTimeOrFrame: string | int,
+    referenceFrame: int,
+    toInt: boolean = true): int | number;
+
   // ------------------------------------------------------------------------
   //                               Functions
   // ------------------------------------------------------------------------

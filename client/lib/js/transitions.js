@@ -73,7 +73,7 @@ var ABeamer;
             if (handler === undefined) {
                 return false;
             }
-            var frameCount = ABeamer._parseTimeHandler(duration, args.story, ABeamer.DEFAULT_TRANSITION_DURATION, sceneFrameCount);
+            var frameCount = ABeamer.parseTimeHandler(duration, args, ABeamer.DEFAULT_TRANSITION_DURATION, sceneFrameCount);
             if (frameCount === 0) {
                 return false;
             }

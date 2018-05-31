@@ -12,15 +12,15 @@
  */
 var ABeamer;
 (function (ABeamer) {
-    function _parseItemDelay(values, story) {
+    function _parseItemDelay(values, args) {
         if (!values.itemDelayDuration) {
             return { duration: 0 };
         }
         return {
-            duration: ABeamer._parseTimeHandler(values.itemDelayDuration, story, 0, 0, false),
+            duration: ABeamer.parseTimeHandler(values.itemDelayDuration, args, 0, 0, false),
             grouping: values.itemDelayGrouping,
             disturbance: values.itemDelayDisturbance
-                ? ABeamer._parseTimeHandler(values.itemDelayDisturbance, story, 0, 0, false) : 0,
+                ? ABeamer.parseTimeHandler(values.itemDelayDisturbance, args, 0, 0, false) : 0,
         };
     }
     ABeamer._parseItemDelay = _parseItemDelay;
