@@ -121,7 +121,7 @@ namespace ABeamer {
         if (actRg.linkIndex !== -1) {
           return actRg.actionRgList[actRg.linkIndex].endValue;
         } else {
-          return elementAdpt.getProp(realPropName);
+          return elementAdpt.getProp(realPropName, args);
         }
       }
 
@@ -341,7 +341,7 @@ namespace ABeamer {
   export function _applyAction(action: _Action,
     elementAdpt: _ElementAdapter,
     isVerbose: boolean,
-    story: _StoryImpl,
+    args: ABeamerArgs,
     simulateOnly: boolean = false): ActionNumValue {
 
     const value = action.value;
@@ -349,8 +349,8 @@ namespace ABeamer {
 
     // #debug-start
     function log(name, aValue) {
-      story.logFrmt('action', [
-        ['id', elementAdpt.getId()],
+      args.story.logFrmt('action', [
+        ['id', elementAdpt.getId(args)],
         ['prop', name],
         ['value', aValue],
       ]);
@@ -364,14 +364,14 @@ namespace ABeamer {
       let prevValue: PropValue;
 
       // #debug-start
-      if (isVerbose) { prevValue = elementAdpt.getProp(propName); }
+      if (isVerbose) { prevValue = elementAdpt.getProp(propName, args); }
       // #debug-end
 
-      elementAdpt.setProp(propName, newValue);
+      elementAdpt.setProp(propName, newValue, args);
 
       // #debug-start
       if (isVerbose) {
-        const actualNewValue = elementAdpt.getProp(propName);
+        const actualNewValue = elementAdpt.getProp(propName, args);
         let isDifferent = newValue !== actualNewValue;
 
         if (isDifferent) {
@@ -385,8 +385,8 @@ namespace ABeamer {
         }
 
         if (isDifferent) {
-          story.logFrmt(`action-update-warn: `,
-            [['id', elementAdpt.getId()]
+          args.story.logFrmt(`action-update-warn: `,
+            [['id', elementAdpt.getId(args)]
               , ['prop', propName]
               , ['expected', newValue + '']
               , ['actual', actualNewValue + ''],

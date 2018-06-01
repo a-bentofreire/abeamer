@@ -146,12 +146,12 @@ var ABeamer;
         function _ElementAdapter(element) {
             return _super.call(this) || this;
         }
-        _ElementAdapter.prototype.getId = function () { return this.getProp('id'); };
+        _ElementAdapter.prototype.getId = function (args) { return this.getProp('id', args); };
         _ElementAdapter.prototype._clearComputerData = function () { };
         return _ElementAdapter;
     }(_AbstractAdapter));
     ABeamer._ElementAdapter = _ElementAdapter;
-    function _setDOMProp(adapter, propName, value) {
+    function _setDOMProp(adapter, propName, value, args) {
         var _a = domPropMapper[propName]
             || [ABeamer.DPT_STYLE, propName], propType = _a[0], domPropName = _a[1];
         var element = adapter.htmlElement;
@@ -217,7 +217,7 @@ var ABeamer;
     function _NullToUnd(v) {
         return v === null ? undefined : v;
     }
-    function _getDOMProp(adapter, propName) {
+    function _getDOMProp(adapter, propName, args) {
         var _a = domPropMapper[propName]
             || [ABeamer.DPT_STYLE, propName], propType = _a[0], domPropName = _a[1];
         switch (propType) {
@@ -264,11 +264,11 @@ var ABeamer;
             }
             return compStyle;
         };
-        _DOMElementAdapter.prototype.getProp = function (propName) {
-            return _getDOMProp(this, propName);
+        _DOMElementAdapter.prototype.getProp = function (propName, args) {
+            return _getDOMProp(this, propName, args);
         };
-        _DOMElementAdapter.prototype.setProp = function (propName, value) {
-            _setDOMProp(this, propName, value);
+        _DOMElementAdapter.prototype.setProp = function (propName, value, args) {
+            _setDOMProp(this, propName, value, args);
         };
         _DOMElementAdapter.prototype._clearComputerData = function () {
             // @TODO: Discover to clear data when is no longer used
@@ -303,11 +303,11 @@ var ABeamer;
             _this.vElement = element;
             return _this;
         }
-        _VirtualElementAdapter.prototype.getProp = function (propName) {
-            return this.vElement.getProp(propName);
+        _VirtualElementAdapter.prototype.getProp = function (propName, args) {
+            return this.vElement.getProp(propName, args);
         };
-        _VirtualElementAdapter.prototype.setProp = function (propName, value) {
-            this.vElement.setProp(propName, value);
+        _VirtualElementAdapter.prototype.setProp = function (propName, value, args) {
+            this.vElement.setProp(propName, value, args);
         };
         return _VirtualElementAdapter;
     }(_ElementAdapter));
@@ -387,7 +387,7 @@ var ABeamer;
             }
             return compStyle;
         };
-        _DOMSceneAdapter.prototype.getProp = function (propName) {
+        _DOMSceneAdapter.prototype.getProp = function (propName, args) {
             switch (propName) {
                 // story attributes
                 case 'fps':
@@ -415,7 +415,7 @@ var ABeamer;
                     return _getDOMProp(this, propName);
             }
         };
-        _DOMSceneAdapter.prototype.setProp = function (propName, value) {
+        _DOMSceneAdapter.prototype.setProp = function (propName, value, args) {
             switch (propName) {
                 // story attributes
                 case 'clip-path':
@@ -471,11 +471,11 @@ var ABeamer;
             _this.isVirtual = true;
             return _this;
         }
-        _VirtualSceneAdapter.prototype.getProp = function (propName) {
-            return this.vScene.getProp(propName);
+        _VirtualSceneAdapter.prototype.getProp = function (propName, args) {
+            return this.vScene.getProp(propName, args);
         };
-        _VirtualSceneAdapter.prototype.setProp = function (propName, value) {
-            this.vScene.setProp(propName, value);
+        _VirtualSceneAdapter.prototype.setProp = function (propName, value, args) {
+            this.vScene.setProp(propName, value, args);
         };
         _VirtualSceneAdapter.prototype.query = function (selector, iterator) {
             this.vScene.query(selector, iterator);

@@ -73,7 +73,7 @@ var ABeamer;
                         + (item.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>') + "</span>");
                 });
                 elAdapters.forEach(function (elAdapter) {
-                    elAdapter.setProp('html', inTextHtml_1.join(''));
+                    elAdapter.setProp('html', inTextHtml_1.join(''), args);
                     if (params.realign && !elAdapter.isVirtual) {
                         var $spans = $(elAdapter.htmlElement).find('span');
                         var left_1 = 0;

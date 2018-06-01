@@ -163,8 +163,8 @@ namespace ABeamer {
    */
   export interface VirtualElement {
 
-    getProp(name: PropName): PropValue;
-    setProp(name: PropName, value: PropValue): void;
+    getProp(name: PropName, args?: ABeamerArgs): PropValue;
+    setProp(name: PropName, value: PropValue, args?: ABeamerArgs): void;
     waitFor?(waitItems: WaitItems): void;
   }
 
@@ -184,13 +184,13 @@ namespace ABeamer {
     /**
      * Must support `id` and `visible` attributes.
      */
-    getProp(name: PropName): string;
+    getProp(name: PropName, args?: ABeamerArgs): string;
 
 
     /**
      * Must support `visible` and `uid` attributes.
      */
-    setProp(name: PropName, value: string): void;
+    setProp(name: PropName, value: string, args?: ABeamerArgs): void;
 
 
     /**
@@ -340,8 +340,8 @@ namespace ABeamer {
 
     isVirtual: boolean;
 
-    abstract getProp(name: PropName): PropValue;
-    abstract setProp(name: PropName, value: PropValue): void;
+    abstract getProp(name: PropName, args?: ABeamerArgs): PropValue;
+    abstract setProp(name: PropName, value: PropValue, args?: ABeamerArgs): void;
   }
 
   // ------------------------------------------------------------------------
@@ -354,7 +354,7 @@ namespace ABeamer {
   export abstract class _ElementAdapter extends _AbstractAdapter implements ElementAdapter {
 
     constructor(element: PElement) { super(); }
-    getId(): string { return this.getProp('id') as string; }
+    getId(args?: ABeamerArgs): string { return this.getProp('id', args) as string; }
     _clearComputerData(): void { }
   }
 
@@ -370,7 +370,7 @@ namespace ABeamer {
 
 
   function _setDOMProp(adapter: _DOMAdapter,
-    propName: PropName, value: PropValue) {
+    propName: PropName, value: PropValue, args?: ABeamerArgs): void {
 
     const [propType, domPropName] = domPropMapper[propName]
       || [DPT_STYLE, propName];
@@ -441,7 +441,8 @@ namespace ABeamer {
   }
 
 
-  function _getDOMProp(adapter: _DOMAdapter, propName: PropName): PropValue {
+  function _getDOMProp(adapter: _DOMAdapter,
+    propName: PropName, args?: ABeamerArgs): PropValue {
 
     const [propType, domPropName] = domPropMapper[propName]
       || [DPT_STYLE, propName];
@@ -500,13 +501,13 @@ namespace ABeamer {
     }
 
 
-    getProp(propName: PropName): PropValue {
-      return _getDOMProp(this, propName);
+    getProp(propName: PropName, args?: ABeamerArgs): PropValue {
+      return _getDOMProp(this, propName, args);
     }
 
 
-    setProp(propName: PropName, value: PropValue): void {
-      _setDOMProp(this, propName, value);
+    setProp(propName: PropName, value: PropValue, args?: ABeamerArgs): void {
+      _setDOMProp(this, propName, value, args);
     }
 
 
@@ -544,13 +545,13 @@ namespace ABeamer {
     }
 
 
-    getProp(propName: PropName): PropValue {
-      return this.vElement.getProp(propName);
+    getProp(propName: PropName, args?: ABeamerArgs): PropValue {
+      return this.vElement.getProp(propName, args);
     }
 
 
-    setProp(propName: PropName, value: PropValue): void {
-      this.vElement.setProp(propName, value);
+    setProp(propName: PropName, value: PropValue, args?: ABeamerArgs): void {
+      this.vElement.setProp(propName, value, args);
     }
   }
 
@@ -647,7 +648,7 @@ namespace ABeamer {
       return compStyle;
     }
 
-    getProp(propName: PropName): PropValue {
+    getProp(propName: PropName, args?: ABeamerArgs): PropValue {
 
       switch (propName) {
         // story attributes
@@ -681,7 +682,7 @@ namespace ABeamer {
     }
 
 
-    setProp(propName: PropName, value: PropValue): void {
+    setProp(propName: PropName, value: PropValue, args?: ABeamerArgs): void {
       switch (propName) {
         // story attributes
         case 'clip-path':
@@ -750,13 +751,13 @@ namespace ABeamer {
     }
 
 
-    getProp(propName: PropName): string {
-      return this.vScene.getProp(propName);
+    getProp(propName: PropName, args?: ABeamerArgs): string {
+      return this.vScene.getProp(propName, args);
     }
 
 
-    setProp(propName: PropName, value: string): void {
-      this.vScene.setProp(propName, value);
+    setProp(propName: PropName, value: string, args?: ABeamerArgs): void {
+      this.vScene.setProp(propName, value, args);
     }
 
 

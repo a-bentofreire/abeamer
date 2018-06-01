@@ -145,12 +145,7 @@ namespace ABeamer {
    * Use it to render elements that scene independent.
    */
   export type FlyoverFunc = (wkFlyover: WorkFlyover, params: FlyoverParams,
-    stage?: uint, args?: ABeamerArgs) => WaitFunc;
-
-
-  /** WARNING: Experimental. It can change in the future */
-  export type WaitFunc = (args?: ABeamerArgs,
-    onDone?: (args?: ABeamerArgs) => void) => void;
+    stage?: uint, args?: ABeamerArgs) => void;
 
 
   export interface WorkFlyover {
@@ -239,7 +234,7 @@ namespace ABeamer {
    * Implementation of Info Flyover.
    */
   function _infoFlyover(wkFlyover: WorkFlyover,
-    params: _InfoFlyoverParams, stage?: uint, args?: ABeamerArgs): WaitFunc {
+    params: _InfoFlyoverParams, stage?: uint, args?: ABeamerArgs): void {
 
     switch (stage) {
       case TS_INIT:
@@ -279,11 +274,10 @@ namespace ABeamer {
           }
           // #debug-end
 
-          elAdapter.setProp('text', text);
+          elAdapter.setProp('text', text, args);
         });
         break;
     }
-    return undefined;
   }
 
   // ------------------------------------------------------------------------
@@ -309,7 +303,7 @@ namespace ABeamer {
   _flyoverFunctions['video-sync'] = _videoSyncFlyover;
 
   function _videoSyncFlyover(wkFlyover: WorkFlyover,
-    params: _VideoSyncFlyoverParams, stage?: uint, args?: ABeamerArgs): WaitFunc {
+    params: _VideoSyncFlyoverParams, stage?: uint, args?: ABeamerArgs): void {
 
     // setup
     switch (stage) {
@@ -333,10 +327,9 @@ namespace ABeamer {
           }
           // #debug-end
 
-          elAdapter.setProp('currentTime', currentTime);
+          elAdapter.setProp('currentTime', currentTime, args);
         });
         break;
     }
-    return undefined;
   }
 }

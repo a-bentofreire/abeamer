@@ -2,13 +2,13 @@
   "config": {
     "abeamer": {
       "fps": 20,
-      "width": 300,
-      "height": 200,
+      "width": 500,
+      "height": 140,
       "version": "0.2.0",
       "locale": "en",
       "file": "__PROJDIR__/index.html",
       "renderPos": 0,
-      "renderCount": 100,
+      "renderCount": 60,
       "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/67.0.3396.62 Safari/537.36",
       "metadata": {},
       "plugins": [],
@@ -16,33 +16,87 @@
         [
           [
             {
-              "selector": "#img",
-              "duration": "5s",
-              "props": [
+              "selector": "#star-container",
+              "tasks": [
                 {
-                  "prop": "opacity",
-                  "easing": "easeInSine",
-                  "oscillator": {
-                    "handler": "harmonic",
-                    "params": {
-                      "cycles": 2
-                    }
+                  "handler": "factory",
+                  "params": {
+                    "count": 20,
+                    "tag": "img",
+                    "attrs": [
+                      {
+                        "name": "src",
+                        "value": "assets/a-bentofreire/star.svg"
+                      },
+                      {
+                        "name": "style",
+                        "value": "='opacity: ' + random() + ';'",
+                        "isFormatted": true
+                      }
+                    ]
                   }
                 }
               ]
             },
             {
-              "selector": "#t3",
-              "duration": "5s",
+              "selector": "#star-container img",
+              "duration": "2s",
               "props": [
                 {
+                  "prop": "top",
+                  "value": "=-10-random()*120"
+                },
+                {
                   "prop": "left",
-                  "easing": "linear",
-                  "valueStart": 0,
-                  "value": 4,
-                  "oscillator": {
-                    "handler": "damped",
-                    "params": {}
+                  "value": "=250+random()*200"
+                }
+              ]
+            },
+            {
+              "selector": "#ball-container",
+              "tasks": [
+                {
+                  "handler": "factory",
+                  "params": {
+                    "count": 20,
+                    "tag": "img",
+                    "attrs": [
+                      {
+                        "name": "src",
+                        "value": "assets/a-bentofreire/ball.svg"
+                      },
+                      {
+                        "name": "style",
+                        "value": "='opacity: ' + random() + ';'",
+                        "isFormatted": true
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "selector": "#ball-container img",
+              "duration": "2s",
+              "props": [
+                {
+                  "prop": "top",
+                  "value": "=-10-random()*120"
+                },
+                {
+                  "prop": "right",
+                  "value": "=250+random()*200"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "tasks": [
+                {
+                  "handler": "add-stills",
+                  "params": {
+                    "duration": "1s"
                   }
                 }
               ]
@@ -53,36 +107,27 @@
       "html": [
         "",
         "        <div class=\"abeamer-scene\" id=\"scene1\">",
-        "            <img id=\"img\" src=\"assets/pixabay/halloween-2836388_640.jpg\">",
-        "            <!-- <div id=text> -->",
-        "                <p id=\"t1\">THIS</p>",
-        "                <p id=\"t2\">HALLOWEEN</p>",
-        "                <p id=\"t3\">FEAR</p>",
-        "                <p id=\"t4\">WILL RETURN</p>",
-        "            <!-- </div> -->",
+        "            <div id=\"star-container\"></div>",
+        "            <div id=\"ball-container\"></div>",
         "        </div>",
         "    "
       ],
       "css": [
         {
           "path": "css/",
-          "text": "body, html, .abeamer-story, .abeamer-scene { width: 300px; height: 200px; }"
+          "text": "body, html, .abeamer-story, .abeamer-scene { width: 500px; height: 140px; }"
         },
         {
           "path": "css/",
-          "text": "@font-face { font-family: Creepster; font-style: normal; src: url(\"../assets/fonts/Creepster/Creepster-Regular.ttf\"); }"
+          "text": "#scene1 { text-align: center; background: white; border: 1px solid rgb(211, 210, 210); color: rgb(44, 44, 44); padding-left: 5px; padding-top: 25px; }"
         },
         {
           "path": "css/",
-          "text": "#scene1 { background: rgb(0, 0, 0); padding: 10px; color: rgb(255, 255, 255); font-family: Creepster; font-weight: bold; font-size: 30px; display: flex; flex-flow: column; justify-content: center; align-items: center; }"
+          "text": "#star-container img { position: absolute; bottom: 10px; left: 10px; }"
         },
         {
           "path": "css/",
-          "text": "#img { position: absolute; right: -18px; top: 10px; opacity: 0; }"
-        },
-        {
-          "path": "css/",
-          "text": "p { z-index: 5; margin: 6px; color: transparent; background: linear-gradient(rgb(116, 116, 116) 0%, rgb(231, 56, 39) 100%) text; text-shadow: rgb(251, 84, 68) 0px 0px 13px; position: relative; }"
+          "text": "#ball-container img { position: absolute; bottom: 10px; right: 10px; }"
         }
       ]
     }

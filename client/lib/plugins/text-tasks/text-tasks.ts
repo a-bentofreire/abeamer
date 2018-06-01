@@ -151,7 +151,7 @@ namespace ABeamer {
         );
 
         elAdapters.forEach(elAdapter => {
-          elAdapter.setProp('html', inTextHtml.join(''));
+          elAdapter.setProp('html', inTextHtml.join(''), args);
           if (params.realign && !elAdapter.isVirtual) {
             const $spans = $((elAdapter as _DOMElementAdapter).htmlElement).find('span');
             let left = 0;

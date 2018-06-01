@@ -113,7 +113,7 @@ var ABeamer;
                     params.leaveRealFrameI = frameNr;
                     params.frameI = frameI;
                     if (params.bothVisible && params.enterAdapter && params.frameI === 0) {
-                        params.enterAdapter.setProp('visible', true);
+                        params.enterAdapter.setProp('visible', true, args);
                     }
                     this._transitionFunc(params, args);
                 }
@@ -126,10 +126,10 @@ var ABeamer;
                     params.frameI = frameNr + params.leaveFrameCount;
                     if (params.bothVisible) {
                         if (params.enterAdapter && frameNr === 0) {
-                            params.leaveAdapter.setProp('visible', true);
+                            params.leaveAdapter.setProp('visible', true, args);
                         }
                         if (frameNr === params.enterFrameCount) {
-                            params.leaveAdapter.setProp('visible', false);
+                            params.leaveAdapter.setProp('visible', false, args);
                         }
                     }
                     this._transitionFunc(params, args);
@@ -143,14 +143,14 @@ var ABeamer;
         var sParams = params;
         var leaveAdapter = params.leaveAdapter;
         if (params.state === ABeamer.TRS_SETUP) {
-            sParams.ref = parseInt(leaveAdapter.getProp(refAttrName));
-            sParams.length = parseInt(leaveAdapter.getProp(lengthAttrName));
+            sParams.ref = parseInt(leaveAdapter.getProp(refAttrName, args));
+            sParams.length = parseInt(leaveAdapter.getProp(lengthAttrName, args));
         }
         else {
             var shift = ABeamer.downRound((params.frameI / params.frameCount) * sParams.length);
             var ref = sParams.ref;
             ref = isNegDir ? ref - shift : ref + shift;
-            params.leaveAdapter.setProp(refAttrName, ref);
+            params.leaveAdapter.setProp(refAttrName, ref, args);
             // #debug-start
             if (args.isVerbose) {
                 args.story.logFrmt('slide-leave', [
@@ -161,7 +161,7 @@ var ABeamer;
             // #debug-end
             if (params.enterAdapter) {
                 ref = isNegDir ? ref + sParams.length : ref - sParams.length;
-                params.enterAdapter.setProp(refAttrName, ref);
+                params.enterAdapter.setProp(refAttrName, ref, args);
                 // #debug-start
                 if (args.isVerbose) {
                     args.story.logFrmt('slide-enter', [
@@ -193,7 +193,7 @@ var ABeamer;
     function _dissolveTransition(params, args) {
         if (params.state !== ABeamer.TRS_SETUP) {
             var opacity = 1 - (params.frameI / params.frameCount);
-            params.leaveAdapter.setProp('opacity', opacity);
+            params.leaveAdapter.setProp('opacity', opacity, args);
             // #debug-start
             if (args.isVerbose) {
                 args.story.logFrmt('dissolve-leave', [
@@ -204,7 +204,7 @@ var ABeamer;
             // #debug-end
             if (params.enterAdapter) {
                 opacity = 1 - opacity;
-                params.enterAdapter.setProp('opacity', opacity);
+                params.enterAdapter.setProp('opacity', opacity, args);
                 // #debug-start
                 if (args.isVerbose) {
                     args.story.logFrmt('dissolve-enter', [

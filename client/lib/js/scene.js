@@ -167,7 +167,7 @@ var ABeamer;
              * #end-user @readonly
              */
             get: function () {
-                return this._sceneAdpt.getProp('id');
+                return this._sceneAdpt.getProp('id', this._story._args);
             },
             enumerable: true,
             configurable: true
@@ -210,10 +210,10 @@ var ABeamer;
         //                               Visibility
         // ------------------------------------------------------------------------
         _Scene.prototype._show = function () {
-            this._sceneAdpt.setProp('visible', 'true');
+            this._sceneAdpt.setProp('visible', 'true', this._story._args);
         };
         _Scene.prototype._hide = function () {
-            this._sceneAdpt.setProp('visible', 'false');
+            this._sceneAdpt.setProp('visible', 'false', this._story._args);
         };
         // ------------------------------------------------------------------------
         //                               Transitions
@@ -286,6 +286,7 @@ var ABeamer;
         _Scene.prototype._initInterpolators = function (animes) {
             var _this = this;
             var story = this._story;
+            var args = story._args;
             var elAnimations = [];
             animes.forEach(function (anime) {
                 if (anime.enabled === false) {
@@ -295,7 +296,7 @@ var ABeamer;
                 var elAnimation = new ABeamer._ElWorkAnimation();
                 elAnimation.buildElements(_this._story, _this, _this._sceneAdpt, anime);
                 if (elAnimation.elAdapters.length) {
-                    if (elAnimation.assignValues(anime, story, _this, undefined, elAnimation.elAdapters[0].getId())) {
+                    if (elAnimation.assignValues(anime, story, _this, undefined, elAnimation.elAdapters[0].getId(args))) {
                         anime.props.forEach(function (prop) {
                             elAnimation.propInterpolators
                                 .push(prop.enabled !== false ? new ABeamer._PropInterpolator(prop) : undefined);
@@ -394,7 +395,7 @@ var ABeamer;
                                 _this._frameCount = endPos;
                             }
                             maxEndFrame = Math.max(maxEndFrame, endPos);
-                            var actRg = ABeamer._findActionRg(_this._actionRgMaps, elementAdpt, pi.realPropName, pos, endPos - 1);
+                            var actRg = ABeamer._findActionRg(_this._actionRgMaps, elementAdpt, pi.realPropName, pos, endPos - 1, args);
                             pi.attachSelector(elementAdpt, actRg, isVerbose, args);
                             var frameI = pi.dirPair[0] === 1 ? 0 : (pi.framesPerCycle - 1);
                             var v;
@@ -402,7 +403,7 @@ var ABeamer;
                             // #debug-start
                             if (isVerbose) {
                                 _this._story.logFrmt('action-range', [
-                                    ['id', elementAdpt.getId()],
+                                    ['id', elementAdpt.getId(args)],
                                     ['prop', pi.propName],
                                     ['frame', pi.positionFrame],
                                     ['total', totalDuration]
@@ -418,7 +419,7 @@ var ABeamer;
                                 pos++;
                             }
                             // stores the last output value in the ActRg
-                            var outputValue = ABeamer._applyAction(action, elementAdpt, false, _this._story, true);
+                            var outputValue = ABeamer._applyAction(action, elementAdpt, false, args, true);
                             actRg.actionRg.endValue = outputValue;
                         });
                     });
@@ -488,6 +489,7 @@ var ABeamer;
         //                               Render
         // ------------------------------------------------------------------------
         _Scene.prototype._internalRenderFrame = function (framePos, dir, isVerbose, bypassMode) {
+            var args = this._story._args;
             // handle transitions
             if (!bypassMode) {
                 if (this._transitionInterpolator._active) {
@@ -523,7 +525,7 @@ var ABeamer;
                         if (canByPass) {
                             // #debug-start
                             if (isVerbose) {
-                                this._story.logFrmt('bypass', [['id', elementAdpt.getId()],
+                                this._story.logFrmt('bypass', [['id', elementAdpt.getId(args)],
                                     ['prop', action.realPropName],
                                     ['frame', framePos]]);
                             }
@@ -531,7 +533,7 @@ var ABeamer;
                             continue;
                         }
                     }
-                    ABeamer._applyAction(action, elementAdpt, isVerbose, this._story);
+                    ABeamer._applyAction(action, elementAdpt, isVerbose, args);
                 }
             }
             this._renderFramePos += dir;

@@ -199,7 +199,7 @@ namespace ABeamer {
      * #end-user @readonly
      */
     get id(): string {
-      return this._sceneAdpt.getProp('id') as string;
+      return this._sceneAdpt.getProp('id', this._story._args) as string;
     }
 
     // ------------------------------------------------------------------------
@@ -254,12 +254,12 @@ namespace ABeamer {
     // ------------------------------------------------------------------------
 
     _show(): void {
-      this._sceneAdpt.setProp('visible', 'true');
+      this._sceneAdpt.setProp('visible', 'true', this._story._args);
     }
 
 
     _hide(): void {
-      this._sceneAdpt.setProp('visible', 'false');
+      this._sceneAdpt.setProp('visible', 'false', this._story._args);
     }
 
     // ------------------------------------------------------------------------
@@ -342,6 +342,7 @@ namespace ABeamer {
      */
     protected _initInterpolators(animes: Animations): _ElWorkAnimation[] {
       const story = this._story;
+      const args = story._args;
 
       const elAnimations: _ElWorkAnimation[] = [];
       animes.forEach((anime) => {
@@ -358,7 +359,7 @@ namespace ABeamer {
         if (elAnimation.elAdapters.length) {
 
           if (elAnimation.assignValues(anime, story, this, undefined,
-            elAnimation.elAdapters[0].getId())) {
+            elAnimation.elAdapters[0].getId(args))) {
             anime.props.forEach(prop => {
               elAnimation.propInterpolators
                 .push(prop.enabled !== false ? new _PropInterpolator(prop) : undefined);
@@ -468,7 +469,7 @@ namespace ABeamer {
               maxEndFrame = Math.max(maxEndFrame, endPos);
 
               const actRg = _findActionRg(this._actionRgMaps, elementAdpt, pi.realPropName,
-                pos, endPos - 1);
+                pos, endPos - 1, args);
               pi.attachSelector(elementAdpt, actRg, isVerbose, args);
 
               let frameI = pi.dirPair[0] === 1 ? 0 : (pi.framesPerCycle - 1);
@@ -479,7 +480,7 @@ namespace ABeamer {
               // #debug-start
               if (isVerbose) {
                 this._story.logFrmt('action-range', [
-                  ['id', elementAdpt.getId()],
+                  ['id', elementAdpt.getId(args)],
                   ['prop', pi.propName],
                   ['frame', pi.positionFrame],
                   ['total', totalDuration]],
@@ -499,7 +500,7 @@ namespace ABeamer {
 
               // stores the last output value in the ActRg
               const outputValue = _applyAction(action, elementAdpt, false,
-                this._story, true);
+                args, true);
               actRg.actionRg.endValue = outputValue;
             });
           });
@@ -576,6 +577,8 @@ namespace ABeamer {
     _internalRenderFrame(framePos: int, dir: DirectionInt,
       isVerbose: boolean, bypassMode: boolean): void {
 
+      const args = this._story._args;
+
       // handle transitions
       if (!bypassMode) {
         if (this._transitionInterpolator._active) {
@@ -623,7 +626,7 @@ namespace ABeamer {
               // #debug-start
               if (isVerbose) {
                 this._story.logFrmt('bypass',
-                  [['id', elementAdpt.getId()],
+                  [['id', elementAdpt.getId(args)],
                   ['prop', action.realPropName],
                   ['frame', framePos]]);
               }
@@ -633,7 +636,7 @@ namespace ABeamer {
             }
           }
 
-          _applyAction(action, elementAdpt, isVerbose, this._story);
+          _applyAction(action, elementAdpt, isVerbose, args);
         }
       }
       this._renderFramePos += dir;

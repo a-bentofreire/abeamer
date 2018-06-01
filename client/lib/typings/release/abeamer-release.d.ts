@@ -712,12 +712,7 @@ declare namespace ABeamer {
    * Use it to render elements that scene independent.
    */
   export type FlyoverFunc = (wkFlyover: WorkFlyover, params: FlyoverParams,
-    stage?: uint, args?: ABeamerArgs) => WaitFunc;
-
-
-  /** WARNING: Experimental. It can change in the future */
-  export type WaitFunc = (args?: ABeamerArgs,
-    onDone?: (args?: ABeamerArgs) => void) => void;
+    stage?: uint, args?: ABeamerArgs) => void;
 
 
   export interface WorkFlyover {
@@ -849,8 +844,8 @@ declare namespace ABeamer {
    */
   export interface VirtualElement {
 
-    getProp(name: PropName): PropValue;
-    setProp(name: PropName, value: PropValue): void;
+    getProp(name: PropName, args?: ABeamerArgs): PropValue;
+    setProp(name: PropName, value: PropValue, args?: ABeamerArgs): void;
     waitFor?(waitItems: WaitItems): void;
   }
 
@@ -870,13 +865,13 @@ declare namespace ABeamer {
     /**
      * Must support `id` and `visible` attributes.
      */
-    getProp(name: PropName): string;
+    getProp(name: PropName, args?: ABeamerArgs): string;
 
 
     /**
      * Must support `visible` and `uid` attributes.
      */
-    setProp(name: PropName, value: string): void;
+    setProp(name: PropName, value: string, args?: ABeamerArgs): void;
 
 
     /**
@@ -1014,6 +1009,8 @@ declare namespace ABeamer {
     /** Every time, the render is executed this value is incremented. */
     renderNr?: uint;
     user?: AnyParams;
+    waitMan?: WaitMan;
+    /** If true, the internal code or plugin should dump information using `story.logFrmt`. */
     isVerbose?: boolean;
     isTeleporting?: boolean;
     /** If true, perform type checks and other restriction checks. */
@@ -1532,6 +1529,14 @@ declare namespace ABeamer {
   // ------------------------------------------------------------------------
   //                               Story
   // ------------------------------------------------------------------------
+
+
+
+  export type WaitFunc = (args: ABeamerArgs) => void;
+
+  export interface WaitMan {
+    addWaitFunc(func: WaitFunc): void;
+  }
 
 
   export type DirectionInt = -1 | 1;

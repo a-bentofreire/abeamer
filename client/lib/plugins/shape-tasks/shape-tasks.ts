@@ -275,7 +275,8 @@ namespace ABeamer {
 
         const elAdapters = args.scene.getElementAdapters(anime.selector);
         elAdapters.forEach(elAdapter => {
-          elAdapter.setProp('html', elAdapter.getProp('html') + inTextHtml.join(''));
+          elAdapter.setProp('html', elAdapter.getProp('html') +
+            inTextHtml.join(''), args);
         });
 
         return TR_EXIT;

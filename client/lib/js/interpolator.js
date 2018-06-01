@@ -106,7 +106,7 @@ var ABeamer;
                     return actRg.actionRgList[actRg.linkIndex].endValue;
                 }
                 else {
-                    return elementAdpt.getProp(realPropName);
+                    return elementAdpt.getProp(realPropName, args);
                 }
             }
             var startValue = getStartValue();
@@ -283,14 +283,14 @@ var ABeamer;
         return _PropInterpolator;
     }(ABeamer._WorkAnimationProp));
     ABeamer._PropInterpolator = _PropInterpolator;
-    function _applyAction(action, elementAdpt, isVerbose, story, simulateOnly) {
+    function _applyAction(action, elementAdpt, isVerbose, args, simulateOnly) {
         if (simulateOnly === void 0) { simulateOnly = false; }
         var value = action.value;
         var propName = action.realPropName;
         // #debug-start
         function log(name, aValue) {
-            story.logFrmt('action', [
-                ['id', elementAdpt.getId()],
+            args.story.logFrmt('action', [
+                ['id', elementAdpt.getId(args)],
                 ['prop', name],
                 ['value', aValue],
             ]);
@@ -303,13 +303,13 @@ var ABeamer;
             var prevValue;
             // #debug-start
             if (isVerbose) {
-                prevValue = elementAdpt.getProp(propName);
+                prevValue = elementAdpt.getProp(propName, args);
             }
             // #debug-end
-            elementAdpt.setProp(propName, newValue);
+            elementAdpt.setProp(propName, newValue, args);
             // #debug-start
             if (isVerbose) {
-                var actualNewValue = elementAdpt.getProp(propName);
+                var actualNewValue = elementAdpt.getProp(propName, args);
                 var isDifferent = newValue !== actualNewValue;
                 if (isDifferent) {
                     // compares numerical values taking into account the numeric precision errors
@@ -320,7 +320,7 @@ var ABeamer;
                     }
                 }
                 if (isDifferent) {
-                    story.logFrmt("action-update-warn: ", [['id', elementAdpt.getId()],
+                    args.story.logFrmt("action-update-warn: ", [['id', elementAdpt.getId(args)],
                         ['prop', propName],
                         ['expected', newValue + ''],
                         ['actual', actualNewValue + ''],

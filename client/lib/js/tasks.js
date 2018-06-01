@@ -171,7 +171,7 @@ var ABeamer;
                     for (var i = 0; i < count_1; i++) {
                         _loop_1(i);
                     }
-                    elAdapter.setProp('html', inTextHtml.join('\n'));
+                    elAdapter.setProp('html', inTextHtml.join('\n'), args);
                 });
                 return ABeamer.TR_EXIT;
         }

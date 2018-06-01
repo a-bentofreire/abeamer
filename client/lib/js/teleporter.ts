@@ -218,7 +218,7 @@ namespace ABeamer {
         // this parameters because tend to be longer should come at the end.
         cfg.plugins = pluginManager._plugins;
         cfg.animations = [];
-        cfg.html = (story.storyAdapter.getProp('html') as string).split(/\n/);
+        cfg.html = (story.storyAdapter.getProp('html', story._args) as string).split(/\n/);
         cfg.css = _getStoryCSS();
       } else {
         this.hasStory = cfg.html !== undefined;
@@ -244,22 +244,25 @@ namespace ABeamer {
 
 
     _rebuildStory(): void {
+      const story = this._story;
+
       // css must be rebuilt before html.
       if (this._cfg.css) {
         _buildCssRulesFromConfig(this._cfg.css);
       }
 
       if (this._cfg.html) {
-        this._story.storyAdapter.setProp('html', _sanitizeHtml(this._cfg.html.join('\n')));
-        this._story.addDefaultScenes();
+        story.storyAdapter.setProp('html',
+          _sanitizeHtml(this._cfg.html.join('\n')), story._args);
+        story.addDefaultScenes();
       }
 
       if (this._cfg.animations) {
-        this._story.addStoryAnimations(this._cfg.animations);
+        story.addStoryAnimations(this._cfg.animations);
       }
 
       if (this._cfg.metadata) {
-        _filteredDeepCopy(this._cfg.metadata, this._story.metadata);
+        _filteredDeepCopy(this._cfg.metadata, story.metadata);
       }
     }
 

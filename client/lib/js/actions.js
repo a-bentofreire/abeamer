@@ -28,17 +28,17 @@ var ABeamer;
      * If it exists, it links to the previous `actionRg` to a newly created `actionRg`,
      * If doesn't exist just creates a `actionRg`.
      *
-     * `_findActionRg` uses `elementAdpt.getProp('uid')` to determine if has already
+     * `_findActionRg` uses `elementAdpt.getProp('uid', args)` to determine if has already
      * an ActionRg.
      */
-    function _findActionRg(actionRgMaps, elementAdpt, propName, startFrame, endFrame) {
-        var propValue = elementAdpt.getProp('uid');
+    function _findActionRg(actionRgMaps, elementAdpt, propName, startFrame, endFrame, args) {
+        var propValue = elementAdpt.getProp('uid', args);
         var index = propValue !== undefined ? parseInt(propValue) : -1;
         var found = index >= 0;
         var actionRgMap;
         if (!found) {
             index = actionRgMaps.length;
-            elementAdpt.setProp('uid', index.toString());
+            elementAdpt.setProp('uid', index.toString(), args);
             actionRgMap = {};
             actionRgMaps.push(actionRgMap);
         }

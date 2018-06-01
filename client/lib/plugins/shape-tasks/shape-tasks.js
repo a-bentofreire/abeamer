@@ -190,7 +190,8 @@ var ABeamer;
                 inTextHtml_1.push('/></svg >');
                 var elAdapters = args.scene.getElementAdapters(anime.selector);
                 elAdapters.forEach(function (elAdapter) {
-                    elAdapter.setProp('html', elAdapter.getProp('html') + inTextHtml_1.join(''));
+                    elAdapter.setProp('html', elAdapter.getProp('html') +
+                        inTextHtml_1.join(''), args);
                 });
                 return ABeamer.TR_EXIT;
         }

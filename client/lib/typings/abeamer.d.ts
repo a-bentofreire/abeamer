@@ -28,8 +28,8 @@ declare namespace ABeamer {
   export interface AbstractAdapter {
 
     isVirtual: boolean;
-    getProp(name: PropName): PropValue;
-    setProp(name: PropName, value: PropValue): void;
+    getProp(name: PropName, args?: ABeamerArgs): PropValue;
+    setProp(name: PropName, value: PropValue, args?: ABeamerArgs): void;
   }
 
   /**
@@ -37,7 +37,7 @@ declare namespace ABeamer {
    */
   export interface ElementAdapter extends AbstractAdapter {
 
-    getId(): string;
+    getId(args?: ABeamerArgs): string;
   }
 
   /**
@@ -55,8 +55,8 @@ declare namespace ABeamer {
     getComputedStyle(): any;
 
 
-    getProp(propName: PropName): PropValue;
-    setProp(propName: PropName, value: PropValue): void;
+    getProp(propName: PropName, args?: ABeamerArgs): PropValue;
+    setProp(propName: PropName, value: PropValue, args?: ABeamerArgs): void;
   }
 
   /**
@@ -85,8 +85,8 @@ declare namespace ABeamer {
     getComputedStyle(): any;
 
 
-    getProp(propName: PropName): PropValue;
-    setProp(propName: PropName, value: PropValue): void;
+    getProp(propName: PropName, args?: ABeamerArgs): PropValue;
+    setProp(propName: PropName, value: PropValue, args?: ABeamerArgs): void;
     query(selector: string,
       iterator: (element: PElement, index: uint) => void): void;
   }
@@ -269,6 +269,10 @@ declare namespace ABeamer {
   // ------------------------------------------------------------------------
   //                               Story
   // ------------------------------------------------------------------------
+
+  export interface WaitMan {
+    addWaitFunc(func: WaitFunc): void;
+  }
 
   /**
    * Implementation of _Story class.

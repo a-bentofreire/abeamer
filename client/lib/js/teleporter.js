@@ -181,7 +181,7 @@ var ABeamer;
                 // this parameters because tend to be longer should come at the end.
                 cfg.plugins = ABeamer.pluginManager._plugins;
                 cfg.animations = [];
-                cfg.html = story.storyAdapter.getProp('html').split(/\n/);
+                cfg.html = story.storyAdapter.getProp('html', story._args).split(/\n/);
                 cfg.css = _getStoryCSS();
             }
             else {
@@ -204,19 +204,20 @@ var ABeamer;
             }, undefined, isPretty ? 2 : undefined);
         };
         _Teleporter.prototype._rebuildStory = function () {
+            var story = this._story;
             // css must be rebuilt before html.
             if (this._cfg.css) {
                 _buildCssRulesFromConfig(this._cfg.css);
             }
             if (this._cfg.html) {
-                this._story.storyAdapter.setProp('html', _sanitizeHtml(this._cfg.html.join('\n')));
-                this._story.addDefaultScenes();
+                story.storyAdapter.setProp('html', _sanitizeHtml(this._cfg.html.join('\n')), story._args);
+                story.addDefaultScenes();
             }
             if (this._cfg.animations) {
-                this._story.addStoryAnimations(this._cfg.animations);
+                story.addStoryAnimations(this._cfg.animations);
             }
             if (this._cfg.metadata) {
-                _filteredDeepCopy(this._cfg.metadata, this._story.metadata);
+                _filteredDeepCopy(this._cfg.metadata, story.metadata);
             }
         };
         _Teleporter.prototype._addScene = function () {

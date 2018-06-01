@@ -63,6 +63,8 @@ namespace ABeamer {
     /** Every time, the render is executed this value is incremented. */
     renderNr?: uint;
     user?: AnyParams;
+    waitMan?: WaitMan;
+    /** If true, the internal code or plugin should dump information using `story.logFrmt`. */
     isVerbose?: boolean;
     isTeleporting?: boolean;
     /** If true, perform type checks and other restriction checks. */

@@ -142,11 +142,10 @@ var ABeamer;
                         args.story.logFrmt('info-flyover', [['text', text]]);
                     }
                     // #debug-end
-                    elAdapter.setProp('text', text);
+                    elAdapter.setProp('text', text, args);
                 });
                 break;
         }
-        return undefined;
     }
     /**
      * Implementation of Video Sync Flyover.
@@ -171,11 +170,10 @@ var ABeamer;
                         args.story.logFrmt('video-sync', [['currentTime', currentTime]]);
                     }
                     // #debug-end
-                    elAdapter.setProp('currentTime', currentTime);
+                    elAdapter.setProp('currentTime', currentTime, args);
                 });
                 break;
         }
-        return undefined;
     }
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=flyovers.js.map

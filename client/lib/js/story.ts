@@ -47,6 +47,14 @@ namespace ABeamer {
   // -------------------------------
   // #export-section-start: release
 
+
+  export type WaitFunc = (args: ABeamerArgs) => void;
+
+  export interface WaitMan {
+    addWaitFunc(func: WaitFunc): void;
+  }
+
+
   export type DirectionInt = -1 | 1;
 
 
@@ -143,6 +151,14 @@ namespace ABeamer {
   //                               Implementation
   // ------------------------------------------------------------------------
 
+  export class _WaitMan implements WaitMan {
+    addWaitFunc(func: WaitFunc): void {
+
+    }
+  }
+
+
+
   interface _RenderFrameOptionsEx extends RenderFrameOptions {
     playSpeedMs?: uint;
   }
@@ -182,7 +198,7 @@ namespace ABeamer {
 
 
     _teleporter: _Teleporter;
-
+    _waitMan: _WaitMan;
 
     // scene access
     _args: ABeamerArgs = {
@@ -462,31 +478,35 @@ namespace ABeamer {
     constructor(cfg: _Config, createParams: CreateStoryParams) {
       const urlParams = window.location.search || '';
 
+      const args = this._args;
+      this._waitMan = new _WaitMan();
+      args.waitMan = this._waitMan;
+
       this.storyAdapter = createParams.storyAdapter || new _DOMSceneAdapter('.abeamer-story');
 
-      cfg.fps = cfg.fps || this.storyAdapter.getProp('fps') as uint;
+      cfg.fps = cfg.fps || this.storyAdapter.getProp('fps', args) as uint;
       throwIfI8n(!isPositiveNatural(cfg.fps), Msgs.MustNatPositive, { p: 'fps' });
       _vars.fps = cfg.fps;
 
 
-      cfg.width = cfg.width || this.storyAdapter.getProp('frame-width') as uint;
+      cfg.width = cfg.width || this.storyAdapter.getProp('frame-width', args) as uint;
       throwIfI8n(!isPositiveNatural(cfg.width), Msgs.MustNatPositive, { p: 'frame-width' });
-      this.storyAdapter.setProp('frame-width', cfg.width);
+      this.storyAdapter.setProp('frame-width', cfg.width, args);
       _vars.frameWidth = cfg.width;
 
-      cfg.height = cfg.height || this.storyAdapter.getProp('frame-height') as uint;
+      cfg.height = cfg.height || this.storyAdapter.getProp('frame-height', args) as uint;
       throwIfI8n(!isPositiveNatural(cfg.height), Msgs.MustNatPositive, { p: 'frame-height' });
-      this.storyAdapter.setProp('frame-height', cfg.height);
+      this.storyAdapter.setProp('frame-height', cfg.height, args);
       _vars.frameHeight = cfg.height;
 
       // setting clip-path is used because of slide transitions that display outside
       // the story boundaries
       this.storyAdapter.setProp('clip-path',
-        `polygon(0 0, 0 ${cfg.height}px, ${cfg.width}px ${cfg.height}px, ${cfg.width}px 0px)`);
+        `polygon(0 0, 0 ${cfg.height}px, ${cfg.width}px ${cfg.height}px, ${cfg.width}px 0px)`, args);
 
       this._width = cfg.width;
       this._height = cfg.height;
-      this._args.story = this;
+      args.story = this;
       this.fps = cfg.fps;
       this._isTeleporting = createParams.toTeleport || false;
 
@@ -507,8 +527,8 @@ namespace ABeamer {
         return '';
       });
 
-      this._args.isTeleporting = this._isTeleporting;
-      this._args.vars.isTeleporting = this._args.isTeleporting;
+      args.isTeleporting = this._isTeleporting;
+      args.vars.isTeleporting = args.isTeleporting;
       this._teleporter = new _Teleporter(this, cfg, this._isTeleporting);
 
       // #debug-start
@@ -771,18 +791,18 @@ namespace ABeamer {
 
     // @TODO: This can cause a stack overflow. It needs a better solution,
     // probably using async.
-    protected _internalCallWaitFor(scene: _SceneImpl, waitFor: WaitFunc[],
-      at: uint, onFinished: () => void) {
+    // protected _internalCallWaitFor(scene: _SceneImpl, waitFor: WaitFuncTmp[],
+    //   at: uint, onFinished: () => void) {
 
-      if (at < waitFor.length) {
-        waitFor[at](this._args, () => {
-          this._internalCallWaitFor(scene, waitFor, at + 1, onFinished);
-        });
-      } else {
-        this._afterWaitRenderFrame(scene);
-        onFinished();
-      }
-    }
+    //   if (at < waitFor.length) {
+    //     waitFor[at](this._args, () => {
+    //       this._internalCallWaitFor(scene, waitFor, at + 1, onFinished);
+    //     });
+    //   } else {
+    //     this._afterWaitRenderFrame(scene);
+    //     onFinished();
+    //   }
+    // }
 
 
     protected _internalRenderFrame(onFinished: () => void): void {
@@ -794,15 +814,14 @@ namespace ABeamer {
       this._args.scene = scene;
       if (scene !== this._curScene) { this._internalGotoScene(scene); }
 
-
-      const waitFor: WaitFunc[] = [];
       this._wkFlyovers.forEach(wkFlyover => {
-        const waitFunc = wkFlyover.func(wkFlyover, wkFlyover.params, TS_ANIME_LOOP,
+        wkFlyover.func(wkFlyover, wkFlyover.params, TS_ANIME_LOOP,
           this._args);
-        if (waitFunc) { waitFor.push(waitFunc); }
       });
 
-      this._internalCallWaitFor(scene, waitFor, 0, onFinished);
+      // this._internalCallWaitFor(scene, waitFor, 0, onFinished);
+      this._afterWaitRenderFrame(scene);
+      onFinished();
     }
 
     // ------------------------------------------------------------------------
@@ -1005,7 +1024,7 @@ namespace ABeamer {
       this._setupTransitions();
       this._internalGotoFrame(this._renderFramePos);
       if (!this.hasServer) {
-        this._serverlessRender(playSpeedMs);
+        this._pacedRenderLoop(playSpeedMs !== undefined && playSpeedMs > 0 ? playSpeedMs : 1);
       } else {
         this._sendCmd(_SRV_CNT.MSG_READY);
       }
@@ -1086,23 +1105,6 @@ namespace ABeamer {
       };
 
       callRenderFrame(); // renders the first frame without delay
-    }
-
-
-    protected _serverlessRender(playSpeedMs: uint | undefined) {
-
-      if (playSpeedMs !== undefined && playSpeedMs > 0) {
-        this._pacedRenderLoop(playSpeedMs);
-      } else {
-        // with waitFor events even at full speed it will need a timer.
-
-        // do {
-        //   this._internalCallRenderFrame();
-        // } while (this._isRendering);
-
-        // @TODO: Better solution. probably using async.
-        this._pacedRenderLoop(1);
-      }
     }
 
     // ------------------------------------------------------------------------

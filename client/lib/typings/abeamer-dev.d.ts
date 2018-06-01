@@ -117,12 +117,16 @@ declare namespace ABeamer {
   //                               Story
   // ------------------------------------------------------------------------
 
+  export interface _WaitManImpl extends WaitMan {
+  }
+
   /**
    * Implementation of _Story class.
    */
   export interface _StoryImpl extends Story {
 
     _teleporter: _Teleporter;
+    _waitMan: _WaitMan;
     _args: ABeamerArgs;
     /**
      * If true, the input parameters have strict checks and throw errors if fails.

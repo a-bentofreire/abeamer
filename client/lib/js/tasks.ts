@@ -295,7 +295,7 @@ namespace ABeamer {
 
             inTextHtml.push(parts.join(''));
           }
-          elAdapter.setProp('html', inTextHtml.join('\n'));
+          elAdapter.setProp('html', inTextHtml.join('\n'), args);
         });
         return TR_EXIT;
     }

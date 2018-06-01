@@ -36,6 +36,19 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Story
     // ------------------------------------------------------------------------
+    // #export-section-end: release
+    // -------------------------------
+    // ------------------------------------------------------------------------
+    //                               Implementation
+    // ------------------------------------------------------------------------
+    var _WaitMan = /** @class */ (function () {
+        function _WaitMan() {
+        }
+        _WaitMan.prototype.addWaitFunc = function (func) {
+        };
+        return _WaitMan;
+    }());
+    ABeamer._WaitMan = _WaitMan;
     /**
      * Implementation of _Story class.
      */
@@ -108,24 +121,27 @@ var ABeamer;
              */
             this.bestPlaySpeed = function () { return Math.abs(1000 / _this.fps); };
             var urlParams = window.location.search || '';
+            var args = this._args;
+            this._waitMan = new _WaitMan();
+            args.waitMan = this._waitMan;
             this.storyAdapter = createParams.storyAdapter || new ABeamer._DOMSceneAdapter('.abeamer-story');
-            cfg.fps = cfg.fps || this.storyAdapter.getProp('fps');
+            cfg.fps = cfg.fps || this.storyAdapter.getProp('fps', args);
             ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(cfg.fps), ABeamer.Msgs.MustNatPositive, { p: 'fps' });
             ABeamer._vars.fps = cfg.fps;
-            cfg.width = cfg.width || this.storyAdapter.getProp('frame-width');
+            cfg.width = cfg.width || this.storyAdapter.getProp('frame-width', args);
             ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(cfg.width), ABeamer.Msgs.MustNatPositive, { p: 'frame-width' });
-            this.storyAdapter.setProp('frame-width', cfg.width);
+            this.storyAdapter.setProp('frame-width', cfg.width, args);
             ABeamer._vars.frameWidth = cfg.width;
-            cfg.height = cfg.height || this.storyAdapter.getProp('frame-height');
+            cfg.height = cfg.height || this.storyAdapter.getProp('frame-height', args);
             ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(cfg.height), ABeamer.Msgs.MustNatPositive, { p: 'frame-height' });
-            this.storyAdapter.setProp('frame-height', cfg.height);
+            this.storyAdapter.setProp('frame-height', cfg.height, args);
             ABeamer._vars.frameHeight = cfg.height;
             // setting clip-path is used because of slide transitions that display outside
             // the story boundaries
-            this.storyAdapter.setProp('clip-path', "polygon(0 0, 0 " + cfg.height + "px, " + cfg.width + "px " + cfg.height + "px, " + cfg.width + "px 0px)");
+            this.storyAdapter.setProp('clip-path', "polygon(0 0, 0 " + cfg.height + "px, " + cfg.width + "px " + cfg.height + "px, " + cfg.width + "px 0px)", args);
             this._width = cfg.width;
             this._height = cfg.height;
-            this._args.story = this;
+            args.story = this;
             this.fps = cfg.fps;
             this._isTeleporting = createParams.toTeleport || false;
             urlParams.replace(new RegExp(ABeamer._SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), function (m, p1) {
@@ -142,8 +158,8 @@ var ABeamer;
                 _this.serverFeatures = ABeamer._setServer(_this.serverName);
                 return '';
             });
-            this._args.isTeleporting = this._isTeleporting;
-            this._args.vars.isTeleporting = this._args.isTeleporting;
+            args.isTeleporting = this._isTeleporting;
+            args.vars.isTeleporting = args.isTeleporting;
             this._teleporter = new ABeamer._Teleporter(this, cfg, this._isTeleporting);
             // #debug-start
             if (this._isVerbose) {
@@ -550,18 +566,17 @@ var ABeamer;
         };
         // @TODO: This can cause a stack overflow. It needs a better solution,
         // probably using async.
-        _Story.prototype._internalCallWaitFor = function (scene, waitFor, at, onFinished) {
-            var _this = this;
-            if (at < waitFor.length) {
-                waitFor[at](this._args, function () {
-                    _this._internalCallWaitFor(scene, waitFor, at + 1, onFinished);
-                });
-            }
-            else {
-                this._afterWaitRenderFrame(scene);
-                onFinished();
-            }
-        };
+        // protected _internalCallWaitFor(scene: _SceneImpl, waitFor: WaitFuncTmp[],
+        //   at: uint, onFinished: () => void) {
+        //   if (at < waitFor.length) {
+        //     waitFor[at](this._args, () => {
+        //       this._internalCallWaitFor(scene, waitFor, at + 1, onFinished);
+        //     });
+        //   } else {
+        //     this._afterWaitRenderFrame(scene);
+        //     onFinished();
+        //   }
+        // }
         _Story.prototype._internalRenderFrame = function (onFinished) {
             var _this = this;
             var scene = this._curScene;
@@ -572,14 +587,12 @@ var ABeamer;
             if (scene !== this._curScene) {
                 this._internalGotoScene(scene);
             }
-            var waitFor = [];
             this._wkFlyovers.forEach(function (wkFlyover) {
-                var waitFunc = wkFlyover.func(wkFlyover, wkFlyover.params, ABeamer.TS_ANIME_LOOP, _this._args);
-                if (waitFunc) {
-                    waitFor.push(waitFunc);
-                }
+                wkFlyover.func(wkFlyover, wkFlyover.params, ABeamer.TS_ANIME_LOOP, _this._args);
             });
-            this._internalCallWaitFor(scene, waitFor, 0, onFinished);
+            // this._internalCallWaitFor(scene, waitFor, 0, onFinished);
+            this._afterWaitRenderFrame(scene);
+            onFinished();
         };
         // ------------------------------------------------------------------------
         //                               Transitions
@@ -736,7 +749,7 @@ var ABeamer;
             this._setupTransitions();
             this._internalGotoFrame(this._renderFramePos);
             if (!this.hasServer) {
-                this._serverlessRender(playSpeedMs);
+                this._pacedRenderLoop(playSpeedMs !== undefined && playSpeedMs > 0 ? playSpeedMs : 1);
             }
             else {
                 this._sendCmd(ABeamer._SRV_CNT.MSG_READY);
@@ -812,19 +825,6 @@ var ABeamer;
                 });
             };
             callRenderFrame(); // renders the first frame without delay
-        };
-        _Story.prototype._serverlessRender = function (playSpeedMs) {
-            if (playSpeedMs !== undefined && playSpeedMs > 0) {
-                this._pacedRenderLoop(playSpeedMs);
-            }
-            else {
-                // with waitFor events even at full speed it will need a timer.
-                // do {
-                //   this._internalCallRenderFrame();
-                // } while (this._isRendering);
-                // @TODO: Better solution. probably using async.
-                this._pacedRenderLoop(1);
-            }
         };
         // ------------------------------------------------------------------------
         //                               Communicate with the server

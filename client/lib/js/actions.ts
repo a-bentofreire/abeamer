@@ -115,7 +115,7 @@ namespace ABeamer {
   /**
    * List of `_ActionRgMap`, one per element.
    *
-   * `elementAdpt.getProp('uid')` contains the index to this list.
+   * `elementAdpt.getProp('uid', args)` contains the index to this list.
    */
   export type _ActionRgMaps = _ActionRgMap[];
 
@@ -125,7 +125,7 @@ namespace ABeamer {
    * If it exists, it links to the previous `actionRg` to a newly created `actionRg`,
    * If doesn't exist just creates a `actionRg`.
    *
-   * `_findActionRg` uses `elementAdpt.getProp('uid')` to determine if has already
+   * `_findActionRg` uses `elementAdpt.getProp('uid', args)` to determine if has already
    * an ActionRg.
    */
   export function _findActionRg(
@@ -133,16 +133,17 @@ namespace ABeamer {
     elementAdpt: _ElementAdapter,
     propName: string,
     startFrame: uint,
-    endFrame: uint): _ElActionRg {
+    endFrame: uint,
+    args: ABeamerArgs): _ElActionRg {
 
-    const propValue = elementAdpt.getProp('uid') as string;
+    const propValue = elementAdpt.getProp('uid', args) as string;
     let index = propValue !== undefined ? parseInt(propValue) : -1;
     const found = index >= 0;
     let actionRgMap: _ActionRgMap;
 
     if (!found) {
       index = actionRgMaps.length;
-      elementAdpt.setProp('uid', index.toString());
+      elementAdpt.setProp('uid', index.toString(), args);
       actionRgMap = {};
       actionRgMaps.push(actionRgMap);
     } else {
