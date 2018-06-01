@@ -6,6 +6,7 @@ gallery/*/*.gif
 gallery/*/story.json
 gallery/animate-video-sync/assets/a-bentofreire/*.mp4
 gallery/remote-server/assets/**
+gallery/remote-server/story.json
 gallery/**/story-frames/
 test/tests.run/
 docs/build

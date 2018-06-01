@@ -929,6 +929,22 @@ declare namespace ABeamer {
   export type ElSelectorHandler = ElSelector | ElSelectorFunc;
 
 
+  // ------------------------------------------------------------------------
+  //                               Browser
+  // ------------------------------------------------------------------------
+
+  export interface Browser {
+
+    vendorPrefix: string;
+    prefixedProps: string[];
+  }
+
+
+  export const browser: Browser = {
+    vendorPrefix: '',
+    prefixedProps: [],
+  };
+
 
   // ------------------------------------------------------------------------
   //                               Transitions

@@ -2,13 +2,13 @@
   "config": {
     "abeamer": {
       "fps": 20,
-      "width": 200,
-      "height": 133,
+      "width": 300,
+      "height": 200,
       "version": "0.2.0",
       "locale": "en",
       "file": "__PROJDIR__/index.html",
       "renderPos": 0,
-      "renderCount": 80,
+      "renderCount": 100,
       "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/67.0.3396.62 Safari/537.36",
       "metadata": {},
       "plugins": [],
@@ -16,47 +16,34 @@
         [
           [
             {
-              "selector": "#bkg",
+              "selector": "#img",
+              "duration": "5s",
               "props": [
                 {
-                  "prop": "src",
-                  "duration": "4s",
-                  "valueText": [
-                    "assets/pixabay/barley-field-1684052_640.jpg",
-                    "assets/pixabay/field-533541_640.jpg",
-                    "assets/pixabay/schilthorn-3033448_640.jpg",
-                    "assets/pixabay/world-549425_640.jpg"
-                  ]
+                  "prop": "opacity",
+                  "easing": "easeInSine",
+                  "oscillator": {
+                    "handler": "harmonic",
+                    "params": {
+                      "cycles": 2
+                    }
+                  }
                 }
               ]
             },
             {
-              "selector": "#text",
-              "duration": "4s",
+              "selector": "#t3",
+              "duration": "5s",
               "props": [
                 {
-                  "prop": "backgroundImage",
-                  "valueText": [
-                    "url(\"assets/pixabay/world-549425_640.jpg\")",
-                    "url(\"assets/pixabay/schilthorn-3033448_640.jpg\")",
-                    "url(\"assets/pixabay/barley-field-1684052_640.jpg\")",
-                    "url(\"assets/pixabay/field-533541_640.jpg\")"
-                  ]
-                },
-                {
-                  "prop": "color",
-                  "easing": "easeInQuad",
-                  "value": 0.8,
-                  "valueFormat": "rgba(224, 224, 224, %f)"
-                },
-                {
-                  "prop": "html",
-                  "valueText": [
-                    "SAVE<br>THE<br>PLANET",
-                    "IT'S<br>THE<br>ONLY",
-                    "HOME",
-                    "HE<br>HAVE"
-                  ]
+                  "prop": "left",
+                  "easing": "linear",
+                  "valueStart": 0,
+                  "value": 4,
+                  "oscillator": {
+                    "handler": "damped",
+                    "params": {}
+                  }
                 }
               ]
             }
@@ -66,31 +53,36 @@
       "html": [
         "",
         "        <div class=\"abeamer-scene\" id=\"scene1\">",
-        "            <img class=\"bkg abs-elem-lt\" id=\"bkg\" src=\"assets/pixabay/barley-field-1684052_640.jpg\">",
-        "            <div id=\"cntr\">",
-        "                <div id=\"text\">SAVE",
-        "                    <br>THE",
-        "                    <br>PLANET</div>",
-        "            </div>",
+        "            <img id=\"img\" src=\"assets/pixabay/halloween-2836388_640.jpg\">",
+        "            <!-- <div id=text> -->",
+        "                <p id=\"t1\">THIS</p>",
+        "                <p id=\"t2\">HALLOWEEN</p>",
+        "                <p id=\"t3\">FEAR</p>",
+        "                <p id=\"t4\">WILL RETURN</p>",
+        "            <!-- </div> -->",
         "        </div>",
         "    "
       ],
       "css": [
         {
           "path": "css/",
-          "text": "body, html, .abeamer-story, .abeamer-scene { width: 200px; height: 133px; }"
+          "text": "body, html, .abeamer-story, .abeamer-scene { width: 300px; height: 200px; }"
         },
         {
           "path": "css/",
-          "text": "#scene1 { text-align: center; }"
+          "text": "@font-face { font-family: Creepster; font-style: normal; src: url(\"../assets/fonts/Creepster/Creepster-Regular.ttf\"); }"
         },
         {
           "path": "css/",
-          "text": "#cntr { display: flex; place-content: center; align-items: center; width: 100%; height: 100%; }"
+          "text": "#scene1 { background: rgb(0, 0, 0); padding: 10px; color: rgb(255, 255, 255); font-family: Creepster; font-weight: bold; font-size: 30px; display: flex; flex-flow: column; justify-content: center; align-items: center; }"
         },
         {
           "path": "css/",
-          "text": "#text { position: relative; font-family: Arial, Helvetica, sans-serif; font-weight: bold; color: transparent; background-clip: text; background-size: 100% 100%; text-shadow: rgba(0, 0, 0, 0.53) 2px 2px 9px; font-size: 35px !important; }"
+          "text": "#img { position: absolute; right: -18px; top: 10px; opacity: 0; }"
+        },
+        {
+          "path": "css/",
+          "text": "p { z-index: 5; margin: 6px; color: transparent; background: linear-gradient(rgb(116, 116, 116) 0%, rgb(231, 56, 39) 100%) text; text-shadow: rgb(251, 84, 68) 0px 0px 13px; position: relative; }"
         }
       ]
     }

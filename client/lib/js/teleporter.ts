@@ -244,13 +244,14 @@ namespace ABeamer {
 
 
     _rebuildStory(): void {
+      // css must be rebuilt before html.
+      if (this._cfg.css) {
+        _buildCssRulesFromConfig(this._cfg.css);
+      }
+
       if (this._cfg.html) {
         this._story.storyAdapter.setProp('html', _sanitizeHtml(this._cfg.html.join('\n')));
         this._story.addDefaultScenes();
-      }
-
-      if (this._cfg.css) {
-        _buildCssRulesFromConfig(this._cfg.css);
       }
 
       if (this._cfg.animations) {
@@ -349,10 +350,13 @@ namespace ABeamer {
     const pageRoot = _getPageRoot();
     const styleSheets = window.document.styleSheets;
     const lastSheet = styleSheets[styleSheets.length - 1] as CSSStyleSheet;
-    for (let i = cssRules.length - 1; i >= 0; i--) {
+    let cssRulesLen = lastSheet.cssRules.length;
+    for (let i = 0; i < cssRules.length; i++) {
       const cssRule = cssRules[i];
-      lastSheet.insertRule(_remapCSSRuleLocalLink(pageRoot, cssRule.path,
-        _handleVendorPrefixes(cssRule.text)), 0);
+      const prefixedCssRule = _handleVendorPrefixes(cssRule.text);
+      const remappedRule = _remapCSSRuleLocalLink(pageRoot, cssRule.path,
+        prefixedCssRule);
+      lastSheet.insertRule(remappedRule, cssRulesLen++);
     }
   }
 
@@ -389,7 +393,7 @@ namespace ABeamer {
   function _remapCSSRuleLocalLink(pageRoot: string, path: string,
     cssText: string): string {
 
-    return !path ? path : cssText.replace(/url\("([^"]+)"\)/, (all, link) => {
+    return !path ? path : cssText.replace(/url\("([^"]+)"\)/g, (all, link) => {
       if (link.startsWith('http')) { return all; }
       const newLink = pageRoot + path + link;
       return `url("${newLink}")`;

@@ -243,6 +243,22 @@ namespace ABeamer {
   export type ElSelectorHandler = ElSelector | ElSelectorFunc;
 
 
+  // ------------------------------------------------------------------------
+  //                               Browser
+  // ------------------------------------------------------------------------
+
+  export interface Browser {
+
+    vendorPrefix: string;
+    prefixedProps: string[];
+  }
+
+
+  export const browser: Browser = {
+    vendorPrefix: '',
+    prefixedProps: [],
+  };
+
   // #export-section-end: release
   // -------------------------------
 
@@ -711,7 +727,7 @@ namespace ABeamer {
 
 
     query(selector: string,
-      iterator: (element: PElement, index: uint) => void) {
+      iterator: (element: PElement, index: uint) => void): void {
 
       this.$scene.find(selector as string).each((index, element) => {
         iterator(element, index);
@@ -745,7 +761,7 @@ namespace ABeamer {
 
 
     query(selector: string,
-      iterator: (element: PElement, index: uint) => void) {
+      iterator: (element: PElement, index: uint) => void): void {
       this.vScene.query(selector, iterator);
     }
   }
@@ -762,7 +778,7 @@ namespace ABeamer {
     elementOrStr: PElement | string,
     elementAdapters: _ElementAdapter[],
     isVirtual?: boolean,
-    isString?: boolean) {
+    isString?: boolean): void {
 
     let element: PElement;
 
@@ -827,4 +843,80 @@ namespace ABeamer {
     }
     return elementAdapters;
   }
+
+  // ------------------------------------------------------------------------
+  //                               Browser
+  // ------------------------------------------------------------------------
+
+  /**
+   * List of CSS properties by vendor prefix that aren't caught by
+   * `window.getComputedStyle`
+   */
+  const FORCED_PROP_REMAPS = {
+    '-webkit-': ['background-clip'],
+  };
+
+
+  /**
+   * Maps an input CSS property into the current CSS property, adding a prefixed
+   * CSS property if necessary.
+   */
+  export function _propNameToVendorProps(propName: string): string[] {
+
+    const subPropName = propName.replace(/(?:-webkit-|-moz-|-ie-)/, '');
+    const mapValue = domPropMapper[subPropName];
+    if (mapValue && mapValue[1] && mapValue[1] !== subPropName) {
+      return [subPropName, mapValue[1]];
+    }
+    return [subPropName];
+  }
+
+
+  /**
+   * Adds a vendor prefixed CSS properties to the domPropMapper.
+   */
+  function _addPropToDomPropMapper(subPropName: string, propName: string): void {
+    const mapValue = domPropMapper[subPropName];
+    const propType = mapValue !== undefined ? mapValue[0] : DPT_STYLE;
+    domPropMapper[propName] = [propType, propName];
+    domPropMapper[subPropName] = [propType, propName];
+  }
+
+
+  /**
+   * Discovers the vendor prefix and vendor prefixed CSS properties
+   * by using `window.getComputedStyle`.
+   */
+  function _initBrowser(): void {
+    const cssMap = window.getComputedStyle(document.body);
+    const cssMapLen = cssMap.length;
+    const regEx = /^(-webkit-|-moz-|-ie-)(.*)/;
+    let foundVendorPrefix = false;
+    for (let i = 0; i < cssMapLen; i++) {
+      const propName = cssMap[i];
+      const parts = propName.match(regEx);
+      if (parts) {
+
+        if (!foundVendorPrefix) {
+          const vendorPrefix = parts[1];
+          browser.vendorPrefix = vendorPrefix;
+          foundVendorPrefix = true;
+
+          const forcedProps = FORCED_PROP_REMAPS[vendorPrefix] as string[];
+          if (forcedProps) {
+            forcedProps.forEach(forcedProp => {
+              _addPropToDomPropMapper(forcedProp, vendorPrefix + forcedProp);
+            });
+          }
+        }
+
+        const subPropName = parts[2];
+        browser.prefixedProps.push(subPropName);
+        _addPropToDomPropMapper(subPropName, propName);
+      }
+    }
+  }
+
+  // executed at startup
+  _initBrowser();
 }

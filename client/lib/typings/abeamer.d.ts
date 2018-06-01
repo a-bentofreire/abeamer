@@ -88,7 +88,7 @@ declare namespace ABeamer {
     getProp(propName: PropName): PropValue;
     setProp(propName: PropName, value: PropValue): void;
     query(selector: string,
-      iterator: (element: PElement, index: uint) => void);
+      iterator: (element: PElement, index: uint) => void): void;
   }
 
   // ------------------------------------------------------------------------

@@ -93,6 +93,7 @@ var BuildDocs;
         ReferenceBuilder.prototype.updateLinks = function (fileBase, content) {
             var _this = this;
             return content.replace(/\[([^\]]*)\]\(([\w\-]*)(?:#([\w\-]*))?\)/g, function (app, info, link, bookmark) {
+                var _a;
                 bookmark = bookmark || '';
                 link = link || '';
                 if (!info) {
@@ -116,7 +117,6 @@ var BuildDocs;
                     _a = tracedLink.split('#'), link = _a[0], bookmark = _a[1];
                 }
                 return "[" + info + "](" + link + (bookmark ? '#' + bookmark : '') + ")";
-                var _a;
             });
         };
         /** Main entry point. Reads the files and calls appropriate action. */

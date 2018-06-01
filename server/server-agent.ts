@@ -125,8 +125,10 @@ export namespace ServerAgent {
         + sc.LOG_LEVEL_SUFFIX + this.logLevel + '&'
         + sc.TELEPORT_SUFFIX + this.toTeleport.toString();
 
-      if (this.isVerbose) {
-        console.log(`pageUrl: ${pageUrl}`);
+      // since this is an fundamental information it should always display
+      // even not on verbose mode.
+      if (this.logLevel !== 0) {
+        console.log(`pageUrl: [${pageUrl}]`);
       }
       return pageUrl;
     }

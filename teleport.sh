@@ -11,8 +11,14 @@
 # e.g. ./teleport.sh ./gallery/animate-colors
 
 if [ "$1" == "" ]; then
-  echo "usage: ./teleport.sh [PORT] (FOLDER)"
+  echo "usage: ./teleport.sh [--gif] [PORT] (FOLDER)"
 else
+  GEN_GIF=0
+  if [ "$1" == "--gif" ]; then
+    GEN_GIF=1
+    shift
+  fi
+
   PORT=$1
   PARAM_TEST=${PORT//[0-9]}
   if [ "$PARAM_TEST" != "" ]; then
@@ -52,4 +58,8 @@ else
   node ./cli/abeamer-cli.js render $@ --dp --url $URL --config $CONFIG \
   --allowed-plugins "$RS_FOLDER/.allowed-plugins.json" \
   --inject-page "$RS_FOLDER/index.html"
+
+  if [ $GEN_GIF == 1 ]; then
+    node ./cli/abeamer-cli.js gif $RS_FOLDER/
+  fi
 fi

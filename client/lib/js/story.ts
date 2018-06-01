@@ -760,7 +760,7 @@ namespace ABeamer {
     }
 
 
-    protected _AfterWaitRenderFrame(scene: _SceneImpl) {
+    protected _afterWaitRenderFrame(scene: _SceneImpl) {
       if (this.onBeforeRenderFrame) { this.onBeforeRenderFrame(this._args); }
       scene._internalRenderFrame(this._renderFramePos - scene.storyFrameStart,
         this._renderDir, this._isVerbose, false);
@@ -779,7 +779,7 @@ namespace ABeamer {
           this._internalCallWaitFor(scene, waitFor, at + 1, onFinished);
         });
       } else {
-        this._AfterWaitRenderFrame(scene);
+        this._afterWaitRenderFrame(scene);
         onFinished();
       }
     }

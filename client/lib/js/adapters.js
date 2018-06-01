@@ -57,6 +57,10 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Elements
     // ------------------------------------------------------------------------
+    ABeamer.browser = {
+        vendorPrefix: '',
+        prefixedProps: [],
+    };
     // #export-section-end: release
     // -------------------------------
     // ------------------------------------------------------------------------
@@ -540,5 +544,72 @@ var ABeamer;
         return elementAdapters;
     }
     ABeamer._parseInElSelector = _parseInElSelector;
+    // ------------------------------------------------------------------------
+    //                               Browser
+    // ------------------------------------------------------------------------
+    /**
+     * List of CSS properties by vendor prefix that aren't caught by
+     * `window.getComputedStyle`
+     */
+    var FORCED_PROP_REMAPS = {
+        '-webkit-': ['background-clip'],
+    };
+    /**
+     * Maps an input CSS property into the current CSS property, adding a prefixed
+     * CSS property if necessary.
+     */
+    function _propNameToVendorProps(propName) {
+        var subPropName = propName.replace(/(?:-webkit-|-moz-|-ie-)/, '');
+        var mapValue = domPropMapper[subPropName];
+        if (mapValue && mapValue[1] && mapValue[1] !== subPropName) {
+            return [subPropName, mapValue[1]];
+        }
+        return [subPropName];
+    }
+    ABeamer._propNameToVendorProps = _propNameToVendorProps;
+    /**
+     * Adds a vendor prefixed CSS properties to the domPropMapper.
+     */
+    function _addPropToDomPropMapper(subPropName, propName) {
+        var mapValue = domPropMapper[subPropName];
+        var propType = mapValue !== undefined ? mapValue[0] : ABeamer.DPT_STYLE;
+        domPropMapper[propName] = [propType, propName];
+        domPropMapper[subPropName] = [propType, propName];
+    }
+    /**
+     * Discovers the vendor prefix and vendor prefixed CSS properties
+     * by using `window.getComputedStyle`.
+     */
+    function _initBrowser() {
+        var cssMap = window.getComputedStyle(document.body);
+        var cssMapLen = cssMap.length;
+        var regEx = /^(-webkit-|-moz-|-ie-)(.*)/;
+        var foundVendorPrefix = false;
+        var _loop_1 = function (i) {
+            var propName = cssMap[i];
+            var parts = propName.match(regEx);
+            if (parts) {
+                if (!foundVendorPrefix) {
+                    var vendorPrefix_1 = parts[1];
+                    ABeamer.browser.vendorPrefix = vendorPrefix_1;
+                    foundVendorPrefix = true;
+                    var forcedProps = FORCED_PROP_REMAPS[vendorPrefix_1];
+                    if (forcedProps) {
+                        forcedProps.forEach(function (forcedProp) {
+                            _addPropToDomPropMapper(forcedProp, vendorPrefix_1 + forcedProp);
+                        });
+                    }
+                }
+                var subPropName = parts[2];
+                ABeamer.browser.prefixedProps.push(subPropName);
+                _addPropToDomPropMapper(subPropName, propName);
+            }
+        };
+        for (var i = 0; i < cssMapLen; i++) {
+            _loop_1(i);
+        }
+    }
+    // executed at startup
+    _initBrowser();
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=adapters.js.map

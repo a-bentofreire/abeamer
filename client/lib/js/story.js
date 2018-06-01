@@ -538,7 +538,7 @@ var ABeamer;
             }
             _curScene._internalGotoFrame(framePos - _curScene.storyFrameStart);
         };
-        _Story.prototype._AfterWaitRenderFrame = function (scene) {
+        _Story.prototype._afterWaitRenderFrame = function (scene) {
             if (this.onBeforeRenderFrame) {
                 this.onBeforeRenderFrame(this._args);
             }
@@ -558,7 +558,7 @@ var ABeamer;
                 });
             }
             else {
-                this._AfterWaitRenderFrame(scene);
+                this._afterWaitRenderFrame(scene);
                 onFinished();
             }
         };

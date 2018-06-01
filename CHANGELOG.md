@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - (DEV)Added `teleport.sh` test script.
 ### Fixed
 - Fixed `gulp build-gallery-gifs` links.
+- Improved CSS properties teleportation.
 
 
 ## [0.1.6] -

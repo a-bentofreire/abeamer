@@ -204,12 +204,13 @@ var ABeamer;
             }, undefined, isPretty ? 2 : undefined);
         };
         _Teleporter.prototype._rebuildStory = function () {
+            // css must be rebuilt before html.
+            if (this._cfg.css) {
+                _buildCssRulesFromConfig(this._cfg.css);
+            }
             if (this._cfg.html) {
                 this._story.storyAdapter.setProp('html', _sanitizeHtml(this._cfg.html.join('\n')));
                 this._story.addDefaultScenes();
-            }
-            if (this._cfg.css) {
-                _buildCssRulesFromConfig(this._cfg.css);
             }
             if (this._cfg.animations) {
                 this._story.addStoryAnimations(this._cfg.animations);
@@ -298,9 +299,12 @@ var ABeamer;
         var pageRoot = _getPageRoot();
         var styleSheets = window.document.styleSheets;
         var lastSheet = styleSheets[styleSheets.length - 1];
-        for (var i = cssRules.length - 1; i >= 0; i--) {
+        var cssRulesLen = lastSheet.cssRules.length;
+        for (var i = 0; i < cssRules.length; i++) {
             var cssRule = cssRules[i];
-            lastSheet.insertRule(_remapCSSRuleLocalLink(pageRoot, cssRule.path, _handleVendorPrefixes(cssRule.text)), 0);
+            var prefixedCssRule = _handleVendorPrefixes(cssRule.text);
+            var remappedRule = _remapCSSRuleLocalLink(pageRoot, cssRule.path, prefixedCssRule);
+            lastSheet.insertRule(remappedRule, cssRulesLen++);
         }
     }
     /** Prevents scripts to be injected to the teleported story. */
@@ -327,7 +331,7 @@ var ABeamer;
      * This function from the original path and current host generates a new link.
      */
     function _remapCSSRuleLocalLink(pageRoot, path, cssText) {
-        return !path ? path : cssText.replace(/url\("([^"]+)"\)/, function (all, link) {
+        return !path ? path : cssText.replace(/url\("([^"]+)"\)/g, function (all, link) {
             if (link.startsWith('http')) {
                 return all;
             }
