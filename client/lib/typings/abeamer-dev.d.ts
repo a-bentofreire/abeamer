@@ -172,8 +172,6 @@ declare namespace ABeamer {
     _exceptIfRendering(): void;
 
 
-    _internalRender(playSpeedMs?: uint | undefined,
-      frameOpts?: RenderFrameOptions): void;
     /**
      * This method is called by the server to communicate with the client.
      */

@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - (DEV)exact framework supports plugins.
 - Improved cross-browser CSS support.
 - Adaptors have access to ABeamerArgs.
+- Redesigned the render loop for wait functions support.
 ### Added
 - Added `DEFAULT_FADE_DURATION = '400ms'`.
 - Added `color-functions` plugin with `rgb` and `rgba` functions.

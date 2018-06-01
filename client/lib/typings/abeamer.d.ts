@@ -271,7 +271,9 @@ declare namespace ABeamer {
   // ------------------------------------------------------------------------
 
   export interface WaitMan {
-    addWaitFunc(func: WaitFunc): void;
+    funcs: _WaitFunc[];
+    pos: uint;
+    addWaitFunc(func: WaitFunc, params: AnyParams): void;
   }
 
   /**

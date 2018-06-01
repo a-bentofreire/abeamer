@@ -1532,10 +1532,12 @@ declare namespace ABeamer {
 
 
 
-  export type WaitFunc = (args: ABeamerArgs) => void;
+  export type WaitFunc = (args: ABeamerArgs, params: AnyParams,
+    onDone: () => void) => void;
+
 
   export interface WaitMan {
-    addWaitFunc(func: WaitFunc): void;
+    addWaitFunc(func: WaitFunc, params: AnyParams): void;
   }
 
 

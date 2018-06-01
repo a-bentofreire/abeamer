@@ -48,10 +48,12 @@ namespace ABeamer {
   // #export-section-start: release
 
 
-  export type WaitFunc = (args: ABeamerArgs) => void;
+  export type WaitFunc = (args: ABeamerArgs, params: AnyParams,
+    onDone: () => void) => void;
+
 
   export interface WaitMan {
-    addWaitFunc(func: WaitFunc): void;
+    addWaitFunc(func: WaitFunc, params: AnyParams): void;
   }
 
 
@@ -151,9 +153,18 @@ namespace ABeamer {
   //                               Implementation
   // ------------------------------------------------------------------------
 
-  export class _WaitMan implements WaitMan {
-    addWaitFunc(func: WaitFunc): void {
+  export interface _WaitFunc {
+    func: WaitFunc;
+    params: AnyParams;
+  }
 
+  export class _WaitMan implements WaitMan {
+
+    funcs: _WaitFunc[] = [];
+    pos: uint = 0;
+
+    addWaitFunc(func: WaitFunc, params: AnyParams): void {
+      this.funcs.push({ func, params });
     }
   }
 
@@ -182,6 +193,12 @@ namespace ABeamer {
     protected _renderDir: -1 | 1 = 1;
     protected _renderFrameEnd: uint = 0;
     protected _renderFrameCount: uint = 0;
+
+    protected _renderStage: uint = 0;
+    protected _renderPlaySpeed: uint = 0;
+    protected _renderTimeStamp: Date;
+    protected _renderHiddenStory: boolean;
+
     protected _isRendering: boolean = false;
     protected _scenes: _SceneImpl[] = [];
     protected _curScene: _SceneImpl | undefined = undefined;
@@ -779,51 +796,6 @@ namespace ABeamer {
       _curScene._internalGotoFrame(framePos - _curScene.storyFrameStart);
     }
 
-
-    protected _afterWaitRenderFrame(scene: _SceneImpl) {
-      if (this.onBeforeRenderFrame) { this.onBeforeRenderFrame(this._args); }
-      scene._internalRenderFrame(this._renderFramePos - scene.storyFrameStart,
-        this._renderDir, this._isVerbose, false);
-      // @TODO: Rethink so it's placed only after the frame is stored on the server
-      if (this.onAfterRenderFrame) { this.onAfterRenderFrame(this._args); }
-    }
-
-
-    // @TODO: This can cause a stack overflow. It needs a better solution,
-    // probably using async.
-    // protected _internalCallWaitFor(scene: _SceneImpl, waitFor: WaitFuncTmp[],
-    //   at: uint, onFinished: () => void) {
-
-    //   if (at < waitFor.length) {
-    //     waitFor[at](this._args, () => {
-    //       this._internalCallWaitFor(scene, waitFor, at + 1, onFinished);
-    //     });
-    //   } else {
-    //     this._afterWaitRenderFrame(scene);
-    //     onFinished();
-    //   }
-    // }
-
-
-    protected _internalRenderFrame(onFinished: () => void): void {
-
-      let scene = this._curScene as _SceneImpl;
-      while (!scene._internalContainsFrame(this._renderFramePos)) {
-        scene = this._scenes[this._curScene.storySceneIndex + this._renderDir];
-      }
-      this._args.scene = scene;
-      if (scene !== this._curScene) { this._internalGotoScene(scene); }
-
-      this._wkFlyovers.forEach(wkFlyover => {
-        wkFlyover.func(wkFlyover, wkFlyover.params, TS_ANIME_LOOP,
-          this._args);
-      });
-
-      // this._internalCallWaitFor(scene, waitFor, 0, onFinished);
-      this._afterWaitRenderFrame(scene);
-      onFinished();
-    }
-
     // ------------------------------------------------------------------------
     //                               Transitions
     // ------------------------------------------------------------------------
@@ -1006,11 +978,19 @@ namespace ABeamer {
         this._queueRenders.push(frameOpts);
         return;
       }
+
+      if (!this.hasServer) {
+        // @TODO: Determine why the first frame still shows the last frame.
+        // hide the story in case it takes time to build the first frame.
+        this._renderHiddenStory = true;
+        this.storyAdapter.setProp('visible', false, this._args);
+      }
+
       this._internalRender(playSpeedMs, frameOpts);
     }
 
 
-    _internalRender(playSpeedMs?: uint | undefined,
+    protected _internalRender(playSpeedMs?: uint | undefined,
       frameOpts?: RenderFrameOptions): void {
 
       this._args.stage = AS_RENDERING;
@@ -1021,10 +1001,15 @@ namespace ABeamer {
         return;
       }
 
+      this._renderStage = 0;
+      this._waitMan.funcs = [];
+      this._waitMan.pos = 0;
+      this._renderPlaySpeed = !this.hasServer && playSpeedMs !== undefined
+        && playSpeedMs > 0 ? playSpeedMs : 0;
       this._setupTransitions();
-      this._internalGotoFrame(this._renderFramePos);
+
       if (!this.hasServer) {
-        this._pacedRenderLoop(playSpeedMs !== undefined && playSpeedMs > 0 ? playSpeedMs : 1);
+        this._renderLoop();
       } else {
         this._sendCmd(_SRV_CNT.MSG_READY);
       }
@@ -1035,6 +1020,11 @@ namespace ABeamer {
      * Aborts the rendering process.
      */
     finishRender(): void {
+      if (this._renderHiddenStory) {
+        this._renderHiddenStory = false;
+        this.storyAdapter.setProp('visible', true, this._args);
+      }
+
       if (this._isRendering) {
         this._isRendering = false;
         if (this._renderTimer) {
@@ -1058,53 +1048,94 @@ namespace ABeamer {
     }
 
 
-    protected _internalCallRenderFrame(onFinished: (res: boolean) => void): void {
-      // in case DOM notification system after this.finishRender();
-      if (!this._isRendering) { onFinished(false); }
-
-      this._internalRenderFrame(() => {
-        if (this._renderFramePos !== this._renderFrameEnd) {
-          this._renderFramePos += this._renderDir;
-          if (this.onNextFrame) { this.onNextFrame(this._args); }
-          onFinished(true);
-
-        } else {
-          this.finishRender();
-          onFinished(false);
-        }
-      });
-    }
-
-
     /**
      * Renders each frame at a pre-defined speed.
      */
-    protected _pacedRenderLoop(playSpeedMs: uint) {
+    protected _renderLoop() {
 
-      // @TODO: set interval / 2 and sync frames to have a more abeamer timing
+      let stage = this._renderStage;
+      while (true) {
+        if (!this._isRendering) { return; }
 
-      let now = new Date() as any;
-      let stackLevel = 0; // protects from stack overflow
-      const callRenderFrame = () => {
-        this._internalCallRenderFrame((res: boolean) => {
-          if (res) {
-            const newDate = new Date() as any;
-            const elapsed = newDate - now;
-            const waitTime = playSpeedMs - Math.floor(elapsed /* / 1000 */);
-            now = newDate;
-            if (waitTime > 0 || stackLevel > 100) {
-              stackLevel = 0;
-              this._renderTimer = window.setTimeout(callRenderFrame,
-                Math.max(waitTime, 0));
-            } else {
-              stackLevel++;
-              callRenderFrame();
+        if (stage) {
+
+        }
+
+        switch (stage) {
+          case 0: // timestamp
+            stage++;
+            this._renderTimeStamp = new Date() as any;
+            break;
+
+          case 1:
+            stage += 2;
+            this._internalGotoFrame(this._renderFramePos);
+            break;
+
+          case 3:
+            stage++;
+            this._wkFlyovers.forEach(wkFlyover => {
+              wkFlyover.func(wkFlyover, wkFlyover.params, TS_ANIME_LOOP,
+                this._args);
+            });
+            break;
+
+          case 4:
+            stage++;
+            if (this.onBeforeRenderFrame) { this.onBeforeRenderFrame(this._args); }
+            break;
+
+          case 5:
+            stage++;
+            this._curScene._internalRenderFrame(this._renderFramePos - this._curScene.storyFrameStart,
+              this._renderDir, this._isVerbose, false);
+            if (this._renderHiddenStory) {
+              this._renderHiddenStory = false;
+              this.storyAdapter.setProp('visible', true, this._args);
             }
-          }
-        });
-      };
+            break;
 
-      callRenderFrame(); // renders the first frame without delay
+          case 6:
+            if (this.hasServer) {
+              stage++;
+            } else {
+              stage += 2;
+              // if hasServer=true, it's better to call before wait for next frame.
+              if (this.onAfterRenderFrame) { this.onAfterRenderFrame(this._args); }
+            }
+
+            this._renderStage = stage;
+            const newDate = new Date();
+            const elapsed = newDate as any - (this._renderTimeStamp as any);
+            const waitTime = Math.max(this._renderPlaySpeed - Math.floor(elapsed /* / 1000 */), 1);
+            this._renderTimer = window.setTimeout(() => {
+              if (!this.hasServer) {
+                this._renderLoop();
+              } else {
+                this._sendCmd(_SRV_CNT.MSG_RENDER);
+              }
+            }, waitTime);
+            return;
+
+          case 7:
+            // this is only called if hasServer
+            stage++;
+            if (this.onAfterRenderFrame) { this.onAfterRenderFrame(this._args); }
+            break;
+
+          case 8:
+            stage = 0;
+            if (this._renderFramePos !== this._renderFrameEnd) {
+              this._renderFramePos += this._renderDir;
+              if (this.onNextFrame) { this.onNextFrame(this._args); }
+            } else {
+              this._renderStage = -1;
+              this.finishRender();
+              return;
+            }
+            break;
+        }
+      }
     }
 
     // ------------------------------------------------------------------------
@@ -1194,23 +1225,13 @@ namespace ABeamer {
           this._sendCmd(_SRV_CNT.MSG_SET_FPS, this.fps.toString());
           this._sendCmd(_SRV_CNT.MSG_SET_FRAME_COUNT, this._frameCount.toString());
           if (this.onServerReady) { this.onServerReady(this._args); }
+          this._renderLoop();
           break;
 
         case _SRV_CNT.MSG_RENDER_DONE:
-          if (this._renderFramePos === this._renderFrameEnd) {
-            this.finishRender();
-            return;
-          }
-          this._renderFramePos += this._renderDir;
-          if (this.onNextFrame) { this.onNextFrame(this._args); }
+          this._renderLoop();
+          break;
       }
-
-      // Avoids stack overflow, since isn't clear if the server is async
-      window.setTimeout(() => {
-        this._internalRenderFrame(() => {
-          this._sendCmd(_SRV_CNT.MSG_RENDER);
-        });
-      }, 1);
     }
 
     // ------------------------------------------------------------------------
