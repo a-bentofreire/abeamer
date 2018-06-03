@@ -275,7 +275,7 @@ namespace ABeamer {
   export const DPT_PIXEL = 5;
   export const DPT_DUAL_PIXELS = 6;
   export const DPT_CLASS = 7;
-
+  export const DPT_MEDIA_TIME = 8;
 
   /**
    * Maps user property names to DOM property names.
@@ -291,7 +291,7 @@ namespace ABeamer {
     'innerHTML': [DPT_ATTR, 'innerHTML'],
     'outerHML': [DPT_ATTR, 'outerHML'],
     'textContent': [DPT_ATTR, 'textContent'],
-    'currentTime': [DPT_ATTR, 'currentTime'],
+    'currentTime': [DPT_MEDIA_TIME, 'currentTime'],
     'src': [DPT_ATTR_FUNC, 'src'],
     'class': [DPT_CLASS, 'className'],
     'visible': [DPT_VISIBLE, ''],
@@ -369,6 +369,19 @@ namespace ABeamer {
   }
 
 
+  function _syncMedia(el: HTMLMediaElement, waitMan: WaitMan,
+    pos: number): void {
+
+    waitMan.addWaitFunc((_args, params, onDone) => {
+
+      el.currentTime = pos;
+      window.setTimeout(() => {
+        onDone();
+      }, 1);
+    }, {});
+  }
+
+
   function _setDOMProp(adapter: _DOMAdapter,
     propName: PropName, value: PropValue, args?: ABeamerArgs): void {
 
@@ -395,6 +408,10 @@ namespace ABeamer {
       case DPT_ID:
       // flows to `DPT_ATTR`.
       case DPT_ATTR: element[domPropName] = value; break;
+      case DPT_MEDIA_TIME:
+        _syncMedia(element as HTMLMediaElement, args.waitMan, value as number);
+        break;
+
       case DPT_VISIBLE:
         const defDisplay = element['data-abeamer-display'];
         const curDisplay = element.style.display || adapter.getComputedStyle()['display'];
@@ -448,6 +465,8 @@ namespace ABeamer {
       || [DPT_STYLE, propName];
 
     switch (propType) {
+      case DPT_MEDIA_TIME:
+      // flows to `DPT_CLASS`.
       case DPT_CLASS:
       // flows to `DPT_ID`.
       case DPT_ID:

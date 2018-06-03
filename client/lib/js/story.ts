@@ -1054,11 +1054,22 @@ namespace ABeamer {
     protected _renderLoop() {
 
       let stage = this._renderStage;
+      const waitMan = this._waitMan;
       while (true) {
         if (!this._isRendering) { return; }
 
-        if (stage) {
-
+        if (stage && waitMan.funcs.length > waitMan.pos) {
+          this._renderStage = stage;
+          const func = waitMan.funcs[waitMan.pos];
+          waitMan.pos++;
+          if (waitMan.funcs.length === waitMan.pos) {
+            waitMan.pos = 0;
+            waitMan.funcs = [];
+          }
+          func.func(this._args, func.params, () => {
+            this._renderLoop();
+          });
+          return;
         }
 
         switch (stage) {

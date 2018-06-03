@@ -758,11 +758,23 @@ var ABeamer;
         _Story.prototype._renderLoop = function () {
             var _this = this;
             var stage = this._renderStage;
+            var waitMan = this._waitMan;
             while (true) {
                 if (!this._isRendering) {
                     return;
                 }
-                if (stage) {
+                if (stage && waitMan.funcs.length > waitMan.pos) {
+                    this._renderStage = stage;
+                    var func = waitMan.funcs[waitMan.pos];
+                    waitMan.pos++;
+                    if (waitMan.funcs.length === waitMan.pos) {
+                        waitMan.pos = 0;
+                        waitMan.funcs = [];
+                    }
+                    func.func(this._args, func.params, function () {
+                        _this._renderLoop();
+                    });
+                    return;
                 }
                 switch (stage) {
                     case 0: // timestamp

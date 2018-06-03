@@ -75,6 +75,7 @@ var ABeamer;
     ABeamer.DPT_PIXEL = 5;
     ABeamer.DPT_DUAL_PIXELS = 6;
     ABeamer.DPT_CLASS = 7;
+    ABeamer.DPT_MEDIA_TIME = 8;
     /**
      * Maps user property names to DOM property names.
      *
@@ -89,7 +90,7 @@ var ABeamer;
         'innerHTML': [ABeamer.DPT_ATTR, 'innerHTML'],
         'outerHML': [ABeamer.DPT_ATTR, 'outerHML'],
         'textContent': [ABeamer.DPT_ATTR, 'textContent'],
-        'currentTime': [ABeamer.DPT_ATTR, 'currentTime'],
+        'currentTime': [ABeamer.DPT_MEDIA_TIME, 'currentTime'],
         'src': [ABeamer.DPT_ATTR_FUNC, 'src'],
         'class': [ABeamer.DPT_CLASS, 'className'],
         'visible': [ABeamer.DPT_VISIBLE, ''],
@@ -151,6 +152,14 @@ var ABeamer;
         return _ElementAdapter;
     }(_AbstractAdapter));
     ABeamer._ElementAdapter = _ElementAdapter;
+    function _syncMedia(el, waitMan, pos) {
+        waitMan.addWaitFunc(function (_args, params, onDone) {
+            el.currentTime = pos;
+            window.setTimeout(function () {
+                onDone();
+            }, 1);
+        }, {});
+    }
     function _setDOMProp(adapter, propName, value, args) {
         var _a = domPropMapper[propName]
             || [ABeamer.DPT_STYLE, propName], propType = _a[0], domPropName = _a[1];
@@ -177,6 +186,9 @@ var ABeamer;
             // flows to `DPT_ATTR`.
             case ABeamer.DPT_ATTR:
                 element[domPropName] = value;
+                break;
+            case ABeamer.DPT_MEDIA_TIME:
+                _syncMedia(element, args.waitMan, value);
                 break;
             case ABeamer.DPT_VISIBLE:
                 var defDisplay = element['data-abeamer-display'];
@@ -221,6 +233,8 @@ var ABeamer;
         var _a = domPropMapper[propName]
             || [ABeamer.DPT_STYLE, propName], propType = _a[0], domPropName = _a[1];
         switch (propType) {
+            case ABeamer.DPT_MEDIA_TIME:
+            // flows to `DPT_CLASS`.
             case ABeamer.DPT_CLASS:
             // flows to `DPT_ID`.
             case ABeamer.DPT_ID:
