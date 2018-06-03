@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `vars.defaultDuration` removed.
 - `DEFAULT_DURATION` becomes immutable `1f`.
 - `rgb` function moves into color-functions plugin.
+- `typewriter` text task cursor is parameterized in similar way to CSS properties.
 
 ### Changed
 - (DEV)Harmonization of internal call parameters.
@@ -24,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `DEFAULT_FADE_DURATION = '400ms'`.
 - Added `color-functions` plugin with `rgb` and `rgba` functions.
 - (DEV)Added `teleport.sh` test script.
+- DOMAdaptor can sync HTMLMediaElement `currentTime` property.
 ### Fixed
 - Fixed `gulp build-gallery-gifs` links.
 - Improved CSS properties teleportation.

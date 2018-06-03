@@ -77,9 +77,8 @@ namespace ABeamer {
 
 
   export interface TypewriterTaskParams extends TextSplitTaskParams {
-    cursor?: boolean | {
-      char?: string;
-    };
+    cursor?: boolean;
+    cursorChar?: string;
   }
 
 
@@ -181,14 +180,7 @@ namespace ABeamer {
         const inTextArray = _textSplitter(params);
         const len = inTextArray.length;
         const hasCursor = params.cursor !== undefined;
-        let cursorChar = '';
-
-        if (hasCursor) {
-          cursorChar = '▐';
-          if (typeof (params.cursor) === 'object') {
-            cursorChar = params.cursor.char || cursorChar;
-          }
-        }
+        const cursorChar = hasCursor ? params.cursorChar || '▐' : '';
 
         let accText = '';
         for (let i = 0; i < len; i++) {
