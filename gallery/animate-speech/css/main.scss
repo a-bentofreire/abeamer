@@ -14,50 +14,53 @@ html,
   height: $abeamer-height + px;
 }
 
+$img-height: 275;
+$padding: 4px;
 #scene1 {
-  text-align: left;
-  background: rgb(44, 44, 44);
-  color: rgb(230, 230, 230);
-  div {
-    display: inline;
+  background: #fffdfd;
+  color: rgb(44, 44, 44);
+  font-family: sans-serif;
+  font-size: 14px;
+  #msg-area {
+    background-image: url("../assets/pixabay/hayden-valley-63564_1280.jpg");
+    height: $img-height + px;
+    padding: 5px 5px;
+    box-sizing: border-box;
   }
-  #bkg {
-    position: absolute;
-    left: 0;
-    top: 0;
+  #write-area {
+    height: ($abeamer-height - $img-height - 2) + px;
+    background: #fffdfd;
+    color: rgb(44, 44, 44);
+    display: flex;
+    border: 1px solid darkgray;
+    justify-content: center;
+    align-items: center;
   }
-  #speech {
+  #write {
+    padding: $padding;
+    width: ($abeamer-width - 2 * $padding);
+    box-sizing: border-box;
+    border: 1px solid darkgray;
+    border-radius: 5px;
+  }
+  #msg-area div {
     opacity: 0;
-    position: absolute;
-    left: 300px;
-    top: 40px;
+    position: relative;
   }
-  #text {
-    opacity: 0;
-    position: absolute;
-    left: 318px;
-    top: 47px;
-    font-weight: bold;
-    font-family: sans-serif;
-    font-size: 20px;
+  #text1L,
+  #text2L,
+  #text1R,
+  #text2R {
+    position: relative;
+    top: -41px;
+    left: 10px;
   }
-  #speech2 {
-    opacity: 0;
-    position: absolute;
-    left: 120px;
-    top: 5px;
+  #text1R,
+  #text2R {
+    left: 82px;
   }
-  #speech2-content {
-    opacity: 0;
-    position: absolute;
-    left: 140px;
-    top: 10px;
-    font-weight: bold;
-    font-family: sans-serif;
-    font-size: 20px;
-    #text2 {
-      vertical-align: top;
-    }
+  #speech1R,
+  #speech2R {
+    left: 71px;
   }
-
 }

@@ -14,10 +14,39 @@ $(window).on("load", () => {
   //                               Scene1
   // ------------------------------------------------------------------------
 
+  const IMG = '<img src="assets/pixabay/emoji-2762568_640.png">';
+
   const scene1 = story.scenes[0];
   scene1
     .addAnimations([{
-      selector: "#speech",
+      selector: '#write',
+      duration: '0.5s',
+      tasks: [
+        {
+          handler: 'typewriter',
+          params: {
+            text: 'What\'s up!',
+            splitBy: 'char',
+          },
+        },
+      ],
+    }],
+  )
+    .addAnimations([{
+      selector: '#write',
+      props: [
+        {
+          prop: 'html',
+          duration: '1f',
+          valueText: [`What\'s up!${IMG}`],
+        },
+      ],
+    }],
+  )
+    .addStills('0.2s')
+
+    .addAnimations([{
+      selector: "#speech1L, #speech2L",
       tasks: [
         {
           handler: 'shape',
@@ -25,13 +54,13 @@ $(window).on("load", () => {
             shape: ABeamer.Shapes.speech,
             speechPosition: ABeamer.SpeechPosition.left,
             width: 160,
-            height: 80,
-            speechStart: 60,
-            speechHeight: 35,
-            speechShift: 15,
+            height: 30,
+            speechStart: 10,
+            speechHeight: 15,
+            speechShift: 5,
             speechWidth: 15,
-            fill: '#42504fd0',
-            stroke: '#858585ff',
+            fill: '#eeeeee',
+            stroke: 'black',
             strokeWidth: 1,
             rx: 5,
             ry: 5,
@@ -39,44 +68,31 @@ $(window).on("load", () => {
         },
       ],
     }, {
-      selector: "#speech, #text",
+      selector: "#speech1L, #text1L",
       props: [{
         prop: 'opacity',
-        value: 1,
-        duration: '1s',
+        duration: '0.2s',
       }],
     }])
+
+    .addStills('0.5s')
+
     .addAnimations([{
-      selector: "#circle",
-      tasks: [
-        {
-          handler: 'shape',
-          params: {
-            shape: ABeamer.Shapes.circle,
-            radius: 10,
-            fill: 'yellow',
-            stroke: 'green',
-            strokeWidth: 3,
-          },
-        },
-      ],
-    },
-    {
-      selector: "#speech2",
+      selector: "#speech1R, #speech2R",
       tasks: [
         {
           handler: 'shape',
           params: {
             shape: ABeamer.Shapes.speech,
-            speechPosition: ABeamer.SpeechPosition.left,
-            width: 200,
-            height: 35,
-            speechStart: 35,
-            speechHeight: 35,
-            speechShift: 35,
+            speechPosition: ABeamer.SpeechPosition.right,
+            width: 160,
+            height: 30,
+            speechStart: 10,
+            speechHeight: 15,
+            speechShift: 5,
             speechWidth: 15,
-            fill: '#42504fd0',
-            stroke: '#858585ff',
+            fill: '#eeeeee',
+            stroke: 'black',
             strokeWidth: 1,
             rx: 5,
             ry: 5,
@@ -84,15 +100,66 @@ $(window).on("load", () => {
         },
       ],
     }, {
-      selector: "#speech2, #speech2-content",
+      selector: "#speech1R, #text1R",
       props: [{
         prop: 'opacity',
-        value: 1,
-        duration: '1s',
+
+        duration: '0.2s',
       }],
-    },
-    ],
-  );
+    }, {
+      selector: '#write',
+      props: [{
+        prop: 'text',
+        valueText: [''],
+        valueStart: 0,
+        value: 0,
+      }],
+    }],
+  )
+    .addAnimations([{
+      selector: '#write',
+      duration: '1s',
+      tasks: [
+        {
+          handler: 'typewriter',
+          params: {
+            text: 'What\'s left',
+            splitBy: 'char',
+          },
+        },
+      ],
+    }])
+
+    .addAnimations([{
+      selector: '#write',
+      props: [
+        {
+          prop: 'html',
+          duration: '5f',
+          valueText: [`What\'s left${IMG}`, `What\'s left${IMG}${IMG}`, `What\'s left${IMG}${IMG}${IMG}`],
+        },
+      ],
+    }])
+
+    .addAnimations([{
+      selector: "#speech2L, #text2L",
+      props: [{
+        prop: 'opacity',
+        duration: '0.2s',
+      }],
+    }])
+
+    .addStills('0.5s')
+
+    .addAnimations([{
+      selector: "#speech2R, #text2R",
+      props: [{
+        prop: 'opacity',
+        duration: '0.2s',
+      }],
+    }])
+
+    .addStills('0.5s');
 
   story.render(story.bestPlaySpeed());
 });

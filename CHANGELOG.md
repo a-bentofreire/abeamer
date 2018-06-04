@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Adaptors have access to ABeamerArgs.
 - Redesigned the render loop to support wait functions.
 - Improved `README.md`.
+- Redesigned `gallery/animate-speech`.
 ### Added
 - Added `DEFAULT_FADE_DURATION = '400ms'`.
 - Added `color-functions` plugin with `rgb` and `rgba` functions.
