@@ -27,7 +27,7 @@ var __extends = (this && this.__extends) || (function () {
  * via `position` parameter.
  *
  * An animation has an [](#Animation Interpolator) that passes a `t` parameter from
- * [Start Value](#Animation Start Value) to [Value](#Animation Value) through the
+ * [Start Value](animations#animationpropvaluestart) to [Value](animations#animationpropvalue) through the
  * [](#Animation Pipeline).
  *
  * An animation doesn't communicates direct with an HTMLElement attributes, instead

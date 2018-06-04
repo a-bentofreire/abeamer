@@ -52,6 +52,7 @@ import { HttpServerEx } from "../shared/vendor/http-server-ex.js";
  *  Generate the animations in file image sequences and deletes the previous images.
  * `abeamer render --dp foo`.
  *
+ *  Same as above, but it outputs detailed information about what is happening.
  * `abeamer render --ll 3 --dp foo`.
  */
 namespace Cli {

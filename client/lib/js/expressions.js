@@ -52,10 +52,10 @@
  *  `t` - `t` used to interpolate an easing, oscillator or path via expression.
  * ## Examples
  *
- * @example = 'A' + 'Beamer'
- * @example = round(12.4 + ceil(50.5) / 2 * (60 % 4))
- * @example = cos(60*deg2rad) * random()
- * @example = iff(fps < 20, 'too few frames', 'lots of frames')
+ * `= 'A' + 'Beamer'`
+ * `= round(12.4 + ceil(50.5) / 2 * (60 % 4))`
+ * `= cos(60*deg2rad) * random()`
+ * `= iff(fps < 20, 'too few frames', 'lots of frames')`
  */
 var ABeamer;
 (function (ABeamer) {

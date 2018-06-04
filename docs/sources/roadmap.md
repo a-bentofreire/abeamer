@@ -3,7 +3,7 @@
 - Bug fixing.
 - Solve inconsistences created during the multiple designs.
 - Improve documentation.
-- Wait for assets load and sync support.
+- Improve Wait for assets load and sync support.
 - Reversibility.
 
 ### Coming soon

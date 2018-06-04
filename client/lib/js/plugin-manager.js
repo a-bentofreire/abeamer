@@ -16,7 +16,7 @@
  *
  * - Declare the plugin via `pluginManager.addPlugin`.
  * - Set the `pluginInfo.teleportable = true`.
- * - Follow the [Developer Guideline Rules](dev-docs/coding-style).
+ * - Follow the [Developer Guideline Rules](../../../../../developer/dev-docs/coding-style).
  *
  * ABeamer allows plugins to add the following functionality types:
  *

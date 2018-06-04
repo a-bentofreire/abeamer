@@ -31,7 +31,7 @@ A typical use would be:
     }],
   }]);
 ```
-In this example, `#hello` will move will move left and top property for 2s.   
+In this example, `#hello` will move will move `left` and `top` property for 2s.   
 
 Each element and each property can have a different `duration`.   
 ```js
@@ -106,7 +106,7 @@ This will a series of parallel animations.
 
 When the user adds an animation to the scene, ABeamer will first determine 
 the start value of the [property](faq.md#why-addanimation-uses-properties-naming-and-not-attributes-), 
-if the user doesn't provides the `startValue`, it will compute from the current element's attribute value.  
+if the user doesn't provides the `startValue`, it will compute from the current element's CSS property value.  
 Then it will transform the duration into frames, and for each frame, 
 it will compute and store the interpolated value for that element.  
 If a new `addAnimations` is added that modifies the same elements' property, 

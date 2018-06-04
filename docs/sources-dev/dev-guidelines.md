@@ -51,7 +51,7 @@ to this format [uuid-licenses](https://github.com/a-bentofreire/uuid-licenses)
 - G06. JSDocs comments must not include information regarding the parameters 
 except if there is any parameter that has very specific information.
 - G07. All function and method parameters and all interface items must be strong typed.
-- G08. Integer values must use the type: `int` or `uint`, as it is defined in [](https://github.com/a-bentofreire/scalartypes)
+- G08. Integer values must use the type: `int` or `uint`, as it is defined in [scalar types](https://github.com/a-bentofreire/scalartypes).
 - G09. Don't use `null`, use only `undefined` for empty or non-value situations.
 
 # Web Browser Library Coding Rules

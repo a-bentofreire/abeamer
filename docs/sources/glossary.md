@@ -27,7 +27,7 @@ and caches its content.
 DOM Adapters use the attribute `abeamer-display` if present to define which
 value will be when visible is set to true.   
   
-'DOM Scenes' are typically a DIV. 'DOM Elements' can be any HtmlElement.   
+A 'DOM Scene' is typically a DIV. A 'DOM Element' can be any HtmlElement.   
   
 DOM Scenes can provide Virtual Elements via ids starting with `%`,
 and `story.onGetVirtualElement`.   
@@ -50,7 +50,7 @@ Although, the animations that are added in parallel, they can be [](#Off-Sync)
 via `position` parameter.   
 
 An animation has an [](#Animation Interpolator) that passes a `t` parameter from
-[Start Value](#Animation Start Value) to [Value](#Animation Value) through the
+[Start Value](animations#animationpropvaluestart) to [Value](animations#animationpropvalue) through the
 [](#Animation Pipeline).   
 
 An animation doesn't communicates direct with an HTML Element attributes, instead

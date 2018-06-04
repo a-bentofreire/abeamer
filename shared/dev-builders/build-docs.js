@@ -92,7 +92,7 @@ var BuildDocs;
         /** Processes the links from Markdown content, updating its content */
         ReferenceBuilder.prototype.updateLinks = function (fileBase, content) {
             var _this = this;
-            return content.replace(/\[([^\]]*)\]\(([\w\-]*)(?:#([\w\-]*))?\)/g, function (app, info, link, bookmark) {
+            return content.replace(/\[([^\]]*)\]\(([\w\-\s]*)(?:#([\w\-\s]*))?\)/g, function (app, info, link, bookmark) {
                 var _a;
                 bookmark = bookmark || '';
                 link = link || '';
@@ -110,7 +110,7 @@ var BuildDocs;
                     tracedLink = _this.refs[refLink];
                 }
                 if (!tracedLink) {
-                    console.log("Did found reference for: " + link + "#" + bookmark + " in " + fileBase);
+                    console.warn("Didn't found reference for: " + link + "#" + bookmark + " in " + fileBase);
                 }
                 else {
                     console.log("Found reference for: " + link + "#" + bookmark + " in " + fileBase + " = " + tracedLink);
@@ -126,6 +126,7 @@ var BuildDocs;
                 .filter(function (file) { return file.endsWith('.md'); }).map(function (file) { return file.replace(/\.md$/, ''); });
             [0, 1].forEach(function (stage) {
                 if (stage === 1) {
+                    // uncomment this line to log all the references
                     // console.log(`this.refs: ${JSON.stringify(this.refs, undefined, 2)}`);
                 }
                 fileBases.forEach(function (fileBase) {

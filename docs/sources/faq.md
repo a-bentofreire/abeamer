@@ -3,7 +3,7 @@
 <!--- @author: Alexandre Bento Freire -->
 # Description
 This document provides information regarding installation and execution for the end-user.  
-For developers and plugin creators read: [Developer Documentation](https://a-bentofreire.github.io/abeamer-docs/developer/versions/latest/en/site/)  
+For developers and plugin creators read: [Developer Documentation](../../../../../developer/versions/latest/en/site/)  
 
 ---------------------
 ## Installation
@@ -12,7 +12,7 @@ For developers and plugin creators read: [Developer Documentation](https://a-ben
 
 ABeamer is a nodejs package.  
 It requires the installation of nodejs.  
-It can be downloaded here:  [](http://www.nodejs.com)  
+It can be downloaded here: [nodejs](http://www.nodejs.com)  
 
 During the installation process, abeamer requires to create a shortcut, 
 if you are running on linux OS, it must be installed with sudo  
@@ -20,7 +20,7 @@ if you are running on linux OS, it must be installed with sudo
 
 If you have access errors, consider installing your global node packages 
 on a path where you have access rights.  
-Read how to do it here: [](https://docs.npmjs.com/getting-started/fixing-npm-permissions)  
+Read how to do it here: [fixing-npm-permissions](https://docs.npmjs.com/getting-started/fixing-npm-permissions)  
 
 ### Can I install ABeamer as a local nodejs package?
 
@@ -47,7 +47,7 @@ Here is the link: @TODO: add link
 ### I can't install puppeteer.   
 
 `puppeteer` is a node package just like abeamer.  
-For details read the question above [I can't install ABeamer!](#i-cant-install-abeamer)
+For details, read the question above [I can't install ABeamer!](#i-cant-install-abeamer)
 
 ### Can I install puppeteer without chromium?
 
@@ -80,7 +80,7 @@ In order for an element to change its position, in necessary that:
 
 1. The starting position be defined in pixels either by:  
 
-   - Info in a CSS file. e.g { left: 10px; top: 0px; }  
+   - Info in a CSS file. e.g `{ left: 10px; top: 0px; }`  
    - `valueStart` defined in pixels. e.g. `valueStart: '30px'`.  
    - The property had been previously animated.  
 2. The `value` be defined numerically not in pixels.  
@@ -90,7 +90,7 @@ In order for an element to change its position, in necessary that:
 ### How do I change the output frame size?
 
 Inside `abeamer.ini` there are two fields: `$abeamer-width` and `$abeamer-height`.  
-After modifying these two fields, recompile the js/main.scss using SCSS compiler.   
+After modifying these two fields, recompile the `js/main.scss` using SCSS compiler.   
 
 ### Can I use only JavaScript without TypeScript?
 

@@ -20,7 +20,7 @@
  * via `position` parameter.
  *
  * An animation has an [](#Animation Interpolator) that passes a `t` parameter from
- * [Start Value](#Animation Start Value) to [Value](#Animation Value) through the
+ * [Start Value](animations#animationpropvaluestart) to [Value](animations#animationpropvalue) through the
  * [](#Animation Pipeline).
  *
  * An animation doesn't communicates direct with an HTMLElement attributes, instead
@@ -270,7 +270,7 @@ namespace ABeamer {
 
     /**
      * Defines the starting value of an animation injected into the
-     * Animation Pipeline (easing->oscillator->path|valueText->valueFormat).
+     * Animation Pipeline (easing➝oscillator➝path|valueText➝valueFormat).
      * Easing interpolates from `valueStart` to `value`.
      *
      * Use only if:

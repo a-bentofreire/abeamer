@@ -10,8 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - `hello-world` example uses `div` instead of `p`.
 - `gulp build-gallery-release` cleans `gallery-release` before copy all the examples.
+- Improved `hello-world` example.
 ### Fixed
 - Fixes `ellipse` path `radiusY` parameter.
+- Fixes `gulp build-docs` link parser.
 
 ## [0.2.0] -
 ### Breaking changes

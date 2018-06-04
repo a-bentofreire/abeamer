@@ -106,7 +106,7 @@ export namespace BuildDocs {
 
     /** Processes the links from Markdown content, updating its content */
     private updateLinks(fileBase: string, content: string) {
-      return content.replace(/\[([^\]]*)\]\(([\w\-]*)(?:#([\w\-]*))?\)/g,
+      return content.replace(/\[([^\]]*)\]\(([\w\-\s]*)(?:#([\w\-\s]*))?\)/g,
         (app, info, link, bookmark) => {
           bookmark = bookmark || '';
           link = link || '';
@@ -124,7 +124,7 @@ export namespace BuildDocs {
           }
 
           if (!tracedLink) {
-            console.log(`Did found reference for: ${link}#${bookmark} in ${fileBase}`);
+            console.warn(`Didn't found reference for: ${link}#${bookmark} in ${fileBase}`);
           } else {
             console.log(`Found reference for: ${link}#${bookmark} in ${fileBase} = ${tracedLink}`);
             [link, bookmark] = tracedLink.split('#');
@@ -142,6 +142,7 @@ export namespace BuildDocs {
 
       [0, 1].forEach(stage => {
         if (stage === 1) {
+          // uncomment this line to log all the references
           // console.log(`this.refs: ${JSON.stringify(this.refs, undefined, 2)}`);
         }
         fileBases.forEach(fileBase => {

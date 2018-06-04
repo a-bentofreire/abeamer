@@ -14,7 +14,7 @@
 /**
  * ## Description
  *
- * A **story** is the entry point of ABeamer client library.
+ * A **story** is the entry point of ABeamer web browser library.
  * It has the following functions:
  *
  * - Manage multiple scenes, including insert and remove.
@@ -29,7 +29,7 @@
  * - A story automatically creates DOM scenes.
  * - In each scene, the user adds its animations.
  * - The user executes `story.render` which will process the animation pipeline
- * frame by frame and send it to the server agent.
+ * frame by frame and sends it to the server agent.
  * - The server agent will communicate with a headless server such as puppeteer
  * to store each frame on the disk.
  *

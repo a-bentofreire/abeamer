@@ -9,7 +9,7 @@ Documentation of the `abeamer.ini` file and `story.json` format.
 Due the fact that html page layout has its own quirks, it's many times necessary
 for the `.scss` files have access to the page dimensions to correctly position elements within the page.  
 Since scss can't import json files, it's thus required to have `.scss` file with information regarding page dimensions.  
-The server agent also requires to have access to such information as well.  
+The server agent also requires to have access to such information.  
 Instead of having a complex communication system or different files (one `.json` and other `.scss`) format, 
 having a solution with one single `.ini` file with a simple format that serves all purposes turn out to be one of the simplest solutions.  
 Although, it has `.scss` format, it was decided to have `.ini` extension to prevent 
@@ -62,7 +62,8 @@ In this case modify the `abeamer.ini` file from `$abeamer` to `@abeamer`.
 When ABeamer was initially developer, the configuration files were `.json` files.  
 During the develop phase, it become clear, the necessity of the `.scss` files 
 to have access to the information about `width` and `height`, as a result the `.ini` format replaced the `.json` format.  
-But the concept wasn't abandoned since it allowed to load complete animations from a `.json` file, if there is a live server.  
+But the concept wasn't abandoned since it allowed to load complete animations from a `.json` file, 
+if it's running using a live server.  
 It was later, with the introduction of [teleportation](teleporter.md) that its main usage become to store teleportable stories,
 and its importance was reinstated.  
 
@@ -95,5 +96,5 @@ A `story.json` is a config file with the extra information, including:
 - Plugins information.
 - Metadata.
 
-The easiest way to create a `story.json` is by running the `abeamer render --teleport`.
-Read more about on [teleporter](teleporter.md)
+The easiest way to create a `story.json` is by running the `abeamer render --teleport`.  
+Read more about on [teleporter](teleporter.md).
