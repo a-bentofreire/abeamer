@@ -43,6 +43,7 @@ var DevConsts;
         Msgs["ExpHasErrors"] = "Expression %e% has errors: %err%";
         Msgs["WrongNrParams"] = "Function %p% has the wrong number of input parameters";
         Msgs["WrongParamType"] = "Function %p% has the wrong type in parameter: %i%";
+        Msgs["ValueTypeError"] = "Value %p% must be a number or an expression";
         Msgs["UnaryErr"] = "Unary operators only support numerical values";
         Msgs["flyover"] = "flyover";
         Msgs["task"] = "task";

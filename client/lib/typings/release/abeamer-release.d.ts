@@ -70,6 +70,7 @@ declare namespace ABeamer {
     ExpHasErrors = 'Expression %e% has errors: %err%',
     WrongNrParams = 'Function %p% has the wrong number of input parameters',
     WrongParamType = 'Function %p% has the wrong type in parameter: %i%',
+    ValueTypeError = 'Value %p% must be a number or an expression',
     UnaryErr = 'Unary operators only support numerical values',
 
     flyover = 'flyover',
