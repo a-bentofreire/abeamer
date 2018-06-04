@@ -741,7 +741,7 @@ export namespace BuildDocs {
 
           if (file.endsWith('.css') || file.endsWith('.png')) {
             sysFs.writeFileSync(`${markdownDstPath}/${file}`,
-              fsix.readUtf8Sync(`${sourcesPathName}/${file}`));
+              sysFs.readFileSync(`${sourcesPathName}/${file}`));
           }
         });
       });

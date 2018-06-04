@@ -564,7 +564,7 @@ var BuildDocs;
                         copyMarkdownFile(sourcesPathName + "/" + file, markdownDstPath + "/" + file, mkDocsYml, {});
                     }
                     if (file.endsWith('.css') || file.endsWith('.png')) {
-                        sysFs.writeFileSync(markdownDstPath + "/" + file, fsix_js_1.fsix.readUtf8Sync(sourcesPathName + "/" + file));
+                        sysFs.writeFileSync(markdownDstPath + "/" + file, sysFs.readFileSync(sourcesPathName + "/" + file));
                     }
                 });
             });

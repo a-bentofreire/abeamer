@@ -40,8 +40,8 @@ To build this project, and take it to the next level with the creation of the An
 please, consider donating to keep this project
 alive and help to tell your story or to grow your business:  
 
-* ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer/docs/sources/paypal.png) [paypal](https://www.paypal.me/abentofreire) 
-* ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer/docs/sources/bitcoin.png) Bitcoin: `1mH89kWbvffActY7FAke26t2fbJE9U6jv`
+* ![Image](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/paypal.png) [paypal](https://www.paypal.me/abentofreire) 
+* ![Image](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/bitcoin.png) Bitcoin: `1mH89kWbvffActY7FAke26t2fbJE9U6jv`
 
 ## Features
 
@@ -323,13 +323,13 @@ to install if you need to render, create gifs or movies on the local machine.
 
 ## Contribute
 
-![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer/docs/sources/warning.png) ABeamer is still in **beta** stage,
+![Image](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/warning.png) ABeamer is still in **beta** stage,
 and before the first GitHub commit it went through multiple redesigns both the 
 code and the documentation as well, although it has now reach a mature phase, 
 now is in a process of harmonize the code and documentation created during the multiple designs.   
 It still has bugs and inconsistences to tackle.
 
-![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer/docs/sources/warning.png) ABeamer was built on Linux/Chrome/Puppeteer and tested on Windows.  
+![Image](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/warning.png) ABeamer was built on Linux/Chrome/Puppeteer and tested on Windows.  
 There is still a lot of work to support other web browsers, OSes and render servers.
 
 To keep an healthy cooperation environment, before posting an issue, please read 
