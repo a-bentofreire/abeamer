@@ -299,6 +299,6 @@ namespace ABeamer {
     stage: uint, args?: ABeamerArgs): number[] {
 
     return _interpolateEllipse(t, params as _CirclePathParams,
-      params.radiusX, params.radiusX, stage, args);
+      params.radiusX, params.radiusY, stage, args);
   }
 }

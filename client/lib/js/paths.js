@@ -156,7 +156,7 @@ var ABeamer;
     ABeamer._pathFunctions['ellipse'] = _ellipsePath;
     /** Implements the Ellipse Path */
     function _ellipsePath(t, params, stage, args) {
-        return _interpolateEllipse(t, params, params.radiusX, params.radiusX, stage, args);
+        return _interpolateEllipse(t, params, params.radiusX, params.radiusY, stage, args);
     }
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=paths.js.map
