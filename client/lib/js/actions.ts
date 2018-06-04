@@ -46,7 +46,7 @@ namespace ABeamer {
     numValue: ActionNumValue;
     toBypassForward: boolean;
     toBypassBackward: boolean;
-    waitFor: WaitItems;
+    actRg: _ActionRg;
   }
 
 
@@ -84,6 +84,7 @@ namespace ABeamer {
     endFrame: uint;
     initialValue?: ActionNumValue;
     endValue?: ActionNumValue;
+    waitFor?: WaitForList;
   }
 
 

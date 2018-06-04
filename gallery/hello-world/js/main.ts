@@ -4,6 +4,7 @@ $(window).on("load", () => {
   const scene0 = story.scenes[0];
   scene0.addAnimations([{
     selector: '#hello',
+    duration: '2s',
     props: [{
       prop: 'left',
       value: 100,

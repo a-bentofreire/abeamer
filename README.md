@@ -3,10 +3,10 @@
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-abeamer/story-frames/story.gif)  
   
 **ABeamer** is a powerful batch animation EcoSystem, designed to create an animated story 
-in the web browser and then generate the file images of each frame in either a local machine or in a remote machine.  
+in the web browser and generate the file images of each frame in either a local machine or in a remote machine.  
  
-Unlike `VelocityJs` and `JQuery.animate` which are built for real-time user interaction, 
-ABeamer allows you build complex frame based animations and save them frame-by-frame 
+Unlike `VelocityJs` and `JQuery.animate` which were built for real-time user interaction, 
+ABeamer allows you to build complex frame based animations and save them frame-by-frame 
 with transparency at high resolution and lossless compression without frame drop.  
   
 When an animated story is designed to be rendered in a remote machine, 
@@ -23,10 +23,9 @@ ABeamer includes a web browser library, a server agent and a command line utilit
 For the the ABeamer Animation Editor, read [Animation Editor](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/animation-editor/).
   
 - ABeamer **web browser library** is a highly extensible TypeScript/JavaScript 
-bundled with a rich [](#toolset) reducing the time to build complex animations.  
-- ABeamer **server agent** is designed to communicate with a server in order to render 
-each frame with either the full potential or in a sanitized environment 
-allowing you safely to render animations created by other users.  
+bundled with a rich [toolset](#toolset) reducing the time to build complex animations.  
+- ABeamer **server agent** is designed to communicate with a render server, usually a headless web browser, in order to save 
+each frame to the disk. It can run either the full potential supporting Code Handlers or in a sanitized environment allowing you safely to render animations created by other users.  
 - ABeamer **command utility** allows you to build new projects, 
 render frames, create animated gifs or movies.  
 
@@ -37,8 +36,8 @@ to install if you need to render, create gifs or movies in the local machine.
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-support/story-frames/story.gif)  
   
-To build this project, and take it to the next level with the Animation Editor,
-it requires a full-time developer, please, consider donating to keep this project
+To build this project, and take it to the next level with the creation of the Animation Editor, it requires a full-time developer, 
+please, consider donating to keep this project
 alive and help to tell your story or to grow your business:  
 
 * <i class="fa fa-paypal fa-lg"></i>  [paypal](https://www.paypal.me/abentofreire)
@@ -48,12 +47,13 @@ alive and help to tell your story or to grow your business:
 
 * Free and Open-source.
 * Simple and intuitive design.
+* Supports rendering in a remote machine in a sanitized environment.
 * Extensively documented: [End-User Documentation](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/) and
  [Developer Documentation](https://a-bentofreire.github.io/abeamer-docs/developer/versions/latest/en/site/).
 * Absolutely minimum [dependencies](#requirements).
-* Highly Extensible via [plugins](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/plugin-manager/) including: easings, oscillators, paths.
+* Highly Extensible via [plugins](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/plugin-manager/) including interpolators, functions, flyovers and tasks.
 * [Task](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/tasks/) to build complex animations 
-and [special effects](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/tasks/special-effects).
+and [F/X](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/tasks/special-effects).
 * Large gallery of [example projects](https://a-bentofreire.github.io/abeamer-gallery-release/README.md).
 * Multiple scenes (only default scenes are teleportable).
 * [Expressions](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/expressions/), functions and variables.
@@ -76,14 +76,6 @@ and [special effects](https://a-bentofreire.github.io/abeamer-docs/end-user/vers
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-localization/story-frames/story.gif)  
   
 * Localization of messages and plugin functionalities, including functions and variables.
-   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-item-delay/story-frames/story.gif)  
-  
-* Item-delay.
-  
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-loop/story-frames/story.gif)  
-  
-* CSS animation-iteration-count.
 
 # Property Animation
 
@@ -96,34 +88,55 @@ e.g  `prop: 'border-style'; valueText: ['dotted', 'dashed']`.
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-pixels/story-frames/story.gif)  
   
-* Pixel properties. e.g. `valueStart: 10px; value: 100;`
+* Pixel properties.  
+ e.g. `valueStart: 10px; value: 100;`
 * Dual-pixel properties via [paths](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/paths/).
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-colors/story-frames/story.gif)  
   
-* Color properties. e.g. `valueText: ['red', '#FF00AA'];`
+* Color properties.  
+e.g. `valueText: ['red', '#FF00AA'];`
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-counter/story-frames/story.gif)  
   
+* Formatted numerical properties.  
+e.g. `valueFormat: '%d%'; value: 100;`
 * Unformatted numerical properties.
-* Formatted numerical properties. e.g. `valueFormat: '%d%'; value: 100;`
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-images/story-frames/story.gif)  
   
-* Image properties. e.g. `prop: 'src'; valueText: ['a.png', 'b.png'];`
+* Image properties.  
+e.g. `prop: 'src'; valueText: ['a.png', 'b.png'];`
 * Text properties.
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-class-prop/story-frames/story.gif)  
   
-* Class properties. `prop: 'class'; valueText: ['+class1 -class2'];`
-* Visible properties. `prop: 'visible'; duration: 1; value: 1;`
-* Transform properties: `prop: 'transform'; valueFormat: 'rotateX(%fdeg)'`;
+* `class` property.  
+e.g. `prop: 'class'; valueText: ['+class1 -class2'];`
+* `visible` property.  
+e.g. `prop: 'visible'; duration: 1; value: 1;`
+* `transform` property:  
+e.g. `prop: 'transform'; valueFormat: 'rotateX(%fdeg)'`;
+
+## CSS Animations
+ABeamer doesn't supports CSS animations, but ABeamer was designed in a way that 
+its animations are similar to CSS animations, therefore it's easy to convert CSS Animations 
+to ABeamer animations.  
+Besides the property interpolation described above, ABeamer also supports:
+   
+![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-item-delay/story-frames/story.gif)  
+  
+* Item-delay with `disturbance` to produce random effects.
+  
+![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-loop/story-frames/story.gif)  
+  
+* CSS animation-iteration-count.
 
 ## Interpolators
 
 ABeamer provides several interpolators, which can be defined by:
 
-- Built-in interpolators. Accessible by name and ID and are teleportation.
+- Teleportable Built-in interpolators. Accessible by name and ID.
 - Teleportable [Expressions](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/expressions/).
 - [Plugins](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/plugin-manager/). Only official plugins can be teleportable.
 - [Code Handlers](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/glossary/#code-handler) due security reasons aren't teleportable.
@@ -137,7 +150,11 @@ ABeamer has following interpolators:
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-oscillator/story-frames/story.gif)  
   
-* Oscillators - Rotation and Balancing motion.
+* `harmonic` and `damped` oscillators - Rotation and Balancing motion.
+  
+![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-pulsar/story-frames/story.gif)  
+  
+* `pulsar` oscillator.
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-paths/story-frames/story.gif)  
   
@@ -147,10 +164,9 @@ The interpolators are chained in the following order: easing→oscillator→path
 
 ## Toolset
 
-ABeamer has a rich toolset and extensibility and teleportation are key features of these tools.  
-Unless is noticed all the built-in tools support teleportation.  
-Just like the interpolators, Code Handlers aren't teleported, and the tools can be extended
-via plugins but only official plugins are teleportable.  
+ABeamer has a rich toolset. Extensibility and teleportation are the key features of these tools.  
+Unless is noticed, all the built-in tools support teleportation.  
+Just like in the case of interpolators, Code Handlers aren't teleported, and the tools can be extended via plugins but only official plugins are teleportable.  
 
 ABeamer has the following tools:
   
@@ -160,7 +176,7 @@ ABeamer has the following tools:
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-flyovers/story-frames/story.gif)  
   
-* info and video-sync flyovers.
+* `info` and `video-sync` flyovers.
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-wrappers/story-frames/story.gif)  
   
@@ -168,29 +184,41 @@ ABeamer has the following tools:
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-text-tasks/story-frames/story.gif)  
   
-* Text tasks.
-* Text splitter task.
-* Typewriter task.
-  
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-pulsar/story-frames/story.gif)  
-  
-* Pulsar Oscillators.
+* Text tasks:
+   * `text-split` task.
+   * `typewriter` task.
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-factory/story-frames/story.gif)  
   
-* Factory tasks.
+* `factory` task.
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-decipher-text/story-frames/story.gif)  
   
-* Text Decipher task.
+* `decipher` task.
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-attack-task/story-frames/story.gif)  
   
-* Text attack task.
+* `color-attack` task.
+  
+![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-shapes/story-frames/story.gif)  
+  
+* `shape` task.
+
+![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-speech/story-frames/story.gif)  
+  
+* `speech` shape task.
 
 ## Installation
 
+To create animations, It's only required to have the `web browser library` without the need of any software installed in the computer.  
+
 `[sudo] npm install -g abeamer`  
+
+However, in order to render frames, generate gifs and movies, it requires:
+1. [nodejs](https://nodejs.org/en/).
+2. To render, it requires a render server [puppeteer](https://www.npmjs.com/package/puppeteer) `npm install -g puppeteer`.
+3. To generate gifs, it requires to have [imagemagick](https://www.imagemagick.org) on system path.
+4. To create movies, it requires to have [ffmpeg](https://www.ffmpeg.org/) on the system path.
 
 ## Getting started
 
@@ -198,9 +226,9 @@ Start by creating a new project using the ABeamer command line utility:
   
 `abeamer create myproject`
 
-ABeamer web browser library root is ABeamer.Story.  
-When you create the story, you defined an immutable frames per second,  
-and all animations are interpolated based on that fps.  
+ABeamer web browser library root is `ABeamer.Story`.  
+When you create a story, you define an immutable number of frames per second,  
+and all animations are interpolated based on that `fps`.  
   
 on file `js/main.ts`:  
 ``` javascript
@@ -209,7 +237,7 @@ on file `js/main.ts`:
   
 The `story` holds a collection of Scenes.  
 Only one scene can be visible at a given moment in time except during the transition between two scenes.   
-It represents the natural concept of a scene in a storyline. 
+It represents the natural concept of a scene in a storyline.  
 By using Scenes, ABeamer can speed up the processing speed by reducing the global amount of calculations.   
 
 The bare-bones of a `html` file:   
@@ -229,16 +257,17 @@ html,
 .abeamer-story,
 .abeamer-scene {
   width: $abeamer-width + px;
-  height: $abeamer-height + px;
+  height: $abeamer-using htmlheight + px;
 }
 ```
   
-or it can be added by coding:  
+Html Elements with `abeamer-scene` class are added automatically.  
+Scenes can be added manually with the following code:  
 ```javascript
  var newScene = story.AddScene();
 ```
 
-Creating scenes using html is the preferable way, and these are automatically added once you create the story.  
+Creating scenes with `abeamer-scene` class is the preferable way.  
 You add animations to the scene defining the time in 'seconds', 'milliseconds' or 'frames' 
 but if it's defined in time, these are converted to frames based on the story fps.
 
@@ -274,18 +303,6 @@ You can add multiple properties in parallel or off-sync with the `position` para
 For further documentation, read: [Command Line Utility](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/abeamer-cli/).  
 Read [Requirements](#requirements) for details about the necessary software 
 to install if you need to render, create gifs or movies on the local machine.
-
-## Requirements
-
-To create animations, only It's required to have the `web browser library` without needing
-and software installed in the computer.  
-
-However to render, gifs and movies, it requires:
-1. [nodejs](https://nodejs.org/en/).
-2. to render, it requires a render server [puppeteer](https://www.npmjs.com/package/puppeteer) `npm install -g puppeteer`.
-3. to generate gifs, it requires to have [imagemagick](https://www.imagemagick.org) on system path.
-4. to create movies, it requires to have [ffmpeg](https://www.ffmpeg.org/) on the system path.
-
 
 ## Documentation
 

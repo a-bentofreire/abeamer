@@ -831,12 +831,21 @@ declare namespace ABeamer {
   export type PropValue = string | number | int | boolean;
 
 
-  export interface WaitItem {
-    prop: PropName;
+  export enum WaitForWhat {
+    Custom,
+    ImageLoad,
+    MediaSync,
   }
 
 
-  export type WaitItems = WaitItem[];
+  export interface WaitFor {
+    prop: PropName;
+    value?: string | number;
+    what?: WaitForWhat;
+  }
+
+
+  export type WaitForList = WaitFor[];
 
 
   /**
@@ -846,7 +855,7 @@ declare namespace ABeamer {
 
     getProp(name: PropName, args?: ABeamerArgs): PropValue;
     setProp(name: PropName, value: PropValue, args?: ABeamerArgs): void;
-    waitFor?(waitItems: WaitItems): void;
+    waitFor?(waitFor: WaitFor, onDone: DoneFunc, args?: ABeamerArgs): void;
   }
 
 
@@ -1435,7 +1444,7 @@ declare namespace ABeamer {
      *
      * @see gallery/animate-video-sync
      */
-    waitFor?: WaitItems;
+    waitFor?: WaitForList;
 
 
 
@@ -1532,8 +1541,10 @@ declare namespace ABeamer {
 
 
 
+  export type DoneFunc = () => void;
+
   export type WaitFunc = (args: ABeamerArgs, params: AnyParams,
-    onDone: () => void) => void;
+    onDone: DoneFunc) => void;
 
 
   export interface WaitMan {
@@ -1685,9 +1696,8 @@ declare namespace ABeamer {
 
 
   export interface TypewriterTaskParams extends TextSplitTaskParams {
-    cursor?: boolean | {
-      char?: string;
-    };
+    cursor?: boolean;
+    cursorChar?: string;
   }
 
 

@@ -160,6 +160,12 @@ var DevConsts;
     // -------------
     // adapters
     // -------------
+    var WaitForWhat;
+    (function (WaitForWhat) {
+        WaitForWhat[WaitForWhat["Custom"] = 0] = "Custom";
+        WaitForWhat[WaitForWhat["ImageLoad"] = 1] = "ImageLoad";
+        WaitForWhat[WaitForWhat["MediaSync"] = 2] = "MediaSync";
+    })(WaitForWhat = DevConsts.WaitForWhat || (DevConsts.WaitForWhat = {}));
     DevConsts.DPT_ID = 0;
     DevConsts.DPT_VISIBLE = 1;
     DevConsts.DPT_ATTR = 2;
@@ -168,6 +174,8 @@ var DevConsts;
     DevConsts.DPT_PIXEL = 5;
     DevConsts.DPT_DUAL_PIXELS = 6;
     DevConsts.DPT_CLASS = 7;
+    DevConsts.DPT_MEDIA_TIME = 8;
+    DevConsts.DPT_SRC = 9;
     // -------------
     // transitions
     // -------------

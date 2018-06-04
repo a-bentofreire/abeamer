@@ -395,8 +395,8 @@ var ABeamer;
                                 _this._frameCount = endPos;
                             }
                             maxEndFrame = Math.max(maxEndFrame, endPos);
-                            var actRg = ABeamer._findActionRg(_this._actionRgMaps, elementAdpt, pi.realPropName, pos, endPos - 1, args);
-                            pi.attachSelector(elementAdpt, actRg, isVerbose, args);
+                            var elActRg = ABeamer._findActionRg(_this._actionRgMaps, elementAdpt, pi.realPropName, pos, endPos - 1, args);
+                            pi.attachSelector(elementAdpt, elActRg, isVerbose, args);
                             var frameI = pi.dirPair[0] === 1 ? 0 : (pi.framesPerCycle - 1);
                             var v;
                             var action;
@@ -420,7 +420,7 @@ var ABeamer;
                             }
                             // stores the last output value in the ActRg
                             var outputValue = ABeamer._applyAction(action, elementAdpt, false, args, true);
-                            actRg.actionRg.endValue = outputValue;
+                            elActRg.actionRg.endValue = outputValue;
                         });
                     });
                 });

@@ -98,13 +98,7 @@ var ABeamer;
                 var inTextArray = _textSplitter(params);
                 var len = inTextArray.length;
                 var hasCursor = params.cursor !== undefined;
-                var cursorChar = '';
-                if (hasCursor) {
-                    cursorChar = '▐';
-                    if (typeof (params.cursor) === 'object') {
-                        cursorChar = params.cursor.char || cursorChar;
-                    }
-                }
+                var cursorChar = hasCursor ? params.cursorChar || '▐' : '';
                 var accText = '';
                 for (var i = 0; i < len; i++) {
                     accText += inTextArray[i];

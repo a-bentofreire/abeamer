@@ -92,7 +92,7 @@ var ABeamer;
         function _PropInterpolator() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        _PropInterpolator.prototype.attachSelector = function (elementAdpt, actRg, isVerbose, args) {
+        _PropInterpolator.prototype.attachSelector = function (elementAdpt, elActRg, isVerbose, args) {
             var self = this;
             var realPropName = this.realPropName;
             function getStartValue() {
@@ -102,8 +102,8 @@ var ABeamer;
                     return _parseStartValueHandler(valueStart, args);
                 }
                 // then comes linking with previous actRg
-                if (actRg.linkIndex !== -1) {
-                    return actRg.actionRgList[actRg.linkIndex].endValue;
+                if (elActRg.linkIndex !== -1) {
+                    return elActRg.actionRgList[elActRg.linkIndex].endValue;
                 }
                 else {
                     return elementAdpt.getProp(realPropName, args);
@@ -184,7 +184,10 @@ var ABeamer;
             this.numStartValue = numStartValue;
             this.numEndValue = numEndValue;
             this.variation = this.numEndValue - this.numStartValue;
-            actRg.actionRg.initialValue = numStartValue;
+            var actRg = elActRg.actionRg;
+            this.actRg = actRg;
+            actRg.initialValue = numStartValue;
+            actRg.waitFor = this.waitFor;
         };
         _PropInterpolator.prototype.interpolate = function (t, story, isVerbose) {
             var args = story._args;
@@ -274,7 +277,7 @@ var ABeamer;
                 realPropName: this.realPropName,
                 propType: this.propType,
                 value: v,
-                waitFor: this.waitFor,
+                actRg: this.actRg,
                 numValue: this.curNumValue,
                 toBypassForward: _bypassModeToBool(isFirst, isLast, this.bypassForwardMode),
                 toBypassBackward: _bypassModeToBool(isLast, isFirst, this.bypassBackwardMode),
@@ -283,14 +286,15 @@ var ABeamer;
         return _PropInterpolator;
     }(ABeamer._WorkAnimationProp));
     ABeamer._PropInterpolator = _PropInterpolator;
-    function _applyAction(action, elementAdpt, isVerbose, args, simulateOnly) {
+    function _applyAction(action, elAdapter, isVerbose, args, simulateOnly) {
         if (simulateOnly === void 0) { simulateOnly = false; }
+        var actRg = action.actRg;
         var value = action.value;
         var propName = action.realPropName;
         // #debug-start
         function log(name, aValue) {
             args.story.logFrmt('action', [
-                ['id', elementAdpt.getId(args)],
+                ['id', elAdapter.getId(args)],
                 ['prop', name],
                 ['value', aValue],
             ]);
@@ -303,13 +307,13 @@ var ABeamer;
             var prevValue;
             // #debug-start
             if (isVerbose) {
-                prevValue = elementAdpt.getProp(propName, args);
+                prevValue = elAdapter.getProp(propName, args);
             }
             // #debug-end
-            elementAdpt.setProp(propName, newValue, args);
+            elAdapter.setProp(propName, newValue, args);
             // #debug-start
             if (isVerbose) {
-                var actualNewValue = elementAdpt.getProp(propName, args);
+                var actualNewValue = elAdapter.getProp(propName, args);
                 var isDifferent = newValue !== actualNewValue;
                 if (isDifferent) {
                     // compares numerical values taking into account the numeric precision errors
@@ -320,7 +324,7 @@ var ABeamer;
                     }
                 }
                 if (isDifferent) {
-                    args.story.logFrmt("action-update-warn: ", [['id', elementAdpt.getId(args)],
+                    args.story.logFrmt("action-update-warn: ", [['id', elAdapter.getId(args)],
                         ['prop', propName],
                         ['expected', newValue + ''],
                         ['actual', actualNewValue + ''],
@@ -331,6 +335,12 @@ var ABeamer;
             // #debug-end
         }
         setValue(value);
+        if (actRg.waitFor && actRg.waitFor.length) {
+            for (var _i = 0, _a = actRg.waitFor; _i < _a.length; _i++) {
+                var waitFor = _a[_i];
+                args.waitMan.addWaitFunc(ABeamer._handleWaitFor, { waitFor: waitFor, elAdapter: elAdapter });
+            }
+        }
         return action.numValue;
     }
     ABeamer._applyAction = _applyAction;

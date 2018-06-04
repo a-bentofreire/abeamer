@@ -150,12 +150,21 @@ namespace ABeamer {
   export type PropValue = string | number | int | boolean;
 
 
-  export interface WaitItem {
-    prop: PropName;
+  export enum WaitForWhat {
+    Custom,
+    ImageLoad,
+    MediaSync,
   }
 
 
-  export type WaitItems = WaitItem[];
+  export interface WaitFor {
+    prop: PropName;
+    value?: string | number;
+    what?: WaitForWhat;
+  }
+
+
+  export type WaitForList = WaitFor[];
 
 
   /**
@@ -165,7 +174,7 @@ namespace ABeamer {
 
     getProp(name: PropName, args?: ABeamerArgs): PropValue;
     setProp(name: PropName, value: PropValue, args?: ABeamerArgs): void;
-    waitFor?(waitItems: WaitItems): void;
+    waitFor?(waitFor: WaitFor, onDone: DoneFunc, args?: ABeamerArgs): void;
   }
 
 
@@ -276,6 +285,7 @@ namespace ABeamer {
   export const DPT_DUAL_PIXELS = 6;
   export const DPT_CLASS = 7;
   export const DPT_MEDIA_TIME = 8;
+  export const DPT_SRC = 9;
 
   /**
    * Maps user property names to DOM property names.
@@ -292,7 +302,7 @@ namespace ABeamer {
     'outerHML': [DPT_ATTR, 'outerHML'],
     'textContent': [DPT_ATTR, 'textContent'],
     'currentTime': [DPT_MEDIA_TIME, 'currentTime'],
-    'src': [DPT_ATTR_FUNC, 'src'],
+    'src': [DPT_SRC, 'src'],
     'class': [DPT_CLASS, 'className'],
     'visible': [DPT_VISIBLE, ''],
     'left': [DPT_PIXEL, 'left'],
@@ -342,6 +352,7 @@ namespace ABeamer {
 
     abstract getProp(name: PropName, args?: ABeamerArgs): PropValue;
     abstract setProp(name: PropName, value: PropValue, args?: ABeamerArgs): void;
+    waitFor?(waitItem: WaitFor, onDone: DoneFunc, args?: ABeamerArgs): void { }
   }
 
   // ------------------------------------------------------------------------
@@ -367,20 +378,6 @@ namespace ABeamer {
     compStyle: CSSStyleDeclaration;
     getComputedStyle(): any;
   }
-
-
-  function _syncMedia(el: HTMLMediaElement, waitMan: WaitMan,
-    pos: number): void {
-
-    waitMan.addWaitFunc((_args, params, onDone) => {
-
-      el.currentTime = pos;
-      window.setTimeout(() => {
-        onDone();
-      }, 1);
-    }, {});
-  }
-
 
   function _setDOMProp(adapter: _DOMAdapter,
     propName: PropName, value: PropValue, args?: ABeamerArgs): void {
@@ -409,7 +406,7 @@ namespace ABeamer {
       // flows to `DPT_ATTR`.
       case DPT_ATTR: element[domPropName] = value; break;
       case DPT_MEDIA_TIME:
-        _syncMedia(element as HTMLMediaElement, args.waitMan, value as number);
+        _waitForMediaSync(element as HTMLMediaElement, args, value as number);
         break;
 
       case DPT_VISIBLE:
@@ -429,8 +426,13 @@ namespace ABeamer {
         }
         break;
 
+      case DPT_SRC:
+      // flows to DPT_ATTR_FUNC
       case DPT_ATTR_FUNC:
         element.setAttribute(domPropName, value as string);
+        if (propType === DPT_SRC && element.tagName === 'IMG') {
+          _waitForImageLoad(element as HTMLImageElement, args);
+        }
         break;
 
       case DPT_STYLE:
@@ -477,6 +479,8 @@ namespace ABeamer {
         const value = adapter.htmlElement.style.display || adapter.getComputedStyle()['display'];
         return (value === '' || value !== 'none') ? true : false;
 
+      case DPT_SRC:
+      // flows to DPT_ATTR_FUNC
       case DPT_ATTR_FUNC: return _NullToUnd(adapter.htmlElement.getAttribute(domPropName));
       case DPT_PIXEL:
       case DPT_STYLE:
@@ -534,6 +538,18 @@ namespace ABeamer {
       // @TODO: Discover to clear data when is no longer used
       // this.compStyle = undefined;
     }
+
+    waitFor?(waitFor: WaitFor, onDone: DoneFunc, args?: ABeamerArgs): void {
+      switch (waitFor.what) {
+        case WaitForWhat.ImageLoad:
+          _waitForImageLoad(this.htmlElement as HTMLImageElement, args);
+          break;
+        case WaitForWhat.MediaSync:
+          _waitForMediaSync(this.htmlElement as HTMLMediaElement, args,
+            waitFor.value as number);
+          break;
+      }
+    }
   }
 
   // ------------------------------------------------------------------------
@@ -571,6 +587,10 @@ namespace ABeamer {
 
     setProp(propName: PropName, value: PropValue, args?: ABeamerArgs): void {
       this.vElement.setProp(propName, value, args);
+    }
+
+    waitFor?(waitItem: WaitFor, onDone: DoneFunc, args?: ABeamerArgs): void {
+      this.vElement.waitFor(waitItem, onDone, args);
     }
   }
 
@@ -862,6 +882,51 @@ namespace ABeamer {
       }
     }
     return elementAdapters;
+  }
+
+  // ------------------------------------------------------------------------
+  //                               Wait Events
+  // ------------------------------------------------------------------------
+
+  function _waitForImageLoad(elImg: HTMLImageElement,
+    args: ABeamerArgs): void {
+
+    if (!elImg.complete) {
+      args.waitMan.addWaitFunc((_args, params, onDone) => {
+        if (!elImg.complete) {
+          elImg.addEventListener('load', () => {
+            onDone();
+          }, { once: true });
+        } else {
+          onDone();
+        }
+      }, {});
+    }
+  }
+
+
+  function _waitForMediaSync(elMedia: HTMLMediaElement, args: ABeamerArgs,
+    pos: number): void {
+
+    args.waitMan.addWaitFunc((_args, params, onDone) => {
+
+      if (pos !== undefined) { elMedia.currentTime = pos; }
+      window.setTimeout(() => {
+        onDone();
+      }, 1);
+    }, {});
+  }
+
+
+  export interface _WorkWaitForParams extends AnyParams {
+    waitFor: WaitFor;
+    elAdapter: _ElementAdapter;
+  }
+
+
+  export function _handleWaitFor(args: ABeamerArgs, params: _WorkWaitForParams,
+    onDone: DoneFunc) {
+    params.elAdapter.waitFor(params.waitFor, onDone, args);
   }
 
   // ------------------------------------------------------------------------

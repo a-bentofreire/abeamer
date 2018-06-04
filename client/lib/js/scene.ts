@@ -468,9 +468,9 @@ namespace ABeamer {
               }
               maxEndFrame = Math.max(maxEndFrame, endPos);
 
-              const actRg = _findActionRg(this._actionRgMaps, elementAdpt, pi.realPropName,
+              const elActRg = _findActionRg(this._actionRgMaps, elementAdpt, pi.realPropName,
                 pos, endPos - 1, args);
-              pi.attachSelector(elementAdpt, actRg, isVerbose, args);
+              pi.attachSelector(elementAdpt, elActRg, isVerbose, args);
 
               let frameI = pi.dirPair[0] === 1 ? 0 : (pi.framesPerCycle - 1);
 
@@ -501,7 +501,7 @@ namespace ABeamer {
               // stores the last output value in the ActRg
               const outputValue = _applyAction(action, elementAdpt, false,
                 args, true);
-              actRg.actionRg.endValue = outputValue;
+              elActRg.actionRg.endValue = outputValue;
             });
           });
         });

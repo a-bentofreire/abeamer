@@ -100,10 +100,11 @@ namespace ABeamer {
     protected numEndValue?: ActionNumValue;
     protected curNumValue?: number;
     protected curStrValue?: string;
+    protected actRg?: _ActionRg;
 
 
     attachSelector(elementAdpt: _ElementAdapter,
-      actRg: _ElActionRg,
+      elActRg: _ElActionRg,
       isVerbose: boolean,
       args: ABeamerArgs): void {
 
@@ -118,8 +119,8 @@ namespace ABeamer {
           return _parseStartValueHandler(valueStart, args) as ActionValue;
         }
         // then comes linking with previous actRg
-        if (actRg.linkIndex !== -1) {
-          return actRg.actionRgList[actRg.linkIndex].endValue;
+        if (elActRg.linkIndex !== -1) {
+          return elActRg.actionRgList[elActRg.linkIndex].endValue;
         } else {
           return elementAdpt.getProp(realPropName, args);
         }
@@ -210,7 +211,11 @@ namespace ABeamer {
       this.numStartValue = numStartValue;
       this.numEndValue = numEndValue;
       this.variation = this.numEndValue - this.numStartValue;
-      actRg.actionRg.initialValue = numStartValue;
+
+      const actRg = elActRg.actionRg;
+      this.actRg = actRg;
+      actRg.initialValue = numStartValue;
+      actRg.waitFor = this.waitFor;
     }
 
 
@@ -327,7 +332,7 @@ namespace ABeamer {
         realPropName: this.realPropName,
         propType: this.propType,
         value: v,
-        waitFor: this.waitFor,
+        actRg: this.actRg,
         numValue: this.curNumValue,
         toBypassForward: _bypassModeToBool(isFirst,
           isLast, this.bypassForwardMode),
@@ -339,18 +344,19 @@ namespace ABeamer {
 
 
   export function _applyAction(action: _Action,
-    elementAdpt: _ElementAdapter,
+    elAdapter: _ElementAdapter,
     isVerbose: boolean,
     args: ABeamerArgs,
     simulateOnly: boolean = false): ActionNumValue {
 
+    const actRg = action.actRg;
     const value = action.value;
     const propName = action.realPropName;
 
     // #debug-start
     function log(name, aValue) {
       args.story.logFrmt('action', [
-        ['id', elementAdpt.getId(args)],
+        ['id', elAdapter.getId(args)],
         ['prop', name],
         ['value', aValue],
       ]);
@@ -364,14 +370,14 @@ namespace ABeamer {
       let prevValue: PropValue;
 
       // #debug-start
-      if (isVerbose) { prevValue = elementAdpt.getProp(propName, args); }
+      if (isVerbose) { prevValue = elAdapter.getProp(propName, args); }
       // #debug-end
 
-      elementAdpt.setProp(propName, newValue, args);
+      elAdapter.setProp(propName, newValue, args);
 
       // #debug-start
       if (isVerbose) {
-        const actualNewValue = elementAdpt.getProp(propName, args);
+        const actualNewValue = elAdapter.getProp(propName, args);
         let isDifferent = newValue !== actualNewValue;
 
         if (isDifferent) {
@@ -386,7 +392,7 @@ namespace ABeamer {
 
         if (isDifferent) {
           args.story.logFrmt(`action-update-warn: `,
-            [['id', elementAdpt.getId(args)]
+            [['id', elAdapter.getId(args)]
               , ['prop', propName]
               , ['expected', newValue + '']
               , ['actual', actualNewValue + ''],
@@ -398,6 +404,13 @@ namespace ABeamer {
     }
 
     setValue(value);
+
+    if (actRg.waitFor && actRg.waitFor.length) {
+      for (const waitFor of actRg.waitFor) {
+        args.waitMan.addWaitFunc(_handleWaitFor,
+          {waitFor, elAdapter} as _WorkWaitForParams);
+      }
+    }
     return action.numValue;
   }
 }

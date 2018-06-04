@@ -48,8 +48,10 @@ namespace ABeamer {
   // #export-section-start: release
 
 
+  export type DoneFunc = () => void;
+
   export type WaitFunc = (args: ABeamerArgs, params: AnyParams,
-    onDone: () => void) => void;
+    onDone: DoneFunc) => void;
 
 
   export interface WaitMan {

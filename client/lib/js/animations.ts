@@ -367,7 +367,7 @@ namespace ABeamer {
      *
      * @see gallery/animate-video-sync
      */
-    waitFor?: WaitItems;
+    waitFor?: WaitForList;
 
 
 
@@ -681,7 +681,7 @@ namespace ABeamer {
     forward: boolean;
 
     roundFunc: RoundFunc;
-    waitFor: WaitItems;
+    waitFor: WaitForList;
 
     constructor(animProp: AnimationProp) {
       super();
@@ -701,7 +701,7 @@ namespace ABeamer {
       this.roundFunc = parseRoundFunc(animProp.roundFunc);
 
       this.waitFor = !animProp.waitFor ? undefined :
-        animProp.waitFor.map((waitItem: WaitItem) => {
+        animProp.waitFor.map((waitItem: WaitFor) => {
           waitItem.prop = waitItem.prop || this.propName;
           return waitItem;
         });

@@ -11,8 +11,14 @@
 # e.g. ./live-render.sh ./gallery/animate-colors
 
 if [ "$1" == "" ]; then
-  echo "usage: ./live-render.sh [PORT] (FOLDER)"
+  echo "usage: ./live-render.sh [--gif] [PORT] (FOLDER)"
 else
+  GEN_GIF=0
+  if [ "$1" == "--gif" ]; then
+    GEN_GIF=1
+    shift
+  fi
+
   PORT=$1
   PARAM_TEST=${PORT//[0-9]}
   if [ "$PARAM_TEST" != "" ]; then
@@ -35,4 +41,8 @@ else
 
   echo "node ./cli/abeamer-cli.js render $@ --dp --url $URL --config $CONFIG"
   node ./cli/abeamer-cli.js render $@ --dp --url $URL --config $CONFIG
+
+  if [ $GEN_GIF == 1 ]; then
+    node ./cli/abeamer-cli.js gif "./$DFOLDER"
+  fi
 fi

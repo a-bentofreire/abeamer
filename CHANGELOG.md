@@ -20,12 +20,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - (DEV)exact framework supports plugins.
 - Improved cross-browser CSS support.
 - Adaptors have access to ABeamerArgs.
-- Redesigned the render loop for wait functions support.
+- Redesigned the render loop to support wait functions.
+- Improved `README.md`.
 ### Added
 - Added `DEFAULT_FADE_DURATION = '400ms'`.
 - Added `color-functions` plugin with `rgb` and `rgba` functions.
 - (DEV)Added `teleport.sh` test script.
-- DOMAdaptor can sync HTMLMediaElement `currentTime` property.
+- `_DOMElementAdapter` can sync HTMLMediaElement `currentTime` property.
+- `_DOMElementAdapter` checks if `img` `src` is loaded, if not adds `waitFor` to wait until loaded.
+- First implementation of custom waitFor.
+- `_DOMElementAdapter` handles Animation property waitFor parameter.
 ### Fixed
 - Fixed `gulp build-gallery-gifs` links.
 - Improved CSS properties teleportation.

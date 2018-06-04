@@ -180,6 +180,12 @@ export namespace DevConsts {
   // adapters
   // -------------
 
+  export enum WaitForWhat {
+    Custom,
+    ImageLoad,
+    MediaSync,
+  }
+
   export const DPT_ID = 0;
   export const DPT_VISIBLE = 1;
   export const DPT_ATTR = 2;
@@ -188,6 +194,8 @@ export namespace DevConsts {
   export const DPT_PIXEL = 5;
   export const DPT_DUAL_PIXELS = 6;
   export const DPT_CLASS = 7;
+  export const DPT_MEDIA_TIME = 8;
+  export const DPT_SRC = 9;
 
   // -------------
   // transitions

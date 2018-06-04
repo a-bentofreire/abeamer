@@ -57,6 +57,12 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Elements
     // ------------------------------------------------------------------------
+    var WaitForWhat;
+    (function (WaitForWhat) {
+        WaitForWhat[WaitForWhat["Custom"] = 0] = "Custom";
+        WaitForWhat[WaitForWhat["ImageLoad"] = 1] = "ImageLoad";
+        WaitForWhat[WaitForWhat["MediaSync"] = 2] = "MediaSync";
+    })(WaitForWhat = ABeamer.WaitForWhat || (ABeamer.WaitForWhat = {}));
     ABeamer.browser = {
         vendorPrefix: '',
         prefixedProps: [],
@@ -76,6 +82,7 @@ var ABeamer;
     ABeamer.DPT_DUAL_PIXELS = 6;
     ABeamer.DPT_CLASS = 7;
     ABeamer.DPT_MEDIA_TIME = 8;
+    ABeamer.DPT_SRC = 9;
     /**
      * Maps user property names to DOM property names.
      *
@@ -91,7 +98,7 @@ var ABeamer;
         'outerHML': [ABeamer.DPT_ATTR, 'outerHML'],
         'textContent': [ABeamer.DPT_ATTR, 'textContent'],
         'currentTime': [ABeamer.DPT_MEDIA_TIME, 'currentTime'],
-        'src': [ABeamer.DPT_ATTR_FUNC, 'src'],
+        'src': [ABeamer.DPT_SRC, 'src'],
         'class': [ABeamer.DPT_CLASS, 'className'],
         'visible': [ABeamer.DPT_VISIBLE, ''],
         'left': [ABeamer.DPT_PIXEL, 'left'],
@@ -133,6 +140,7 @@ var ABeamer;
     var _AbstractAdapter = /** @class */ (function () {
         function _AbstractAdapter() {
         }
+        _AbstractAdapter.prototype.waitFor = function (waitItem, onDone, args) { };
         return _AbstractAdapter;
     }());
     ABeamer._AbstractAdapter = _AbstractAdapter;
@@ -152,14 +160,6 @@ var ABeamer;
         return _ElementAdapter;
     }(_AbstractAdapter));
     ABeamer._ElementAdapter = _ElementAdapter;
-    function _syncMedia(el, waitMan, pos) {
-        waitMan.addWaitFunc(function (_args, params, onDone) {
-            el.currentTime = pos;
-            window.setTimeout(function () {
-                onDone();
-            }, 1);
-        }, {});
-    }
     function _setDOMProp(adapter, propName, value, args) {
         var _a = domPropMapper[propName]
             || [ABeamer.DPT_STYLE, propName], propType = _a[0], domPropName = _a[1];
@@ -188,7 +188,7 @@ var ABeamer;
                 element[domPropName] = value;
                 break;
             case ABeamer.DPT_MEDIA_TIME:
-                _syncMedia(element, args.waitMan, value);
+                _waitForMediaSync(element, args, value);
                 break;
             case ABeamer.DPT_VISIBLE:
                 var defDisplay = element['data-abeamer-display'];
@@ -207,8 +207,13 @@ var ABeamer;
                     element.style.display = 'none';
                 }
                 break;
+            case ABeamer.DPT_SRC:
+            // flows to DPT_ATTR_FUNC
             case ABeamer.DPT_ATTR_FUNC:
                 element.setAttribute(domPropName, value);
+                if (propType === ABeamer.DPT_SRC && element.tagName === 'IMG') {
+                    _waitForImageLoad(element, args);
+                }
                 break;
             case ABeamer.DPT_STYLE:
                 var cssPropName = cssPropNameMapper[domPropName] || domPropName;
@@ -243,6 +248,8 @@ var ABeamer;
             case ABeamer.DPT_VISIBLE:
                 var value = adapter.htmlElement.style.display || adapter.getComputedStyle()['display'];
                 return (value === '' || value !== 'none') ? true : false;
+            case ABeamer.DPT_SRC:
+            // flows to DPT_ATTR_FUNC
             case ABeamer.DPT_ATTR_FUNC: return _NullToUnd(adapter.htmlElement.getAttribute(domPropName));
             case ABeamer.DPT_PIXEL:
             case ABeamer.DPT_STYLE:
@@ -288,6 +295,16 @@ var ABeamer;
             // @TODO: Discover to clear data when is no longer used
             // this.compStyle = undefined;
         };
+        _DOMElementAdapter.prototype.waitFor = function (waitFor, onDone, args) {
+            switch (waitFor.what) {
+                case WaitForWhat.ImageLoad:
+                    _waitForImageLoad(this.htmlElement, args);
+                    break;
+                case WaitForWhat.MediaSync:
+                    _waitForMediaSync(this.htmlElement, args, waitFor.value);
+                    break;
+            }
+        };
         return _DOMElementAdapter;
     }(_ElementAdapter));
     ABeamer._DOMElementAdapter = _DOMElementAdapter;
@@ -322,6 +339,9 @@ var ABeamer;
         };
         _VirtualElementAdapter.prototype.setProp = function (propName, value, args) {
             this.vElement.setProp(propName, value, args);
+        };
+        _VirtualElementAdapter.prototype.waitFor = function (waitItem, onDone, args) {
+            this.vElement.waitFor(waitItem, onDone, args);
         };
         return _VirtualElementAdapter;
     }(_ElementAdapter));
@@ -558,6 +578,37 @@ var ABeamer;
         return elementAdapters;
     }
     ABeamer._parseInElSelector = _parseInElSelector;
+    // ------------------------------------------------------------------------
+    //                               Wait Events
+    // ------------------------------------------------------------------------
+    function _waitForImageLoad(elImg, args) {
+        if (!elImg.complete) {
+            args.waitMan.addWaitFunc(function (_args, params, onDone) {
+                if (!elImg.complete) {
+                    elImg.addEventListener('load', function () {
+                        onDone();
+                    }, { once: true });
+                }
+                else {
+                    onDone();
+                }
+            }, {});
+        }
+    }
+    function _waitForMediaSync(elMedia, args, pos) {
+        args.waitMan.addWaitFunc(function (_args, params, onDone) {
+            if (pos !== undefined) {
+                elMedia.currentTime = pos;
+            }
+            window.setTimeout(function () {
+                onDone();
+            }, 1);
+        }, {});
+    }
+    function _handleWaitFor(args, params, onDone) {
+        params.elAdapter.waitFor(params.waitFor, onDone, args);
+    }
+    ABeamer._handleWaitFor = _handleWaitFor;
     // ------------------------------------------------------------------------
     //                               Browser
     // ------------------------------------------------------------------------
