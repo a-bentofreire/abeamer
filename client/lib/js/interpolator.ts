@@ -68,7 +68,13 @@ namespace ABeamer {
         return curValue + parseFloat(value.substr(1));
       } else if (value[0] === '-') {
         return curValue - parseFloat(value.substr(1));
-      } else { return parseFloat(value); }
+      } else {
+        const resValue = parseFloat(value);
+        if (isNaN(resValue)) {
+          throwI8n(Msgs.ValueTypeError, { p: value });
+        }
+        return value;
+      }
     } else {
       return value as AnimPropValue;
     }
@@ -408,7 +414,7 @@ namespace ABeamer {
     if (actRg.waitFor && actRg.waitFor.length) {
       for (const waitFor of actRg.waitFor) {
         args.waitMan.addWaitFunc(_handleWaitFor,
-          {waitFor, elAdapter} as _WorkWaitForParams);
+          { waitFor, elAdapter } as _WorkWaitForParams);
       }
     }
     return action.numValue;

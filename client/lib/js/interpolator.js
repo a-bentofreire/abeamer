@@ -66,7 +66,11 @@ var ABeamer;
                 return curValue - parseFloat(value.substr(1));
             }
             else {
-                return parseFloat(value);
+                var resValue = parseFloat(value);
+                if (isNaN(resValue)) {
+                    ABeamer.throwI8n(ABeamer.Msgs.ValueTypeError, { p: value });
+                }
+                return value;
             }
         }
         else {
