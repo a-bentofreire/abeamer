@@ -343,11 +343,10 @@ var Gulp;
     //                               Builds Release Version Of The Gallery
     // ------------------------------------------------------------------------
     gulp.task('gal-rel:clear', function (cb) {
-        rimraf(build_gallery_release_js_1.BuildGalleryRelease.DEST_RELEASE_PATH, function () {
-            cb();
-        });
+        rimrafExcept(build_gallery_release_js_1.BuildGalleryRelease.DST_GALLERY_RELEASE_PATH, ['.git']);
+        cb();
     });
-    gulp.task('gal-rel:get-examples', function (cb) {
+    gulp.task('gal-rel:get-examples', ['gal-rel:clear'], function (cb) {
         build_gallery_release_js_1.BuildGalleryRelease.populateReleaseExamples();
         cb();
     });

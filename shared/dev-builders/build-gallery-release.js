@@ -19,7 +19,7 @@ var dev_web_links_js_1 = require("../dev-web-links.js");
 var BuildGalleryRelease;
 (function (BuildGalleryRelease) {
     BuildGalleryRelease.SRC_GALLERY_PATH = 'gallery';
-    BuildGalleryRelease.DEST_RELEASE_PATH = 'gallery-release';
+    BuildGalleryRelease.DST_GALLERY_RELEASE_PATH = 'gallery-release';
     BuildGalleryRelease.EXAMPLE_ZIP_FILE = 'code.zip';
     BuildGalleryRelease.releaseExamples = [];
     /**
@@ -33,7 +33,7 @@ var BuildGalleryRelease;
                 return;
             }
             var srcFullPath = BuildGalleryRelease.SRC_GALLERY_PATH + "/" + folder;
-            var dstFullPath = BuildGalleryRelease.DEST_RELEASE_PATH + "/" + folder;
+            var dstFullPath = BuildGalleryRelease.DST_GALLERY_RELEASE_PATH + "/" + folder;
             var iniFileName = srcFullPath + "/abeamer.ini";
             if (sysFs.existsSync(iniFileName)) {
                 var description_1 = [];
@@ -108,7 +108,7 @@ var BuildGalleryRelease;
         });
         var outREADME = fsix_js_1.fsix.readUtf8Sync(BuildGalleryRelease.SRC_GALLERY_PATH + "/README-rel.md")
             + galleryLinks.join('');
-        sysFs.writeFileSync(BuildGalleryRelease.DEST_RELEASE_PATH + "/README.md", outREADME);
+        sysFs.writeFileSync(BuildGalleryRelease.DST_GALLERY_RELEASE_PATH + "/README.md", outREADME);
     }
     BuildGalleryRelease.buildReadMe = buildReadMe;
     // ------------------------------------------------------------------------

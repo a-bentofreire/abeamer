@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Raises an exception if `value` parameter isn't number nor expression.
 ### Changed
 - `hello-world` example uses `div` instead of `p`.
+- `gulp build-gallery-release` cleans `gallery-release` before copy all the examples.
 ### Fixed
 - Fixes `ellipse` path `radiusY` parameter.
 

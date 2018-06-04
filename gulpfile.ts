@@ -493,13 +493,12 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   gulp.task('gal-rel:clear', (cb) => {
-    rimraf(BuildGalRel.DEST_RELEASE_PATH, () => {
-      cb();
-    });
+    rimrafExcept(BuildGalRel.DST_GALLERY_RELEASE_PATH, ['.git']);
+    cb();
   });
 
 
-  gulp.task('gal-rel:get-examples', (cb) => {
+  (gulp as any).task('gal-rel:get-examples', ['gal-rel:clear'], (cb) => {
     BuildGalRel.populateReleaseExamples();
     cb();
   });

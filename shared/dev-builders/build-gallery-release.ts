@@ -25,7 +25,7 @@ import { DevWebLinks as webLinks } from "../dev-web-links.js";
 export namespace BuildGalleryRelease {
 
   export const SRC_GALLERY_PATH = 'gallery';
-  export const DEST_RELEASE_PATH = 'gallery-release';
+  export const DST_GALLERY_RELEASE_PATH = 'gallery-release';
   export const EXAMPLE_ZIP_FILE = 'code.zip';
 
   export interface Example {
@@ -57,7 +57,7 @@ export namespace BuildGalleryRelease {
       if (exclusions.indexOf(folder) !== -1) { return; }
 
       const srcFullPath = `${SRC_GALLERY_PATH}/${folder}`;
-      const dstFullPath = `${DEST_RELEASE_PATH}/${folder}`;
+      const dstFullPath = `${DST_GALLERY_RELEASE_PATH}/${folder}`;
       const iniFileName = `${srcFullPath}/abeamer.ini`;
 
       if (sysFs.existsSync(iniFileName)) {
@@ -142,7 +142,7 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
 
     const outREADME = fsix.readUtf8Sync(`${SRC_GALLERY_PATH}/README-rel.md`)
       + galleryLinks.join('');
-    sysFs.writeFileSync(`${DEST_RELEASE_PATH}/README.md`, outREADME);
+    sysFs.writeFileSync(`${DST_GALLERY_RELEASE_PATH}/README.md`, outREADME);
   }
 
   // ------------------------------------------------------------------------
