@@ -215,9 +215,9 @@ var Cli;
                             return '';
                         });
                         text = text.replace(/^(.*js\/main\.js.*)$/m, function (all) {
-                            return plugins_1
-                                .map(function (plugin) { return pre_1 + "plugins/" + plugin + "/" + plugin + ".js" + post_1; }).join('\n')
-                                + '\n' + all;
+                            return "\n          <!-- remove the unnecessary plugins -->\n"
+                                + plugins_1.map(function (plugin) { return pre_1 + "plugins/" + plugin + "/" + plugin + ".js" + post_1; }).join('\n')
+                                + '\n\n' + all;
                         });
                     }
                     // readjusts file paths

@@ -1,8 +1,9 @@
 $(window).on("load", () => {
+
   const story: ABeamer.Story = ABeamer.createStory(/*FPS:*/20);
 
-  const scene0 = story.scenes[0];
-  scene0.addAnimations([{
+  const scene1 = story.scenes[0];
+  scene1.addAnimations([{
     selector: '#hello',
     duration: '2s',
     props: [{

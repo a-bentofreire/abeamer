@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Fixes `gallery/animate-workbench` top value parameter.
 ### Added
-- Added logical `and`, or `or`.
+- Added logical `and`, or `or` to expressions.
+- `abeamer-cli create` adds a comment before injecting the plugins.
+### Changed
+- `hello-world` uses `scene1` instead of `scene0`.
 
 ## [0.2.1] -
 ### Added

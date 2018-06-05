@@ -290,9 +290,9 @@ The commands are:
             });
 
             text = text.replace(/^(.*js\/main\.js.*)$/m, (all) => {
-              return plugins
-                .map(plugin => `${pre}plugins/${plugin}/${plugin}.js${post}`).join('\n')
-                + '\n' + all;
+              return `\n          <!-- remove the unnecessary plugins -->\n`
+                + plugins.map(plugin => `${pre}plugins/${plugin}/${plugin}.js${post}`).join('\n')
+                + '\n\n' + all;
             });
           }
 
