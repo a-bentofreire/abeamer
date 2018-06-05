@@ -10,7 +10,12 @@ $(window).on("load", function () {
     //                               Scene1
     // ------------------------------------------------------------------------
     var scene1 = story.scenes[0];
+    var expr = "=iff(t<0.2 or t>0.7, 0, 1)";
     var tests = [{
+            enabled: true,
+            label: "easing:" + expr,
+            easing: expr,
+        }, {
             enabled: true,
             label: 'easeInQuart',
             // easing by Id
@@ -51,8 +56,12 @@ $(window).on("load", function () {
         }];
     var h = story.height;
     var margin = 10;
-    var d = 4;
-    tests.forEach(function (test) {
+    var d = 2; // duration in seconds
+    var allowMultiple = true;
+    tests.forEach(function (test, index) {
+        if (index && !allowMultiple) {
+            return;
+        }
         scene1
             .addAnimations([{
                 selector: '#dot',
@@ -68,7 +77,7 @@ $(window).on("load", function () {
                         easing: test.easing,
                         oscillator: test.oscillator,
                         valueStart: h / 2 + "px",
-                        value: h / 8 + "px",
+                        value: h / 8,
                     }],
             },
             {

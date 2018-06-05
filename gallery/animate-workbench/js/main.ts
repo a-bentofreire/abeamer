@@ -24,7 +24,13 @@ $(window).on("load", () => {
     oscillator?: ABeamer.Oscillator;
   }
 
+  const expr = `=iff(t<0.2 or t>0.7, 0, 1)`;
+
   const tests: Test[] = [{
+    enabled: true,
+    label: `easing:${expr}`,
+    easing: expr,
+  }, {
     enabled: true,
     label: 'easeInQuart',
     // easing by Id
@@ -66,10 +72,14 @@ $(window).on("load", () => {
 
   const h = story.height;
   const margin = 10;
-  const d = 4;
+  const d = 2; // duration in seconds
+  const allowMultiple = true;
 
-  tests.forEach(test => {
+  tests.forEach((test, index) => {
 
+    if (index && !allowMultiple) {
+      return;
+    }
     scene1
       .addAnimations([{
         selector: '#dot',
@@ -85,7 +95,7 @@ $(window).on("load", () => {
           easing: test.easing,
           oscillator: test.oscillator,
           valueStart: `${h / 2}px`,
-          value: `${h / 8}px`,
+          value: h / 8,
         }],
       },
       {

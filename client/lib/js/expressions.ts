@@ -20,6 +20,7 @@
  * - binary operators: `+`, `-`, `*`, `/`, `%` (modulus).
  *
  * - equality and comparison operators: `==`, `!=`, `<`, `>`, `<=`, `>=`.
+ * - logical comparison: `and`, `or`.
  *      These operators transform the 2 numerical values into 0 (false) or 1 (true).
  *
  * - parenthesis: `(`, `)`.
@@ -219,6 +220,9 @@ namespace ABeamer {
     Greater,
     LessEqual,
     GreaterEqual,
+    LogicalAnd,
+    LogicalOr,
+    LogicalNot,
   }
 
 
@@ -229,12 +233,13 @@ namespace ABeamer {
     ParamOpen,
     ParamClose,
     Unary,
+    LogicalUnary,
     Binary,
     Comma,
   }
 
 
-  enum TokenType2Str {
+  enum Str2TokenType {
     '(' = TokenType.ParamOpen,
     ')' = TokenType.ParamClose,
     '+' = TokenType.Plus,
@@ -259,7 +264,10 @@ namespace ABeamer {
     funcParams?: ExprFuncParams;
   }
 
-
+  /**
+   * List of operator precedence.
+   * Taken from the JavaScript operator precedence.
+   */
   const opPriority: uint[] = [
     0,  // None,
     19, // Function,
@@ -278,6 +286,9 @@ namespace ABeamer {
     11,  // Greater,
     11,  // LessEqual,
     11,  // GreaterEqual,
+    6,   // LogicalAnd
+    5,   // LogicalOr
+    16,  // LogicalNot
   ];
 
 
@@ -293,12 +304,18 @@ namespace ABeamer {
     TokenClass.Binary,
     TokenClass.Binary,
     TokenClass.Binary,
+    // equality operators
+    TokenClass.Binary,
+    TokenClass.Binary,
+    // conditional Operators
     TokenClass.Binary,
     TokenClass.Binary,
     TokenClass.Binary,
     TokenClass.Binary,
+    // Logical operators
     TokenClass.Binary,
     TokenClass.Binary,
+    TokenClass.LogicalUnary,
   ];
 
   // ------------------------------------------------------------------------
@@ -312,7 +329,7 @@ namespace ABeamer {
   }
 
 
-  function parser(p: ParseParams, checkSign: boolean) {
+  function parser(p: ParseParams, checkSign: boolean): TokenClass {
 
     let startPos;
 
@@ -336,7 +353,7 @@ namespace ABeamer {
 
       if (ch === undefined) { break; }
 
-      // vars & functions
+      // vars, functions, named operators
       if (isCharacter(ch)) {
         do {
           const nextCh = expr[++pos];
@@ -347,28 +364,48 @@ namespace ABeamer {
 
         if (expr[pos] === '(') {
           setToken(TokenType.Function);
-          pos++;
+          const funcName = p.token.sValue;
+
+          if (funcName === 'not') {
+            p.token.tkType = TokenType.LogicalNot;
+            p.token.tkClass = TokenClass.LogicalUnary;
+          } else {
+            pos++;
+          }
+
         } else {
           setToken(TokenType.Value);
           const varName = p.token.sValue;
-          const varValue = p.args.vars[varName];
-          const varTypeOf = typeof varValue;
-          if (varValue === undefined) {
-            err(p, `Unknown variable ${varName}`);
-          }
-          if (varTypeOf === 'string') {
-            p.token.paType = ExFuncParamType.String;
-            p.token.sValue = varValue as string;
-          } else if (varTypeOf === 'number') {
-            p.token.paType = ExFuncParamType.Number;
-            p.token.numValue = varValue as number;
-            p.token.sValue = undefined;
-          } else if (varTypeOf === 'boolean') {
-            p.token.paType = ExFuncParamType.Number;
-            p.token.numValue = (varValue as boolean) ? 1 : 0;
-            p.token.sValue = undefined;
+          const opNameIndex = ['not', 'and', 'or'].indexOf(varName);
+
+          if (opNameIndex !== -1) {
+            // named operators
+            p.token.tkType = [TokenType.LogicalNot, TokenType.LogicalAnd,
+            /**/ TokenType.LogicalOr][opNameIndex];
+            p.token.tkClass = opNameIndex !== 0 ? TokenClass.Binary : TokenClass.LogicalUnary;
+
           } else {
-            err(p, `Unsupported type of ${varName}`);
+            // variables
+            const varValue = p.args.vars[varName];
+            const varTypeOf = typeof varValue;
+            if (varValue === undefined) {
+              err(p, `Unknown variable ${varName}`);
+            }
+            if (varTypeOf === 'string') {
+              p.token.paType = ExFuncParamType.String;
+              p.token.sValue = varValue as string;
+            } else if (varTypeOf === 'number') {
+              p.token.paType = ExFuncParamType.Number;
+              p.token.numValue = varValue as number;
+              p.token.sValue = undefined;
+            } else if (varTypeOf === 'boolean') {
+              p.token.paType = ExFuncParamType.Number;
+              p.token.numValue = (varValue as boolean) ? 1 : 0;
+              p.token.sValue = undefined;
+            } else {
+              err(p, `Unsupported type of ${varName}`);
+            }
+
           }
         }
         break;
@@ -418,7 +455,7 @@ namespace ABeamer {
       }
 
       // symbols
-      const type = TokenType2Str[ch] || TokenType.None;
+      const type = Str2TokenType[ch] || TokenType.None;
       if (type === TokenType.None) {
         err(p, `Unknown token ${ch} in position ${pos}`, p.token);
       }
@@ -462,6 +499,7 @@ namespace ABeamer {
   //                               State Machine
   // ------------------------------------------------------------------------
 
+  // @TODO: Implement logical Not
   function _stateMachine(p: ParseParams): ExprResult {
 
     const enum States {
@@ -556,7 +594,8 @@ namespace ABeamer {
 
           if (state === States.Binary) {
             err(p, '', token);
-          } else if (state === States.NoUnary && stack[stackLast].tkClass === TokenClass.Unary
+          } else if (state === States.NoUnary
+            && [TokenClass.Unary, TokenClass.LogicalUnary].indexOf(stack[stackLast].tkClass) !== -1
             && (stackLast === 0 || stack[stackLast - 1].tkClass !== TokenClass.Value)) {
             state = States.IdAndUnary;
             op = pop();
@@ -621,9 +660,12 @@ namespace ABeamer {
           }
           break;
 
+        case TokenClass.LogicalUnary:
         case TokenClass.Unary:
           if (state === States.IdAndUnary) {
-            state = States.NoUnary;
+            if (thisTkClass === TokenClass.Unary) {
+              state = States.NoUnary;
+            }
             push();
             break;
           }
@@ -722,6 +764,8 @@ namespace ABeamer {
 
     if (op.tkType === TokenType.Minus) {
       value.numValue = -value.numValue;
+    } else if (op.tkType === TokenType.LogicalNot) {
+      value.numValue = value.numValue ? 0 : 1;
     }
   }
 
@@ -779,6 +823,12 @@ namespace ABeamer {
         break;
       case TokenType.GreaterEqual:
         v = value1.numValue >= value2.numValue ? 1 : 0;
+        break;
+      case TokenType.LogicalAnd:
+        v = value1.numValue && value2.numValue ? 1 : 0;
+        break;
+      case TokenType.LogicalOr:
+        v = value1.numValue || value2.numValue ? 1 : 0;
         break;
 
     }

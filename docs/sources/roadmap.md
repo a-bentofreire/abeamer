@@ -9,7 +9,7 @@
 ### Coming soon
 
 - Expressions with Numeric Array.
-- Expressions with 'AND', 'OR' operators.
+- Expressions with 'NOT' operators.
 - `advance` parameter in Animation property to keep the pipeline in the same point
 after an animation.
 - Improved Shape task with animation support.

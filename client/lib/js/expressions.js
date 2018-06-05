@@ -17,6 +17,7 @@
  * - binary operators: `+`, `-`, `*`, `/`, `%` (modulus).
  *
  * - equality and comparison operators: `==`, `!=`, `<`, `>`, `<=`, `>=`.
+ * - logical comparison: `and`, `or`.
  *      These operators transform the 2 numerical values into 0 (false) or 1 (true).
  *
  * - parenthesis: `(`, `)`.
@@ -124,23 +125,27 @@ var ABeamer;
         return text !== undefined && text[0] === '=';
     }
     ABeamer.isExpr = isExpr;
-    var TokenType2Str;
-    (function (TokenType2Str) {
-        TokenType2Str[TokenType2Str["("] = 3] = "(";
-        TokenType2Str[TokenType2Str[")"] = 4] = ")";
-        TokenType2Str[TokenType2Str["+"] = 6] = "+";
-        TokenType2Str[TokenType2Str["-"] = 7] = "-";
-        TokenType2Str[TokenType2Str["*"] = 8] = "*";
-        TokenType2Str[TokenType2Str["/"] = 9] = "/";
-        TokenType2Str[TokenType2Str["%"] = 10] = "%";
-        TokenType2Str[TokenType2Str[","] = 2] = ",";
-        TokenType2Str[TokenType2Str["=="] = 11] = "==";
-        TokenType2Str[TokenType2Str["!="] = 12] = "!=";
-        TokenType2Str[TokenType2Str["<"] = 13] = "<";
-        TokenType2Str[TokenType2Str[">"] = 14] = ">";
-        TokenType2Str[TokenType2Str["<="] = 15] = "<=";
-        TokenType2Str[TokenType2Str[">="] = 16] = ">=";
-    })(TokenType2Str || (TokenType2Str = {}));
+    var Str2TokenType;
+    (function (Str2TokenType) {
+        Str2TokenType[Str2TokenType["("] = 3] = "(";
+        Str2TokenType[Str2TokenType[")"] = 4] = ")";
+        Str2TokenType[Str2TokenType["+"] = 6] = "+";
+        Str2TokenType[Str2TokenType["-"] = 7] = "-";
+        Str2TokenType[Str2TokenType["*"] = 8] = "*";
+        Str2TokenType[Str2TokenType["/"] = 9] = "/";
+        Str2TokenType[Str2TokenType["%"] = 10] = "%";
+        Str2TokenType[Str2TokenType[","] = 2] = ",";
+        Str2TokenType[Str2TokenType["=="] = 11] = "==";
+        Str2TokenType[Str2TokenType["!="] = 12] = "!=";
+        Str2TokenType[Str2TokenType["<"] = 13] = "<";
+        Str2TokenType[Str2TokenType[">"] = 14] = ">";
+        Str2TokenType[Str2TokenType["<="] = 15] = "<=";
+        Str2TokenType[Str2TokenType[">="] = 16] = ">=";
+    })(Str2TokenType || (Str2TokenType = {}));
+    /**
+     * List of operator precedence.
+     * Taken from the JavaScript operator precedence.
+     */
     var opPriority = [
         0,
         19,
@@ -159,25 +164,31 @@ var ABeamer;
         11,
         11,
         11,
+        6,
+        5,
+        16,
     ];
     var Type2Class = [
         0 /* None */,
         1 /* Function */,
-        7 /* Comma */,
+        8 /* Comma */,
         3 /* ParamOpen */,
         4 /* ParamClose */,
         2 /* Value */,
         5 /* Unary */,
         5 /* Unary */,
-        6 /* Binary */,
-        6 /* Binary */,
-        6 /* Binary */,
-        6 /* Binary */,
-        6 /* Binary */,
-        6 /* Binary */,
-        6 /* Binary */,
-        6 /* Binary */,
-        6 /* Binary */,
+        7 /* Binary */,
+        7 /* Binary */,
+        7 /* Binary */,
+        7 /* Binary */,
+        7 /* Binary */,
+        7 /* Binary */,
+        7 /* Binary */,
+        7 /* Binary */,
+        7 /* Binary */,
+        7 /* Binary */,
+        7 /* Binary */,
+        6 /* LogicalUnary */,
     ];
     function parser(p, checkSign) {
         var startPos;
@@ -198,7 +209,7 @@ var ABeamer;
             if (ch === undefined) {
                 break;
             }
-            // vars & functions
+            // vars, functions, named operators
             if (isCharacter(ch)) {
                 do {
                     var nextCh = expr[++pos];
@@ -208,32 +219,49 @@ var ABeamer;
                 } while (true);
                 if (expr[pos] === '(') {
                     setToken(1 /* Function */);
-                    pos++;
+                    var funcName = p.token.sValue;
+                    if (funcName === 'not') {
+                        p.token.tkType = 19 /* LogicalNot */;
+                        p.token.tkClass = 6 /* LogicalUnary */;
+                    }
+                    else {
+                        pos++;
+                    }
                 }
                 else {
                     setToken(5 /* Value */);
                     var varName = p.token.sValue;
-                    var varValue = p.args.vars[varName];
-                    var varTypeOf = typeof varValue;
-                    if (varValue === undefined) {
-                        err(p, "Unknown variable " + varName);
-                    }
-                    if (varTypeOf === 'string') {
-                        p.token.paType = 2 /* String */;
-                        p.token.sValue = varValue;
-                    }
-                    else if (varTypeOf === 'number') {
-                        p.token.paType = 1 /* Number */;
-                        p.token.numValue = varValue;
-                        p.token.sValue = undefined;
-                    }
-                    else if (varTypeOf === 'boolean') {
-                        p.token.paType = 1 /* Number */;
-                        p.token.numValue = varValue ? 1 : 0;
-                        p.token.sValue = undefined;
+                    var opNameIndex = ['not', 'and', 'or'].indexOf(varName);
+                    if (opNameIndex !== -1) {
+                        // named operators
+                        p.token.tkType = [19 /* LogicalNot */, 17 /* LogicalAnd */,
+                            18 /* LogicalOr */][opNameIndex];
+                        p.token.tkClass = opNameIndex !== 0 ? 7 /* Binary */ : 6 /* LogicalUnary */;
                     }
                     else {
-                        err(p, "Unsupported type of " + varName);
+                        // variables
+                        var varValue = p.args.vars[varName];
+                        var varTypeOf = typeof varValue;
+                        if (varValue === undefined) {
+                            err(p, "Unknown variable " + varName);
+                        }
+                        if (varTypeOf === 'string') {
+                            p.token.paType = 2 /* String */;
+                            p.token.sValue = varValue;
+                        }
+                        else if (varTypeOf === 'number') {
+                            p.token.paType = 1 /* Number */;
+                            p.token.numValue = varValue;
+                            p.token.sValue = undefined;
+                        }
+                        else if (varTypeOf === 'boolean') {
+                            p.token.paType = 1 /* Number */;
+                            p.token.numValue = varValue ? 1 : 0;
+                            p.token.sValue = undefined;
+                        }
+                        else {
+                            err(p, "Unsupported type of " + varName);
+                        }
                     }
                 }
                 break;
@@ -278,7 +306,7 @@ var ABeamer;
                 pos++;
             }
             // symbols
-            var type = TokenType2Str[ch] || 0 /* None */;
+            var type = Str2TokenType[ch] || 0 /* None */;
             if (type === 0 /* None */) {
                 err(p, "Unknown token " + ch + " in position " + pos, p.token);
             }
@@ -289,7 +317,7 @@ var ABeamer;
         var tkClass = p.token.tkClass;
         p.pos = pos;
         // @ts-ignore   TypeScript bug :-(
-        p.token.canBinOp = tkClass === 5 /* Unary */ || tkClass === 6 /* Binary */;
+        p.token.canBinOp = tkClass === 5 /* Unary */ || tkClass === 7 /* Binary */;
         return tkClass;
     }
     // ------------------------------------------------------------------------
@@ -314,6 +342,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               State Machine
     // ------------------------------------------------------------------------
+    // @TODO: Implement logical Not
     function _stateMachine(p) {
         var stack = [];
         var state = 0 /* IdAndUnary */;
@@ -389,7 +418,8 @@ var ABeamer;
                     if (state === 2 /* Binary */) {
                         err(p, '', token);
                     }
-                    else if (state === 1 /* NoUnary */ && stack[stackLast].tkClass === 5 /* Unary */
+                    else if (state === 1 /* NoUnary */
+                        && [5 /* Unary */, 6 /* LogicalUnary */].indexOf(stack[stackLast].tkClass) !== -1
                         && (stackLast === 0 || stack[stackLast - 1].tkClass !== 2 /* Value */)) {
                         state = 0 /* IdAndUnary */;
                         op = pop();
@@ -411,13 +441,13 @@ var ABeamer;
                     startPoints.push(startPoint);
                     state = 0 /* IdAndUnary */;
                     break;
-                case 7 /* Comma */:
+                case 8 /* Comma */:
                 case 4 /* ParamClose */:
                     if (!startPoint) {
                         err(p, "Missing starting parenthesis", token);
                     }
                     var funcToken = stack[startPoint - 1];
-                    var isTokenComma = thisTkClass === 7 /* Comma */;
+                    var isTokenComma = thisTkClass === 8 /* Comma */;
                     var isFunc = funcToken.tkClass === 1 /* Function */;
                     if (isTokenComma && !isFunc) {
                         err(p, "Missing function", token);
@@ -445,14 +475,17 @@ var ABeamer;
                         state = 0 /* IdAndUnary */;
                     }
                     break;
+                case 6 /* LogicalUnary */:
                 case 5 /* Unary */:
                     if (state === 0 /* IdAndUnary */) {
-                        state = 1 /* NoUnary */;
+                        if (thisTkClass === 5 /* Unary */) {
+                            state = 1 /* NoUnary */;
+                        }
                         push();
                         break;
                     }
                 // it flows to TokenClass.Binary
-                case 6 /* Binary */:
+                case 7 /* Binary */:
                     if (state !== 2 /* Binary */) {
                         err(p, '', token);
                     }
@@ -531,6 +564,9 @@ var ABeamer;
         if (op.tkType === 7 /* Minus */) {
             value.numValue = -value.numValue;
         }
+        else if (op.tkType === 19 /* LogicalNot */) {
+            value.numValue = value.numValue ? 0 : 1;
+        }
     }
     /** Computes the binary operators. */
     function _calcBinary(p, op, value1, value2) {
@@ -584,6 +620,12 @@ var ABeamer;
                 break;
             case 16 /* GreaterEqual */:
                 v = value1.numValue >= value2.numValue ? 1 : 0;
+                break;
+            case 17 /* LogicalAnd */:
+                v = value1.numValue && value2.numValue ? 1 : 0;
+                break;
+            case 18 /* LogicalOr */:
+                v = value1.numValue || value2.numValue ? 1 : 0;
                 break;
         }
         value1.numValue = v;
