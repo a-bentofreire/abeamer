@@ -52,6 +52,7 @@ $(window).on("load", () => {
             } as ABeamer.PulsarOscillatorParams,
           },
           iterationCount: 4,
+          valueStart: '0px',
           value: 36,
         }, {
 

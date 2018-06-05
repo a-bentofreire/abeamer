@@ -46,6 +46,7 @@ $(window).on("load", function () {
                         },
                     },
                     iterationCount: 4,
+                    valueStart: '0px',
                     value: 36,
                 }, {
                     position: "='+' + (d/2) + 's'",

@@ -627,12 +627,13 @@ var ABeamer;
     var FORCED_PROP_REMAPS = {
         '-webkit-': ['background-clip'],
     };
+    var vendorRegEx = /^(-webkit-|-moz-|-ie-|-ms-)(.*)$/;
     /**
      * Maps an input CSS property into the current CSS property, adding a prefixed
      * CSS property if necessary.
      */
     function _propNameToVendorProps(propName) {
-        var subPropName = propName.replace(/(?:-webkit-|-moz-|-ie-)/, '');
+        var subPropName = propName.replace(vendorRegEx, '$2');
         var mapValue = domPropMapper[subPropName];
         if (mapValue && mapValue[1] && mapValue[1] !== subPropName) {
             return [subPropName, mapValue[1]];
@@ -656,11 +657,10 @@ var ABeamer;
     function _initBrowser() {
         var cssMap = window.getComputedStyle(document.body);
         var cssMapLen = cssMap.length;
-        var regEx = /^(-webkit-|-moz-|-ie-)(.*)/;
         var foundVendorPrefix = false;
         var _loop_1 = function (i) {
             var propName = cssMap[i];
-            var parts = propName.match(regEx);
+            var parts = propName.match(vendorRegEx);
             if (parts) {
                 if (!foundVendorPrefix) {
                     var vendorPrefix_1 = parts[1];

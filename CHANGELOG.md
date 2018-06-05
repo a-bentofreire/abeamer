@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.2.2] -
 ### Fixed
 - Fixes `gallery/animate-workbench` top value parameter.
+- Added extra info to gallery examples to improve browser compatibility.
+- `Adaptor` and `interpolator` improved browser compatibility.
 ### Added
 - Added logical `and`, or `or` to expressions.
 - `abeamer-cli create` adds a comment before injecting the plugins.
 - (DEV)declared function return `void` if it didn't had a return value.
+- `abeamer serve --dirs` defines the body colors (fixes a problem on firefox with dark themes)
 ### Changed
 - `hello-world` uses `scene1` instead of `scene0`.
 

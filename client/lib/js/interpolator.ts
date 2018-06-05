@@ -132,7 +132,10 @@ namespace ABeamer {
         }
       }
 
-      const startValue = getStartValue();
+      let startValue = getStartValue();
+      if (startValue === 'auto') {
+        startValue = '';
+      }
 
       const strStartValue = startValue as string;
       let numStartValue = 0;

@@ -114,6 +114,9 @@ var ABeamer;
                 }
             }
             var startValue = getStartValue();
+            if (startValue === 'auto') {
+                startValue = '';
+            }
             var strStartValue = startValue;
             var numStartValue = 0;
             var propType = ABeamer.PT_NUMBER;

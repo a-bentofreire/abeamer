@@ -950,6 +950,7 @@ namespace ABeamer {
     '-webkit-': ['background-clip'],
   };
 
+  const vendorRegEx = /^(-webkit-|-moz-|-ie-|-ms-)(.*)$/;
 
   /**
    * Maps an input CSS property into the current CSS property, adding a prefixed
@@ -957,7 +958,7 @@ namespace ABeamer {
    */
   export function _propNameToVendorProps(propName: string): string[] {
 
-    const subPropName = propName.replace(/(?:-webkit-|-moz-|-ie-)/, '');
+    const subPropName = propName.replace(vendorRegEx, '$2');
     const mapValue = domPropMapper[subPropName];
     if (mapValue && mapValue[1] && mapValue[1] !== subPropName) {
       return [subPropName, mapValue[1]];
@@ -984,11 +985,10 @@ namespace ABeamer {
   function _initBrowser(): void {
     const cssMap = window.getComputedStyle(document.body);
     const cssMapLen = cssMap.length;
-    const regEx = /^(-webkit-|-moz-|-ie-)(.*)/;
     let foundVendorPrefix = false;
     for (let i = 0; i < cssMapLen; i++) {
       const propName = cssMap[i];
-      const parts = propName.match(regEx);
+      const parts = propName.match(vendorRegEx);
       if (parts) {
 
         if (!foundVendorPrefix) {

@@ -76,6 +76,8 @@ export namespace HttpServerEx {
     body {
       font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,
         sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+        color: #24292e;
+        background-color: white;
     }
     pre {
       background-color: #1b1f230d;
@@ -163,7 +165,17 @@ export namespace HttpServerEx {
               (fa.isDir ? -1 : 1);
           });
 
-          const html = '<html>\n<head>\n</head><body>\n'
+
+          const html = `<html>\n<head>
+<style>
+body {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,
+      sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+      color: #24292e;
+      background-color: white;
+}
+</style>
+          </head><body>\n`
             + filesInfo.map(fileInf => {
               return !fileInf.isDir ? `<div><a href="${fileInf.url}">${fileInf.file}</a></div>` :
                 `<div>[<a href="${fileInf.url}${DIR_PREFIX}">${fileInf.file}</a>]</div>`;
