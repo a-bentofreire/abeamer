@@ -80,15 +80,18 @@ html,
 }
 
 #animation {
-  opacity: 0;
-  position: absolute;
   left: 38px;
   top: 34px;
 }
 
+#animation,
 #beamer {
   opacity: 0;
   position: absolute;
+  text-shadow: 0 0 2px white;
+}
+
+#beamer {
   left: 205px;
   top: 34px;
   background: #000;

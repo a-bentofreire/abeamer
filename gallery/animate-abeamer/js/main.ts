@@ -118,7 +118,7 @@ $(window).on("load", () => {
           prop: 'left',
           duration: '1s',
           easing: 'easeInCubic',
-          value: 54,
+          value: 52,
         },
         {
           prop: 'left',
