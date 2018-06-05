@@ -160,7 +160,7 @@ namespace ABeamer {
   /** Map of the built-in path functions, plus the ones added via plugins. */
   export const _pathFunctions: { [name: string]: PathFunc } = {};
 
-  export function _pathNumToStr(num: number) {
+  export function _pathNumToStr(num: number): string {
     return PathName[num];
   }
 

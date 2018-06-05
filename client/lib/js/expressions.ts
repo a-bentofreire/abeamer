@@ -333,7 +333,7 @@ namespace ABeamer {
 
     let startPos;
 
-    function setToken(aType: TokenType) {
+    function setToken(aType: TokenType): void {
       p.token.sValue = expr.substring(startPos, pos);
       p.token.tkType = aType;
       p.token.tkClass = Type2Class[aType];
@@ -748,7 +748,7 @@ namespace ABeamer {
   // ------------------------------------------------------------------------
 
   /** Compares the operators priority. */
-  function _comparePriority(op1: Token, op2: Token) {
+  function _comparePriority(op1: Token, op2: Token): boolean {
     return opPriority[op1.tkType] >= opPriority[op2.tkType];
   }
 
@@ -757,7 +757,7 @@ namespace ABeamer {
   // ------------------------------------------------------------------------
 
   /** Computes the unary operators. */
-  function _calcUnary(p: ParseParams, op: Token, value: Token) {
+  function _calcUnary(p: ParseParams, op: Token, value: Token): void {
     if (value.paType !== ExFuncParamType.Number) {
       err(p, Msgs.UnaryErr, op);
     }
@@ -771,7 +771,7 @@ namespace ABeamer {
 
 
   /** Computes the binary operators. */
-  function _calcBinary(p: ParseParams, op: Token, value1: Token, value2: Token) {
+  function _calcBinary(p: ParseParams, op: Token, value1: Token, value2: Token): void {
 
     const AnyNotNumber = value1.paType !== ExFuncParamType.Number
       || value2.paType !== ExFuncParamType.Number;

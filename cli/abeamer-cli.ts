@@ -109,7 +109,7 @@ namespace Cli {
 
   argOpts['listDir'] = {
     desc:
-      `serve command supports list directory, if the seach path is ?dir`,
+      `serve command supports list directory, if the search part is ?dir`,
   };
 
 
@@ -117,7 +117,7 @@ namespace Cli {
   //                               Print Usage
   // ------------------------------------------------------------------------
 
-  function printUsage() {
+  function printUsage(): void {
     console.log(`abeamer [command] [options] [project-name|report-name]
 The commands are:
     ${CMD_CREATE} creates a project with project-name
@@ -153,7 +153,7 @@ The commands are:
   //                               Parse Arguments
   // ------------------------------------------------------------------------
 
-  function parseArguments() {
+  function parseArguments(): uint {
     const args: string[] = sysProcess.argv;
     let argI = 1;
     // @TODO: Improve this code
@@ -210,7 +210,7 @@ The commands are:
   //                               Runs External Commands
   // ------------------------------------------------------------------------
 
-  function runSpawn(cmdLine: string, args: string[], callback?) {
+  function runSpawn(cmdLine: string, args: string[], callback?): void {
 
     if (isVerbose) {
       console.log(`spawn cmdLine: ${cmdLine}`);
@@ -236,7 +236,7 @@ The commands are:
   //                                Command: Create
   // ------------------------------------------------------------------------
 
-  function commandCreate() {
+  function commandCreate(): void {
 
     const projName = cmdParam;
     if (projName === '' || projName[0] === '-'
@@ -356,7 +356,7 @@ The commands are:
   //                               Serve
   // ------------------------------------------------------------------------
 
-  function commandServe() {
+  function commandServe(): void {
     const hasMarked = sysFs.existsSync(sysPath.posix.join(__dirname,
       '../node_modules/marked/bin/marked'));
     const hasHighlightJs = sysFs.existsSync(sysPath.posix.join(__dirname,
@@ -383,7 +383,7 @@ The commands are:
   //                                Command: Render
   // ------------------------------------------------------------------------
 
-  function commandRender() {
+  function commandRender(): void {
 
     const serverName = (OptsParser.argOpts.server.value as string
       || RelConsts.DEFAULT_SERVER).toLowerCase();
@@ -452,7 +452,7 @@ The commands are:
   //                                Command: Gif
   // ------------------------------------------------------------------------
 
-  function commandGif() {
+  function commandGif(): void {
     const report = getReport();
     const gifFileName = argOpts['gif'].value as string
       || `${report.dirname}/${DEFAULT_GIF_NAME}`;
@@ -474,7 +474,7 @@ The commands are:
   //                                Command: Movie
   // ------------------------------------------------------------------------
 
-  function commandMovie() {
+  function commandMovie(): void {
     const report = getReport();
     const movieFileName = argOpts['movie'].value as string
       || `${report.dirname}/${DEFAULT_MOVIE_NAME}`;

@@ -37,14 +37,14 @@ export namespace fsix {
    *
    * @param path unix-style path
    */
-  export function mkdirpSync(path: string) {
+  export function mkdirpSync(path: string): void {
     while (path && !sysFs.existsSync(path)) {
       mkdirpSync(sysPath.dirname(path));
       sysFs.mkdirSync(path);
     }
   }
 
-  export function runExternal(cmd: string, callback: (error, stdout, stderr) => void) {
+  export function runExternal(cmd: string, callback: (error, stdout, stderr) => void): void {
     sysExec(cmd, (error, stdout, stderr) => {
       if (callback) { callback(error, stdout, stderr); }
     });

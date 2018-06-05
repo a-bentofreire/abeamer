@@ -221,7 +221,7 @@ export namespace OptsParser {
 
 
   /** Outputs to the console the program usage */
-  export function printUsage() {
+  export function printUsage(): void {
 
     const names = Object.keys(argOpts);
     let max = 0;

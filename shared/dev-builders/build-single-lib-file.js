@@ -48,7 +48,7 @@ var BuildSingleLibFile;
         });
         var output = ''
             // 'var ABeamer;\n'
-            // + '(function (ABeamer) {\n'
+            // + '(function (ABeamer): void {\n'
             + outputList.join('\n') + '\n';
         fsix_js_1.fsix.mkdirpSync(dstPath);
         sysFs.writeFileSync(dstFile, output);

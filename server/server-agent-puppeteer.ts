@@ -57,7 +57,7 @@ namespace ServerAgent {
   //                               Run Server
   // ------------------------------------------------------------------------
 
-  async function _runServer() {
+  async function _runServer(): Promise<void> {
 
     const chromeBin = sysProcess.env['CHROME_BIN'];
 
@@ -88,7 +88,7 @@ namespace ServerAgent {
     const page = await browser.newPage();
 
     /** Sends Messages to the client */
-    async function sendClientMsg(cmd: string, value: string = '') {
+    async function sendClientMsg(cmd: string, value: string = ''): Promise<void> {
       await page.evaluate((_cmd, _value) => {
         _abeamer._internalGetServerMsg.call(_abeamer, _cmd, _value);
       }, cmd, value);

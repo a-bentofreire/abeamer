@@ -347,7 +347,7 @@ export namespace Exact {
   export let builder: TestBuilder;
 
 
-  export function defaultTestFunc(rd: Exact.ExactResult, done, index) {
+  export function defaultTestFunc(rd: Exact.ExactResult, done, index): void {
     builder.runTest(rd, builder.tests[index]);
     done();
   }
@@ -359,7 +359,7 @@ export namespace Exact {
   export const obj2String = (obj: any) => JSON.stringify(obj, undefined, 2);
 
 
-  export function hexToRgb(hex: string) {
+  export function hexToRgb(hex: string): string {
     const _hh2Int = (delta) => parseInt(hex.substr(delta, 2), 16);
     return `rgb(${_hh2Int(1)}, ${_hh2Int(3)}, ${_hh2Int(5)})`;
   }
@@ -410,7 +410,7 @@ export namespace Exact {
   }
 
 
-  export function genTestHtml(count: int, opts?: HtmlOptions) {
+  export function genTestHtml(count: int, opts?: HtmlOptions): string {
     const res = [];
     opts = opts || {};
     opts.cssClass = opts.cssClass === undefined ? 'abslf' : opts.cssClass;
@@ -475,15 +475,15 @@ export namespace Exact {
   }
 
 
-  export let simulatePixelAction = (values: number[]) =>
+  export let simulatePixelAction = (values: number[]): string[] =>
     values.map(value => Math.round(value) + 'px');
 
 
-  export let simulateNumAction = (values: number[]) =>
+  export let simulateNumAction = (values: number[]): string[] =>
     values.map(value => value.toString());
 
 
-  export function simulateAction(values: any[], propType: uint) {
+  export function simulateAction(values: any[], propType: uint): string[] {
     switch (propType) {
       case DevConsts.PT_PIXEL:
         return Exact.simulatePixelAction(values);
@@ -561,7 +561,7 @@ export namespace Exact {
       actualStartIndex: int = 0,
       actualLength?: int) {
 
-      function failTestAndLog() {
+      function failTestAndLog(): void {
         if (toLogIfFails) {
           console.log('Actual:');
           console.log(actual);
@@ -627,9 +627,9 @@ export namespace Exact {
       toAssert: boolean = true,
       toLogIfFails: boolean = true,
       actualStartIndex: int = 0,
-      actualLength?: int) {
+      actualLength?: int): number {
 
-      function failTestAndLog() {
+      function failTestAndLog(): void {
         if (toLogIfFails) {
           console.log('Actual:');
           console.log(actual);
@@ -683,7 +683,7 @@ export namespace Exact {
   function assertionManager(suiteName: string,
     params: ExactParams,
     holder: ResultHolder,
-    callback: (resolve) => void) {
+    callback: (resolve) => void): void {
 
     before(() => {
       return new Promise((resolve) => {
@@ -696,12 +696,12 @@ export namespace Exact {
     const testNames = Object.keys(tests);
 
     // tslint:disable-next-line:only-arrow-functions space-before-function-paren
-    describe(suiteName, function () {
+    describe(suiteName, function (): void {
 
       testNames.forEach((name, index) => {
         const func = tests[name];
         // tslint:disable-next-line:only-arrow-functions space-before-function-paren
-        it(name, function (done) {
+        it(name, function (done): void {
           this.timeout(/* holder.rd.params.timeout || DEFAULT_TIMEOUT */0);
           if (!holder.rd.hasCriticalError) {
             func(holder.rd, done, index);
@@ -726,7 +726,7 @@ export namespace Exact {
   export function runTestSuite(suiteName: string,
     inMacros: ExactInMacros,
     params: ExactParams,
-    callback?: (rd: ExactResult) => void) {
+    callback?: (rd: ExactResult) => void): void {
 
     // converts __filename to the suiteName
     suiteName = fsix.toPosixSlash(suiteName).replace(/^.*\/([^\/]+)\.js$/, '$1');
@@ -782,7 +782,7 @@ export namespace Exact {
   //                               parseAnimes
   // ------------------------------------------------------------------------
 
-  function parseAnimes(jsAnimes: AnimesType) {
+  function parseAnimes(jsAnimes: AnimesType): string {
     const PRE_ADD_TRY_CATCH = `try {`;
     const POST_ADD_TRY_CATCH = `
 } catch (error) {
@@ -868,7 +868,7 @@ export namespace Exact {
    * Usage: replace text on `.js/.html/.css` files.
    */
   function initReplaceMacros(inMacros: ExactInMacros,
-    params: ExactParams) {
+    params: ExactParams): [RegExp, string][] {
 
     const macros = Object.keys(inMacros).map(key =>
       [new RegExp(`__${key.toUpperCase()}__`, 'g'),
@@ -923,7 +923,7 @@ export namespace Exact {
    * Creates a shell file.
    * Usage: manually execute a test.
    */
-  function createShellFile(rd: ExactResult) {
+  function createShellFile(rd: ExactResult): void {
     const isWin = sysProcess.platform === 'win32';
     const scriptName = rd.outFolder + '/run' + (isWin ? '.bat' : '.sh');
     const shell = '#/usr/bin/env sh\n';

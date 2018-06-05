@@ -144,7 +144,7 @@ namespace ABeamer {
   };
 
 
-  export function _easingNumToStr(num: number) {
+  export function _easingNumToStr(num: number): string {
     return EasingName[num];
   }
 

@@ -88,7 +88,7 @@ var Cli;
         desc: "creates a project without TypeScript files",
     };
     argOpts['listDir'] = {
-        desc: "serve command supports list directory, if the seach path is ?dir",
+        desc: "serve command supports list directory, if the search part is ?dir",
     };
     // ------------------------------------------------------------------------
     //                               Print Usage

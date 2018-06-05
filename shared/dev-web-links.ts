@@ -31,7 +31,7 @@ export namespace DevWebLinks {
   /**
    * Initializes the web links based if isLocal or not.
    */
-  export function setup(isLocal: boolean) {
+  export function setup(isLocal: boolean): void {
     const LOCAL_PORT = 9000;
 
     const server = !isLocal

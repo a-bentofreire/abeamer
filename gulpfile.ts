@@ -644,7 +644,7 @@ namespace Gulp {
   //                               Lists ./docs Files As Links
   // ------------------------------------------------------------------------
 
-  function changeReadmeLinks(isTargetLocal: boolean) {
+  function changeReadmeLinks(isTargetLocal: boolean): void {
     const IN_FILE = './README.md';
     const BAK_FILE = IN_FILE + '.bak.md';
 

@@ -46,9 +46,10 @@ export namespace PluginInjector {
   }
 
 
-  export function processUrl(url: string) {
+  export function processUrl(url: string): string {
     return url.search(/^http/) !== -1 ? url : `../../client/lib/${url}`;
   }
+
 
   export function inject(
     existsSync: (fileName: string) => boolean,

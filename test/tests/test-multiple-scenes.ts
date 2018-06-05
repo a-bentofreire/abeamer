@@ -41,7 +41,7 @@ namespace Tests {
     rd.actions.isIdPropActions(`t${test.element}`, 'left',
       Exact.simulatePixelAction(
         Exact.interpolateMinMax(min, test.max, test.frameCount)));
-    // @TODO: test if went to a different scene 
+    // @TODO: test if went to a different scene
     done();
   };
 

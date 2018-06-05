@@ -56,7 +56,7 @@ $(window).on("load", () => {
   //                               drawGame
   // ------------------------------------------------------------------------
 
-  function drawGame() {
+  function drawGame(): void {
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.drawImage(patImg, 0, story.height - patHeight);
     android.draw();

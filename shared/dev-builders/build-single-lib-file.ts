@@ -66,7 +66,7 @@ export namespace BuildSingleLibFile {
 
     const output = ''
       // 'var ABeamer;\n'
-      // + '(function (ABeamer) {\n'
+      // + '(function (ABeamer): void {\n'
       + outputList.join('\n') + '\n'
       // + extRefs.map(ref => `ABeamer.${ref}=${ref};`).join('\n') + '\n'
       // + '})(ABeamer || (ABeamer = {}));\n'

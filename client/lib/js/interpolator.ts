@@ -360,7 +360,7 @@ namespace ABeamer {
     const propName = action.realPropName;
 
     // #debug-start
-    function log(name, aValue) {
+    function log(name, aValue): void {
       args.story.logFrmt('action', [
         ['id', elAdapter.getId(args)],
         ['prop', name],

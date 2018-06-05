@@ -44,7 +44,7 @@ namespace Server {
       const page = phantomWebPage.create() as WebPage;
 
       /** Sends Messages to the client */
-      function sendClientMsg(cmd: string, value: string = '') {
+      function sendClientMsg(cmd: string, value: string = ''): void {
         const script = `function(){_abeamer._internalGetServerMsg.call(_abeamer, '${cmd}', '${value}'); }`;
         page.evaluateJavaScript(script);
       }

@@ -209,7 +209,7 @@ namespace ABeamer {
   function _decipherTask(anime: Animation, wkTask: WorkTask,
     params: DecipherTaskParams, stage: uint, args?: ABeamerArgs): TaskResult {
 
-    function isInsideRange(code: uint, ranges: [number, number][]) {
+    function isInsideRange(code: uint, ranges: [number, number][]): [number, number][] {
       return ranges.findIndex(range => range[0] <= code && range[1] >= code)
         !== -1 ? ranges : undefined;
     }

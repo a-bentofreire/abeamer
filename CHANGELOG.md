@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Added logical `and`, or `or` to expressions.
 - `abeamer-cli create` adds a comment before injecting the plugins.
+- (DEV)declared function return `void` if it didn't had a return value.
 ### Changed
 - `hello-world` uses `scene1` instead of `scene0`.
 

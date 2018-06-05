@@ -25,7 +25,7 @@ namespace Tests {
   }[] = [];
 
 
-  function add(expr: string, label?: string, expected?: string | ExpectFunction) {
+  function add(expr: string, label?: string, expected?: string | ExpectFunction): void {
     // if (tests.length > 0) { return; }
     const i = tests.length;
     tests.push({

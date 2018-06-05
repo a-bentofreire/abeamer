@@ -334,7 +334,7 @@ namespace ABeamer {
    *
    * @see server-features
    */
-  export function _addServerDOMPropMaps(map: { [name: string]: string }) {
+  export function _addServerDOMPropMaps(map: { [name: string]: string }): void {
     Object.keys(map).forEach(name => { cssPropNameMapper[name] = map[name]; });
   }
 
@@ -917,9 +917,9 @@ namespace ABeamer {
         window.setTimeout(() => {
           onDone();
         }, 1);
-/*         elMedia.play().then(() => {
-          elMedia.pause();
-        }); */
+        /*         elMedia.play().then(() => {
+                  elMedia.pause();
+                }); */
       } else {
         onDone();
       }

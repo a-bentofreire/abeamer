@@ -56,7 +56,7 @@ export namespace ServerAgent {
 
   // this function is credited to @Flygenring
   // https://stackoverflow.com/questions/10830357/javascript-toisostring-ignores-timezone-offset
-  function getLocalISOTimeDate() {
+  function getLocalISOTimeDate(): string {
     const tzOffset = (new Date()).getTimezoneOffset() * 60000; // offset in milliseconds
     return (new Date(Date.now() - tzOffset)).toISOString().substr(0, 19).replace('T', ' ');
   }
@@ -219,7 +219,7 @@ export namespace ServerAgent {
 
       const self = this;
 
-      function getConfigFileName(value: string, needsToAddIni) {
+      function getConfigFileName(value: string, needsToAddIni): string {
         let configFileName = toPosixSlash(value);
         if (!configFileName) { return ''; }
         if (needsToAddIni || configFileName.match(/^\/$/)) {
@@ -228,7 +228,7 @@ export namespace ServerAgent {
         return configFileName;
       }
 
-      function parseOption(option, value) {
+      function parseOption(option, value): uint {
 
         switch (option) {
 
@@ -417,7 +417,7 @@ export namespace ServerAgent {
 
       const self = this;
 
-      function renderDone() {
+      function renderDone(): void {
         self.frameNr++;
         if (self.frameNr >= self.frameCount) { self.frameCount = self.frameNr + 1; }
         sendClientMsg(sc.MSG_RENDER_DONE);

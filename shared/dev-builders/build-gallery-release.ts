@@ -149,7 +149,7 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
   //                               Runs External Commands
   // ------------------------------------------------------------------------
 
-  function runSpawn(cmdLine: string, args: string[], callback?) {
+  function runSpawn(cmdLine: string, args: string[], callback?): void {
 
     console.log(`spawn cmdLine: ${cmdLine}`);
     console.log(`args: ${args}`);
@@ -173,7 +173,7 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
   //                               buildGifs
   // ------------------------------------------------------------------------
 
-  export function buildGifs() {
+  export function buildGifs(): void {
     populateReleaseExamples();
     releaseExamples.forEach((example, index) => {
       if (example.noGifImage) { return; }

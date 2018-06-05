@@ -38,11 +38,11 @@ export namespace BuildShared {
 
     const sharedConsts = [];
 
-    function parseSharedConsts(fileTitle: string, content: string) {
+    function parseSharedConsts(fileTitle: string, content: string): void {
       let found = false;
       let lastIdPart = '';
 
-      function addConst(line: string) {
+      function addConst(line: string): void {
         if (!found) {
           sharedConsts.push(`
   // -------------

@@ -209,7 +209,7 @@ namespace ABeamer {
   //                               Implementation
   // ------------------------------------------------------------------------
 
-  export function _oscillatorNumToStr(num: number) {
+  export function _oscillatorNumToStr(num: number): string {
     return OscillatorName[num] || _easingNumToStr(num);
   }
 

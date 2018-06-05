@@ -26,7 +26,7 @@ var Tests;
     var func = function (rd, done, index) {
         var test = tests[index];
         rd.actions.isIdPropActions("t" + test.element, 'left', exact_js_1.Exact.simulatePixelAction(exact_js_1.Exact.interpolateMinMax(min, test.max, test.frameCount)));
-        // @TODO: test if went to a different scene 
+        // @TODO: test if went to a different scene
         done();
     };
     var testParams = {};

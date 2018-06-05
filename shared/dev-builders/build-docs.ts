@@ -810,7 +810,7 @@ markdownCompiler.setOptions({
   xhtml: false,
 });
 
-export function markdownToHtml(inpFileName: string, outputFileName: string) {
+export function markdownToHtml(inpFileName: string, outputFileName: string): void {
 
   const inpData = fsix.readUtf8Sync(inpFileName);
   const STYLING_PATH = '../../../../styling';
