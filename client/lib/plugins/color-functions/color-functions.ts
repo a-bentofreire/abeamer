@@ -32,7 +32,7 @@ namespace ABeamer {
     id: 'abeamer.color-functions',
     uuid: 'ce739c9f-13ba-4742-b1c3-dec56624be7d',
     author: 'Alexandre Bento Freire',
-    email: 'dev@a-bentofreire.com',
+    email: 'abeamer@a-bentofreire.com',
     jsUrls: ['plugins/color-functions/color-functions.js'],
     teleportable: true,
   });

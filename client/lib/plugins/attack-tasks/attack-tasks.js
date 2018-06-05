@@ -33,7 +33,7 @@ var ABeamer;
         id: 'abeamer.attack-tasks',
         uuid: 'e98cfe21-ec23-4545-88eb-829a0e9add39',
         author: 'Alexandre Bento Freire',
-        email: 'dev@a-bentofreire.com',
+        email: 'abeamer@a-bentofreire.com',
         jsUrls: ['plugins/attack-tasks/attack-tasks.js'],
         teleportable: true,
     });

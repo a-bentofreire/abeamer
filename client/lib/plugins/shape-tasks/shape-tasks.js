@@ -53,7 +53,7 @@ var ABeamer;
         id: 'abeamer.shape-tasks',
         uuid: '3e5d5813-348a-4eb1-a8b5-9c87c3988923',
         author: 'Alexandre Bento Freire',
-        email: 'dev@a-bentofreire.com',
+        email: 'abeamer@a-bentofreire.com',
         jsUrls: ['plugins/shape-tasks/shape-tasks.js'],
         teleportable: true,
     });

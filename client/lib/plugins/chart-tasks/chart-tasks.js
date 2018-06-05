@@ -20,7 +20,7 @@ var ABeamer;
         id: 'abeamer.chart-tasks',
         uuid: '73631f28-df71-4b4d-88e1-c99a858e0fd3',
         author: 'Alexandre Bento Freire',
-        email: 'dev@a-bentofreire.com',
+        email: 'abeamer@a-bentofreire.com',
         jsUrls: ['plugins/chart-tasks/chart-tasks.js'],
         teleportable: true,
     });

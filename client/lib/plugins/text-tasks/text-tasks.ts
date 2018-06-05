@@ -114,7 +114,7 @@ namespace ABeamer {
     id: 'abeamer.text-tasks',
     uuid: '8b547eff-a0de-446a-9753-fb8b39d8031a',
     author: 'Alexandre Bento Freire',
-    email: 'dev@a-bentofreire.com',
+    email: 'abeamer@a-bentofreire.com',
     jsUrls: ['plugins/text-tasks/text-tasks.js'],
     teleportable: true,
   });
