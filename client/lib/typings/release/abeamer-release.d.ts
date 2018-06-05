@@ -1348,7 +1348,7 @@ declare namespace ABeamer {
 
     /**
      * Defines the starting value of an animation injected into the
-     * Animation Pipeline (easing->oscillator->path|valueText->valueFormat).
+     * Animation Pipeline (easing➝oscillator➝path|valueText➝valueFormat).
      * Easing interpolates from `valueStart` to `value`.
      *
      * Use only if:

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixes `ellipse` path `radiusY` parameter.
 - Fixes `gulp build-docs` link parser.
 - Fixes `server-agent-phantomjs`.
+- Minor cosmetic improvements on gallery examples.
 
 ## [0.2.0] -
 ### Breaking changes
