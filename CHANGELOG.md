@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.2.1] -
 ### Added
 - Raises an exception if `value` parameter isn't number nor expression.
+- Added `gallery/animate-video-sync`.
 ### Changed
 - `hello-world` example uses `div` instead of `p`.
 - `gulp build-gallery-release` cleans `gallery-release` before copy all the examples.
@@ -14,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Fixes `ellipse` path `radiusY` parameter.
 - Fixes `gulp build-docs` link parser.
+- Fixes `server-agent-phantomjs`.
 
 ## [0.2.0] -
 ### Breaking changes

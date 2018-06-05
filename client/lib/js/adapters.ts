@@ -910,10 +910,19 @@ namespace ABeamer {
 
     args.waitMan.addWaitFunc((_args, params, onDone) => {
 
-      if (pos !== undefined) { elMedia.currentTime = pos; }
-      window.setTimeout(() => {
+      // @TODO: Find a way to sync video.
+      // this code doesn't work on chrome.
+      if (pos !== undefined) {
+        elMedia.currentTime = pos;
+        window.setTimeout(() => {
+          onDone();
+        }, 1);
+/*         elMedia.play().then(() => {
+          elMedia.pause();
+        }); */
+      } else {
         onDone();
-      }, 1);
+      }
     }, {});
   }
 

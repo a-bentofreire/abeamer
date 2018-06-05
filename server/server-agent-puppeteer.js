@@ -118,6 +118,7 @@ var ServerAgent;
                         return [4 /*yield*/, puppeteer.launch(chromeBin ? {
                                 executablePath: chromeBin,
                                 // @TODO: Find more options to make chrome faster and more stable.
+                                /* spell-checker: disable */
                                 args: [
                                     '--disable-extensions',
                                     '--disable-default-apps',
@@ -127,6 +128,8 @@ var ServerAgent;
                                     '--enable-fast-unload',
                                     '--disable-cloud-import',
                                     '--safebrowsing-disable-auto-update',
+                                    '--ignore-autoplay-restrictions',
+                                    '--no-user-gesture-required',
                                     '--enable-font-antialiasing',
                                 ],
                             }

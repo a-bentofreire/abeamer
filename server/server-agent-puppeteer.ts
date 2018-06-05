@@ -69,6 +69,7 @@ namespace ServerAgent {
       executablePath: chromeBin,
 
       // @TODO: Find more options to make chrome faster and more stable.
+      /* spell-checker: disable */
       args: [
         '--disable-extensions',
         '--disable-default-apps',
@@ -78,6 +79,8 @@ namespace ServerAgent {
         '--enable-fast-unload',
         '--disable-cloud-import',
         '--safebrowsing-disable-auto-update',
+        '--ignore-autoplay-restrictions',
+        '--no-user-gesture-required',
         '--enable-font-antialiasing',
       ],
     }

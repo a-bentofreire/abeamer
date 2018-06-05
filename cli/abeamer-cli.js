@@ -152,7 +152,7 @@ var Cli;
     function runSpawn(cmdLine, args, callback) {
         if (isVerbose) {
             console.log("spawn cmdLine: " + cmdLine);
-            console.log("args: " + args);
+            console.log("args: " + args.join(' '));
         }
         var ls = child_process_1.spawn(cmdLine, args);
         ls.stdout.on('data', function (data) {

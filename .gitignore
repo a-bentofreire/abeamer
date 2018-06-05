@@ -4,7 +4,6 @@ gallery-updated/
 gallery-release/
 gallery/*/*.gif
 gallery/*/story.json
-gallery/animate-video-sync
 gallery/remote-server/assets/**
 gallery/remote-server/story.json
 gallery/**/story-frames/

@@ -597,12 +597,20 @@ var ABeamer;
     }
     function _waitForMediaSync(elMedia, args, pos) {
         args.waitMan.addWaitFunc(function (_args, params, onDone) {
+            // @TODO: Find a way to sync video.
+            // this code doesn't work on chrome.
             if (pos !== undefined) {
                 elMedia.currentTime = pos;
+                window.setTimeout(function () {
+                    onDone();
+                }, 1);
+                /*         elMedia.play().then(() => {
+                          elMedia.pause();
+                        }); */
             }
-            window.setTimeout(function () {
+            else {
                 onDone();
-            }, 1);
+            }
         }, {});
     }
     function _handleWaitFor(args, params, onDone) {

@@ -214,7 +214,7 @@ The commands are:
 
     if (isVerbose) {
       console.log(`spawn cmdLine: ${cmdLine}`);
-      console.log(`args: ${args}`);
+      console.log(`args: ${args.join(' ')}`);
     }
 
     const ls = sysSpawn(cmdLine, args);

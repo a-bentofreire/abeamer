@@ -25,7 +25,7 @@ var Server;
     var baseServerAgent /* : ABeamerServer.BaseServer */;
     // @HINT: Must surround with try/catch otherwise it will block in case of error
     try {
-        baseServerAgent = require('./server-agent.js').Server;
+        baseServerAgent = require('./server-agent.js').ServerAgent;
     }
     catch (error) {
         console.error(error);
