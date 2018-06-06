@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixes `gallery/animate-workbench` top value parameter.
 - Added extra info to gallery examples to improve browser compatibility.
 - `Adaptor` and `interpolator` improved browser compatibility.
+- fixes missing devDependencies.
 ### Added
 - Added logical `and`, or `or` to expressions.
 - `abeamer-cli create` adds a comment before injecting the plugins.
