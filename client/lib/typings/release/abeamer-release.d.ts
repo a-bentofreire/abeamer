@@ -120,6 +120,10 @@ declare namespace ABeamer {
   // ------------------------------------------------------------------------
 
 
+  /**
+   * List of supported Time Units.
+   * `%` can only be used if there is a parent time reference.
+   */
   export enum TimeUnit {
     f,
     ms,
@@ -129,7 +133,7 @@ declare namespace ABeamer {
   }
 
 
-  /** Real-type time function  */
+  /** Time [](Code Handler) */
   export type TimeFunc = (args?: ABeamerArgs) => TimeUnit | string
     | ExprString | number;
 
@@ -582,9 +586,6 @@ declare namespace ABeamer {
     params?: AnyParams, stage?: uint, args?: ABeamerArgs) => TaskResult;
 
 
-  export type TaskHandlerFunc = (args?: ABeamerArgs) => string | ExprString | TaskFunc;
-
-
   export type TaskHandler = TaskName | TaskFunc;
 
   export type TaskName = string
@@ -766,7 +767,7 @@ declare namespace ABeamer {
 
 
   /**
-   * Dual properties are properties that map one animation property into 2 [](DOM properties).
+   * **Dual properties** are properties that map one animation property into 2 [](DOM properties).
    */
   export type DualPropName = 'left-top'
     | 'right-top'
@@ -967,6 +968,10 @@ declare namespace ABeamer {
 
   export const DEFAULT_TRANSITION_DURATION = '1s';
 
+
+  /**
+   * List of the built-in Transition Names.
+   */
   export enum StdTransitions {
     slideLeft,
     slideRight,
@@ -976,6 +981,9 @@ declare namespace ABeamer {
   }
 
 
+  /**
+   * Parameters passed to the Transition function.
+   */
   export interface TransitionParams {
     bothVisible: boolean;
     state?: int;
@@ -992,10 +1000,7 @@ declare namespace ABeamer {
 
   export type TransitionFunc = (params: TransitionParams, args?: ABeamerArgs) => void;
 
-  export type TransitionHandlerFunc = (args?: ABeamerArgs) => string | ExprString
-    | StdTransitions | TransitionFunc;
-
-  export type TransitionHandler = string | ExprString | TransitionHandlerFunc
+  export type TransitionHandler = string | ExprString | TransitionFunc
     | StdTransitions;
 
 

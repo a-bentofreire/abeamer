@@ -549,14 +549,14 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Tools
     // ------------------------------------------------------------------------
-    /** Compares the operators priority. */
+    /** Compares operators priority. */
     function _comparePriority(op1, op2) {
         return opPriority[op1.tkType] >= opPriority[op2.tkType];
     }
     // ------------------------------------------------------------------------
     //                               Compute
     // ------------------------------------------------------------------------
-    /** Computes the unary operators. */
+    /** Computes unary operators. */
     function _calcUnary(p, op, value) {
         if (value.paType !== 1 /* Number */) {
             err(p, ABeamer.Msgs.UnaryErr, op);
@@ -568,7 +568,7 @@ var ABeamer;
             value.numValue = value.numValue ? 0 : 1;
         }
     }
-    /** Computes the binary operators. */
+    /** Computes binary operators. */
     function _calcBinary(p, op, value1, value2) {
         var AnyNotNumber = value1.paType !== 1 /* Number */
             || value2.paType !== 1 /* Number */;

@@ -747,7 +747,7 @@ namespace ABeamer {
   //                               Tools
   // ------------------------------------------------------------------------
 
-  /** Compares the operators priority. */
+  /** Compares operators priority. */
   function _comparePriority(op1: Token, op2: Token): boolean {
     return opPriority[op1.tkType] >= opPriority[op2.tkType];
   }
@@ -756,7 +756,7 @@ namespace ABeamer {
   //                               Compute
   // ------------------------------------------------------------------------
 
-  /** Computes the unary operators. */
+  /** Computes unary operators. */
   function _calcUnary(p: ParseParams, op: Token, value: Token): void {
     if (value.paType !== ExFuncParamType.Number) {
       err(p, Msgs.UnaryErr, op);
@@ -770,7 +770,7 @@ namespace ABeamer {
   }
 
 
-  /** Computes the binary operators. */
+  /** Computes binary operators. */
   function _calcBinary(p: ParseParams, op: Token, value1: Token, value2: Token): void {
 
     const AnyNotNumber = value1.paType !== ExFuncParamType.Number

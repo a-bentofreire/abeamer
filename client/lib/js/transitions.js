@@ -44,6 +44,9 @@ var ABeamer;
     ABeamer.TRS_AT_OUT = 1;
     ABeamer.TRS_AT_IN = 2;
     ABeamer.DEFAULT_TRANSITION_DURATION = '1s';
+    /**
+     * List of the built-in Transition Names.
+     */
     var StdTransitions;
     (function (StdTransitions) {
         StdTransitions[StdTransitions["slideLeft"] = 0] = "slideLeft";
@@ -90,7 +93,7 @@ var ABeamer;
                 this._transitionFunc = ABeamer._transitionFunctions[handler];
             }
             else {
-                this._transitionFunc = handler(args);
+                this._transitionFunc = handler;
             }
             this._active = this._transitionFunc !== undefined;
             return this._active;

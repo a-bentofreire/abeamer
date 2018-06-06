@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `abeamer serve --dirs` defines the body colors (fixes a problem on firefox with dark themes)
 ### Changed
 - `hello-world` uses `scene1` instead of `scene0`.
+- Improved documentation.
+- Improved `build-docs`: removes README.md, generates logs, improves generation of `api-header`.
+- Removed `TransitionFuncHandler`.
 
 ## [0.2.1] -
 ### Added

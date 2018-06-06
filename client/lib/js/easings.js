@@ -111,7 +111,7 @@ var ABeamer;
     });
     function _expressionEasing(t, params, args) {
         ABeamer._vars.t = t;
-        return parseFloat(ABeamer.calcExpr(params.__expression, args));
+        return parseFloat(ABeamer.calcExpr(params._expression, args));
     }
     ABeamer._expressionEasing = _expressionEasing;
 })(ABeamer || (ABeamer = {}));

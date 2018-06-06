@@ -470,8 +470,9 @@ namespace ABeamer {
     params: TParams;
   }
 
+
   export interface _WorkExprMotionParams {
-    __expression: string;
+    _expression: string;
   }
 
 
@@ -494,7 +495,7 @@ namespace ABeamer {
       case 'string':
         if (isExpr(handler as string)) {
           func = exprMotionHandler;
-          ((params as any) as _WorkExprMotionParams).__expression = handler as any;
+          ((params as any) as _WorkExprMotionParams)._expression = handler as any;
         } else {
           func = mapper[handler as string];
         }
@@ -511,7 +512,6 @@ namespace ABeamer {
       params,
     };
   }
-
 
   // ------------------------------------------------------------------------
   //                               _AbstractWorkAnimation

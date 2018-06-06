@@ -20,7 +20,7 @@
  *
  * - `add-flyover` - adds a flyover to the story.
  *
- * - `add-vars` - adds variables to be used expressions.
+ * - `add-vars` - adds variables to be used by expressions.
  */
 var ABeamer;
 (function (ABeamer) {

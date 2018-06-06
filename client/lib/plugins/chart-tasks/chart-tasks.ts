@@ -13,7 +13,7 @@
 /**
  * ## Description
  *
- * An **chart task** task creates an animated chart.
+ * A **chart task** task creates an animated chart.
  *
  * This feature is not implemented yet..._Coming soon_ .
  *

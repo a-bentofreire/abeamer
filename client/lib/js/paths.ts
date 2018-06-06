@@ -169,7 +169,7 @@ namespace ABeamer {
     args?: ABeamerArgs): number[] {
     _vars.t = t;
     return [parseFloat(
-      calcExpr((params as _WorkExprMotionParams).__expression, args) as any)];
+      calcExpr((params as _WorkExprMotionParams)._expression, args) as any)];
   }
 
   // ------------------------------------------------------------------------

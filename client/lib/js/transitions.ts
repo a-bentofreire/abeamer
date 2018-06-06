@@ -54,6 +54,10 @@ namespace ABeamer {
 
   export const DEFAULT_TRANSITION_DURATION = '1s';
 
+
+  /**
+   * List of the built-in Transition Names.
+   */
   export enum StdTransitions {
     slideLeft,
     slideRight,
@@ -63,6 +67,9 @@ namespace ABeamer {
   }
 
 
+  /**
+   * Parameters passed to the Transition function.
+   */
   export interface TransitionParams {
     bothVisible: boolean;
     state?: int;
@@ -79,10 +86,7 @@ namespace ABeamer {
 
   export type TransitionFunc = (params: TransitionParams, args?: ABeamerArgs) => void;
 
-  export type TransitionHandlerFunc = (args?: ABeamerArgs) => string | ExprString
-    | StdTransitions | TransitionFunc;
-
-  export type TransitionHandler = string | ExprString | TransitionHandlerFunc
+  export type TransitionHandler = string | ExprString | TransitionFunc
     | StdTransitions;
 
 
@@ -143,7 +147,7 @@ namespace ABeamer {
       if (typeof handler === 'string') {
         this._transitionFunc = _transitionFunctions[handler as string];
       } else {
-        this._transitionFunc = (handler as TransitionHandlerFunc)(args) as TransitionFunc;
+        this._transitionFunc = (handler as TransitionFunc);
       }
 
       this._active = this._transitionFunc !== undefined;

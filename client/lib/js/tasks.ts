@@ -79,9 +79,6 @@ namespace ABeamer {
     params?: AnyParams, stage?: uint, args?: ABeamerArgs) => TaskResult;
 
 
-  export type TaskHandlerFunc = (args?: ABeamerArgs) => string | ExprString | TaskFunc;
-
-
   export type TaskHandler = TaskName | TaskFunc;
 
   export type TaskName = string

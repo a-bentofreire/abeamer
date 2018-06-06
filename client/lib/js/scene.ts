@@ -54,7 +54,7 @@ namespace ABeamer {
 
     /** Internal list of all the scene frames. */
     protected _frames: _Frame[] = [];
-    /** Internal position of where the render pipeline was [](#consumed). */
+    /** Internal position of where the render pipeline was [consumed](consuming-the-pipeline). */
     protected _renderFramePos: int = 0;
 
 

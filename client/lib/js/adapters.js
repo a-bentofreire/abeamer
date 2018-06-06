@@ -396,7 +396,7 @@ var ABeamer;
     /**
      * DOM Scene and Story adapter.
      * Both of them are similar. No need for 2 separated classes.
-     * Gets and sets attributes from HTMLElements.
+     * Gets and sets properties from HTMLElements.
      * Maps the animation property names into DOM attributes.
      */
     var _DOMSceneAdapter = /** @class */ (function (_super) {

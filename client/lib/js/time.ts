@@ -11,6 +11,9 @@
 /**
  * ## Description
  *
+ * Provides time functions to convert between minutes/seconds/milliseconds into frames.
+ * Internally ABeamer only works with frames.
+ *
  */
 namespace ABeamer {
 
@@ -24,6 +27,10 @@ namespace ABeamer {
   // -------------------------------
   // #export-section-start: release
 
+  /**
+   * List of supported Time Units.
+   * `%` can only be used if there is a parent time reference.
+   */
   export enum TimeUnit {
     f,
     ms,
@@ -33,7 +40,7 @@ namespace ABeamer {
   }
 
 
-  /** Real-type time function  */
+  /** Time [](Code Handler) */
   export type TimeFunc = (args?: ABeamerArgs) => TimeUnit | string
     | ExprString | number;
 
@@ -70,7 +77,7 @@ namespace ABeamer {
   }
 
   // ------------------------------------------------------------------------
-  //                               _parseInTime
+  //                               parseTimeHandler
   // ------------------------------------------------------------------------
 
   /**

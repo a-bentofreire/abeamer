@@ -71,7 +71,7 @@ var ABeamer;
             case 'string':
                 if (ABeamer.isExpr(handler)) {
                     func = exprMotionHandler;
-                    params.__expression = handler;
+                    params._expression = handler;
                 }
                 else {
                     func = mapper[handler];

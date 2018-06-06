@@ -16,6 +16,13 @@ var opts_parser_js_1 = require("../shared/opts-parser.js");
 var server_consts_js_1 = require("../shared/lib/server-consts.js");
 var sprintf_js_1 = require("../shared/lib/sprintf.js");
 var plugin_injector_js_1 = require("./plugin-injector.js");
+/**
+ * ## Description
+ *
+ * A **Server Agent** executes a server render, usually a headless web browser,
+ * sends order to start rendering, captures the render and saves it into a file.
+ *
+ */
 var ServerAgent;
 (function (ServerAgent) {
     var sc = server_consts_js_1.ServerConsts._SRV_CNT;

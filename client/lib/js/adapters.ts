@@ -84,7 +84,7 @@ namespace ABeamer {
 
 
   /**
-   * Dual properties are properties that map one animation property into 2 [](DOM properties).
+   * **Dual properties** are properties that map one animation property into 2 [](DOM properties).
    */
   export type DualPropName = 'left-top'
     | 'right-top'
@@ -379,6 +379,7 @@ namespace ABeamer {
     getComputedStyle(): any;
   }
 
+
   function _setDOMProp(adapter: _DOMAdapter,
     propName: PropName, value: PropValue, args?: ABeamerArgs): void {
 
@@ -653,7 +654,7 @@ namespace ABeamer {
   /**
    * DOM Scene and Story adapter.
    * Both of them are similar. No need for 2 separated classes.
-   * Gets and sets attributes from HTMLElements.
+   * Gets and sets properties from HTMLElements.
    * Maps the animation property names into DOM attributes.
    */
   export class _DOMSceneAdapter extends _SceneAdapter implements _DOMAdapter {
@@ -686,6 +687,7 @@ namespace ABeamer {
       }
       return compStyle;
     }
+
 
     getProp(propName: PropName, args?: ABeamerArgs): PropValue {
 

@@ -217,10 +217,10 @@ var ABeamer;
                 ]);
             }
             // #debug-end
-            // process variation and startValue
+            // processes `variation` and `startValue`
             var v = tAfterOscillator * this.variation + this.numStartValue;
             this.curNumValue = v;
-            // process path
+            // processes `path`
             var values;
             var dimCount = 1;
             if (this.path) {

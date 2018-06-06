@@ -67,9 +67,11 @@ namespace ABeamer {
       this._elementAdapters = scene.getElementAdapters(selector);
     }
 
+
     protected getSelector(): pEls | ElSelectorHandler {
       return _vars.isTeleporting ? this._selector : this;
     }
+
 
     /**
      * Wrapper for `scene.addAnimation` with `visible = false`,
@@ -140,6 +142,7 @@ namespace ABeamer {
       ]);
       return this;
     }
+
 
     /**
      * Shows all the elements owned by pEls.

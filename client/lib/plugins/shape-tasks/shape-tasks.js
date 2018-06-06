@@ -9,7 +9,7 @@
 /**
  * ## Description
  *
- * A **shape task** creates a configurable shape via creating a `svg` tag.
+ * A **shape task** creates a configurable shape by creating a `svg` tag.
  *
  * This plugin has the following built-in shape tasks:
  *

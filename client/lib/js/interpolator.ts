@@ -25,7 +25,7 @@ namespace ABeamer {
   // ------------------------------------------------------------------------
 
   function _bypassModeToBool(isFirst: boolean, isLast: boolean,
-    mode: BypassMode) {
+    mode: BypassMode): boolean {
 
     switch (mode || BP_FIRST_INSIDE) {
       case BP_FIRST_INSIDE: return !isLast;
@@ -256,11 +256,11 @@ namespace ABeamer {
       }
       // #debug-end
 
-      // process variation and startValue
+      // processes `variation` and `startValue`
       let v = tAfterOscillator * this.variation + this.numStartValue;
       this.curNumValue = v;
 
-      // process path
+      // processes `path`
       let values: number[];
       let dimCount = 1;
 

@@ -21,7 +21,13 @@ import { ServerConsts } from '../shared/lib/server-consts.js';
 import { Sprintf } from '../shared/lib/sprintf.js';
 import { PluginInjector } from './plugin-injector.js';
 
-
+/**
+ * ## Description
+ *
+ * A **Server Agent** executes a server render, usually a headless web browser,
+ * sends order to start rendering, captures the render and saves it into a file.
+ *
+ */
 export namespace ServerAgent {
 
   const sc = ServerConsts._SRV_CNT;

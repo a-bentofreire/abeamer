@@ -58,6 +58,7 @@ export namespace BuildDocs {
       moduleTypes: ['end-user'],
       indexFile: './README.md',
       isEndUser: true,
+      logFile: './build-docs-end-user.log',
     },
     {
       id: 'dev',
@@ -67,9 +68,20 @@ export namespace BuildDocs {
       moduleTypes: ['end-user', 'developer', 'internal'],
       indexFile: `${DevPaths.SOURCE_DOCS_PATH}-dev/README.md`,
       isEndUser: false,
+      logFile: './build-docs-dev.log',
     },
   ];
 
+  // ------------------------------------------------------------------------
+  //                               LogData
+  // ------------------------------------------------------------------------
+
+  interface Log {
+    notFound: string[];
+    found: string[];
+    generated: string[];
+    refs: {};
+  }
 
   // ------------------------------------------------------------------------
   //                               ReferenceBuilder
@@ -89,9 +101,10 @@ export namespace BuildDocs {
 
     refs: { [ref: string]: string } = {};
 
+    constructor(public log: Log) { }
 
     /** Stage 0. Generate references from the filename and headers */
-    private buildRefs(fileBase: string, content: string) {
+    private buildRefs(fileBase: string, content: string): void {
       this.refs[textToRef(fileBase)] = `${fileBase}.md`;
       content.replace(/^#+\s*(.+)\s*$/mg, (all, text) => {
         const ref = textToRef(text);
@@ -105,7 +118,7 @@ export namespace BuildDocs {
 
 
     /** Processes the links from Markdown content, updating its content */
-    private updateLinks(fileBase: string, content: string) {
+    private updateLinks(fileBase: string, content: string): string {
       return content.replace(/\[([^\]]*)\]\(([\w\-\s]*)(?:#([\w\-\s]*))?\)/g,
         (app, info, link, bookmark) => {
           bookmark = bookmark || '';
@@ -124,9 +137,9 @@ export namespace BuildDocs {
           }
 
           if (!tracedLink) {
-            console.warn(`Didn't found reference for: ${link}#${bookmark} in ${fileBase}`);
+            this.log.notFound.push(`${link}#${bookmark} in ${fileBase}`);
           } else {
-            console.log(`Found reference for: ${link}#${bookmark} in ${fileBase} = ${tracedLink}`);
+            this.log.found.push(`${link}#${bookmark} in ${fileBase} = ${tracedLink}`);
             [link, bookmark] = tracedLink.split('#');
           }
           return `[${info}](${link}${bookmark ? '#' + bookmark : ''})`;
@@ -135,16 +148,12 @@ export namespace BuildDocs {
 
 
     /** Main entry point. Reads the files and calls appropriate action. */
-    build(path: string) {
+    build(path: string): void {
 
       const fileBases = sysFs.readdirSync(path)
         .filter(file => file.endsWith('.md')).map(file => file.replace(/\.md$/, ''));
 
       [0, 1].forEach(stage => {
-        if (stage === 1) {
-          // uncomment this line to log all the references
-          // console.log(`this.refs: ${JSON.stringify(this.refs, undefined, 2)}`);
-        }
         fileBases.forEach(fileBase => {
           const fileName = `${path}/${fileBase}.md`;
           const content = fsix.readUtf8Sync(fileName);
@@ -155,6 +164,7 @@ export namespace BuildDocs {
           }
         });
       });
+      this.log.refs = this.refs;
     }
   }
 
@@ -479,7 +489,6 @@ export namespace BuildDocs {
     }
 
 
-
     parseFileData(text: string): void {
       this.outerSpaces = '  ';
       this.innerSpaces = this.outerSpaces + this.outerSpaces;
@@ -655,7 +664,7 @@ export namespace BuildDocs {
     inpFileName: string, outFileName: string, apiFileName: string,
     moduleTypes: string[], mkDocsYml: MkDocsYml, mkDocsOpts: Opts,
     localWebLinks: LocalWebLinks,
-    isEndUser: boolean): void {
+    isEndUser: boolean, log: Log): void {
 
 
     // if (isEndUser || inpFileName.indexOf('story') === -1) { return; }
@@ -684,14 +693,14 @@ export namespace BuildDocs {
 
         docParser.parseFileData(preDocText + inpText);
         if (docParser.outLines.length) {
-          outText += '\n<div class=api-header>&nbsp;</div>\n#API\n' + docParser.outLines.join('\n');
+          outText += '  \n<div class=api-header>&nbsp;</div>\n#API\n' + docParser.outLines.join('\n');
         }
       }
 
       mkDocsYml.addSourceFile(mkDocsOpts, outFileName, inpText);
 
       sysFs.writeFileSync(outFileName, outText);
-      console.log(`Generated ${outFileName}`);
+      log.generated.push(outFileName);
     }
   }
 
@@ -728,6 +737,13 @@ export namespace BuildDocs {
       const mkDocsYml = new MkDocsYml(`${DevPaths.SOURCE_DOCS_PATH}/.mkdocs-template.yml`,
         target.name);
 
+      const log: Log = {
+        notFound: [],
+        found: [],
+        generated: [],
+        refs: {},
+      };
+
       // index.html
       copyMarkdownFile(target.indexFile,
         `${markdownDstPath}/index.md`, mkDocsYml, {});
@@ -735,7 +751,7 @@ export namespace BuildDocs {
       // copy sources
       target.sourcePaths.forEach(sourcesPathName => {
         sysFs.readdirSync(sourcesPathName).forEach(file => {
-          if (file.endsWith('.md') && !file.match(/-dev/)) {
+          if (file.endsWith('.md') && !file.match(/-dev|README/)) {
             copyMarkdownFile(`${sourcesPathName}/${file}`,
               `${markdownDstPath}/${file}`, mkDocsYml, {});
           }
@@ -762,14 +778,21 @@ export namespace BuildDocs {
           buildMarkdownFromSourceFile(srcFileName, dstFileName,
             `${baseDstPath}/${API_FOLDER}/${fileTitle}.txt`,
             target.moduleTypes,
-            mkDocsYml, { folder }, localWebLinks, target.isEndUser);
+            mkDocsYml, { folder }, localWebLinks, target.isEndUser, log);
         });
 
       // writes mkdocs to be used by mkdocs command-line program
       mkDocsYml.save(`${baseDstPath}/mkdocs.yml`);
 
       // process all the links
-      new ReferenceBuilder().build(markdownDstPath);
+      new ReferenceBuilder(log).build(markdownDstPath);
+
+      // save log
+      fsix.writeJsonSync(target.logFile, log);
+      console.log(`
+Generated: ${log.generated.length} files.
+Not Found references: ${log.notFound.length}
+`);
     });
   }
 }

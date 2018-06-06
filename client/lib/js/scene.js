@@ -42,7 +42,7 @@ var ABeamer;
             this._addAnimationCallCount = 0;
             /** Internal list of all the scene frames. */
             this._frames = [];
-            /** Internal position of where the render pipeline was [](#consumed). */
+            /** Internal position of where the render pipeline was [consumed](consuming-the-pipeline). */
             this._renderFramePos = 0;
             this._transitionInterpolator = new ABeamer._TransitionInterpolator();
             /**

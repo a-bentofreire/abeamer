@@ -48,7 +48,7 @@
  * With the current technology still has following limitations,
  * some of them imposed due security reasons:
  *
- * - No [](Code Handlers) are allowed.
+ * - [Code Handlers](Code Handler) aren't allowed.
  * - Only default scenes are allowed.
  * - Scenes can't be removed during the execution.
  * - Only fixed remote assets are allowed.
@@ -261,6 +261,11 @@ var ABeamer;
         }
         return rules;
     }
+    /**
+     * Recursively copies one object into another, and sanitizes the input
+     * to ensure there are no javascript functions.
+     * keys starting with `_` aren't copied.
+     */
     function _filteredDeepCopy(src, dst) {
         if (Array.isArray(src)) {
             src.forEach(function (item) {
