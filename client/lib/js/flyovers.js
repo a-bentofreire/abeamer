@@ -163,15 +163,17 @@ var ABeamer;
             case ABeamer.TS_ANIME_LOOP:
                 // rendering
                 var storyFps_1 = args.story.fps;
-                params._elAdapters.forEach(function (elAdapter) {
-                    var currentTime = args.story.renderFramePos / storyFps_1;
-                    // #debug-start
-                    if (args.isVerbose) {
-                        args.story.logFrmt('video-sync', [['currentTime', currentTime]]);
-                    }
-                    // #debug-end
-                    elAdapter.setProp('currentTime', currentTime, args);
-                });
+                if (!args.hasServer || params.serverRender !== false) {
+                    params._elAdapters.forEach(function (elAdapter) {
+                        var currentTime = args.story.renderFramePos / storyFps_1;
+                        // #debug-start
+                        if (args.isVerbose) {
+                            args.story.logFrmt('video-sync', [['currentTime', currentTime]]);
+                        }
+                        // #debug-end
+                        elAdapter.setProp('currentTime', currentTime, args);
+                    });
+                }
                 break;
         }
     }

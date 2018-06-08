@@ -154,10 +154,12 @@ var ABeamer;
             });
             urlParams.replace(new RegExp(ABeamer._SRV_CNT.SERVER_SUFFIX + '(\\w+)'), function (m, p1) {
                 _this.hasServer = true;
+                _this.storyAdapter.setProp('class', 'has-server', args);
                 _this.serverName = p1;
                 _this.serverFeatures = ABeamer._setServer(_this.serverName);
                 return '';
             });
+            args.hasServer = this.hasServer;
             args.isTeleporting = this._isTeleporting;
             args.vars.isTeleporting = args.isTeleporting;
             this._teleporter = new ABeamer._Teleporter(this, cfg, this._isTeleporting);

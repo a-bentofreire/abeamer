@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.2.3] -
 ### Fixed
 - Fixes `README.md`.
+- Improved `_waitForMediaSync` to wait for video ready to play and finish seek, only when is ready.
+- `video-sync` Flyover supports `serverRender` param to disable if `hasServer`.
 ### Added
 - (DEV) http-server-ex.ts: `npm serve-with-dirs` also lists 'index.html', 'README.md' files.
 ## [0.2.2] -

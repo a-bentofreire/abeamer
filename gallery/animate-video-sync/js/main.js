@@ -25,6 +25,7 @@ $(window).on("load", function () {
         }]);
     story.addFlyover('video-sync', {
         selector: '#video',
+        serverRender: false,
     });
     story.render(story.bestPlaySpeed());
 });

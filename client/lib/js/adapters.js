@@ -600,13 +600,24 @@ var ABeamer;
             // @TODO: Find a way to sync video.
             // this code doesn't work on chrome.
             if (pos !== undefined) {
-                elMedia.currentTime = pos;
-                window.setTimeout(function () {
+                if (elMedia.readyState < 3) {
+                    elMedia.addEventListener('loadeddata', function () {
+                        _waitForMediaSync(elMedia, args, pos);
+                    }, { once: true });
+                    return;
+                }
+                elMedia.addEventListener('seeked', function () {
+                    // #debug-start
+                    if (_args.isVerbose) {
+                        args.story.logFrmt("video-sync: ", [
+                            ['expected', pos],
+                            ['actual', elMedia.currentTime],
+                        ], ABeamer.LT_MSG);
+                    }
+                    // #debug-end
                     onDone();
-                }, 1);
-                /*         elMedia.play().then(() => {
-                          elMedia.pause();
-                        }); */
+                }, { once: true });
+                elMedia.currentTime = pos;
             }
             else {
                 onDone();

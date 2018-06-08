@@ -66,6 +66,12 @@ namespace ABeamer {
     waitMan?: WaitMan;
     /** If true, the internal code or plugin should dump information using `story.logFrmt`. */
     isVerbose?: boolean;
+    /**
+     * True if it's running a supporting server program for frame storage.
+     *
+     * #end-user @readonly
+     */
+    hasServer?: boolean;
     isTeleporting?: boolean;
     /** If true, perform type checks and other restriction checks. */
     isStrict?: boolean;

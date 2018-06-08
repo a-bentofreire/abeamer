@@ -541,11 +541,13 @@ namespace ABeamer {
 
       urlParams.replace(new RegExp(_SRV_CNT.SERVER_SUFFIX + '(\\w+)'), (m, p1) => {
         this.hasServer = true;
+        this.storyAdapter.setProp('class', 'has-server', args);
         this.serverName = p1;
         this.serverFeatures = _setServer(this.serverName);
         return '';
       });
 
+      args.hasServer = this.hasServer;
       args.isTeleporting = this._isTeleporting;
       args.vars.isTeleporting = args.isTeleporting;
       this._teleporter = new _Teleporter(this, cfg, this._isTeleporting);

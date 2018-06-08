@@ -79,9 +79,10 @@ namespace ServerAgent {
         '--enable-fast-unload',
         '--disable-cloud-import',
         '--safebrowsing-disable-auto-update',
-        '--ignore-autoplay-restrictions',
         '--no-user-gesture-required',
         '--enable-font-antialiasing',
+        '--ignore-autoplay-restrictions',
+        '--autoplay-policy=no-user-gesture-required',
       ],
     }
       : undefined);

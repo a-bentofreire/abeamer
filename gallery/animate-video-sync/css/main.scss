@@ -28,6 +28,10 @@ html,
   top: 0;
 }
 
+.has-server #video {
+  display: none;
+}
+
 #scene1 {
   display: flex;
   justify-content: center;

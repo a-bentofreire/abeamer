@@ -331,7 +331,8 @@ var ABeamer;
                     }
                 }
                 if (isDifferent) {
-                    args.story.logFrmt("action-update-warn: ", [['id', elAdapter.getId(args)],
+                    args.story.logFrmt("action-update-warn: ", [
+                        ['id', elAdapter.getId(args)],
                         ['prop', propName],
                         ['expected', newValue + ''],
                         ['actual', actualNewValue + ''],

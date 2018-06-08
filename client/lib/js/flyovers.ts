@@ -129,6 +129,13 @@ namespace ABeamer {
      * @default #video
      */
     selector?: ElSelector;
+
+    /**
+     * If it's `false`, is disabled if `isServer = true`.
+     *
+     * @default true
+     */
+    serverRender: boolean;
   }
 
 
@@ -318,17 +325,19 @@ namespace ABeamer {
         // rendering
         const storyFps = args.story.fps;
 
-        params._elAdapters.forEach(elAdapter => {
-          const currentTime = args.story.renderFramePos / storyFps;
+        if (!args.hasServer || params.serverRender !== false) {
+          params._elAdapters.forEach(elAdapter => {
+            const currentTime = args.story.renderFramePos / storyFps;
 
-          // #debug-start
-          if (args.isVerbose) {
-            args.story.logFrmt('video-sync', [['currentTime', currentTime]]);
-          }
-          // #debug-end
+            // #debug-start
+            if (args.isVerbose) {
+              args.story.logFrmt('video-sync', [['currentTime', currentTime]]);
+            }
+            // #debug-end
 
-          elAdapter.setProp('currentTime', currentTime, args);
-        });
+            elAdapter.setProp('currentTime', currentTime, args);
+          });
+        }
         break;
     }
   }
