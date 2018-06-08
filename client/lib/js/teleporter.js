@@ -22,8 +22,8 @@
  * from a computer or tablet** without the need of installed software
  * nor direct access to the computer files.
  *
- * It was created with the main goal of allowing user video providers,
- * ad providers, meme providers, and online product catalogs to allow their users
+ * It was created with the main goal of allowing video hosting services,
+ * ad network, and e-commerce companies to allow their users
  * or employees to build their animation in their machines,
  * and then generate the video on the company's machines.
  *

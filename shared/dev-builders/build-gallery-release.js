@@ -36,14 +36,22 @@ var BuildGalleryRelease;
             var dstFullPath = BuildGalleryRelease.DST_GALLERY_RELEASE_PATH + "/" + folder;
             var iniFileName = srcFullPath + "/abeamer.ini";
             if (sysFs.existsSync(iniFileName)) {
-                var description_1 = [];
-                var usesLive_1 = false;
-                var noGifImage_1 = false;
-                var genMovie_1 = false;
-                var teleportable_1 = true;
+                var ex_1 = {
+                    width: 0,
+                    height: 0,
+                    folder: folder,
+                    srcFullPath: srcFullPath,
+                    dstFullPath: dstFullPath,
+                    iniFileName: iniFileName,
+                    description: [],
+                    usesLive: false,
+                    noGifImage: false,
+                    genMovie: false,
+                    teleportable: true,
+                    movieSnapshot: '',
+                    movieViewPage: '',
+                };
                 var prevNr_1 = 0;
-                var width_1 = 0;
-                var height_1 = 0;
                 var lastDescLine_1 = '';
                 fsix_js_1.fsix.readUtf8Sync(iniFileName).replace(/[\$@]abeamer-([a-z\-]+)(\d*)\s*:\s*"?([^";]+)"?/g, function (all, id, nr, value) {
                     switch (id) {
@@ -55,53 +63,47 @@ var BuildGalleryRelease;
                             prevNr_1 = nr;
                             if (lastDescLine_1 && !lastDescLine_1.match(/[:\.]$/)) {
                                 lastDescLine_1 += ' ' + value;
-                                description_1[description_1.length - 1] = lastDescLine_1;
+                                ex_1.description[ex_1.description.length - 1] = lastDescLine_1;
                             }
                             else {
-                                description_1.push(value);
+                                ex_1.description.push(value);
                                 lastDescLine_1 = value;
                             }
                             break;
                         case 'width':
-                            width_1 = parseInt(value);
-                            console.log("width: " + width_1);
+                            ex_1.width = parseInt(value);
+                            console.log("width: " + ex_1.width);
                             break;
                         case 'height':
-                            height_1 = parseInt(value);
-                            console.log("\n\nheight: " + height_1);
+                            ex_1.height = parseInt(value);
+                            console.log("\n\nheight: " + ex_1.height);
                             break;
                         case 'uses-live':
-                            usesLive_1 = value.toLowerCase() === 'true';
+                            ex_1.usesLive = value.toLowerCase() === 'true';
                             break;
                         case 'no-gif-image':
-                            noGifImage_1 = value.toLowerCase() === 'true';
+                            ex_1.noGifImage = value.toLowerCase() === 'true';
                             break;
                         case 'gen-movie':
-                            genMovie_1 = value.toLowerCase() === 'true';
-                            noGifImage_1 = noGifImage_1 || genMovie_1;
+                            ex_1.genMovie = value.toLowerCase() === 'true';
+                            ex_1.noGifImage = ex_1.noGifImage || ex_1.genMovie;
                             break;
                         case 'teleportable':
-                            teleportable_1 = value.toLowerCase() === 'true';
+                            ex_1.teleportable = value.toLowerCase() === 'true';
+                            break;
+                        case 'movie-snapshot':
+                            ex_1.movieSnapshot = value;
+                            break;
+                        case 'movie-view-page':
+                            ex_1.movieViewPage = value;
                             break;
                     }
                     return '';
                 });
-                if (!description_1.length) {
-                    description_1.push(folder);
+                if (!ex_1.description.length) {
+                    ex_1.description.push(folder);
                 }
-                BuildGalleryRelease.releaseExamples.push({
-                    width: width_1,
-                    height: height_1,
-                    folder: folder,
-                    srcFullPath: srcFullPath,
-                    dstFullPath: dstFullPath,
-                    iniFileName: iniFileName,
-                    description: description_1,
-                    usesLive: usesLive_1,
-                    noGifImage: noGifImage_1,
-                    genMovie: genMovie_1,
-                    teleportable: teleportable_1,
-                });
+                BuildGalleryRelease.releaseExamples.push(ex_1);
             }
         });
     }
@@ -124,7 +126,9 @@ var BuildGalleryRelease;
                     + ("\n![Image](" + storyFramesFolder + "/story.gif)" + '  ' + "\n  "));
             }
             if (ex.genMovie) {
-                galleryLinks.push("\n  \n<video id=video width=\"" + ex.width + "\" height=\"" + ex.height + "\"\n          src=\"" + storyFramesFolder + "/story.mp4\" type=\"video/mp4\" controls></video>" + '  ' + "\n  ");
+                galleryLinks.push("\n  "
+                    + ("\n[![Image](" + storyFramesFolder + "/../" + ex.movieSnapshot + ")]")
+                    + ("(" + storyFramesFolder + "/../" + ex.movieViewPage + ")" + '  ' + "\n  "));
             }
             galleryLinks.push("\nDownload code: [zip](" + dev_web_links_js_1.DevWebLinks.repos.galleryReleaseRaw + ex.folder + "/" + BuildGalleryRelease.EXAMPLE_ZIP_FILE + ")" + '  ' + "\n" + (ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n') + "\n" + (!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n') + "\n    ");
         });

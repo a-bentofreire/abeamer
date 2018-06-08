@@ -11,7 +11,7 @@ with transparency at high resolution and lossless compression without frame drop
   
 When an animated story is designed to be rendered in a remote machine, 
 no software is required to install on the local machine,
-allowing video content providers, online shopping catalogs and 
+allowing video hosting services, ad network, e-commerce companies 
 many other businesses to provide a tool for their users to add text, images, 
 and special effects to their images or videos by just using the web browser 
 and then [teleport](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/teleporter/) 
@@ -179,8 +179,7 @@ ABeamer has the following tools:
   
 * `info` flyover.
   
-<video id=video width="240" height="320"
-          src="https://a-bentofreire.github.io/abeamer-gallery-release/animate-video-sync/story-frames/story.mp4" type="video/mp4" controls></video>  
+[![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-video-sync/story-frames/../assets/a-bentofreire/snapshot.jpg)](https://a-bentofreire.github.io/abeamer-gallery-release/animate-video-sync/story-frames/../assets/a-bentofreire/view-video.html)  
   
 * `video-sync` flyover [[1]](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/flyovers/#video-sync-flyover).
   

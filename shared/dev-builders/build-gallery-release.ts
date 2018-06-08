@@ -42,6 +42,9 @@ export namespace BuildGalleryRelease {
     genMovie: boolean;
     /** if false, it doesn't supports teleportation. */
     teleportable: boolean;
+    /** snapshot built to overcome github removing video tag. */
+    movieSnapshot: string;
+    movieViewPage: string;
   }
 
 
@@ -65,14 +68,24 @@ export namespace BuildGalleryRelease {
       const iniFileName = `${srcFullPath}/abeamer.ini`;
 
       if (sysFs.existsSync(iniFileName)) {
-        const description = [];
-        let usesLive = false;
-        let noGifImage = false;
-        let genMovie = false;
-        let teleportable = true;
+
+        const ex = {
+          width: 0,
+          height: 0,
+          folder,
+          srcFullPath,
+          dstFullPath,
+          iniFileName,
+          description: [],
+          usesLive: false,
+          noGifImage: false,
+          genMovie: false,
+          teleportable: true,
+          movieSnapshot: '',
+          movieViewPage: '',
+        } as Example;
+
         let prevNr = 0;
-        let width = 0;
-        let height = 0;
         let lastDescLine = '';
         fsix.readUtf8Sync(iniFileName).replace(/[\$@]abeamer-([a-z\-]+)(\d*)\s*:\s*"?([^";]+)"?/g,
           (all, id, nr, value: string) => {
@@ -85,58 +98,54 @@ export namespace BuildGalleryRelease {
                 prevNr = nr;
                 if (lastDescLine && !lastDescLine.match(/[:\.]$/)) {
                   lastDescLine += ' ' + value;
-                  description[description.length - 1] = lastDescLine;
+                  ex.description[ex.description.length - 1] = lastDescLine;
                 } else {
-                  description.push(value);
+                  ex.description.push(value);
                   lastDescLine = value;
                 }
                 break;
 
               case 'width':
-                width = parseInt(value);
-                console.log(`width: ${width}`);
+                ex.width = parseInt(value);
+                console.log(`width: ${ex.width}`);
                 break;
 
               case 'height':
-                height = parseInt(value);
-                console.log(`\n\nheight: ${height}`);
+                ex.height = parseInt(value);
+                console.log(`\n\nheight: ${ex.height}`);
                 break;
 
               case 'uses-live':
-                usesLive = value.toLowerCase() === 'true';
+                ex.usesLive = value.toLowerCase() === 'true';
                 break;
 
               case 'no-gif-image':
-                noGifImage = value.toLowerCase() === 'true';
+                ex.noGifImage = value.toLowerCase() === 'true';
                 break;
 
               case 'gen-movie':
-                genMovie = value.toLowerCase() === 'true';
-                noGifImage = noGifImage || genMovie;
+                ex.genMovie = value.toLowerCase() === 'true';
+                ex.noGifImage = ex.noGifImage || ex.genMovie;
                 break;
 
               case 'teleportable':
-                teleportable = value.toLowerCase() === 'true';
+                ex.teleportable = value.toLowerCase() === 'true';
+                break;
+
+              case 'movie-snapshot':
+                ex.movieSnapshot = value;
+                break;
+
+              case 'movie-view-page':
+                ex.movieViewPage = value;
                 break;
             }
             return '';
           });
 
-        if (!description.length) { description.push(folder); }
+        if (!ex.description.length) { ex.description.push(folder); }
 
-        releaseExamples.push({
-          width,
-          height,
-          folder,
-          srcFullPath,
-          dstFullPath,
-          iniFileName,
-          description,
-          usesLive,
-          noGifImage,
-          genMovie,
-          teleportable,
-        });
+        releaseExamples.push(ex);
       }
     });
   }
@@ -163,8 +172,9 @@ export namespace BuildGalleryRelease {
       }
 
       if (ex.genMovie) {
-        galleryLinks.push(`\n  \n<video id=video width="${ex.width}" height="${ex.height}"
-          src="${storyFramesFolder}/story.mp4" type="video/mp4" controls></video>${'  '}\n  `);
+        galleryLinks.push(`\n  `
+          + `\n[![Image](${storyFramesFolder}/../${ex.movieSnapshot})]`
+          + `(${storyFramesFolder}/../${ex.movieViewPage})${'  '}\n  `);
       }
 
       galleryLinks.push(`

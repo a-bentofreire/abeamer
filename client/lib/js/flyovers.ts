@@ -56,7 +56,7 @@
  * A `video-sync` flyover synchronizes the current render frame with a background video.
  *
  * **WARNING** Due Chrome 'autoplay-policy', it's not possible to 'safely' use Chrome to sync with videos,
- * In order to overcome this limitations:
+ * In order to overcome this limitation:
  * 1. Use Firefox to test the animation with a background video.
  * 2. Set `serverRender: false` to prevent `abeamer render` from attempting to sync the video while server render.
  * 3. When using `abeamer movie`, set `--bkg-movie` parameter with the video filename to use a background video.
