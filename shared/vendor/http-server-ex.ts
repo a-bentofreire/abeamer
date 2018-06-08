@@ -149,12 +149,12 @@ export namespace HttpServerEx {
         sysFs.readdir(rp.path, (err, files: string[]) => {
 
           const filesInfo = files.map(file => {
-            const filename = `${rp.path}${rp.path.endsWith('/') ? '' : '/'}${file}`;
-            const url = filename.substr(1);
-            const isDir = sysFs.statSync(filename).isDirectory();
+            const fileName = `${rp.path}${rp.path.endsWith('/') ? '' : '/'}${file}`;
+            const url = fileName.substr(1);
+            const isDir = sysFs.statSync(fileName).isDirectory();
             return {
               file,
-              filename,
+              fileName,
               url,
               isDir,
             };
@@ -177,8 +177,18 @@ body {
 </style>
           </head><body>\n`
             + filesInfo.map(fileInf => {
-              return !fileInf.isDir ? `<div><a href="${fileInf.url}">${fileInf.file}</a></div>` :
-                `<div>[<a href="${fileInf.url}${DIR_PREFIX}">${fileInf.file}</a>]</div>`;
+              const isDir = fileInf.isDir;
+              const defaultLinks: string[] = [];
+              if (isDir) {
+                HttpServer.DEFAULT_FILES.forEach(defFile => {
+                  const defFileName = `${fileInf.fileName}/${defFile}`;
+                  if (sysFs.existsSync(defFileName)) {
+                    defaultLinks.push(`&nbsp;(<a href="${fileInf.url}/${defFile}">${defFile}</a>)`);
+                  }
+                });
+              }
+              return !isDir ? `<div><a href="${fileInf.url}">${fileInf.file}</a></div>` :
+                `<div>[<a href="${fileInf.url}${DIR_PREFIX}">${fileInf.file}</a>]${defaultLinks.join('')}</div>`;
             }).join('\n')
             + '\n</body>\n</html>';
 

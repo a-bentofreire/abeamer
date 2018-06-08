@@ -26,7 +26,7 @@ For the the ABeamer Animation Editor, read [Animation Editor](https://a-bentofre
 bundled with a rich [toolset](#toolset) reducing the time to build complex animations.  
 - ABeamer **server agent** is designed to communicate with a render server, usually a headless web browser, in order to save 
 each frame to the disk. It can run either the full potential supporting Code Handlers or in a sanitized environment allowing you safely to render animations created by other users.  
-- ABeamer **command utility** allows you to build new projects, 
+- ABeamer **command line utility** allows you to build new projects, 
 render frames, create animated gifs or movies.  
 
 Read [Requirements](#requirements) for details about the necessary software 
@@ -51,11 +51,12 @@ alive and help to tell your story or to grow your business:
 * Extensively documented: [End-User Documentation](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/) and
  [Developer Documentation](https://a-bentofreire.github.io/abeamer-docs/developer/versions/latest/en/site/).
 * Absolutely minimum [dependencies](#requirements).
-* Highly Extensible via [plugins](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/plugin-manager/) including interpolators, functions, flyovers and tasks.
-* [Task](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/tasks/) to build complex animations 
+* Highly Extensible via [plugins](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/plugin-manager/) including [interpolators](#interpolators), functions, flyovers and tasks.
+* [Tasks](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/tasks/) to build complex animations 
 and [F/X](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/tasks/special-effects).
 * Large gallery of [example projects](https://a-bentofreire.github.io/abeamer-gallery-release/README.md).
 * Multiple scenes (only default scenes are teleportable).
+* Scene transitions.
 * [Expressions](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/expressions/), functions and variables.
 * Parallel and [off-sync](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/glossary/#off-sync) property animations.
 * Teleportable [JQuery-like containers](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/pels/).

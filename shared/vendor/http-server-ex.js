@@ -109,12 +109,12 @@ var HttpServerEx;
             if (this.allowDirListing && rp.search === DIR_PREFIX) {
                 sysFs.readdir(rp.path, function (err, files) {
                     var filesInfo = files.map(function (file) {
-                        var filename = "" + rp.path + (rp.path.endsWith('/') ? '' : '/') + file;
-                        var url = filename.substr(1);
-                        var isDir = sysFs.statSync(filename).isDirectory();
+                        var fileName = "" + rp.path + (rp.path.endsWith('/') ? '' : '/') + file;
+                        var url = fileName.substr(1);
+                        var isDir = sysFs.statSync(fileName).isDirectory();
                         return {
                             file: file,
-                            filename: filename,
+                            fileName: fileName,
                             url: url,
                             isDir: isDir,
                         };
@@ -125,8 +125,18 @@ var HttpServerEx;
                     });
                     var html = "<html>\n<head>\n<style>\nbody {\n    font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Helvetica,Arial,\n      sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\";\n      color: #24292e;\n      background-color: white;\n}\n</style>\n          </head><body>\n"
                         + filesInfo.map(function (fileInf) {
-                            return !fileInf.isDir ? "<div><a href=\"" + fileInf.url + "\">" + fileInf.file + "</a></div>" :
-                                "<div>[<a href=\"" + fileInf.url + DIR_PREFIX + "\">" + fileInf.file + "</a>]</div>";
+                            var isDir = fileInf.isDir;
+                            var defaultLinks = [];
+                            if (isDir) {
+                                http_server_js_1.HttpServer.DEFAULT_FILES.forEach(function (defFile) {
+                                    var defFileName = fileInf.fileName + "/" + defFile;
+                                    if (sysFs.existsSync(defFileName)) {
+                                        defaultLinks.push("&nbsp;(<a href=\"" + fileInf.url + "/" + defFile + "\">" + defFile + "</a>)");
+                                    }
+                                });
+                            }
+                            return !isDir ? "<div><a href=\"" + fileInf.url + "\">" + fileInf.file + "</a></div>" :
+                                "<div>[<a href=\"" + fileInf.url + DIR_PREFIX + "\">" + fileInf.file + "</a>]" + defaultLinks.join('') + "</div>";
                         }).join('\n')
                         + '\n</body>\n</html>';
                     rp.res.setHeader('Content-type', 'text/html');
