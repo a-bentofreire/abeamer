@@ -49,6 +49,18 @@ var http_server_ex_js_1 = require("../shared/vendor/http-server-ex.js");
  *
  *  Same as above, but it outputs detailed information about what is happening.
  * `abeamer render --ll 3 --dp foo`.
+ *
+ *  Creates an animated gif from the previous generated image sequence on `foo/story-frames/story.gif`.
+ * `abeamer gif foo/`.
+ *
+ *  Creates an animated gif from the previous generated image sequence on `hello.gif`.
+ * `abeamer gif foo/ --gif hello.gif`.
+ *
+ *  Creates a movie from the previous generated image sequence on `foo/story-frames/movie.mp4`.
+ * `abeamer movie foo/`.
+ *
+ *  Creates a movie from the previous generated image sequence using `foo/bkg-movie.mp4` as a background.
+ * `abeamer movie foo/ --bkg-movie foo/bkg-movie.mp4`.
  */
 var Cli;
 (function (Cli) {
@@ -65,7 +77,7 @@ var Cli;
     var CMD_GIF = 'gif';
     var CMD_MOVIE = 'movie';
     var DEFAULT_GIF_NAME = 'story.gif';
-    var DEFAULT_MOVIE_NAME = 'movie.mp4';
+    var DEFAULT_MOVIE_NAME = 'story.mp4';
     var logLevel = consts_js_1.Consts.LL_ERROR;
     var isVerbose = false;
     var cmdName = '';
@@ -81,6 +93,9 @@ var Cli;
     argOpts['movie'] = {
         param: 'string', desc: "output movie name. default is " + DEFAULT_MOVIE_NAME,
     };
+    argOpts['bkgMovie'] = {
+        param: 'string', desc: "movie filename to be used as background to blend with transparent images",
+    };
     argOpts['noPlugins'] = {
         desc: "creates a project without plugins",
     };
@@ -94,7 +109,7 @@ var Cli;
     //                               Print Usage
     // ------------------------------------------------------------------------
     function printUsage() {
-        console.log("abeamer [command] [options] [project-name|report-name]\nThe commands are:\n    " + CMD_CREATE + " creates a project with project-name\n    " + CMD_SERVE + "  starts a live server. Use it in case you need to load the config from JSON file\n    " + CMD_RENDER + " runs your project in the context of the headless browser.\n    " + CMD_GIF + "    creates an animated gif from the project-name or report-name\n    " + CMD_MOVIE + "  creates a movie from the project-name or report-name\n\n    e.g.\n      echo \"create folder foo and copy necessary files\"\n      abeamer " + CMD_CREATE + " --width 640 --height 480 --fps 25 foo\n\n      cd foo\n\n      echo \"start a live server\"\n      echo \"only required if you need to load your configuration from json file\"\n      abeamer " + CMD_SERVE + "\n\n      echo \"generates the png files and a report on story-frames folder\"\n      abeamer " + CMD_RENDER + "\n\n      echo \"creates story.gif file on story-frames folder\"\n      abeamer " + CMD_GIF + "\n\n      echo \"creates story.mp4 file on story-frames folder\"\n      abeamer " + CMD_MOVIE + "\n\n");
+        console.log("abeamer [command] [options] [project-name|report-name]\nThe commands are:\n    " + CMD_CREATE + " creates a project with project-name\n    " + CMD_SERVE + "  starts a live server. Use it in case you need to load the config from JSON file\n    " + CMD_RENDER + " runs your project in the context of the headless browser.\n    " + CMD_GIF + "    creates an animated gif from the project-name or report-name\n    " + CMD_MOVIE + "  creates a movie from the project-name or report-name\n\n    e.g.\n      echo \"create folder foo and copy necessary files\"\n      abeamer " + CMD_CREATE + " --width 640 --height 480 --fps 25 foo\n\n      cd foo\n\n      echo \"start a live server\"\n      echo \"only required if you need to load your configuration from json file\"\n      abeamer " + CMD_SERVE + "\n\n      echo \"generates the png files and a report on story-frames folder\"\n      abeamer " + CMD_RENDER + "\n\n      echo \"creates story.gif file on story-frames folder\"\n      abeamer " + CMD_GIF + "\n\n      echo \"creates story.mp4 file on story-frames folder\"\n      abeamer " + CMD_MOVIE + "\n\n      For more information, read:\n      https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/abeamer-cli/\n\n");
         opts_parser_js_1.OptsParser.printUsage();
     }
     // ------------------------------------------------------------------------
@@ -356,6 +371,9 @@ var Cli;
             args.push('-strip', '-layers', 'optimize', '-alpha', 'deactivate');
         }
         args.push(report.framespattern.replace(/\%\d*d/, '*'), gifFileName);
+        if (isVerbose) {
+            console.log("\n" + cmdLine + " " + args.join(' ') + "\n");
+        }
         runSpawn(cmdLine, args, function () {
             if (logLevel > consts_js_1.Consts.LL_SILENT) {
                 console.log("Created gif " + gifFileName);
@@ -369,12 +387,22 @@ var Cli;
         var report = getReport();
         var movieFileName = argOpts['movie'].value
             || report.dirname + "/" + DEFAULT_MOVIE_NAME;
+        var bkgMovieFileName = argOpts['bkgMovie'].value;
         var cmdLine = 'ffmpeg';
         var args = ['-r', report.fps.toString(), '-f', 'image2',
             '-s', report.width + "x" + report.height,
             '-i', report.framespattern,
-            /* spell-checker: disable */
-            '-vcodec', 'libx264', movieFileName];
+            '-y',
+        ];
+        /* spell-checker: disable */
+        if (bkgMovieFileName) {
+            args.push('-vf', "movie=" + bkgMovieFileName + ",hue=s=1[bg];[in]setpts=PTS,scale=-1:-1"
+                + ",pad=iw:ih:0:0:color=yellow[m]; [bg][m]overlay=shortest=1:x=0:y=0");
+        }
+        args.push('-vcodec', 'libx264', movieFileName);
+        if (isVerbose) {
+            console.log("\n" + cmdLine + " " + args.join(' ') + "\n");
+        }
         runSpawn(cmdLine, args, function () {
             if (logLevel > consts_js_1.Consts.LL_SILENT) {
                 console.log("Created movie " + movieFileName);

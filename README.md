@@ -177,7 +177,12 @@ ABeamer has the following tools:
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-flyovers/story-frames/story.gif)  
   
-* `info` and `video-sync` flyovers.
+* `info` flyover.
+  
+<video id=video width="240" height="320"
+          src="https://a-bentofreire.github.io/abeamer-gallery-release/animate-video-sync/story-frames/story.mp4" type="video/mp4" controls></video>  
+  
+* `video-sync` flyover [[1]](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/flyovers/#video-sync-flyover).
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-wrappers/story-frames/story.gif)  
   
@@ -258,7 +263,7 @@ html,
 .abeamer-story,
 .abeamer-scene {
   width: $abeamer-width + px;
-  height: $abeamer-using htmlheight + px;
+  height: $abeamer-height + px;
 }
 ```
   

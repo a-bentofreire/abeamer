@@ -39,10 +39,13 @@ var BuildGalleryRelease;
                 var description_1 = [];
                 var usesLive_1 = false;
                 var noGifImage_1 = false;
+                var genMovie_1 = false;
                 var teleportable_1 = true;
                 var prevNr_1 = 0;
+                var width_1 = 0;
+                var height_1 = 0;
                 var lastDescLine_1 = '';
-                fsix_js_1.fsix.readUtf8Sync(iniFileName).replace(/[\$@]abeamer-([a-z\-]+)(\d*)\s*:\s*"([^"]+)"/g, function (all, id, nr, value) {
+                fsix_js_1.fsix.readUtf8Sync(iniFileName).replace(/[\$@]abeamer-([a-z\-]+)(\d*)\s*:\s*"?([^";]+)"?/g, function (all, id, nr, value) {
                     switch (id) {
                         case 'description':
                             nr = parseInt(nr || '1');
@@ -50,7 +53,7 @@ var BuildGalleryRelease;
                                 console.warn("Incorrect description numbering in " + iniFileName);
                             }
                             prevNr_1 = nr;
-                            if (lastDescLine_1 && !lastDescLine_1.endsWith('.')) {
+                            if (lastDescLine_1 && !lastDescLine_1.match(/[:\.]$/)) {
                                 lastDescLine_1 += ' ' + value;
                                 description_1[description_1.length - 1] = lastDescLine_1;
                             }
@@ -59,11 +62,23 @@ var BuildGalleryRelease;
                                 lastDescLine_1 = value;
                             }
                             break;
+                        case 'width':
+                            width_1 = parseInt(value);
+                            console.log("width: " + width_1);
+                            break;
+                        case 'height':
+                            height_1 = parseInt(value);
+                            console.log("\n\nheight: " + height_1);
+                            break;
                         case 'uses-live':
                             usesLive_1 = value.toLowerCase() === 'true';
                             break;
                         case 'no-gif-image':
                             noGifImage_1 = value.toLowerCase() === 'true';
+                            break;
+                        case 'gen-movie':
+                            genMovie_1 = value.toLowerCase() === 'true';
+                            noGifImage_1 = noGifImage_1 || genMovie_1;
                             break;
                         case 'teleportable':
                             teleportable_1 = value.toLowerCase() === 'true';
@@ -75,6 +90,8 @@ var BuildGalleryRelease;
                     description_1.push(folder);
                 }
                 BuildGalleryRelease.releaseExamples.push({
+                    width: width_1,
+                    height: height_1,
                     folder: folder,
                     srcFullPath: srcFullPath,
                     dstFullPath: dstFullPath,
@@ -82,6 +99,7 @@ var BuildGalleryRelease;
                     description: description_1,
                     usesLive: usesLive_1,
                     noGifImage: noGifImage_1,
+                    genMovie: genMovie_1,
                     teleportable: teleportable_1,
                 });
             }
@@ -100,9 +118,13 @@ var BuildGalleryRelease;
             galleryLinks.push("\n--------------------------"
                 + ("\n### " + ex.folder + "\n")
                 + ("" + ex.description.join('  \n') + '  '));
+            var storyFramesFolder = "" + dev_web_links_js_1.DevWebLinks.repos.galleryReleaseRaw + ex.folder + "/story-frames";
             if (!ex.noGifImage) {
                 galleryLinks.push("\n  "
-                    + ("\n![Image](" + dev_web_links_js_1.DevWebLinks.repos.galleryReleaseRaw + ex.folder + "/story-frames/story.gif)" + '  ' + "\n  "));
+                    + ("\n![Image](" + storyFramesFolder + "/story.gif)" + '  ' + "\n  "));
+            }
+            if (ex.genMovie) {
+                galleryLinks.push("\n  \n<video id=video width=\"" + ex.width + "\" height=\"" + ex.height + "\"\n          src=\"" + storyFramesFolder + "/story.mp4\" type=\"video/mp4\" controls></video>" + '  ' + "\n  ");
             }
             galleryLinks.push("\nDownload code: [zip](" + dev_web_links_js_1.DevWebLinks.repos.galleryReleaseRaw + ex.folder + "/" + BuildGalleryRelease.EXAMPLE_ZIP_FILE + ")" + '  ' + "\n" + (ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n') + "\n" + (!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n') + "\n    ");
         });

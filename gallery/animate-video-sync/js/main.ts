@@ -20,7 +20,7 @@ $(window).on("load", () => {
       props: [
         {
           prop: 'font-size',
-          duration: '4.14s',
+          duration: '4.72s',
           value: 60,
           oscillator: {
             handler: 'damped',

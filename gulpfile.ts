@@ -131,6 +131,8 @@ namespace Gulp {
     clean-gallery - deletes all the gallery story-frames files and folder
       when: cleaning day!
 
+    clean-gallery-png - deletes all the gallery/story-frames/*.png
+
     update-gallery-scripts - builds a new version of ${DevPaths.GALLERY_PATH}/*/index.html with script list updated
       when: every time there is a new module on the library or a module change its name
             first must update on the ${DevPaths.CLIENT_PATH}/lib/js/modules.json
@@ -508,7 +510,7 @@ namespace Gulp {
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       return gulp.src([`${ex.srcFullPath}/**`,
       `!${ex.srcFullPath}/*.html`,
-      `!${ex.srcFullPath}/story-frames/*.{png,mp4}`], { dot: true })
+      `!${ex.srcFullPath}/story-frames/*.png`], { dot: true })
         .pipe(gulp.dest(ex.dstFullPath));
     }));
   });
@@ -527,7 +529,7 @@ namespace Gulp {
       return gulp.src([
         `${ex.dstFullPath}/**`,
         `!${ex.dstFullPath}/*.zip`,
-        `!${ex.dstFullPath}/story-frames/*.{json,gif}`,
+        `!${ex.dstFullPath}/story-frames/*.{json,gif,mp4}`,
       ])
         .pipe(gulpZip(BuildGalRel.EXAMPLE_ZIP_FILE))
         .pipe(gulp.dest(ex.dstFullPath));
@@ -555,11 +557,16 @@ namespace Gulp {
     cb();
   });
 
+  gulp.task('clean-gallery-png', (cb) => {
+    rimraf.sync(`${DevPaths.GALLERY_PATH}/*/story-frames/*.png`);
+    cb();
+  });
+
   // ------------------------------------------------------------------------
   //                               Creates gallery examples gif image
   // ------------------------------------------------------------------------
 
-  (gulp as any).task('build-gallery-gifs', ['clean-gallery'], (cb) => {
+  (gulp as any).task('build-gallery-gifs', ['clean-gallery-png'], (cb) => {
     webLinks.setup(true);
     BuildGalRel.buildGifs();
     cb();

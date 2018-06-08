@@ -81,7 +81,7 @@ var Gulp;
     //                               Print Usage
     // ------------------------------------------------------------------------
     gulp.task('default', function () {
-        console.log("gulp [task]\n  Where task is\n    bump-version - builds version files from package.json\n      when: before publishing a new version\n\n    clean - executes clean-gallery\n\n    build-release - builds the release files where all the files are compiled and minify\n      when: before publishing a new **stable** version and after testing\n\n    build-shared-lib - builds files from the client library to be used by server, tests and cli\n      when: every time a module tagged with @module shared or\n            constants that are useful for server and cli are modified\n\n    build-docs - builds both the end-user and developer documentation\n      when: before publishing a new **stable** version and after testing\n\n    build-docs-local - same as build-docs but uses local links\n\n    build-definition-files - builds definition files for end-user and developer\n      when: after any public or shared member of a class is modified\n\n    build-gallery-gifs - builds all the animated gifs for each example in the gallery\n      when: before build-gallery-release\n      warn: this can be a long operation\n\n    build-gallery-release - builds release version of the gallery\n      --local builds using local links\n      when: before publishing a new gallery, after build-gallery-gifs\n\n    build-gallery-release-local - same as build-gallery-release but uses local links\n\n    clean-gallery - deletes all the gallery story-frames files and folder\n      when: cleaning day!\n\n    update-gallery-scripts - builds a new version of " + dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/index.html with script list updated\n      when: every time there is a new module on the library or a module change its name\n            first must update on the " + dev_paths_js_1.DevPaths.CLIENT_PATH + "/lib/js/modules.json\n\n    update-test-list - updates test-list.json and package.json with the full list of tests\n      when: every time there is a new test or a test change its name\n\n    list-docs-files-as-links - outputs the console the list of document files in markdown link format\n\n    README-to-online - converts all online README.md local links to online links\n\n    README-to-local - converts all online README.md online links to local links\n\n    ");
+        console.log("gulp [task]\n  Where task is\n    bump-version - builds version files from package.json\n      when: before publishing a new version\n\n    clean - executes clean-gallery\n\n    build-release - builds the release files where all the files are compiled and minify\n      when: before publishing a new **stable** version and after testing\n\n    build-shared-lib - builds files from the client library to be used by server, tests and cli\n      when: every time a module tagged with @module shared or\n            constants that are useful for server and cli are modified\n\n    build-docs - builds both the end-user and developer documentation\n      when: before publishing a new **stable** version and after testing\n\n    build-docs-local - same as build-docs but uses local links\n\n    build-definition-files - builds definition files for end-user and developer\n      when: after any public or shared member of a class is modified\n\n    build-gallery-gifs - builds all the animated gifs for each example in the gallery\n      when: before build-gallery-release\n      warn: this can be a long operation\n\n    build-gallery-release - builds release version of the gallery\n      --local builds using local links\n      when: before publishing a new gallery, after build-gallery-gifs\n\n    build-gallery-release-local - same as build-gallery-release but uses local links\n\n    clean-gallery - deletes all the gallery story-frames files and folder\n      when: cleaning day!\n\n    clean-gallery-png - deletes all the gallery/story-frames/*.png\n\n    update-gallery-scripts - builds a new version of " + dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/index.html with script list updated\n      when: every time there is a new module on the library or a module change its name\n            first must update on the " + dev_paths_js_1.DevPaths.CLIENT_PATH + "/lib/js/modules.json\n\n    update-test-list - updates test-list.json and package.json with the full list of tests\n      when: every time there is a new test or a test change its name\n\n    list-docs-files-as-links - outputs the console the list of document files in markdown link format\n\n    README-to-online - converts all online README.md local links to online links\n\n    README-to-local - converts all online README.md online links to local links\n\n    ");
     });
     // ------------------------------------------------------------------------
     //                               rimrafExcept
@@ -354,7 +354,7 @@ var Gulp;
         return mergeStream(build_gallery_release_js_1.BuildGalleryRelease.releaseExamples.map(function (ex) {
             return gulp.src([ex.srcFullPath + "/**",
                 "!" + ex.srcFullPath + "/*.html",
-                "!" + ex.srcFullPath + "/story-frames/*.{png,mp4}"], { dot: true })
+                "!" + ex.srcFullPath + "/story-frames/*.png"], { dot: true })
                 .pipe(gulp.dest(ex.dstFullPath));
         }));
     });
@@ -368,7 +368,7 @@ var Gulp;
             return gulp.src([
                 ex.dstFullPath + "/**",
                 "!" + ex.dstFullPath + "/*.zip",
-                "!" + ex.dstFullPath + "/story-frames/*.{json,gif}",
+                "!" + ex.dstFullPath + "/story-frames/*.{json,gif,mp4}",
             ])
                 .pipe(gulpZip(build_gallery_release_js_1.BuildGalleryRelease.EXAMPLE_ZIP_FILE))
                 .pipe(gulp.dest(ex.dstFullPath));
@@ -387,10 +387,14 @@ var Gulp;
         rimraf.sync(dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/story-frames");
         cb();
     });
+    gulp.task('clean-gallery-png', function (cb) {
+        rimraf.sync(dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/story-frames/*.png");
+        cb();
+    });
     // ------------------------------------------------------------------------
     //                               Creates gallery examples gif image
     // ------------------------------------------------------------------------
-    gulp.task('build-gallery-gifs', ['clean-gallery'], function (cb) {
+    gulp.task('build-gallery-gifs', ['clean-gallery-png'], function (cb) {
         dev_web_links_js_1.DevWebLinks.setup(true);
         build_gallery_release_js_1.BuildGalleryRelease.buildGifs();
         cb();

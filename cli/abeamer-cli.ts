@@ -54,6 +54,18 @@ import { HttpServerEx } from "../shared/vendor/http-server-ex.js";
  *
  *  Same as above, but it outputs detailed information about what is happening.
  * `abeamer render --ll 3 --dp foo`.
+ *
+ *  Creates an animated gif from the previous generated image sequence on `foo/story-frames/story.gif`.
+ * `abeamer gif foo/`.
+ *
+ *  Creates an animated gif from the previous generated image sequence on `hello.gif`.
+ * `abeamer gif foo/ --gif hello.gif`.
+ *
+ *  Creates a movie from the previous generated image sequence on `foo/story-frames/movie.mp4`.
+ * `abeamer movie foo/`.
+ *
+ *  Creates a movie from the previous generated image sequence using `foo/bkg-movie.mp4` as a background.
+ * `abeamer movie foo/ --bkg-movie foo/bkg-movie.mp4`.
  */
 namespace Cli {
   // ------------------------------------------------------------------------
@@ -72,7 +84,7 @@ namespace Cli {
   const CMD_MOVIE = 'movie';
 
   const DEFAULT_GIF_NAME = 'story.gif';
-  const DEFAULT_MOVIE_NAME = 'movie.mp4';
+  const DEFAULT_MOVIE_NAME = 'story.mp4';
 
   let logLevel = Consts.LL_ERROR;
   let isVerbose = false;
@@ -95,6 +107,11 @@ namespace Cli {
   argOpts['movie'] = {
     param: 'string', desc:
       `output movie name. default is ${DEFAULT_MOVIE_NAME}`,
+  };
+
+  argOpts['bkgMovie'] = {
+    param: 'string', desc:
+      `movie filename to be used as background to blend with transparent images`,
   };
 
   argOpts['noPlugins'] = {
@@ -144,6 +161,9 @@ The commands are:
 
       echo "creates story.mp4 file on story-frames folder"
       abeamer ${CMD_MOVIE}
+
+      For more information, read:
+      https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/abeamer-cli/
 
 `);
     OptsParser.printUsage();
@@ -465,6 +485,10 @@ The commands are:
 
     args.push(report.framespattern.replace(/\%\d*d/, '*'), gifFileName);
 
+    if (isVerbose) {
+      console.log(`\n${cmdLine} ${args.join(' ')}\n`);
+    }
+
     runSpawn(cmdLine, args, () => {
       if (logLevel > Consts.LL_SILENT) { console.log(`Created gif ${gifFileName}`); }
     });
@@ -478,12 +502,25 @@ The commands are:
     const report = getReport();
     const movieFileName = argOpts['movie'].value as string
       || `${report.dirname}/${DEFAULT_MOVIE_NAME}`;
+    const bkgMovieFileName = argOpts['bkgMovie'].value as string;
     const cmdLine = 'ffmpeg';
     const args = ['-r', report.fps.toString(), '-f', 'image2',
       '-s', `${report.width}x${report.height}`,
       '-i', report.framespattern,
-      /* spell-checker: disable */
-      '-vcodec', 'libx264', movieFileName];
+      '-y', // overwrites automatically
+    ];
+
+    /* spell-checker: disable */
+    if (bkgMovieFileName) {
+      args.push('-vf', `movie=${bkgMovieFileName},hue=s=1[bg];[in]setpts=PTS,scale=-1:-1`
+        + `,pad=iw:ih:0:0:color=yellow[m]; [bg][m]overlay=shortest=1:x=0:y=0`);
+    }
+
+    args.push('-vcodec', 'libx264', movieFileName);
+
+    if (isVerbose) {
+      console.log(`\n${cmdLine} ${args.join(' ')}\n`);
+    }
 
     runSpawn(cmdLine, args, () => {
       if (logLevel > Consts.LL_SILENT) { console.log(`Created movie ${movieFileName}`); }

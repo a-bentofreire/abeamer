@@ -7,11 +7,9 @@
 // ------------------------------------------------------------------------
 
 import * as sysFs from "fs";
-import * as sysPath from "path";
 import { spawn as sysSpawn } from "child_process";
 
 import { fsix } from "../vendor/fsix.js";
-import { DevPaths } from "../dev-paths.js";
 import { DevWebLinks as webLinks } from "../dev-web-links.js";
 
 /** @module developer | This module won't be part of release version */
@@ -29,6 +27,8 @@ export namespace BuildGalleryRelease {
   export const EXAMPLE_ZIP_FILE = 'code.zip';
 
   export interface Example {
+    width: uint;
+    height: uint;
     folder: string;
     srcFullPath: string;
     dstFullPath: string;
@@ -38,11 +38,15 @@ export namespace BuildGalleryRelease {
     usesLive: boolean;
     /** if true, it doesn't generates an animated gif image. */
     noGifImage: boolean;
+    /** if true, it generates movies instead of gifs. */
+    genMovie: boolean;
     /** if false, it doesn't supports teleportation. */
     teleportable: boolean;
   }
 
+
   export const releaseExamples: Example[] = [];
+
 
   /**
    * Fills the `releaseExamples` list with every gallery example that
@@ -64,10 +68,13 @@ export namespace BuildGalleryRelease {
         const description = [];
         let usesLive = false;
         let noGifImage = false;
+        let genMovie = false;
         let teleportable = true;
         let prevNr = 0;
+        let width = 0;
+        let height = 0;
         let lastDescLine = '';
-        fsix.readUtf8Sync(iniFileName).replace(/[\$@]abeamer-([a-z\-]+)(\d*)\s*:\s*"([^"]+)"/g,
+        fsix.readUtf8Sync(iniFileName).replace(/[\$@]abeamer-([a-z\-]+)(\d*)\s*:\s*"?([^";]+)"?/g,
           (all, id, nr, value: string) => {
             switch (id) {
               case 'description':
@@ -76,7 +83,7 @@ export namespace BuildGalleryRelease {
                   console.warn(`Incorrect description numbering in ${iniFileName}`);
                 }
                 prevNr = nr;
-                if (lastDescLine && !lastDescLine.endsWith('.')) {
+                if (lastDescLine && !lastDescLine.match(/[:\.]$/)) {
                   lastDescLine += ' ' + value;
                   description[description.length - 1] = lastDescLine;
                 } else {
@@ -85,12 +92,27 @@ export namespace BuildGalleryRelease {
                 }
                 break;
 
+              case 'width':
+                width = parseInt(value);
+                console.log(`width: ${width}`);
+                break;
+
+              case 'height':
+                height = parseInt(value);
+                console.log(`\n\nheight: ${height}`);
+                break;
+
               case 'uses-live':
                 usesLive = value.toLowerCase() === 'true';
                 break;
 
               case 'no-gif-image':
                 noGifImage = value.toLowerCase() === 'true';
+                break;
+
+              case 'gen-movie':
+                genMovie = value.toLowerCase() === 'true';
+                noGifImage = noGifImage || genMovie;
                 break;
 
               case 'teleportable':
@@ -103,6 +125,8 @@ export namespace BuildGalleryRelease {
         if (!description.length) { description.push(folder); }
 
         releaseExamples.push({
+          width,
+          height,
           folder,
           srcFullPath,
           dstFullPath,
@@ -110,6 +134,7 @@ export namespace BuildGalleryRelease {
           description,
           usesLive,
           noGifImage,
+          genMovie,
           teleportable,
         });
       }
@@ -129,10 +154,19 @@ export namespace BuildGalleryRelease {
       galleryLinks.push(`\n--------------------------`
         + `\n### ${ex.folder}\n`
         + `${ex.description.join('  \n')}${'  '}`);
+
+      const storyFramesFolder = `${webLinks.repos.galleryReleaseRaw}${ex.folder}/story-frames`;
+
       if (!ex.noGifImage) {
         galleryLinks.push(`\n  `
-          + `\n![Image](${webLinks.repos.galleryReleaseRaw}${ex.folder}/story-frames/story.gif)${'  '}\n  `);
+          + `\n![Image](${storyFramesFolder}/story.gif)${'  '}\n  `);
       }
+
+      if (ex.genMovie) {
+        galleryLinks.push(`\n  \n<video id=video width="${ex.width}" height="${ex.height}"
+          src="${storyFramesFolder}/story.mp4" type="video/mp4" controls></video>${'  '}\n  `);
+      }
+
       galleryLinks.push(`
 Download code: [zip](${webLinks.repos.galleryReleaseRaw}${ex.folder}/${EXAMPLE_ZIP_FILE})${'  '}
 ${ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n'}
@@ -179,15 +213,15 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
       if (example.noGifImage) { return; }
       // if (example.folder === 'animate-attack-task') { // use to test one example only
 
-        runSpawn('npm', ['run', '--', 'render', '--dp', '--url',
+      runSpawn('npm', ['run', '--', 'render', '--dp', '--url',
         `${webLinks.repos.main}gallery/${example.folder}/`,
         '--config', `./gallery/${example.folder}/abeamer.ini`,
       ], () => {
-          runSpawn('npm', ['run', '--', 'gif', `gallery/${example.folder}/`],
-            () => {
-              console.log(`Done example: ${example.folder}`);
-            });
-        });
+        runSpawn('npm', ['run', '--', 'gif', `gallery/${example.folder}/`],
+          () => {
+            console.log(`Done example: ${example.folder}`);
+          });
+      });
       // }
       console.log(`example.folder: ${example.folder}`);
     });
