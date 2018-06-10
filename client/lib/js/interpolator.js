@@ -99,6 +99,7 @@ var ABeamer;
         _PropInterpolator.prototype.attachSelector = function (elementAdpt, elActRg, isVerbose, args) {
             var self = this;
             var realPropName = this.realPropName;
+            var actRg = elActRg.actionRg;
             function getStartValue() {
                 // user valueStart has priority
                 var valueStart = self.animProp.valueStart;
@@ -154,6 +155,11 @@ var ABeamer;
                         break;
                     case 'number':
                         numStartValue = startValue;
+                        // if this property was animated previously and is pixel,
+                        // the start value will be numerical not `%dpx`.
+                        if (actRg.propType === ABeamer.PT_PIXEL) {
+                            propType = ABeamer.PT_PIXEL;
+                        }
                         break;
                     case 'string':
                         if (strStartValue === 'true' || strStartValue === 'false') {
@@ -191,10 +197,10 @@ var ABeamer;
             this.numStartValue = numStartValue;
             this.numEndValue = numEndValue;
             this.variation = this.numEndValue - this.numStartValue;
-            var actRg = elActRg.actionRg;
             this.actRg = actRg;
             actRg.initialValue = numStartValue;
             actRg.waitFor = this.waitFor;
+            actRg.propType = this.propType;
         };
         _PropInterpolator.prototype.interpolate = function (t, story, isVerbose) {
             var args = story._args;
@@ -282,7 +288,6 @@ var ABeamer;
         _PropInterpolator.prototype.toAction = function (v, isFirst, isLast) {
             return {
                 realPropName: this.realPropName,
-                propType: this.propType,
                 value: v,
                 actRg: this.actRg,
                 numValue: this.curNumValue,
@@ -324,7 +329,7 @@ var ABeamer;
                 var isDifferent = newValue !== actualNewValue;
                 if (isDifferent) {
                     // compares numerical values taking into account the numeric precision errors
-                    if (isDifferent && action.propType === ABeamer.PT_NUMBER) {
+                    if (isDifferent && actRg.propType === ABeamer.PT_NUMBER) {
                         var actualFloat = Math.round(parseFloat(actualNewValue) * ABeamer._TEST_DIGIT_LIMIT);
                         var newFloat = Math.round(newValue * ABeamer._TEST_DIGIT_LIMIT);
                         isDifferent = newFloat !== actualFloat;

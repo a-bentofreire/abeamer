@@ -116,6 +116,7 @@ namespace ABeamer {
 
       const self = this;
       const realPropName = this.realPropName;
+      const actRg = elActRg.actionRg;
 
       function getStartValue(): PropValue {
 
@@ -180,6 +181,11 @@ namespace ABeamer {
 
           case 'number':
             numStartValue = startValue as number;
+            // if this property was animated previously and is pixel,
+            // the start value will be numerical not `%dpx`.
+            if (actRg.propType === PT_PIXEL) {
+              propType = PT_PIXEL;
+            }
             break;
 
           case 'string':
@@ -221,10 +227,10 @@ namespace ABeamer {
       this.numEndValue = numEndValue;
       this.variation = this.numEndValue - this.numStartValue;
 
-      const actRg = elActRg.actionRg;
       this.actRg = actRg;
       actRg.initialValue = numStartValue;
       actRg.waitFor = this.waitFor;
+      actRg.propType = this.propType;
     }
 
 
@@ -339,7 +345,6 @@ namespace ABeamer {
     toAction(v: ActionValue, isFirst: boolean, isLast: boolean): _Action {
       return {
         realPropName: this.realPropName,
-        propType: this.propType,
         value: v,
         actRg: this.actRg,
         numValue: this.curNumValue,
@@ -392,7 +397,7 @@ namespace ABeamer {
         if (isDifferent) {
 
           // compares numerical values taking into account the numeric precision errors
-          if (isDifferent && action.propType === PT_NUMBER) {
+          if (isDifferent && actRg.propType === PT_NUMBER) {
             const actualFloat = Math.round(parseFloat(actualNewValue as string) * _TEST_DIGIT_LIMIT);
             const newFloat = Math.round((newValue as number) * _TEST_DIGIT_LIMIT);
             isDifferent = newFloat !== actualFloat;

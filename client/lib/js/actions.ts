@@ -41,7 +41,6 @@ namespace ABeamer {
    */
   export interface _Action {
     realPropName: string;
-    propType: int;
     value: ActionValue;
     numValue: ActionNumValue;
     toBypassForward: boolean;
@@ -80,6 +79,7 @@ namespace ABeamer {
    * Two `_ActionRg` for the same property and element can't overlap each other
    */
   export interface _ActionRg {
+    propType?: uint;
     startFrame: uint;
     endFrame: uint;
     initialValue?: ActionNumValue;
@@ -174,6 +174,7 @@ namespace ABeamer {
 
     if (res.linkIndex >= 0) {
       const lastActionRg = actionRgList[res.linkIndex];
+      actionRg.propType = lastActionRg.propType;
       if (lastActionRg.endFrame >= startFrame) {
         throwErr(`overlapping property animations is not supported.` +
           `${lastActionRg.endFrame} must be higher than ${startFrame}`);
