@@ -8,7 +8,8 @@
         "text-tasks",
         "shape-tasks",
         "attack-tasks",
-        "chart-tasks"
+        "chart-tasks",
+        "color-functions"
     ],
 
     "libModules": [
