@@ -32,11 +32,11 @@ import { fsix } from "../shared/vendor/fsix.js";
 export namespace Exact {
 
   // @TODO: Implement Image compare
-  const mic = require('mocha-image-compare')({
-    report: './report',
-    threshold: 0.002,
-    highlight: 'yellow',
-  });
+  // const mic = require('mocha-image-compare')({
+  //   report: './report',
+  //   threshold: 0.002,
+  //   highlight: 'yellow',
+  // });
 
   // ------------------------------------------------------------------------
   //                               Consts
@@ -71,6 +71,7 @@ export namespace Exact {
   export type AnimeArrayType = (object | string | [StringOrCommand, string | object])[];
   export type AnimesType = string | AnimeArrayType;
   export type TestFunc = (rd: ExactResult, done, index?: int) => void;
+  export interface Tests { [name: string]: TestFunc; }
 
 
   interface ExactInMacros {
@@ -185,7 +186,7 @@ export namespace Exact {
     expectedErrors?: string[];
 
 
-    tests?: { [name: string]: TestFunc };
+    tests?: Tests;
   }
 
 
@@ -267,7 +268,7 @@ export namespace Exact {
 
     // generated properties
     tests?: TestParams[];
-    runTestParams: { [name: string]: TestFunc } = {};
+    runTestParams: Tests = {};
     testCountForHtml?: int;
 
     testFunc?: TestFunc = defaultTestFunc;

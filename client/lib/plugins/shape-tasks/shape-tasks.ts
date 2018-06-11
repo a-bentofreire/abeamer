@@ -223,10 +223,10 @@ namespace ABeamer {
       x0 = Math.min(0, x);
       y0 = Math.min(0, y);
 
-      if (isArrow) {
-        const norm = Math.sqrt(x * x + y * y);
-        // const
-      }
+      // if (isArrow) {
+      //   const norm = Math.sqrt(x * x + y * y);
+      //   // const
+      // }
 
       buildSvg(inTextHtml, 'line', Math.abs(x), Math.abs(y),
         [['x1', 0], ['y1', 0], ['x2', x], ['y2', y]], x0, y0);

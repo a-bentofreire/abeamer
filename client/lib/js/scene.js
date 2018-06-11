@@ -296,7 +296,7 @@ var ABeamer;
                 var elAnimation = new ABeamer._ElWorkAnimation();
                 elAnimation.buildElements(_this._story, _this, _this._sceneAdpt, anime);
                 if (elAnimation.elAdapters.length) {
-                    if (elAnimation.assignValues(anime, story, _this, undefined, elAnimation.elAdapters[0].getId(args), _this._frameInNr)) {
+                    if (elAnimation.assignValues(anime, story, undefined, elAnimation.elAdapters[0].getId(args), _this._frameInNr)) {
                         anime.props.forEach(function (prop) {
                             elAnimation.propInterpolators
                                 .push(prop.enabled !== false ? new ABeamer._PropInterpolator(prop) : undefined);

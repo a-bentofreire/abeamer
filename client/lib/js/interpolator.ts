@@ -379,11 +379,11 @@ namespace ABeamer {
 
       if (simulateOnly) { return; }
 
-      let prevValue: PropValue;
+      // let prevValue: PropValue;
 
-      // #debug-start
-      if (isVerbose) { prevValue = elAdapter.getProp(propName, args); }
-      // #debug-end
+      // // #debug-start
+      // if (isVerbose) { prevValue = elAdapter.getProp(propName, args); }
+      // // #debug-end
 
       elAdapter.setProp(propName, newValue, args);
 

@@ -57,7 +57,7 @@ namespace Tests {
     done();
   };
 
-  const testParams = {};
+  const testParams: Exact.Tests = {};
   tests.forEach((test, index) => {
     testParams[`t${index} left uses direction ${test.name} ${test.iterCount} `
       + `cycles goes from ${min} to ${max}`] = func;

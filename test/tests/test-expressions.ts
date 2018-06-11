@@ -119,7 +119,7 @@ namespace Tests {
     done();
   };
 
-  const testParams = {};
+  const testParams: Exact.Tests = {};
   tests.forEach((test, index) => {
     testParams[`${test.label}"${test.name}" ~> "${test.expected}"`] = func;
   });

@@ -134,7 +134,7 @@ export namespace BuildDTsFiles {
       const line = this.peek();
       const matches = line.match(new RegExp(`^${dataSpaces}(readonly )?(\\w+)(\\?)?\\s*:(.*)$`));
       if (matches) {
-        const [all, readonly, varName, optional, typeInfo] = matches;
+        const [, readonly, varName, optional, typeInfo] = matches;
 
         const outVarName = this.acceptId(varName, IdTypes.VarName);
         if (!outVarName) { return; }
@@ -150,7 +150,7 @@ export namespace BuildDTsFiles {
       const spaces = '  ';
       const matches = line.match(new RegExp(`^${spaces}export function\\s*(\\w+)(.*)\\s*$`));
       if (matches) {
-        const [all, functionName, paramsData] = matches;
+        const [, functionName, paramsData] = matches;
         this.get();
         const outFunctionName = this.acceptId(functionName, IdTypes.FunctionName);
         if (!outFunctionName) { return; }

@@ -45,7 +45,7 @@ namespace Tests {
     done();
   };
 
-  const testParams = {};
+  const testParams: Exact.Tests = {};
   tests.forEach((test, index) => {
     testParams[
       `$t${test.element} on scene${test.scene} moves for ${test.duration}`

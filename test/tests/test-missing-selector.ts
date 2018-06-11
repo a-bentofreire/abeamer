@@ -40,7 +40,7 @@ namespace Tests {
             tests: {
                 'missing t1 is bypass gracefully':
                     (rd: Exact.ExactResult, done) => {
-                        // @TODO: convert to proper tagging 
+                        // @TODO: convert to proper tagging
                         Exact.AssertHasLine(rd, ERR_EMPTY_SEL, true);
                         done();
                     },

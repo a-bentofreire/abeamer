@@ -79,7 +79,7 @@ namespace Tests {
       done();
     };
 
-    const testParams = {};
+    const testParams: Exact.Tests = {};
     tests.forEach((test, index) => {
       testParams[`t${index} left goes in ${test.duration} in ${test.frameCount} frames `
         + `with ${fps}fps from ${min} to ${max}`] = func;

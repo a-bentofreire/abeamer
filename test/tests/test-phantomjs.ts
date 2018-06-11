@@ -22,7 +22,6 @@ namespace Tests {
 
     const func = (rd: Exact.ExactResult, done, index) => {
 
-        const test = tests[index];
         rd.actions.isIdPropActions('t0', 'left',
             Exact.simulatePixelAction(
                 Exact.interpolateMinMax(min, max, rd.fps)));
@@ -30,7 +29,7 @@ namespace Tests {
         done();
     };
 
-    const testParams = {};
+    const testParams: Exact.Tests = {};
     tests.forEach((test, index) => {
         testParams[`t${index} left goes from ${min} to ${max}`] = func;
     });

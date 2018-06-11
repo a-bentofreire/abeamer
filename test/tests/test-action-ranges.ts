@@ -14,7 +14,6 @@ namespace Tests {
   const fps = 4;
   const seconds = 2;
   const absMin = 50;
-  const startFrame = 0;
 
   const elProps = [
     { elIndex: 0, prop: 'left', relMin: absMin, startFrame: 0, propType: DevConsts.PT_PIXEL },
@@ -79,7 +78,7 @@ namespace Tests {
     done();
   };
 
-  const testParams = {};
+  const testParams: Exact.Tests = {};
   tests.forEach((test, index) => {
     testParams[`${test.label}t${test.elIndex} ${test.propName}`
       + ` goes from ${test.min} to ${test.max}`] = func;

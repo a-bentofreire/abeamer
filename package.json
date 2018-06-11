@@ -48,7 +48,6 @@
     "chai": "^4.1.2",
     "font-awesome": "^4.7.0",
     "gulp": "^3.9.1",
-    "gulp-concat": "^2.6.1",
     "gulp-exec": "^3.0.1",
     "gulp-minify": "^2.1.0",
     "gulp-preservetime": "^1.2.1",

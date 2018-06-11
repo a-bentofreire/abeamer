@@ -71,7 +71,6 @@ export namespace ServerAgent {
   //                               Server
   // ------------------------------------------------------------------------
 
-  let isClientReady = false;
   const toExitOnError = true;
   let isFirstFrame = true;
 
@@ -442,7 +441,6 @@ export namespace ServerAgent {
           switch (cmd) {
 
             case sc.MSG_READY:
-              isClientReady = true;
               sendClientMsg(sc.MSG_SERVER_READY);
               break;
 
@@ -487,7 +485,6 @@ export namespace ServerAgent {
               break;
 
             case sc.MSG_SET_FRAME_NR:
-              const prevFrameNr = this.frameNr;
               this.frameNr = parseInt(value);
               if (this.isVerbose) { console.log(`frame-nr: ${this.frameNr}`); }
               this.checkForValidFrame(this.frameNr, true, `Invalid number frame nr`);

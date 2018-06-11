@@ -257,7 +257,7 @@ namespace ABeamer {
         throwIfI8n(!isPositiveNatural(iterations), Msgs.MustNatPositive, { p: 'iterations' });
         throwIfI8n(!textLen, Msgs.NoEmptyField, { p: 'text' });
 
-        let usableCharsCount = 0;
+        // let usableCharsCount = 0;
         const rangesByIndex: [number, number][][] = [];
 
         for (let charI = 0; charI < textLen; charI++) {
@@ -266,9 +266,9 @@ namespace ABeamer {
             || isInsideRange(charCode, lowerCharRanges)
             || isInsideRange(charCode, digitRanges);
 
-          if (ranges) {
-            usableCharsCount++;
-          }
+          // if (ranges) {
+          //   usableCharsCount++;
+          // }
           rangesByIndex.push(ranges);
         }
 

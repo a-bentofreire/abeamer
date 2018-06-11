@@ -160,16 +160,16 @@ var ABeamer;
                 }
                 ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(iterations), ABeamer.Msgs.MustNatPositive, { p: 'iterations' });
                 ABeamer.throwIfI8n(!textLen, ABeamer.Msgs.NoEmptyField, { p: 'text' });
-                var usableCharsCount = 0;
+                // let usableCharsCount = 0;
                 var rangesByIndex = [];
                 for (var charI = 0; charI < textLen; charI++) {
                     var charCode = text.charCodeAt(charI);
                     var ranges = isInsideRange(charCode, upperCharRanges)
                         || isInsideRange(charCode, lowerCharRanges)
                         || isInsideRange(charCode, digitRanges);
-                    if (ranges) {
-                        usableCharsCount++;
-                    }
+                    // if (ranges) {
+                    //   usableCharsCount++;
+                    // }
                     rangesByIndex.push(ranges);
                 }
                 var textInter = [];

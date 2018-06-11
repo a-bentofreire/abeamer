@@ -16,7 +16,6 @@ var Tests;
         {},
     ];
     var func = function (rd, done, index) {
-        var test = tests[index];
         rd.actions.isIdPropActions('t0', 'left', exact_js_1.Exact.simulatePixelAction(exact_js_1.Exact.interpolateMinMax(min, max, rd.fps)));
         done();
     };

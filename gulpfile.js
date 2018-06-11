@@ -46,7 +46,6 @@ var Gulp;
     // const htmlmin = require('gulp-htmlmin');
     var gulpMinify = require('gulp-minify');
     var gulpReplace = require('gulp-replace');
-    var gulpConcat = require('gulp-concat');
     // const preprocess = require('gulp-preprocess');
     var gulpPreserveTime = require('gulp-preservetime');
     // const autoprefixer = require('gulp-autoprefixer');

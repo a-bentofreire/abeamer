@@ -54,7 +54,6 @@ namespace Gulp {
   // const htmlmin = require('gulp-htmlmin');
   const gulpMinify = require('gulp-minify');
   const gulpReplace = require('gulp-replace');
-  const gulpConcat = require('gulp-concat');
   // const preprocess = require('gulp-preprocess');
   const gulpPreserveTime = require('gulp-preservetime');
   // const autoprefixer = require('gulp-autoprefixer');

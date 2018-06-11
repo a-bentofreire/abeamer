@@ -230,7 +230,7 @@ export namespace BuildDocs {
     private jsDocs: string[] = [];
     private outerSpaces: string;
     private innerSpaces: string;
-    private isReadOnly: boolean = false;
+    // private isReadOnly: boolean = false;
     private isInsideClassOrInterface = false;
     private classOrInterfaceName = '';
     private disabledClassOrInterface = false;
@@ -240,8 +240,7 @@ export namespace BuildDocs {
     private lastPeekLineNr = 0;
 
     constructor(private localWebLinks: LocalWebLinks,
-      private isEndUser: boolean,
-      private moduleType: ModuleType) { }
+      private isEndUser: boolean) { }
 
 
     private getLine(peekOnly: boolean = false): string {
@@ -313,7 +312,7 @@ export namespace BuildDocs {
 
       const svJsDocs = this.jsDocs;
       this.jsDocs = [];
-      this.isReadOnly = false;
+      // this.isReadOnly = false;
       accessTag = this._processAccessTag(accessTag);
       badges = this._prepareBadges(id, idType, badges, accessTag, exportTag);
 
@@ -355,7 +354,7 @@ export namespace BuildDocs {
           });
 
           line = line.replace(/\s*\*\s*#end-user\s+@readonly\s*/, () => {
-            this.isReadOnly = true;
+            // this.isReadOnly = true;
             return '';
           });
 
@@ -440,7 +439,7 @@ export namespace BuildDocs {
 
 
     private parseFunction(): void {
-      const [all, spaces, exportTag, id] = this.getLine(true)
+      const [, spaces, exportTag, id] = this.getLine(true)
         .match(/^(\s*)(export\s+)?function\s+(\w+)\b/) || EMPTY;
       if (spaces === this.outerSpaces) {
         let line = this.getLine();
@@ -458,7 +457,7 @@ export namespace BuildDocs {
 
 
     private parseType(): void {
-      const [all, spaces, exportTag, id] = this.getLine(true)
+      const [, spaces, exportTag, id] = this.getLine(true)
         .match(/^(\s*)(export\s+)?type\s+(\w+)\b/) || EMPTY;
       if (spaces === this.outerSpaces) {
         this.addId(id, DocIdType.TypeName,
@@ -469,7 +468,7 @@ export namespace BuildDocs {
 
 
     private parseEnum(): void {
-      const [all, spaces, constTag, exportTag, id] = this.getLine(true)
+      const [, spaces, constTag, exportTag, id] = this.getLine(true)
         .match(/^(\s*)(export\s+)?(const\s+)?enum\s+(\w+)\b/) || EMPTY;
       if (spaces === this.outerSpaces) {
         this.addId(id, DocIdType.EnumName,
@@ -480,7 +479,7 @@ export namespace BuildDocs {
 
 
     private parseConst(): void {
-      const [all, spaces, exportTag, id] = this.getLine(true)
+      const [, spaces, exportTag, id] = this.getLine(true)
         .match(/^(\s*)(export\s+)?const\s+(\w+)\b/) || EMPTY;
       if (spaces === this.outerSpaces) {
         this.addId(id, DocIdType.ConstName,
@@ -688,8 +687,7 @@ export namespace BuildDocs {
 
 
       if ((!isEndUser) || moduleType === 'end-user') {
-        const docParser = new DocParser(localWebLinks, isEndUser,
-          ModuleType[moduleType]);
+        const docParser = new DocParser(localWebLinks, isEndUser);
 
         docParser.parseFileData(preDocText + inpText);
         if (docParser.outLines.length) {

@@ -26,11 +26,11 @@ var fsix_js_1 = require("../shared/vendor/fsix.js");
 var Exact;
 (function (Exact) {
     // @TODO: Implement Image compare
-    var mic = require('mocha-image-compare')({
-        report: './report',
-        threshold: 0.002,
-        highlight: 'yellow',
-    });
+    // const mic = require('mocha-image-compare')({
+    //   report: './report',
+    //   threshold: 0.002,
+    //   highlight: 'yellow',
+    // });
     // ------------------------------------------------------------------------
     //                               Consts
     // ------------------------------------------------------------------------

@@ -104,7 +104,7 @@ var ABeamer;
     var _AbstractWorkAnimation = /** @class */ (function () {
         function _AbstractWorkAnimation() {
         }
-        _AbstractWorkAnimation.prototype.assignValues = function (acp, story, scene, parent, nameTag, refOrDef) {
+        _AbstractWorkAnimation.prototype.assignValues = function (acp, story, parent, nameTag, refOrDef) {
             var args = story._args;
             this.framesPerCycle = ABeamer.parseTimeHandler(acp.duration, args, parent ? parent.framesPerCycle : ABeamer.DEFAULT_DURATION, 0);
             this.itemDelay = ABeamer._parseItemDelay(acp, args);
@@ -218,7 +218,7 @@ var ABeamer;
             return _this;
         }
         _WorkAnimationProp.prototype.propAssignValues = function (acp, story, scene, ai, elIndex) {
-            if (!this.assignValues(acp, story, scene, ai, this.realPropName, ai.nextPropStartFrame !== undefined ? ai.nextPropStartFrame : ai.positionFrame)) {
+            if (!this.assignValues(acp, story, ai, this.realPropName, ai.nextPropStartFrame !== undefined ? ai.nextPropStartFrame : ai.positionFrame)) {
                 return false;
             }
             var startFrame = this.positionFrame +

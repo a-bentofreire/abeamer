@@ -150,7 +150,7 @@ namespace Tests {
     done();
   };
 
-  const testParams = {};
+  const testParams: Exact.Tests = {};
   renders.forEach((render, index) => {
     testParams[render.test.name] = func;
   });

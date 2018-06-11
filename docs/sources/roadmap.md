@@ -10,8 +10,7 @@
 
 - Expressions with Numeric Array.
 - Expressions with 'NOT' operators.
-- `advance` parameter in Animation property to keep the pipeline in the same point
-after an animation.
+- Slide elements.
 - Improved Shape task with animation support.
 - Arrow shape task.
 - Chart tasks.
@@ -23,9 +22,9 @@ after an animation.
 - Cut parameters for harmonic oscillator.
 - Glitch attack task.
 - Color band attack task.
-- Time functions plugin.
-- Formatter functions plugin.
-- Color functions plugin.
+- CreateTime functions plugin.
+- Create Formatter functions plugin.
+- Color functions plugin with more functions.
 
 ### In a study phase
 

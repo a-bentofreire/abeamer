@@ -12,7 +12,6 @@ var Tests;
     var fps = 4;
     var seconds = 2;
     var absMin = 50;
-    var startFrame = 0;
     var elProps = [
         { elIndex: 0, prop: 'left', relMin: absMin, startFrame: 0, propType: dev_consts_js_1.DevConsts.PT_PIXEL },
         { elIndex: 0, prop: 'top', relMin: absMin, startFrame: 0, propType: dev_consts_js_1.DevConsts.PT_PIXEL },

@@ -95,7 +95,7 @@ namespace Tests {
     done();
   };
 
-  const testParams = {};
+  const testParams: Exact.Tests = {};
   tests.forEach((test, index) => {
     testParams[`t${index} ${test.prop} uses ${test.name}`] = func;
   });

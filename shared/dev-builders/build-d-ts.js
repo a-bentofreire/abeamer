@@ -118,7 +118,7 @@ var BuildDTsFiles;
             var line = this.peek();
             var matches = line.match(new RegExp("^" + dataSpaces + "(readonly )?(\\w+)(\\?)?\\s*:(.*)$"));
             if (matches) {
-                var all = matches[0], readonly = matches[1], varName = matches[2], optional = matches[3], typeInfo = matches[4];
+                var readonly = matches[1], varName = matches[2], optional = matches[3], typeInfo = matches[4];
                 var outVarName = this.acceptId(varName, IdTypes.VarName);
                 if (!outVarName) {
                     return;
@@ -133,7 +133,7 @@ var BuildDTsFiles;
             var spaces = '  ';
             var matches = line.match(new RegExp("^" + spaces + "export function\\s*(\\w+)(.*)\\s*$"));
             if (matches) {
-                var all = matches[0], functionName = matches[1], paramsData = matches[2];
+                var functionName = matches[1], paramsData = matches[2];
                 this.get();
                 var outFunctionName = this.acceptId(functionName, IdTypes.FunctionName);
                 if (!outFunctionName) {

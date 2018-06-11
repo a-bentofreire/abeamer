@@ -74,7 +74,7 @@ namespace Tests {
     done();
   };
 
-  const testParams = {};
+  const testParams: Exact.Tests = {};
   tests.forEach((test, index) => {
     testParams[!test.isStill
       ? `${test.name} - t0 moves for ${test.duration} at ${test.position || ''}`

@@ -556,7 +556,6 @@ namespace ABeamer {
     assignValues(
       acp: AnimationCommonParams,
       story: _StoryImpl,
-      scene: _SceneImpl,
       parent: _AbstractWorkAnimation | undefined,
       nameTag: string,
       refOrDef: uint,
@@ -738,7 +737,7 @@ namespace ABeamer {
       elIndex: uint,
     ): boolean {
 
-      if (!this.assignValues(acp, story, scene, ai, this.realPropName,
+      if (!this.assignValues(acp, story, ai, this.realPropName,
         ai.nextPropStartFrame !== undefined ? ai.nextPropStartFrame : ai.positionFrame,
       )) {
         return false;

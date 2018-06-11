@@ -33,7 +33,7 @@ var Tests;
         expectedErrors: [ERR_EMPTY_SEL],
         tests: {
             'missing t1 is bypass gracefully': function (rd, done) {
-                // @TODO: convert to proper tagging 
+                // @TODO: convert to proper tagging
                 exact_js_1.Exact.AssertHasLine(rd, ERR_EMPTY_SEL, true);
                 done();
             },

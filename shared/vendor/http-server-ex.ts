@@ -9,7 +9,6 @@
 /** @module internal | This module is to be read only by developers */
 
 import * as sysFs from "fs";
-import * as sysPath from "path";
 import * as sysHttp from "http";
 
 import { HttpServer } from "./http-server.js";

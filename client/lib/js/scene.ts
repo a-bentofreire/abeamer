@@ -358,7 +358,7 @@ namespace ABeamer {
 
         if (elAnimation.elAdapters.length) {
 
-          if (elAnimation.assignValues(anime, story, this, undefined,
+          if (elAnimation.assignValues(anime, story, undefined,
             elAnimation.elAdapters[0].getId(args), this._frameInNr)) {
             anime.props.forEach(prop => {
               elAnimation.propInterpolators

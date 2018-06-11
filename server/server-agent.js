@@ -59,7 +59,6 @@ var ServerAgent;
     // ------------------------------------------------------------------------
     //                               Server
     // ------------------------------------------------------------------------
-    var isClientReady = false;
     var toExitOnError = true;
     var isFirstFrame = true;
     var BaseServer = /** @class */ (function () {
@@ -391,7 +390,6 @@ var ServerAgent;
                     }
                     switch (cmd) {
                         case sc.MSG_READY:
-                            isClientReady = true;
                             sendClientMsg(sc.MSG_SERVER_READY);
                             break;
                         case sc.MSG_RENDER:
@@ -433,7 +431,6 @@ var ServerAgent;
                             this.generateReport();
                             break;
                         case sc.MSG_SET_FRAME_NR:
-                            var prevFrameNr = this.frameNr;
                             this.frameNr = parseInt(value);
                             if (this.isVerbose) {
                                 console.log("frame-nr: " + this.frameNr);

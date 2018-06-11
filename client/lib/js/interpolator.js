@@ -314,12 +314,10 @@ var ABeamer;
             if (simulateOnly) {
                 return;
             }
-            var prevValue;
-            // #debug-start
-            if (isVerbose) {
-                prevValue = elAdapter.getProp(propName, args);
-            }
-            // #debug-end
+            // let prevValue: PropValue;
+            // // #debug-start
+            // if (isVerbose) { prevValue = elAdapter.getProp(propName, args); }
+            // // #debug-end
             elAdapter.setProp(propName, newValue, args);
             // #debug-start
             if (isVerbose) {

@@ -171,15 +171,14 @@ var BuildDocs;
         5 /* ClassName */, 3 /* FunctionName */,
     ];
     var DocParser = /** @class */ (function () {
-        function DocParser(localWebLinks, isEndUser, moduleType) {
+        function DocParser(localWebLinks, isEndUser) {
             var _this = this;
             this.localWebLinks = localWebLinks;
             this.isEndUser = isEndUser;
-            this.moduleType = moduleType;
             this.outLines = [];
             this.inpLines = [];
             this.jsDocs = [];
-            this.isReadOnly = false;
+            // private isReadOnly: boolean = false;
             this.isInsideClassOrInterface = false;
             this.classOrInterfaceName = '';
             this.disabledClassOrInterface = false;
@@ -243,7 +242,7 @@ var BuildDocs;
         DocParser.prototype.addId = function (id, idType, line, badges, accessTag, exportTag) {
             var svJsDocs = this.jsDocs;
             this.jsDocs = [];
-            this.isReadOnly = false;
+            // this.isReadOnly = false;
             accessTag = this._processAccessTag(accessTag);
             badges = this._prepareBadges(id, idType, badges, accessTag, exportTag);
             if (!this._allowId(id, idType, accessTag, exportTag)) {
@@ -263,7 +262,6 @@ var BuildDocs;
             return true;
         };
         DocParser.prototype.parseJsDocs = function () {
-            var _this = this;
             this.lastJsDocsLineNr = -1;
             if (this.getLine(true).match(/^\s*\/\*\*/)) {
                 this.jsDocs = [];
@@ -276,7 +274,7 @@ var BuildDocs;
                         return '';
                     });
                     line = line.replace(/\s*\*\s*#end-user\s+@readonly\s*/, function () {
-                        _this.isReadOnly = true;
+                        // this.isReadOnly = true;
                         return '';
                     });
                     line = line.replace(/^\s*\/?\*{1,2}\s*/, '');
@@ -343,7 +341,7 @@ var BuildDocs;
         };
         DocParser.prototype.parseFunction = function () {
             var _a = this.getLine(true)
-                .match(/^(\s*)(export\s+)?function\s+(\w+)\b/) || EMPTY, all = _a[0], spaces = _a[1], exportTag = _a[2], id = _a[3];
+                .match(/^(\s*)(export\s+)?function\s+(\w+)\b/) || EMPTY, spaces = _a[1], exportTag = _a[2], id = _a[3];
             if (spaces === this.outerSpaces) {
                 var line = this.getLine();
                 this.addId(id, 3 /* FunctionName */, this._processDefContent(line, false), [], undefined, exportTag);
@@ -358,21 +356,21 @@ var BuildDocs;
         };
         DocParser.prototype.parseType = function () {
             var _a = this.getLine(true)
-                .match(/^(\s*)(export\s+)?type\s+(\w+)\b/) || EMPTY, all = _a[0], spaces = _a[1], exportTag = _a[2], id = _a[3];
+                .match(/^(\s*)(export\s+)?type\s+(\w+)\b/) || EMPTY, spaces = _a[1], exportTag = _a[2], id = _a[3];
             if (spaces === this.outerSpaces) {
                 this.addId(id, 1 /* TypeName */, this._processDefContent(this.getLine(), true), [], undefined, exportTag);
             }
         };
         DocParser.prototype.parseEnum = function () {
             var _a = this.getLine(true)
-                .match(/^(\s*)(export\s+)?(const\s+)?enum\s+(\w+)\b/) || EMPTY, all = _a[0], spaces = _a[1], constTag = _a[2], exportTag = _a[3], id = _a[4];
+                .match(/^(\s*)(export\s+)?(const\s+)?enum\s+(\w+)\b/) || EMPTY, spaces = _a[1], constTag = _a[2], exportTag = _a[3], id = _a[4];
             if (spaces === this.outerSpaces) {
                 this.addId(id, 0 /* EnumName */, this._processDefContent(this.getLine(), false), [constTag], undefined, exportTag);
             }
         };
         DocParser.prototype.parseConst = function () {
             var _a = this.getLine(true)
-                .match(/^(\s*)(export\s+)?const\s+(\w+)\b/) || EMPTY, all = _a[0], spaces = _a[1], exportTag = _a[2], id = _a[3];
+                .match(/^(\s*)(export\s+)?const\s+(\w+)\b/) || EMPTY, spaces = _a[1], exportTag = _a[2], id = _a[3];
             if (spaces === this.outerSpaces) {
                 this.addId(id, 2 /* ConstName */, this._processDefContent(this.getLine(), true), [exportTag]);
             }
@@ -522,7 +520,7 @@ var BuildDocs;
                 preDocText = fsix_js_1.fsix.readUtf8Sync(apiFileName) + '\n';
             }
             if ((!isEndUser) || moduleType === 'end-user') {
-                var docParser = new DocParser(localWebLinks, isEndUser, ModuleType[moduleType]);
+                var docParser = new DocParser(localWebLinks, isEndUser);
                 docParser.parseFileData(preDocText + inpText);
                 if (docParser.outLines.length) {
                     outText += '  \n<div class=api-header>&nbsp;</div>\n#API\n' + docParser.outLines.join('\n');

@@ -53,7 +53,7 @@ export namespace BuildShared {
         }
 
         // adds extra line if a different constant group
-        const [all, keyword, id] = line.match(/^(\w+)\s+(\w+)/) || ['', '', ''];
+        const [, , id] = line.match(/^(\w+)\s+(\w+)/) || ['', '', ''];
         const idParts = id.split('_');
         if (lastIdPart && lastIdPart !== idParts[0]) {
           sharedConsts.push('');

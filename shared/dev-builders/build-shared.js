@@ -34,7 +34,7 @@ var BuildShared;
                     found = true;
                 }
                 // adds extra line if a different constant group
-                var _a = line.match(/^(\w+)\s+(\w+)/) || ['', '', ''], all = _a[0], keyword = _a[1], id = _a[2];
+                var _a = line.match(/^(\w+)\s+(\w+)/) || ['', '', ''], id = _a[2];
                 var idParts = id.split('_');
                 if (lastIdPart && lastIdPart !== idParts[0]) {
                     sharedConsts.push('');
