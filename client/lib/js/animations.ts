@@ -79,6 +79,21 @@ namespace ABeamer {
     enabled?: boolean;
 
     /**
+     * A `Scene.addAnimations` runs its list of animations and properties in parallel,
+     * and at the end of last animation it moves the position forward.
+     * Setting the `advance`:
+     * 1. To `true` of an animation property will move forward the position
+     * for the next property animation, but not the animation.
+     * The property of each element moves independently.
+     * 2. To `true` of an animation that isn't the last one, will move forward
+     * for the next animation within the list.
+     * The value used with the maximum of all the elements of the all the properties
+     * of the previous animation.
+     * 3. To `false` of the last animation, it won't move forward at the end.
+     */
+    advance?: boolean;
+
+    /**
      * Defines the duration of the animation of a single cycle
      * in terms of frames, seconds, minutes or milliseconds.
      * The total duration is `duration*(iterationCount + 1)`.
@@ -529,6 +544,7 @@ namespace ABeamer {
 
     framesPerCycle: int;
     positionFrame: int;
+    advance: boolean;
 
     easing?: _WorkInterpolator<EasingHandler, EasingFunc, EasingParams>;
     oscillator?: _WorkInterpolator<OscillatorHandler, OscillatorFunc, OscillatorParams>;
@@ -536,12 +552,14 @@ namespace ABeamer {
 
     itemDelay?: _ItemDelay;
 
+
     assignValues(
       acp: AnimationCommonParams,
       story: _StoryImpl,
       scene: _SceneImpl,
-      parent?: _AbstractWorkAnimation | undefined,
-      nameTag?: string,
+      parent: _AbstractWorkAnimation | undefined,
+      nameTag: string,
+      refOrDef: uint,
 
     ): boolean {
 
@@ -566,8 +584,8 @@ namespace ABeamer {
         }
       }
 
-      const refOrDef = parent ? parent.positionFrame : scene._frameInNr;
       this.positionFrame = parseTimeHandler(acp.position, args, refOrDef, refOrDef);
+      this.advance = acp.advance;
 
       if (!story._strictMode) {
         if (this.positionFrame < 0) {
@@ -624,6 +642,7 @@ namespace ABeamer {
 
     elAdapters: _ElementAdapter[] = [];
     propInterpolators: _PropInterpolator[] = [];
+    nextPropStartFrame: uint;
 
     buildElements(story: _StoryImpl, scene: _SceneImpl,
       sceneAdpt: _SceneAdapter, anime: Animation) {
@@ -674,6 +693,9 @@ namespace ABeamer {
 
     scaleDuration: int;
     iterationCount: uint;
+    totalDuration: uint;
+    startFrame: uint;
+    endFrame: uint;
     dirPair: _DirPair;
 
     bypassForwardMode?: BypassMode;
@@ -705,6 +727,32 @@ namespace ABeamer {
           waitItem.prop = waitItem.prop || this.propName;
           return waitItem;
         });
+    }
+
+
+    propAssignValues(
+      acp: AnimationCommonParams,
+      story: _StoryImpl,
+      scene: _SceneImpl,
+      ai: _ElWorkAnimation,
+      elIndex: uint,
+    ): boolean {
+
+      if (!this.assignValues(acp, story, scene, ai, this.realPropName,
+        ai.nextPropStartFrame !== undefined ? ai.nextPropStartFrame : ai.positionFrame,
+      )) {
+        return false;
+      }
+
+      const startFrame = this.positionFrame +
+        (this.itemDelay.duration ? _computeItemDelay(this.itemDelay, elIndex) : 0);
+
+      this.startFrame = startFrame;
+      this.totalDuration = this.framesPerCycle * this.scaleDuration;
+      this.endFrame = this.totalDuration + startFrame;
+
+      ai.nextPropStartFrame = this.advance === true ? this.endFrame : undefined;
+      return true;
     }
   }
 

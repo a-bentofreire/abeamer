@@ -3,7 +3,7 @@
   "uuid": "f709f52e-de91-4010-bca1-4cfb921fd995",
   "displayName": "abeamer",
   "description": "Batch Animation EcoSystem",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "publisher": "a-bentofreire",
   "keywords": [
     "animation",
@@ -130,6 +130,7 @@
     "test-flyovers": "mocha test/tests/test-flyovers.js",
     "test-phantomjs": "mocha test/tests/test-phantomjs.js",
     "test-render-frame-options": "mocha test/tests/test-render-frame-options.js",
-    "test-expressions": "mocha test/tests/test-expressions.js"
+    "test-expressions": "mocha test/tests/test-expressions.js",
+    "test-advance": "mocha test/tests/test-advance.js"
   }
 }

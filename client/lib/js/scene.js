@@ -296,7 +296,7 @@ var ABeamer;
                 var elAnimation = new ABeamer._ElWorkAnimation();
                 elAnimation.buildElements(_this._story, _this, _this._sceneAdpt, anime);
                 if (elAnimation.elAdapters.length) {
-                    if (elAnimation.assignValues(anime, story, _this, undefined, elAnimation.elAdapters[0].getId(args))) {
+                    if (elAnimation.assignValues(anime, story, _this, undefined, elAnimation.elAdapters[0].getId(args), _this._frameInNr)) {
                         anime.props.forEach(function (prop) {
                             elAnimation.propInterpolators
                                 .push(prop.enabled !== false ? new ABeamer._PropInterpolator(prop) : undefined);
@@ -334,6 +334,7 @@ var ABeamer;
             var maxEndFrame = this._frameInNr;
             var isVerbose = this._story._isVerbose;
             var prevStage = story._args.stage;
+            var advanceInTheEnd = true;
             story._exceptIfRendering();
             if (story._teleporter.active) {
                 ABeamer._prepareAnimationsForTeleporting(animes, args);
@@ -365,6 +366,7 @@ var ABeamer;
                 animes = wkAnimes_1;
                 // 2st pass - preprocess interpolators
                 var animeInterpolators_1 = this._initInterpolators(animes);
+                var animeAdvanceValue_1 = 0;
                 // 3st pass - compute values
                 animes.forEach(function (anime, animeIndex) {
                     var ai = animeInterpolators_1[animeIndex];
@@ -374,28 +376,37 @@ var ABeamer;
                     var propInterpolators = ai.propInterpolators;
                     var elementAdapters = ai.elAdapters;
                     ABeamer._vars.elCount = elementAdapters.length;
+                    if (animeAdvanceValue_1) {
+                        ai.positionFrame += animeAdvanceValue_1;
+                    }
+                    if (animeIndex === animes.length - 1) {
+                        advanceInTheEnd = ai.advance !== false;
+                    }
                     elementAdapters.forEach(function (elementAdpt, elIndex) {
                         ABeamer._vars.elIndex = elIndex;
                         var wkTasks = wkAnimesTasks_1[animeIndex];
                         if (wkTasks) {
                             ABeamer._runTasks(wkTasks, anime, animeIndex, args);
                         }
+                        ai.nextPropStartFrame = undefined;
                         anime.props.forEach(function (inProp, propIndex) {
                             var pi = propInterpolators[propIndex];
                             // properties can override the anime values
-                            if (!pi || !pi.assignValues(inProp, story, _this, ai)) {
+                            if (!pi || !pi.propAssignValues(inProp, story, _this, ai, elIndex)) {
                                 return;
                             }
-                            var pos = pi.positionFrame + (pi.itemDelay.duration
-                                ? ABeamer._computeItemDelay(pi.itemDelay, elIndex) : 0);
-                            var totalDuration = pi.framesPerCycle * pi.scaleDuration;
-                            var endPos = totalDuration + pos;
-                            if (endPos > _this._frameCount) {
-                                _this._frames.length = endPos;
-                                _this._frameCount = endPos;
+                            var posFrame = pi.startFrame;
+                            var endFrame = pi.endFrame;
+                            var totalDuration = pi.totalDuration;
+                            if (endFrame > _this._frameCount) {
+                                _this._frames.length = endFrame;
+                                _this._frameCount = endFrame;
                             }
-                            maxEndFrame = Math.max(maxEndFrame, endPos);
-                            var elActRg = ABeamer._findActionRg(_this._actionRgMaps, elementAdpt, pi.realPropName, pos, endPos - 1, args);
+                            maxEndFrame = Math.max(maxEndFrame, endFrame);
+                            if (ai.advance) {
+                                animeAdvanceValue_1 = Math.max(animeAdvanceValue_1, endFrame - _this._frameInNr);
+                            }
+                            var elActRg = ABeamer._findActionRg(_this._actionRgMaps, elementAdpt, pi.realPropName, posFrame, endFrame - 1, args);
                             pi.attachSelector(elementAdpt, elActRg, isVerbose, args);
                             var frameI = pi.dirPair[0] === 1 ? 0 : (pi.framesPerCycle - 1);
                             var v;
@@ -405,7 +416,7 @@ var ABeamer;
                                 _this._story.logFrmt('action-range', [
                                     ['id', elementAdpt.getId(args)],
                                     ['prop', pi.propName],
-                                    ['frame', pi.positionFrame],
+                                    ['frame', posFrame],
                                     ['total', totalDuration]
                                 ]);
                             }
@@ -415,8 +426,8 @@ var ABeamer;
                                 v = pi.interpolate(t, story, isVerbose);
                                 action = pi.toAction(v, i === 0, i === totalDuration - 1);
                                 frameI = ABeamer._computeIterationCount(i, frameI, pi.dirPair, pi.framesPerCycle);
-                                _this._setActionOnFrames(pos, elementAdpt, pi, action, v);
-                                pos++;
+                                _this._setActionOnFrames(posFrame, elementAdpt, pi, action, v);
+                                posFrame++;
                             }
                             // stores the last output value in the ActRg
                             var outputValue = ABeamer._applyAction(action, elementAdpt, false, args, true);
@@ -429,7 +440,16 @@ var ABeamer;
                 throw error;
             }
             finally {
-                this._frameInNr = maxEndFrame;
+                if (advanceInTheEnd) {
+                    this._frameInNr = maxEndFrame;
+                }
+                else {
+                    // #debug-start
+                    if (isVerbose) {
+                        this._story.logFrmt('no-advance-in-end', []);
+                    }
+                    // #debug-end
+                }
                 this._addAnimationCallCount--;
                 if (!this._addAnimationCallCount) {
                     args.stage = prevStage;

@@ -108,11 +108,11 @@ var Exact;
             var _this = this;
             return {
                 fps: this.fps,
-                css: this.tests.map(function (test, index) {
+                css: this.tests.map(function (test) {
                     return "#" + test.elName + " {" + (test.isPosAbsolute ? 'position: absolute; ' : '')
                         + (test.prop + ": " + test.min + "px}");
                 }).join('\n'),
-                animes: this.tests.map(function (test, index) {
+                animes: this.tests.map(function (test) {
                     return _this.getTestAnime(test);
                 }),
                 html: Exact.genTestHtml(this.testCountForHtml, this.cssClassesForHtml),
@@ -448,7 +448,7 @@ var Exact;
     // ------------------------------------------------------------------------
     //                               parseAnimes
     // ------------------------------------------------------------------------
-    function parseAnimes(jsAnimes) {
+    function parseAnimes(jsAnimes, parallelAnimes) {
         var PRE_ADD_TRY_CATCH = "try {";
         var POST_ADD_TRY_CATCH = "\n} catch (error) {\n  story.logFrmt('EXCEPTION', [['index', __INDEX__], ['error', error]]);\n  if (!independentCases) story.exit();\n}\n";
         jsAnimes = (typeof jsAnimes === 'object') ? jsAnimes : [jsAnimes];
@@ -476,7 +476,8 @@ var Exact;
                 }
             }
             if (typeof jsAnime === 'object') {
-                jsAnime = '[' + Exact.obj2String(jsAnime) + ']';
+                jsAnime = Array.isArray(jsAnime) && parallelAnimes && parallelAnimes[animeIndex]
+                    ? Exact.obj2String(jsAnime) : '[' + Exact.obj2String(jsAnime) + ']';
             }
             if (toWrapAddAnimations) {
                 jsAnime = "\nscene" + sceneNr + ".addAnimations("
@@ -494,7 +495,7 @@ var Exact;
     // ------------------------------------------------------------------------
     function initInMacros(inMacros, params) {
         if (inMacros.animes) {
-            inMacros.js = parseAnimes(inMacros.animes);
+            inMacros.js = parseAnimes(inMacros.animes, params.parallelAnimes);
             inMacros.animes = undefined;
         }
         if (params.jsMacros) {

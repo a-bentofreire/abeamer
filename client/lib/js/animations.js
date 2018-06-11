@@ -104,7 +104,7 @@ var ABeamer;
     var _AbstractWorkAnimation = /** @class */ (function () {
         function _AbstractWorkAnimation() {
         }
-        _AbstractWorkAnimation.prototype.assignValues = function (acp, story, scene, parent, nameTag) {
+        _AbstractWorkAnimation.prototype.assignValues = function (acp, story, scene, parent, nameTag, refOrDef) {
             var args = story._args;
             this.framesPerCycle = ABeamer.parseTimeHandler(acp.duration, args, parent ? parent.framesPerCycle : ABeamer.DEFAULT_DURATION, 0);
             this.itemDelay = ABeamer._parseItemDelay(acp, args);
@@ -122,8 +122,8 @@ var ABeamer;
                     ABeamer.throwErr(nameTag + " has invalid duration frames: " + this.framesPerCycle);
                 }
             }
-            var refOrDef = parent ? parent.positionFrame : scene._frameInNr;
             this.positionFrame = ABeamer.parseTimeHandler(acp.position, args, refOrDef, refOrDef);
+            this.advance = acp.advance;
             if (!story._strictMode) {
                 if (this.positionFrame < 0) {
                     story.logMsg(nameTag + " has invalid position: " + this.positionFrame);
@@ -217,6 +217,18 @@ var ABeamer;
                 });
             return _this;
         }
+        _WorkAnimationProp.prototype.propAssignValues = function (acp, story, scene, ai, elIndex) {
+            if (!this.assignValues(acp, story, scene, ai, this.realPropName, ai.nextPropStartFrame !== undefined ? ai.nextPropStartFrame : ai.positionFrame)) {
+                return false;
+            }
+            var startFrame = this.positionFrame +
+                (this.itemDelay.duration ? ABeamer._computeItemDelay(this.itemDelay, elIndex) : 0);
+            this.startFrame = startFrame;
+            this.totalDuration = this.framesPerCycle * this.scaleDuration;
+            this.endFrame = this.totalDuration + startFrame;
+            ai.nextPropStartFrame = this.advance === true ? this.endFrame : undefined;
+            return true;
+        };
         return _WorkAnimationProp;
     }(_AbstractWorkAnimation));
     ABeamer._WorkAnimationProp = _WorkAnimationProp;

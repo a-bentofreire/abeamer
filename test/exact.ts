@@ -79,6 +79,7 @@ export namespace Exact {
     fps?: int;
     css?: string;
     js?: string;
+    /** To run animations in parallel enclose on brackets and set parallelAnimes. */
     animes?: AnimesType;
     html?: string;
   }
@@ -158,11 +159,16 @@ export namespace Exact {
     toLogActions?: boolean;
 
 
+    /** Boolean list of animations indexes that run in parallel. */
+    parallelAnimes?: boolean[];
+
+
     /**
      * Sends to console the execution time.
      * @default True
      */
     toNotTimeExecution?: boolean;
+
 
     /** Set to true, if an exception in a test case should stop all test cases */
     casesAreDependent?: boolean;
@@ -331,11 +337,11 @@ export namespace Exact {
     getInMacros() {
       return {
         fps: this.fps,
-        css: this.tests.map((test, index) =>
+        css: this.tests.map((test) =>
           `#${test.elName} {${test.isPosAbsolute ? 'position: absolute; ' : ''}`
           + `${test.prop}: ${test.min}px}`).join('\n'),
         animes:
-          this.tests.map((test, index) => {
+          this.tests.map((test) => {
             return this.getTestAnime(test);
           }),
         html: Exact.genTestHtml(this.testCountForHtml, this.cssClassesForHtml),
@@ -782,7 +788,7 @@ export namespace Exact {
   //                               parseAnimes
   // ------------------------------------------------------------------------
 
-  function parseAnimes(jsAnimes: AnimesType): string {
+  function parseAnimes(jsAnimes: AnimesType, parallelAnimes: boolean[]): string {
     const PRE_ADD_TRY_CATCH = `try {`;
     const POST_ADD_TRY_CATCH = `
 } catch (error) {
@@ -820,8 +826,10 @@ export namespace Exact {
             break;
         }
       }
+
       if (typeof jsAnime === 'object') {
-        jsAnime = '[' + obj2String(jsAnime) + ']';
+        jsAnime = Array.isArray(jsAnime) && parallelAnimes && parallelAnimes[animeIndex]
+          ? obj2String(jsAnime) : '[' + obj2String(jsAnime) + ']';
       }
 
       if (toWrapAddAnimations) {
@@ -846,7 +854,7 @@ export namespace Exact {
     params: ExactParams): void {
 
     if (inMacros.animes) {
-      inMacros.js = parseAnimes(inMacros.animes);
+      inMacros.js = parseAnimes(inMacros.animes, params.parallelAnimes);
       inMacros.animes = undefined;
     }
 

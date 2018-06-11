@@ -23,7 +23,6 @@ var __extends = (this && this.__extends) || (function () {
  */
 var ABeamer;
 (function (ABeamer) {
-    var VALUE_MACRO = '__VALUE__';
     /** Var used only for internal testing via exact framework  */
     ABeamer._TEST_DIGIT_LIMIT = 1000;
     // ------------------------------------------------------------------------
@@ -247,7 +246,6 @@ var ABeamer;
                     v = values[0];
                 }
             }
-            var inProp = this.animProp;
             var value = v;
             var valueFormat = this.animProp.valueFormat;
             var propType = this.propType;

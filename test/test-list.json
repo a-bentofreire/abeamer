@@ -17,6 +17,7 @@
     "test-flyovers",
     "test-action-ranges",
     "test-render-frame-options",
-    "test-expressions"
+    "test-expressions",
+    "test-advance"
   ]
 }

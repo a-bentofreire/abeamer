@@ -30,12 +30,12 @@ $(window).on("load", () => {
         {
           prop: 'opacity',
           duration: '0.5s',
+          advance: true,
         },
         {
           prop: 'transform',
           valueFormat: 'rotate(%fdeg)',
           duration: '1s',
-          position: '+0.5s',
           value: 100,
         }],
     }])
@@ -60,12 +60,12 @@ $(window).on("load", () => {
         {
           prop: 'opacity',
           duration: '0.5s',
+          advance: true,
         },
         {
           prop: 'transform',
           valueFormat: 'rotate(%fdeg)',
           duration: '1s',
-          position: '+0.5s',
           value: 100,
         }],
     }]).addAnimations([{
@@ -117,12 +117,12 @@ $(window).on("load", () => {
         {
           prop: 'left',
           duration: '1s',
+          advance: true,
           easing: 'easeInCubic',
           value: 52,
         },
         {
           prop: 'left',
-          position: '+1s',
           duration: '2s',
           oscillator: {
             handler: 'damped',

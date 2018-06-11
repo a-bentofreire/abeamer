@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `color-functions` to documentation.
 ### Changed
 - `pEls` no longer needs to use `laserMarker`.
+### Added
+- Added `advance` parameter for both animations and property animations.
 
 
 ## [0.2.4] -

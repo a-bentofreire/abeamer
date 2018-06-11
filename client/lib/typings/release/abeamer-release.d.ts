@@ -1175,6 +1175,21 @@ declare namespace ABeamer {
     enabled?: boolean;
 
     /**
+     * A `Scene.addAnimations` runs its list of animations and properties in parallel,
+     * and at the end of last animation it moves the position forward.
+     * Setting the `advance`:
+     * 1. To `true` of an animation property will move forward the position
+     * for the next property animation, but not the animation.
+     * The property of each element moves independently.
+     * 2. To `true` of an animation that isn't the last one, will move forward
+     * for the next animation within the list.
+     * The value used with the maximum of all the elements of the all the properties
+     * of the previous animation.
+     * 3. To `false` of the last animation, it won't move forward at the end.
+     */
+    advance?: boolean;
+
+    /**
      * Defines the duration of the animation of a single cycle
      * in terms of frames, seconds, minutes or milliseconds.
      * The total duration is `duration*(iterationCount + 1)`.

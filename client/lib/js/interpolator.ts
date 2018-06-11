@@ -16,7 +16,6 @@
  */
 namespace ABeamer {
 
-  const VALUE_MACRO = '__VALUE__';
   /** Var used only for internal testing via exact framework  */
   export let _TEST_DIGIT_LIMIT: int = 1000;
 
@@ -291,7 +290,6 @@ namespace ABeamer {
         }
       }
 
-      const inProp = this.animProp;
 
       let value: string | number = v;
       const valueFormat = this.animProp.valueFormat;
