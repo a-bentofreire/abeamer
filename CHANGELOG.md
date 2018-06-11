@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.2.5] -
 ### Fixed
 - Fixes the case where a pixel property has previous animation and has no `valueStart`.
-- Add `color-functions` to documentation.
+- Added `color-functions` to documentation.
+### Changed
+- `pEls` no longer needs to use `laserMarker`.
+
 
 ## [0.2.4] -
 ### Fixed

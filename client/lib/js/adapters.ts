@@ -852,7 +852,7 @@ namespace ABeamer {
     elSelector: ElSelectorHandler): _ElementAdapter[] {
 
     // test of _pEls
-    if ((elSelector as _pEls).__laserMarker__ !== undefined) {
+    if (elSelector instanceof _pEls) {
       return (elSelector as _pEls)._elementAdapters as _ElementAdapter[];
     }
 

@@ -57,10 +57,6 @@ namespace ABeamer {
     _elementAdapters: ElementAdapter[] = [];
 
 
-    /** The laser marker is used to detected if it's a pEls */
-    __laserMarker__ = 1;
-
-
     constructor(scene: _SceneImpl, selector: ElSelectorHandler) {
       this._scene = scene;
       this._selector = selector;

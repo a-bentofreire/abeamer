@@ -48,8 +48,6 @@ var ABeamer;
     var _pEls = /** @class */ (function () {
         function _pEls(scene, selector) {
             this._elementAdapters = [];
-            /** The laser marker is used to detected if it's a pEls */
-            this.__laserMarker__ = 1;
             this._scene = scene;
             this._selector = selector;
             this._elementAdapters = scene.getElementAdapters(selector);

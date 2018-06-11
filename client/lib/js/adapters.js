@@ -546,7 +546,7 @@ var ABeamer;
      */
     function _parseInElSelector(story, elementAdapters, sceneAdpt, elSelector) {
         // test of _pEls
-        if (elSelector.__laserMarker__ !== undefined) {
+        if (elSelector instanceof ABeamer._pEls) {
             return elSelector._elementAdapters;
         }
         if (typeof elSelector === 'function') {
