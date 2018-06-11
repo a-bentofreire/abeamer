@@ -138,22 +138,30 @@ var Gulp;
     // ------------------------------------------------------------------------
     //                               Bump Version
     // ------------------------------------------------------------------------
-    gulp.task('bump-version', function () {
+    gulp.task('bump-version', function (cb) {
         var SRC_FILENAME = './package.json';
+        var BADGES_FOLDER = './docs/badges/';
         var WARN_MSG = "\n  // This file was generated via gulp bump-version\n  // It has no uuid\n  //\n  // @WARN: Don't edit this file. See the " + SRC_FILENAME + "\n\n";
-        var SRC_REG_EX = /^(?:.|\n)*"version": "([\d\.]+)"(?:.|\n)*$/;
-        var VERSION_OUT = 'export const VERSION = "$1";';
-        gulp.src(SRC_FILENAME)
-            .pipe(gulpRename('version.ts'))
-            .pipe(gulpReplace(SRC_REG_EX, WARN_MSG + VERSION_OUT + '\n'))
-            .pipe(gulp.dest('shared'));
-        gulp.src(SRC_FILENAME)
-            .pipe(gulpRename('version.ts'))
-            .pipe(gulpReplace(SRC_REG_EX, WARN_MSG + ("namespace ABeamer {\n  " + VERSION_OUT + "\n}\n")))
-            .pipe(gulp.dest(dev_paths_js_1.DevPaths.JS_PATH));
+        var matches = fsix_js_1.fsix.readUtf8Sync(SRC_FILENAME).match(/"version": "([\d\.]+)"/);
+        if (!matches) {
+            throw "Unable to find the " + SRC_FILENAME + " version";
+        }
+        var version = matches[1];
+        var VERSION_OUT = "export const VERSION = \"" + version + "\";";
+        console.log(SRC_FILENAME + " version is " + version);
+        sysFs.writeFileSync('./shared/version.ts', WARN_MSG + VERSION_OUT + '\n');
+        sysFs.writeFileSync("./" + dev_paths_js_1.DevPaths.JS_PATH + "/version.ts", WARN_MSG + ("namespace ABeamer {\n  " + VERSION_OUT + "\n}\n"));
+        var vBadgeData = fsix_js_1.fsix.readUtf8Sync(BADGES_FOLDER + "/v-template.svg");
+        vBadgeData = vBadgeData.replace(/\(\(version\)\)/g, version);
+        var outBadgeFileName = "v-" + version + ".svg";
+        sysFs.writeFileSync(BADGES_FOLDER + "/" + outBadgeFileName, vBadgeData);
+        var vREADMEData = fsix_js_1.fsix.readUtf8Sync("./README.md");
+        vREADMEData = vREADMEData.replace(/v-[\d\.]+\.svg/, outBadgeFileName);
+        sysFs.writeFileSync("./README.md", vREADMEData);
         fsix_js_1.fsix.runExternal('gulp build-shared-lib', function () {
             fsix_js_1.fsix.runExternal('tsc -p ./', function () {
                 console.log('Version bumped');
+                cb();
             });
         });
     });

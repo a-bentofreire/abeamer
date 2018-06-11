@@ -44,8 +44,8 @@
      inkscape:window-height="1020"
      id="namedview6403"
      showgrid="false"
-     inkscape:zoom="2.7301587"
-     inkscape:cx="26.372093"
+     inkscape:zoom="7.7220549"
+     inkscape:cx="70.424258"
      inkscape:cy="10"
      inkscape:window-x="0"
      inkscape:window-y="0"
@@ -53,11 +53,15 @@
      inkscape:current-layer="svg6401" />
   <linearGradient
      x2="0"
-     y2="100%"
+     y2="50.199602"
      xlink:type="simple"
      xlink:actuate="onLoad"
      id="a"
-     xlink:show="other">
+     xlink:show="other"
+     gradientTransform="scale(2.28379,0.39840954)"
+     x1="0"
+     y1="0"
+     gradientUnits="userSpaceOnUse">
     <stop
        stop-opacity=".1"
        stop-color="#bbb"
@@ -69,20 +73,23 @@
        id="stop6382" />
   </linearGradient>
   <rect
-     rx="3"
-     fill="#555"
-     width="126"
+     rx="2.7296512"
+     width="114.64535"
      height="20"
      class="sWidth"
-     id="rect6385" />
+     id="rect6385"
+     x="0"
+     y="0"
+     style="fill:#555555;stroke-width:0.95387822" />
   <rect
-     rx="3"
-     fill="#4c1"
-     width="39"
+     rx="2.1265652"
+     width="27.645348"
      x="87"
      height="20"
      class="vWidth tMove"
-     id="rect6387" />
+     id="rect6387"
+     y="0"
+     style="fill:#44cc11;stroke-width:0.84193534" />
   <rect
      x="62.825581"
      width="37.174419"
@@ -92,46 +99,38 @@
      y="0"
      style="fill:#44cc11;stroke-width:1.69102657" />
   <rect
-     rx="3"
-     fill="url(#a)"
-     width="126"
+     rx="2.7296512"
+     width="114.64535"
      height="20"
      class="sWidth"
-     id="rect6391" />
+     id="rect6391"
+     style="fill:url(#a);stroke-width:0.95387822"
+     x="0"
+     y="0" />
   <g
      font-size="11"
      font-family="DejaVu Sans,Verdana,Geneva,sans-serif"
      fill="#fff"
      id="g6399">
     <text
-       x="6"
-       fill="#010101"
-       fill-opacity=".3"
+       x="12"
        y="15"
-       id="text6393">
-            version
-        </text>
+       id="text6393"
+       style="fill:#010101;fill-opacity:0.3">version</text>
     <text
-       x="6"
+       x="12"
        id="tText"
-       y="14">
-            version
-        </text>
+       y="14">version</text>
     <text
-       fill="#010101"
-       x="92"
-       fill-opacity=".3"
+       x="75"
        y="15"
        class="tMove"
-       id="text6396">
-            0.2.4
-        </text>
+       id="text6396"
+       style="fill:#010101;fill-opacity:0.3">((version))</text>
     <text
-       x="92"
+       x="75"
        id="vText"
        y="14"
-       class="tMove">
-            0.2.4
-        </text>
+       class="tMove">((version))</text>
   </g>
 </svg>

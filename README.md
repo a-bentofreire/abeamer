@@ -1,5 +1,5 @@
 ## Description
-![Target](http://localhost:9000/docs/badges/developer-badge.svg)  
+![Target](http://localhost:9000/docs/badges/developer-badge.svg)![Target](http://localhost:9000/docs/badges/v-0.2.5.svg)  
   
 ![Image](http://localhost:9000/gallery-release/animate-abeamer/story-frames/story.gif)  
   

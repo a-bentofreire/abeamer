@@ -45,7 +45,7 @@
      id="namedview953"
      showgrid="false"
      inkscape:zoom="5.4603175"
-     inkscape:cx="40.224861"
+     inkscape:cx="5.4283496"
      inkscape:cy="10"
      inkscape:window-x="0"
      inkscape:window-y="0"
@@ -110,19 +110,14 @@
      fill="#fff"
      id="g949">
     <text
-       x="6"
-       fill="#010101"
-       fill-opacity=".3"
+       x="11"
        y="15"
-       id="text943">
-            target
-        </text>
+       id="text943"
+       style="fill:#010101;fill-opacity:0.3">target</text>
     <text
-       x="6"
+       x="11"
        id="tText"
-       y="14">
-            target
-        </text>
+       y="14">target</text>
     <text
        x="63"
        y="15"
