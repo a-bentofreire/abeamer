@@ -317,9 +317,18 @@ namespace Gulp {
     return gulp.src([
       'CHANGELOG.md',
       'LICENSE.txt',
-      'README.md',
       '.npmignore',
     ])
+      .pipe(gulp.dest(RELEASE_PATH))
+      .pipe(gulpPreserveTime());
+  });
+
+
+  gulp.task('rel:README', () => {
+    return gulp.src([
+      'README.md',
+    ])
+      .pipe(gulpReplace(/developer-badge\.svg/, 'end-user-badge.svg'))
       .pipe(gulp.dest(RELEASE_PATH))
       .pipe(gulpPreserveTime());
   });
@@ -452,6 +461,7 @@ namespace Gulp {
     'rel:gallery-html',
     'rel:client-js-join',
     'rel:root',
+    'rel:README',
     'rel:cli-minify',
     'rel:shared',
     'rel:server-minify',

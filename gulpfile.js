@@ -217,9 +217,16 @@ var Gulp;
         return gulp.src([
             'CHANGELOG.md',
             'LICENSE.txt',
-            'README.md',
             '.npmignore',
         ])
+            .pipe(gulp.dest(RELEASE_PATH))
+            .pipe(gulpPreserveTime());
+    });
+    gulp.task('rel:README', function () {
+        return gulp.src([
+            'README.md',
+        ])
+            .pipe(gulpReplace(/developer-badge\.svg/, 'end-user-badge.svg'))
             .pipe(gulp.dest(RELEASE_PATH))
             .pipe(gulpPreserveTime());
     });
@@ -318,7 +325,7 @@ var Gulp;
             .pipe(gulp.dest(RELEASE_PATH + "/" + dev_paths_js_1.DevPaths.TYPINGS_PATH))
             .pipe(gulpPreserveTime());
     });
-    gulp.task('build-release', ['rel:clean'], gulpSequence('rel:client', 'rel:gallery', 'rel:gallery-html', 'rel:client-js-join', 'rel:root', 'rel:cli-minify', 'rel:shared', 'rel:server-minify', 'rel:jquery-typings', 'rel:build-package.json', 'rel:build-tsconfig.ts', 'rel:build-abeamer.d.ts', 'rel:build-plugins-list.json'));
+    gulp.task('build-release', ['rel:clean'], gulpSequence('rel:client', 'rel:gallery', 'rel:gallery-html', 'rel:client-js-join', 'rel:root', 'rel:README', 'rel:cli-minify', 'rel:shared', 'rel:server-minify', 'rel:jquery-typings', 'rel:build-package.json', 'rel:build-tsconfig.ts', 'rel:build-abeamer.d.ts', 'rel:build-plugins-list.json'));
     // ------------------------------------------------------------------------
     //                               Builds Shared Modules from Client
     // ------------------------------------------------------------------------
