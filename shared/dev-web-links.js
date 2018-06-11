@@ -31,7 +31,7 @@ var DevWebLinks;
             ? 'https://github.com/a-bentofreire/__REPO__/' // blog/master/
             : "http://localhost:" + LOCAL_PORT + "/__REPO__/";
         var rawServer = !isLocal
-            ? 'https://raw.githubusercontent.com/a-bentofreire/__REPO__/' // master/
+            ? 'https://raw.githubusercontent.com/a-bentofreire/__REPO__/master/' // master/
             : "http://localhost:" + LOCAL_PORT + "/__REPO__/";
         var galleryReleaseServer = !isLocal
             ? 'https://a-bentofreire.github.io/abeamer-gallery-release'

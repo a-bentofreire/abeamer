@@ -39,7 +39,7 @@ export namespace DevWebLinks {
       : `http://localhost:${LOCAL_PORT}/__REPO__/`;
 
     const rawServer = !isLocal
-      ? 'https://raw.githubusercontent.com/a-bentofreire/__REPO__/'  // master/
+      ? 'https://raw.githubusercontent.com/a-bentofreire/__REPO__/master/'  // master/
       : `http://localhost:${LOCAL_PORT}/__REPO__/`;
 
     const galleryReleaseServer = !isLocal
