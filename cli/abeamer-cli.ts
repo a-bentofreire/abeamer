@@ -270,12 +270,17 @@ The commands are:
 
     const projName = fsix.toPosixSlash(cmdParam);
     if (projName === '' || projName[0] === '-'
-      || projName.search(/[\\\/\?\*\+]/) !== -1) {
+      || projName.search(/[\"\'\?\*\+]/) !== -1) {
       throw `Error: ${projName} is not valid project name`;
     }
 
-    if (!sysFs.existsSync(projName)) {
+    if (sysFs.existsSync(projName)) {
       throw `Error: Project ${projName} already exists`;
+    }
+
+    if (projName.includes('/')) {
+      const dirname = sysPath.posix.dirname(projName);
+      fsix.mkdirpSync(dirname);
     }
 
     const ROOT_PATH = fsix.toPosixSlash(__dirname) + '/..';

@@ -199,11 +199,15 @@ var Cli;
     function commandCreate() {
         var projName = fsix_js_1.fsix.toPosixSlash(cmdParam);
         if (projName === '' || projName[0] === '-'
-            || projName.search(/[\\\/\?\*\+]/) !== -1) {
+            || projName.search(/[\"\'\?\*\+]/) !== -1) {
             throw "Error: " + projName + " is not valid project name";
         }
-        if (!sysFs.existsSync(projName)) {
+        if (sysFs.existsSync(projName)) {
             throw "Error: Project " + projName + " already exists";
+        }
+        if (projName.includes('/')) {
+            var dirname = sysPath.posix.dirname(projName);
+            fsix_js_1.fsix.mkdirpSync(dirname);
         }
         var ROOT_PATH = fsix_js_1.fsix.toPosixSlash(__dirname) + '/..';
         var TEMPLATE_PATH = ROOT_PATH + '/gallery/hello-world';
