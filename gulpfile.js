@@ -163,11 +163,25 @@ var Gulp;
             // build animated badges
             var renderCmdLine = "node ./cli/abeamer-cli.js render --dp --url '" + url + "' --config " + config;
             console.log(renderCmdLine);
-            fsix_js_1.fsix.runExternal(renderCmdLine, function () {
-                var gifCmdLine = "node ./cli/abeamer-cli.js gif ./" + path_1 + "/ --loop 1 --gif " + outBadgeFileName;
-                console.log(gifCmdLine);
-                fsix_js_1.fsix.runExternal(gifCmdLine, function () {
-                });
+            fsix_js_1.fsix.runExternal(renderCmdLine, function (error, stdout, stderr) {
+                if (stderr) {
+                    console.error(stderr);
+                    console.error('Badge Animated Gif Creation Failed');
+                }
+                else {
+                    var gifCmdLine = "node ./cli/abeamer-cli.js gif ./" + path_1 + "/ --loop 1 --gif " + outBadgeFileName;
+                    console.log(gifCmdLine);
+                    fsix_js_1.fsix.runExternal(gifCmdLine, function (_error, _stdout, _stderr) {
+                        if (stderr) {
+                            console.error(stderr);
+                            console.error('Badge Animated Gif Creation Failed');
+                        }
+                        else {
+                            console.log(stdout);
+                            console.error('Badge Animated Gif Created!');
+                        }
+                    });
+                }
             });
         }
         var vREADMEData = fsix_js_1.fsix.readUtf8Sync("./README.md");

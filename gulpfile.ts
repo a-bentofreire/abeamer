@@ -250,11 +250,23 @@ namespace Gulp {
       // build animated badges
       const renderCmdLine = `node ./cli/abeamer-cli.js render --dp --url '${url}' --config ${config}`;
       console.log(renderCmdLine);
-      fsix.runExternal(renderCmdLine, () => {
-        const gifCmdLine = `node ./cli/abeamer-cli.js gif ./${path}/ --loop 1 --gif ${outBadgeFileName}`;
-        console.log(gifCmdLine);
-        fsix.runExternal(gifCmdLine, () => {
-        });
+      fsix.runExternal(renderCmdLine, (error, stdout, stderr) => {
+        if (stderr) {
+          console.error(stderr);
+          console.error('Badge Animated Gif Creation Failed');
+        } else {
+          const gifCmdLine = `node ./cli/abeamer-cli.js gif ./${path}/ --loop 1 --gif ${outBadgeFileName}`;
+          console.log(gifCmdLine);
+          fsix.runExternal(gifCmdLine, (_error, _stdout, _stderr) => {
+            if (stderr) {
+              console.error(stderr);
+              console.error('Badge Animated Gif Creation Failed');
+            } else {
+              console.log(stdout);
+              console.error('Badge Animated Gif Created!');
+            }
+          });
+        }
       });
     }
 
