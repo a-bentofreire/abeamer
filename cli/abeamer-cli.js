@@ -32,11 +32,11 @@ var http_server_ex_js_1 = require("../shared/vendor/http-server-ex.js");
  *
  * ## Examples
  *
- * Creates a TypeScript/JavaScript project.
- * `abeamer create foo --width 720 --height 480 --fps 20`.
+ *  Creates a TypeScript/JavaScript project.
+ *  `abeamer create foo --width 720 --height 480 --fps 20`.
  *
- * Creates a TypeScript project.
- * `abeamer create foo-js --width 384 --height 288 --fps 30 --no-typescript`.
+ *  Creates a JavaScript project without TypeScript.
+ *  `abeamer create foo-js --width 384 --height 288 --fps 30 --no-typescript`.
  *
  *  Starts the live server.
  * `abeamer serve`.
@@ -94,10 +94,10 @@ var Cli;
         param: 'int', desc: "port for serve command. default is " + DEFAULT_PORT,
     };
     argOpts['gif'] = {
-        param: 'string', desc: "output gif name. default is " + DEFAULT_GIF_NAME,
+        param: 'string', desc: "output gif filename. default is " + DEFAULT_GIF_NAME,
     };
     argOpts['movie'] = {
-        param: 'string', desc: "output movie name. default is " + DEFAULT_MOVIE_NAME,
+        param: 'string', desc: "output movie filename. default is " + DEFAULT_MOVIE_NAME,
     };
     argOpts['bkgMovie'] = {
         param: 'string', desc: "movie filename to be used as background to blend with transparent images",
@@ -109,10 +109,10 @@ var Cli;
         desc: "creates a project without TypeScript files",
     };
     argOpts['listDir'] = {
-        desc: "serve command supports list directory, if the search part is ?dir",
+        desc: "serve command lists the directory contents if url has the querystring '?dir'",
     };
     argOpts['loop'] = {
-        param: 'string', desc: "defines how many times it will loop. set to -1 if you don't won't it to loop",
+        param: 'string', desc: "defines how many times a gif will loop. set to -1 if you don't won't it to loop",
     };
     // ------------------------------------------------------------------------
     //                               Print Usage
@@ -199,7 +199,7 @@ var Cli;
     function commandCreate() {
         var projName = cmdParam;
         if (projName === '' || projName[0] === '-'
-            || projName.search(/[^\w\-_]/) !== -1) {
+            || projName.search(/[\\\/\?\*\+]/) !== -1) {
             throw "Project name " + projName + " is not valid";
         }
         var ROOT_PATH = fsix_js_1.fsix.toPosixSlash(__dirname) + '/..';

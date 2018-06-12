@@ -10,7 +10,7 @@ export namespace DevConsts {
   // version
   // -------------
 
-  export const VERSION = "0.2.6";
+  export const VERSION = "0.2.7";
 
   // -------------
   // consts
