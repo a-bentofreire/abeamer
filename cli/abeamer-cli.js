@@ -412,34 +412,42 @@ var Cli;
     // ------------------------------------------------------------------------
     //                               Main Body
     // ------------------------------------------------------------------------
-    switch (parseArguments()) {
-        case DO_PRINT_USAGE:
-            printUsage();
-            break;
-        case DO_RUN_COMMAND:
-            if (isVerbose) {
-                console.log("Run Command: " + cmdName);
-            }
-            switch (cmdName) {
-                case CMD_CREATE:
-                    commandCreate();
-                    break;
-                case CMD_SERVE:
-                    commandServe();
-                    break;
-                case CMD_RENDER:
-                    commandRender();
-                    break;
-                case CMD_GIF:
-                    commandGif();
-                    break;
-                case CMD_MOVIE:
-                    commandMovie();
-                    break;
-                default:
-                    throw "Unknown command " + cmdName;
-            }
-            break;
+    function main() {
+        switch (parseArguments()) {
+            case DO_PRINT_USAGE:
+                printUsage();
+                break;
+            case DO_RUN_COMMAND:
+                if (isVerbose) {
+                    console.log("Run Command: " + cmdName);
+                }
+                switch (cmdName) {
+                    case CMD_CREATE:
+                        commandCreate();
+                        break;
+                    case CMD_SERVE:
+                        commandServe();
+                        break;
+                    case CMD_RENDER:
+                        commandRender();
+                        break;
+                    case CMD_GIF:
+                        commandGif();
+                        break;
+                    case CMD_MOVIE:
+                        commandMovie();
+                        break;
+                    default:
+                        throw "Unknown command " + cmdName;
+                }
+                break;
+        }
+    }
+    try {
+        main();
+    }
+    catch (err) {
+        console.log(err);
     }
 })(Cli || (Cli = {}));
 //# sourceMappingURL=abeamer-cli.js.map
