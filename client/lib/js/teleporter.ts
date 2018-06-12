@@ -133,7 +133,7 @@
  * Instead of calling render, the `getStoryToTeleport` will generate data ready to be teleported.
  * This data must be **beamed** to the remote machine, usually via Ajax.
  *
- * The remote machine has an empty story body (@see gallery/remote-server) where it fills
+ * The remote machine has an empty story body, see [remote-server](https://a-bentofreire.github.io/abeamer-gallery-release/#remote-server), where it fills
  * with the data has been teleported and injects the plugins.
  *
  *
@@ -143,7 +143,7 @@
  * and doesn't allows the execution of any javascript code except from plugins.
  * However, in order to prevent malicious users or plugins, ensure that:
  *
- * 1. **Only allow 3rd party plugins from trusted sources**
+ * 1. **Only allow 3rd party plugins from trusted sources**.
  * 2. Execute the live server in a contained environment.
  * 3. Don't place any password files accessible to the live server.
  * 4. The provided live server, is just a simple live server, consider using a more restrict live server.

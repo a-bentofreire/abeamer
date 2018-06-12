@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `abeamer movie` also supports `.webm` and `.avi` outputs.
 - `abeamer create` if project name has a path component it does `mkdirp`.
 - rebranding.
+### Fixed
+- fixes web links.
 
 ## [0.2.6] -
 ### Fixed
