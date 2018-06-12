@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `abeamer create` checks if the project name already exists, and throws error if is true.
 - `abeamer movie` also supports `.webm` and `.avi` outputs.
 - `abeamer create` if project name has a path component it does `mkdirp`.
+- rebranding.
 
 ## [0.2.6] -
 ### Fixed
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Fixes the case where a pixel property has previous animation and has no `valueStart`.
 - Added `color-functions` to documentation.
+- Fixes documentation badges.
 ### Changed
 - `pEls` no longer needs to use `laserMarker`.
 - (DEV)Removed several unused vars.
