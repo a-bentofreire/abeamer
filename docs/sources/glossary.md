@@ -157,7 +157,7 @@ Flushing means [](#consuming the pipeline) until the last frame.
 
 **Off-Sync** an animation is when 2 animation in parallel don't start at the same position,
 or when 2 animations in series don't follow each other due a change in the start position.  
-Off-sync is accomplished by setting the `position` parameter.  
+Off-sync is accomplished by setting the `position` or `advance` parameter.  
 
 ## Oscillator
 

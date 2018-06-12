@@ -1,7 +1,6 @@
 ### Top priorities
 
 - Bug fixing.
-- Solve inconsistences created during the multiple designs.
 - Improve documentation.
 - Improve Wait for assets load and sync support.
 - Reversibility.
@@ -10,6 +9,7 @@
 
 - Expressions with Numeric Array.
 - Expressions with 'NOT' operators.
+- Improve video sync parameters.
 - Slide elements.
 - Improved Shape task with animation support.
 - Arrow shape task.
@@ -22,7 +22,7 @@
 - Cut parameters for harmonic oscillator.
 - Glitch attack task.
 - Color band attack task.
-- CreateTime functions plugin.
+- Time functions plugin.
 - Create Formatter functions plugin.
 - Color functions plugin with more functions.
 
@@ -32,4 +32,3 @@
 - Audio support.
 - Teleportable non-default scenes.
 - Teleportable canvas adapter.
-

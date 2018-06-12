@@ -5,9 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [0.2.6] -
+### Fixed
 - `abeamer-cli` converts exception into `console.error` messages.
+### Added
 - `abeamer movie` also supports `.webm` and `.avi` outputs.
 - `abeamer gif` supports `--loop` parameter to define the number of loops.
+- `README` supports animated badges.
 
 ## [0.2.5] -
 ### Fixed

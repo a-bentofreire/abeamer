@@ -151,12 +151,27 @@ var Gulp;
         console.log(SRC_FILENAME + " version is " + version);
         sysFs.writeFileSync('./shared/version.ts', WARN_MSG + VERSION_OUT + '\n');
         sysFs.writeFileSync("./" + dev_paths_js_1.DevPaths.JS_PATH + "/version.ts", WARN_MSG + ("namespace ABeamer {\n  " + VERSION_OUT + "\n}\n"));
-        var vBadgeData = fsix_js_1.fsix.readUtf8Sync(BADGES_FOLDER + "/v-template.svg");
-        vBadgeData = vBadgeData.replace(/\(\(version\)\)/g, version);
-        var outBadgeFileName = "v-" + version + ".svg";
-        sysFs.writeFileSync(BADGES_FOLDER + "/" + outBadgeFileName, vBadgeData);
+        var outBadgeFileBase = "v-" + version + ".gif";
+        var outBadgeFileName = "" + BADGES_FOLDER + outBadgeFileBase;
+        // let vBadgeData = fsix.readUtf8Sync(`${BADGES_FOLDER}/v-template.svg`);
+        // vBadgeData = vBadgeData.replace(/\(\(version\)\)/g, version);
+        // sysFs.writeFileSync(`${BADGES_FOLDER}/${outBadgeFileName}`, vBadgeData);
+        if (!sysFs.existsSync(outBadgeFileName)) {
+            var path_1 = "gallery/animate-badges";
+            var url = "http://localhost:9000/" + path_1 + "/?name=version&value=" + version;
+            var config = "./" + path_1 + "/abeamer.ini";
+            // build animated badges
+            var renderCmdLine = "node ./cli/abeamer-cli.js render --dp --url '" + url + "' --config " + config;
+            console.log(renderCmdLine);
+            fsix_js_1.fsix.runExternal(renderCmdLine, function () {
+                var gifCmdLine = "node ./cli/abeamer-cli.js gif ./" + path_1 + "/ --loop 1 --gif " + outBadgeFileName;
+                console.log(gifCmdLine);
+                fsix_js_1.fsix.runExternal(gifCmdLine, function () {
+                });
+            });
+        }
         var vREADMEData = fsix_js_1.fsix.readUtf8Sync("./README.md");
-        vREADMEData = vREADMEData.replace(/v-[\d\.]+\.svg/, outBadgeFileName);
+        vREADMEData = vREADMEData.replace(/v-[\d\.]+\.gif/, outBadgeFileBase);
         sysFs.writeFileSync("./README.md", vREADMEData);
         fsix_js_1.fsix.runExternal('gulp build-shared-lib', function () {
             fsix_js_1.fsix.runExternal('tsc -p ./', function () {
@@ -234,7 +249,7 @@ var Gulp;
         return gulp.src([
             'README.md',
         ])
-            .pipe(gulpReplace(/developer-badge\.svg/, 'end-user-badge.svg'))
+            .pipe(gulpReplace(/developer-badge\.gif/, 'end-user-badge.gif'))
             .pipe(gulp.dest(RELEASE_PATH))
             .pipe(gulpPreserveTime());
     });

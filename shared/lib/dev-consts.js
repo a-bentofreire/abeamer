@@ -9,7 +9,7 @@ var DevConsts;
     // -------------
     // version
     // -------------
-    DevConsts.VERSION = "0.2.5";
+    DevConsts.VERSION = "0.2.6";
     // -------------
     // consts
     // -------------

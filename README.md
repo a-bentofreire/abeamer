@@ -1,5 +1,5 @@
 ## Description
-<!-- ![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/developer-badge.svg)![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/v-0.2.5.svg)   -->
+![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/developer-badge.gif)![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/v-0.2.6.gif)  
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-abeamer/story-frames/story.gif)  
   
@@ -296,7 +296,7 @@ but if it's defined in time, these are converted to frames based on the story fp
 
 ```
 
-You can add multiple properties in parallel or off-sync with the `position` parameter.  
+You can add multiple properties in parallel or off-sync with the `position` or `advance` parameter.  
 
 ## Command line
 
@@ -308,7 +308,7 @@ You can add multiple properties in parallel or off-sync with the `position` para
 4. create gifs: `abeamer gif`.
 5. create movies: `abeamer movie`.
 
-For further documentation, read: [Command Line Utility](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/abeamer-cli/).  
+For detailed examples, read: [Command Line Utility](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/abeamer-cli/).  
 Read [Requirements](#requirements) for details about the necessary software 
 to install if you need to render, create gifs or movies on the local machine.
 
@@ -342,6 +342,8 @@ There is still a lot of work to support other web browsers, OSes and render serv
 
 To keep an healthy cooperation environment, before posting an issue, please read 
 [Code Of Conduct](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/code-of-conduct.md)
+
+To report issues, use the developers repo [issues](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/issues).
 
 ## License
 

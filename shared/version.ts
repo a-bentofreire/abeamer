@@ -4,4 +4,4 @@
   //
   // @WARN: Don't edit this file. See the ./package.json
 
-export const VERSION = "0.2.5";
+export const VERSION = "0.2.6";

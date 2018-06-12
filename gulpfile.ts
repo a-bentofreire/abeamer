@@ -236,13 +236,30 @@ namespace Gulp {
     sysFs.writeFileSync(`./${DevPaths.JS_PATH}/version.ts`,
       WARN_MSG + `namespace ABeamer {\n  ${VERSION_OUT}\n}\n`);
 
-    let vBadgeData = fsix.readUtf8Sync(`${BADGES_FOLDER}/v-template.svg`);
-    vBadgeData = vBadgeData.replace(/\(\(version\)\)/g, version);
-    const outBadgeFileName = `v-${version}.svg`;
-    sysFs.writeFileSync(`${BADGES_FOLDER}/${outBadgeFileName}`, vBadgeData);
+    const outBadgeFileBase = `v-${version}.gif`;
+    const outBadgeFileName = `${BADGES_FOLDER}${outBadgeFileBase}`;
+    // let vBadgeData = fsix.readUtf8Sync(`${BADGES_FOLDER}/v-template.svg`);
+    // vBadgeData = vBadgeData.replace(/\(\(version\)\)/g, version);
+    // sysFs.writeFileSync(`${BADGES_FOLDER}/${outBadgeFileName}`, vBadgeData);
+
+    if (!sysFs.existsSync(outBadgeFileName)) {
+      const path = `gallery/animate-badges`;
+      const url = `http://localhost:9000/${path}/?name=version&value=${version}`;
+      const config = `./${path}/abeamer.ini`;
+
+      // build animated badges
+      const renderCmdLine = `node ./cli/abeamer-cli.js render --dp --url '${url}' --config ${config}`;
+      console.log(renderCmdLine);
+      fsix.runExternal(renderCmdLine, () => {
+        const gifCmdLine = `node ./cli/abeamer-cli.js gif ./${path}/ --loop 1 --gif ${outBadgeFileName}`;
+        console.log(gifCmdLine);
+        fsix.runExternal(gifCmdLine, () => {
+        });
+      });
+    }
 
     let vREADMEData = fsix.readUtf8Sync(`./README.md`);
-    vREADMEData = vREADMEData.replace(/v-[\d\.]+\.svg/, outBadgeFileName);
+    vREADMEData = vREADMEData.replace(/v-[\d\.]+\.gif/, outBadgeFileBase);
     sysFs.writeFileSync(`./README.md`, vREADMEData);
 
 
@@ -341,7 +358,7 @@ namespace Gulp {
     return gulp.src([
       'README.md',
     ])
-      .pipe(gulpReplace(/developer-badge\.svg/, 'end-user-badge.svg'))
+      .pipe(gulpReplace(/developer-badge\.gif/, 'end-user-badge.gif'))
       .pipe(gulp.dest(RELEASE_PATH))
       .pipe(gulpPreserveTime());
   });
