@@ -107,12 +107,10 @@ export namespace BuildGalleryRelease {
 
               case 'width':
                 ex.width = parseInt(value);
-                console.log(`width: ${ex.width}`);
                 break;
 
               case 'height':
                 ex.height = parseInt(value);
-                console.log(`\n\nheight: ${ex.height}`);
                 break;
 
               case 'uses-live':

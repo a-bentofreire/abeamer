@@ -123,6 +123,7 @@ var ServerAgent;
             // even not on verbose mode.
             if (this.logLevel !== 0) {
                 console.log("pageUrl: [" + pageUrl + "]");
+                console.log("serverless pageUrl: [" + this.url + "]");
             }
             return pageUrl;
         };

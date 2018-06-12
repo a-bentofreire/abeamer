@@ -49,6 +49,8 @@ export namespace BuildDocs {
 
   interface LocalWebLinks { [link: string]: string; }
 
+  let badgeLine = '';
+
   export const targets = [
     {
       id: 'end-user',
@@ -59,6 +61,12 @@ export namespace BuildDocs {
       indexFile: './README.md',
       isEndUser: true,
       logFile: './build-docs-end-user.log',
+      processIndexPage: (data: string) => {
+        return data.replace(/^(.*)developer-badge\.gif(.*)$/m, (all, p1, p2) => {
+          badgeLine = all;
+          return p1 + 'end-user-badge.gif' + p2;
+        });
+      },
     },
     {
       id: 'dev',
@@ -69,6 +77,15 @@ export namespace BuildDocs {
       indexFile: `${DevPaths.SOURCE_DOCS_PATH}-dev/README.md`,
       isEndUser: false,
       logFile: './build-docs-dev.log',
+      processIndexPage: (data: string) => {
+        return data.replace(/^(# Description.*)$/m, (all, p1, p2) => {
+          if (!badgeLine) {
+            throw `end-user should had been processed already.`;
+          }
+          console.warn('---WARN: Make sure the README links match mkdocs-local---');
+          return all + '\n' + badgeLine + '  \n';
+        });
+      },
     },
   ];
 
@@ -708,10 +725,12 @@ export namespace BuildDocs {
    * and adds the file to mkdocs.
    */
   function copyMarkdownFile(srcFileName: string, dstFileName: string,
-    mkDocs: MkDocsYml, mkDocsOpts: Opts): string {
+    mkDocs: MkDocsYml, mkDocsOpts: Opts,
+    processPage?: (data: string) => string): string {
 
     let data = fsix.readUtf8Sync(srcFileName);
     data = mkDocs.addSourceFile(mkDocsOpts, dstFileName, data);
+    if (processPage) { data = processPage(data); }
     sysFs.writeFileSync(dstFileName, data);
     return dstFileName;
   }
@@ -744,7 +763,7 @@ export namespace BuildDocs {
 
       // index.html
       copyMarkdownFile(target.indexFile,
-        `${markdownDstPath}/index.md`, mkDocsYml, {});
+        `${markdownDstPath}/index.md`, mkDocsYml, {}, target.processIndexPage);
 
       // copy sources
       target.sourcePaths.forEach(sourcesPathName => {

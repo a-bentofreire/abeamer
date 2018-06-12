@@ -5,10 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [0.2.7] -
+### Changed
 - Relaxes the `abeamer create` to support a project names with spaces and non-latin characters.
 - If `server-agent-puppeteer` has `page.goto` it logs the error.
 - (DEV)`gulp bump-version` checks for error conditions of badge creation.
 - `abeamer create` checks if the project name already exists, and throws error if is true.
+- `abeamer movie` also supports `.webm` and `.avi` outputs.
+- `abeamer create` if project name has a path component it does `mkdirp`.
 
 ## [0.2.6] -
 ### Fixed

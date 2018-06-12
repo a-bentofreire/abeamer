@@ -72,11 +72,9 @@ var BuildGalleryRelease;
                             break;
                         case 'width':
                             ex_1.width = parseInt(value);
-                            console.log("width: " + ex_1.width);
                             break;
                         case 'height':
                             ex_1.height = parseInt(value);
-                            console.log("\n\nheight: " + ex_1.height);
                             break;
                         case 'uses-live':
                             ex_1.usesLive = value.toLowerCase() === 'true';
