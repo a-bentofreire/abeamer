@@ -516,10 +516,21 @@ The commands are:
         + `,pad=iw:ih:0:0:color=yellow[m]; [bg][m]overlay=shortest=1:x=0:y=0`);
     }
 
-    args.push('-vcodec', 'libx264', movieFileName);
+    const ext = sysPath.extname(movieFileName);
+    let codec = '';
+    switch (ext) {
+      case '.mp4': codec = 'libx264'; break;
+      case '.webm': codec = 'libvpx-vp9'; break;
+    }
+
+    if (codec) {
+      args.push('-vcodec', codec);
+    }
+    args.push(movieFileName);
 
     if (isVerbose) {
-      console.log(`\n${cmdLine} ${args.join(' ')}\n`);
+      console.log(`\next: ${ext}\n`);
+      console.log(`cmdLine:[${cmdLine} ${args.join(' ')}]\n\n`);
     }
 
     runSpawn(cmdLine, args, () => {
