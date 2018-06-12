@@ -56,8 +56,14 @@ var http_server_ex_js_1 = require("../shared/vendor/http-server-ex.js");
  *  Creates an animated gif from the previous generated image sequence on `hello.gif`.
  * `abeamer gif foo/ --gif hello.gif`.
  *
+ *  Creates an animated gif without looping.
+ * `abeamer gif foo/ --loop 1`.
+ *
  *  Creates a movie from the previous generated image sequence on `foo/story-frames/movie.mp4`.
  * `abeamer movie foo/`.
+ *
+ *  Creates the movie `foo/story.webm`.
+ * `abeamer movie foo/ --movie foo/story.webm`.
  *
  *  Creates a movie from the previous generated image sequence using `foo/bkg-movie.mp4` as a background.
  * `abeamer movie foo/ --bkg-movie foo/bkg-movie.mp4`.
@@ -104,6 +110,9 @@ var Cli;
     };
     argOpts['listDir'] = {
         desc: "serve command supports list directory, if the search part is ?dir",
+    };
+    argOpts['loop'] = {
+        param: 'string', desc: "defines how many times it will loop. set to -1 if you don't won't it to loop",
     };
     // ------------------------------------------------------------------------
     //                               Print Usage
@@ -366,7 +375,9 @@ var Cli;
             || report.dirname + "/" + DEFAULT_GIF_NAME;
         var toOptimize = true;
         var cmdLine = 'convert';
-        var args = ['-loop', '0', '-delay', "1x" + report.fps];
+        var args = ['-delay', "1x" + report.fps];
+        var loop = argOpts['loop'].value || '0';
+        args.push('-loop', loop);
         if (toOptimize) {
             args.push('-strip', '-layers', 'optimize', '-alpha', 'deactivate');
         }

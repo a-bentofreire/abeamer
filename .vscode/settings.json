@@ -97,6 +97,7 @@
         "typedoc",
         "uncomment",
         "uuid",
-        "validators"
+        "validators",
+        "webm"
     ]
 }

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.2.6] -
 - `abeamer-cli` converts exception into `console.error` messages.
 - `abeamer movie` also supports `.webm` and `.avi` outputs.
+- `abeamer gif` supports `--loop` parameter to define the number of loops.
 
 ## [0.2.5] -
 ### Fixed
