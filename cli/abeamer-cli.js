@@ -197,10 +197,13 @@ var Cli;
     //                                Command: Create
     // ------------------------------------------------------------------------
     function commandCreate() {
-        var projName = cmdParam;
+        var projName = fsix_js_1.fsix.toPosixSlash(cmdParam);
         if (projName === '' || projName[0] === '-'
             || projName.search(/[\\\/\?\*\+]/) !== -1) {
-            throw "Project name " + projName + " is not valid";
+            throw "Error: " + projName + " is not valid project name";
+        }
+        if (!sysFs.existsSync(projName)) {
+            throw "Error: Project " + projName + " already exists";
         }
         var ROOT_PATH = fsix_js_1.fsix.toPosixSlash(__dirname) + '/..';
         var TEMPLATE_PATH = ROOT_PATH + '/gallery/hello-world';
