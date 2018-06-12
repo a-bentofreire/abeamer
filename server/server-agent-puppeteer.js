@@ -171,6 +171,8 @@ var ServerAgent;
                                 }
                             })
                                 .catch(function (reason) {
+                                console.error("Page Loaded Error");
+                                console.error(reason);
                                 server.exitServer(opts_parser_js_1.OptsParser.ON_ERROR_EXIT_VALUE);
                             })];
                     case 3:

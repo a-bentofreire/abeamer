@@ -132,6 +132,8 @@ namespace ServerAgent {
         }
       })
       .catch((reason) => {
+        console.error(`Page Loaded Error`);
+        console.error(reason);
         server.exitServer(OptsParser.ON_ERROR_EXIT_VALUE);
       });
   }

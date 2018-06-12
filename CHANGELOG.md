@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.2.7] -
 - Relaxes the `abeamer create` to support a project names with spaces and non-latin characters.
+- If `server-agent-puppeteer` has `page.goto` it logs the error.
 
 ## [0.2.6] -
 ### Fixed
