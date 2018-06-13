@@ -132,6 +132,7 @@ var ServerAgent;
                                     '--enable-font-antialiasing',
                                     '--ignore-autoplay-restrictions',
                                     '--autoplay-policy=no-user-gesture-required',
+                                    '--safebrowsing-disable-auto-update',
                                 ],
                             }
                                 : undefined)];

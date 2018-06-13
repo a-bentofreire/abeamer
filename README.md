@@ -230,6 +230,14 @@ However, in order to render frames, generate gifs and movies, it requires:
 3. To generate gifs, it requires to have [imagemagick](https://www.imagemagick.org) on system path.
 4. To create movies, it requires to have [ffmpeg](https://www.ffmpeg.org/) on the system path.
 
+## Playground
+
+Try these examples online without any installation:
+
+- [Hello world](https://jsfiddle.net/abentofreire/peax4f9n/)
+- [Image Overlays](https://jsfiddle.net/abentofreire/dj9m7ztf/12/)
+- [E-Commerce](https://jsfiddle.net/abentofreire/dkztn53o/)
+
 ## Getting started
 
 Start by creating a new project using the ABeamer command line utility:  

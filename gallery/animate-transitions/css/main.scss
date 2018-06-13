@@ -14,10 +14,18 @@ html,
   height: $abeamer-height + px;
 }
 
+// #developer-start
+@font-face {
+  font-family: 'Open Sans';
+  font-style: bold;
+  src: url("../assets/fonts/Open_Sans/OpenSans-Bold.ttf");
+}
+
+// #developer-end
 .abeamer-story {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: /* 'Open Sans', */ sans-serif;
   font-size: 16px;
-  font-weight: bold;
+  // font-weight: bold;
 }
 
 #scene1 {

@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - `_initBrowser();` is only executed during `story.constructor` in order to work with JSFiddle
 - `hello-world` example now has included the normalize.css
+### Added
+- Added the `playground` to `README.md`.
+
 
 ## [0.2.7] -
 ### Changed
