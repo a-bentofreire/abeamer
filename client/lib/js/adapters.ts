@@ -1000,9 +1000,12 @@ namespace ABeamer {
    * Discovers the vendor prefix and vendor prefixed CSS properties
    * by using `window.getComputedStyle`.
    */
-  function _initBrowser(): void {
+  export function _initBrowser(): void {
+
+    if (browser.vendorPrefix) { return; }
+
     const cssMap = window.getComputedStyle(document.body);
-    const cssMapLen = cssMap.length;
+    const cssMapLen = (cssMap || []).length;
     let foundVendorPrefix = false;
     for (let i = 0; i < cssMapLen; i++) {
       const propName = cssMap[i];
@@ -1028,7 +1031,4 @@ namespace ABeamer {
       }
     }
   }
-
-  // executed at startup
-  _initBrowser();
 }

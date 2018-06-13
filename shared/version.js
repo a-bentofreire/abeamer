@@ -4,5 +4,5 @@
 //
 // @WARN: Don't edit this file. See the ./package.json
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VERSION = "0.2.7";
+exports.VERSION = "0.2.8";
 //# sourceMappingURL=version.js.map

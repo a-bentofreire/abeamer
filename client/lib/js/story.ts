@@ -495,6 +495,8 @@ namespace ABeamer {
      * Sets up the Story and adds the Default Scenes.
      */
     constructor(cfg: _Config, createParams: CreateStoryParams) {
+      _initBrowser();
+
       const urlParams = window.location.search || '';
 
       const args = this._args;

@@ -666,8 +666,11 @@ var ABeamer;
      * by using `window.getComputedStyle`.
      */
     function _initBrowser() {
+        if (ABeamer.browser.vendorPrefix) {
+            return;
+        }
         var cssMap = window.getComputedStyle(document.body);
-        var cssMapLen = cssMap.length;
+        var cssMapLen = (cssMap || []).length;
         var foundVendorPrefix = false;
         var _loop_1 = function (i) {
             var propName = cssMap[i];
@@ -693,7 +696,6 @@ var ABeamer;
             _loop_1(i);
         }
     }
-    // executed at startup
-    _initBrowser();
+    ABeamer._initBrowser = _initBrowser;
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=adapters.js.map

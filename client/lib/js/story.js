@@ -120,6 +120,7 @@ var ABeamer;
              * Returns the play speed that best matches the fps.
              */
             this.bestPlaySpeed = function () { return Math.abs(1000 / _this.fps); };
+            ABeamer._initBrowser();
             var urlParams = window.location.search || '';
             var args = this._args;
             this._waitMan = new _WaitMan();
