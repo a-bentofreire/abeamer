@@ -15,6 +15,8 @@
  * ABeamer supports:
  *
  * - binary operators: `+`, `-`, `*`, `/`, `%` (modulus).
+ *      Work both with numbers and arrays.
+ *      `+` operator also concatenates textual values.
  *
  * - equality and comparison operators: `==`, `!=`, `<`, `>`, `<=`, `>=`.
  * - logical comparison: `and`, `or`.
@@ -27,6 +29,7 @@
  *       - `\'` - defines a single quote
  *       - `\n' - defines new line
  * - numerical values.
+ * - numerical arrays: [x,y,z]
  * - variables.
  *
  * ## Built-in Variables
@@ -53,10 +56,11 @@
  *  `t` - `t` used to interpolate an easing, oscillator or path via expression.
  * ## Examples
  *
- * `= 'A' + 'Beamer'`
- * `= round(12.4 + ceil(50.5) / 2 * (60 % 4))`
- * `= cos(60*deg2rad) * random()`
- * `= iff(fps < 20, 'too few frames', 'lots of frames')`
+ * `= 'A' + 'Beamer'`.
+ * `= round(12.4 + ceil(50.5) / 2 * (60 % 4))`.
+ * `= cos(60*deg2rad) * random()`.
+ * `= iff(fps < 20, 'too few frames', 'lots of frames')`.
+ * `=[2, 3] + [4, 5]`.
  */
 var ABeamer;
 (function (ABeamer) {
@@ -127,20 +131,22 @@ var ABeamer;
     ABeamer.isExpr = isExpr;
     var Str2TokenType;
     (function (Str2TokenType) {
-        Str2TokenType[Str2TokenType["("] = 3] = "(";
-        Str2TokenType[Str2TokenType[")"] = 4] = ")";
-        Str2TokenType[Str2TokenType["+"] = 6] = "+";
-        Str2TokenType[Str2TokenType["-"] = 7] = "-";
-        Str2TokenType[Str2TokenType["*"] = 8] = "*";
-        Str2TokenType[Str2TokenType["/"] = 9] = "/";
-        Str2TokenType[Str2TokenType["%"] = 10] = "%";
-        Str2TokenType[Str2TokenType[","] = 2] = ",";
-        Str2TokenType[Str2TokenType["=="] = 11] = "==";
-        Str2TokenType[Str2TokenType["!="] = 12] = "!=";
-        Str2TokenType[Str2TokenType["<"] = 13] = "<";
-        Str2TokenType[Str2TokenType[">"] = 14] = ">";
-        Str2TokenType[Str2TokenType["<="] = 15] = "<=";
-        Str2TokenType[Str2TokenType[">="] = 16] = ">=";
+        Str2TokenType[Str2TokenType["["] = 2] = "[";
+        Str2TokenType[Str2TokenType["]"] = 3] = "]";
+        Str2TokenType[Str2TokenType["("] = 5] = "(";
+        Str2TokenType[Str2TokenType[")"] = 6] = ")";
+        Str2TokenType[Str2TokenType["+"] = 8] = "+";
+        Str2TokenType[Str2TokenType["-"] = 9] = "-";
+        Str2TokenType[Str2TokenType["*"] = 10] = "*";
+        Str2TokenType[Str2TokenType["/"] = 11] = "/";
+        Str2TokenType[Str2TokenType["%"] = 12] = "%";
+        Str2TokenType[Str2TokenType[","] = 4] = ",";
+        Str2TokenType[Str2TokenType["=="] = 13] = "==";
+        Str2TokenType[Str2TokenType["!="] = 14] = "!=";
+        Str2TokenType[Str2TokenType["<"] = 15] = "<";
+        Str2TokenType[Str2TokenType[">"] = 16] = ">";
+        Str2TokenType[Str2TokenType["<="] = 17] = "<=";
+        Str2TokenType[Str2TokenType[">="] = 18] = ">=";
     })(Str2TokenType || (Str2TokenType = {}));
     /**
      * List of operator precedence.
@@ -148,6 +154,8 @@ var ABeamer;
      */
     var opPriority = [
         0,
+        19,
+        19,
         19,
         19,
         20,
@@ -171,24 +179,26 @@ var ABeamer;
     var Type2Class = [
         0 /* None */,
         1 /* Function */,
-        8 /* Comma */,
-        3 /* ParamOpen */,
-        4 /* ParamClose */,
-        2 /* Value */,
-        5 /* Unary */,
-        5 /* Unary */,
-        7 /* Binary */,
-        7 /* Binary */,
-        7 /* Binary */,
-        7 /* Binary */,
-        7 /* Binary */,
-        7 /* Binary */,
-        7 /* Binary */,
-        7 /* Binary */,
-        7 /* Binary */,
-        7 /* Binary */,
-        7 /* Binary */,
-        6 /* LogicalUnary */,
+        2 /* ArrayOpen */,
+        3 /* ArrayClose */,
+        10 /* Comma */,
+        5 /* ParamOpen */,
+        6 /* ParamClose */,
+        4 /* Value */,
+        7 /* Unary */,
+        7 /* Unary */,
+        9 /* Binary */,
+        9 /* Binary */,
+        9 /* Binary */,
+        9 /* Binary */,
+        9 /* Binary */,
+        9 /* Binary */,
+        9 /* Binary */,
+        9 /* Binary */,
+        9 /* Binary */,
+        9 /* Binary */,
+        9 /* Binary */,
+        8 /* LogicalUnary */,
     ];
     function parser(p, checkSign) {
         var startPos;
@@ -221,22 +231,22 @@ var ABeamer;
                     setToken(1 /* Function */);
                     var funcName = p.token.sValue;
                     if (funcName === 'not') {
-                        p.token.tkType = 19 /* LogicalNot */;
-                        p.token.tkClass = 6 /* LogicalUnary */;
+                        p.token.tkType = 21 /* LogicalNot */;
+                        p.token.tkClass = 8 /* LogicalUnary */;
                     }
                     else {
                         pos++;
                     }
                 }
                 else {
-                    setToken(5 /* Value */);
+                    setToken(7 /* Value */);
                     var varName = p.token.sValue;
                     var opNameIndex = ['not', 'and', 'or'].indexOf(varName);
                     if (opNameIndex !== -1) {
                         // named operators
-                        p.token.tkType = [19 /* LogicalNot */, 17 /* LogicalAnd */,
-                            18 /* LogicalOr */][opNameIndex];
-                        p.token.tkClass = opNameIndex !== 0 ? 7 /* Binary */ : 6 /* LogicalUnary */;
+                        p.token.tkType = [21 /* LogicalNot */, 19 /* LogicalAnd */,
+                            20 /* LogicalOr */][opNameIndex];
+                        p.token.tkClass = opNameIndex !== 0 ? 9 /* Binary */ : 8 /* LogicalUnary */;
                     }
                     else {
                         // variables
@@ -253,11 +263,19 @@ var ABeamer;
                             p.token.paType = 1 /* Number */;
                             p.token.numValue = varValue;
                             p.token.sValue = undefined;
+                            p.token.arrayValue = undefined;
+                        }
+                        else if (varTypeOf === 'object' && Array.isArray(varValue)) {
+                            p.token.paType = 3 /* Array */;
+                            p.token.arrayValue = varValue;
+                            p.token.sValue = undefined;
+                            p.token.numValue = undefined;
                         }
                         else if (varTypeOf === 'boolean') {
                             p.token.paType = 1 /* Number */;
                             p.token.numValue = varValue ? 1 : 0;
                             p.token.sValue = undefined;
+                            p.token.arrayValue = undefined;
                         }
                         else {
                             err(p, "Unsupported type of " + varName);
@@ -275,7 +293,7 @@ var ABeamer;
                 do {
                     ch = expr[++pos];
                 } while (ch && (isDigit(ch) || ch === '.'));
-                setToken(5 /* Value */);
+                setToken(7 /* Value */);
                 p.token.paType = 1 /* Number */;
                 p.token.numValue = parseFloat(p.token.sValue);
                 p.token.sValue = undefined;
@@ -289,7 +307,7 @@ var ABeamer;
                     ch = expr[++pos];
                 } while ((ch !== "'" || prevCh === '\\') && ch !== undefined);
                 startPos++;
-                setToken(5 /* Value */);
+                setToken(7 /* Value */);
                 p.token.sValue = p.token.sValue.replace(/\\([n'])/g, function (all, meta) {
                     switch (meta) {
                         case 'n': return '\n';
@@ -317,7 +335,7 @@ var ABeamer;
         var tkClass = p.token.tkClass;
         p.pos = pos;
         // @ts-ignore   TypeScript bug :-(
-        p.token.canBinOp = tkClass === 5 /* Unary */ || tkClass === 7 /* Binary */;
+        p.token.canBinOp = tkClass === 7 /* Unary */ || tkClass === 9 /* Binary */;
         return tkClass;
     }
     // ------------------------------------------------------------------------
@@ -331,12 +349,29 @@ var ABeamer;
         }
         var res = {
             canBinOp: false,
-            tkClass: 2 /* Value */,
-            tkType: 5 /* Value */,
+            tkClass: 4 /* Value */,
+            tkType: 7 /* Value */,
         };
         p.res = res;
         p.token = funcToken;
         func(funcToken.funcParams, p);
+        return res;
+    }
+    // ------------------------------------------------------------------------
+    //                               Execute Array
+    // ------------------------------------------------------------------------
+    function _execArray(p, funcToken) {
+        var res = {
+            paType: 3 /* Array */,
+            sValue: undefined,
+            numValue: undefined,
+            arrayValue: funcToken.funcParams.map(function (param) {
+                return param.numValue;
+            }),
+            canBinOp: false,
+            tkClass: 4 /* Value */,
+            tkType: 7 /* Value */,
+        };
         return res;
     }
     // ------------------------------------------------------------------------
@@ -398,7 +433,7 @@ var ABeamer;
                 }
             }
         }
-        function onCloseParamOrFunc() {
+        function onCloseParamOrArrayOrFunc() {
             calcStackLeft();
             if (startPoint !== stackLast) {
                 err(p, '', token);
@@ -414,13 +449,13 @@ var ABeamer;
                 break;
             }
             switch (thisTkClass) {
-                case 2 /* Value */:
+                case 4 /* Value */:
                     if (state === 2 /* Binary */) {
                         err(p, '', token);
                     }
                     else if (state === 1 /* NoUnary */
-                        && [5 /* Unary */, 6 /* LogicalUnary */].indexOf(stack[stackLast].tkClass) !== -1
-                        && (stackLast === 0 || stack[stackLast - 1].tkClass !== 2 /* Value */)) {
+                        && [7 /* Unary */, 8 /* LogicalUnary */].indexOf(stack[stackLast].tkClass) !== -1
+                        && (stackLast === 0 || stack[stackLast - 1].tkClass !== 4 /* Value */)) {
                         state = 0 /* IdAndUnary */;
                         op = pop();
                         _calcUnary(p, op, token);
@@ -429,10 +464,12 @@ var ABeamer;
                     push();
                     calcStackRight();
                     break;
+                case 2 /* ArrayOpen */:
+                // flows to TokenClass.Function
                 case 1 /* Function */:
                     token.funcParams = [];
                 // flows to TokenClass.ParamOpen
-                case 3 /* ParamOpen */:
+                case 5 /* ParamOpen */:
                     if (state === 2 /* Binary */) {
                         err(p, '', token);
                     }
@@ -441,28 +478,35 @@ var ABeamer;
                     startPoints.push(startPoint);
                     state = 0 /* IdAndUnary */;
                     break;
-                case 8 /* Comma */:
-                case 4 /* ParamClose */:
+                case 10 /* Comma */:
+                case 6 /* ParamClose */:
+                case 3 /* ArrayClose */:
                     if (!startPoint) {
                         err(p, "Missing starting parenthesis", token);
                     }
                     var funcToken = stack[startPoint - 1];
-                    var isTokenComma = thisTkClass === 8 /* Comma */;
+                    var isTokenComma = thisTkClass === 10 /* Comma */;
                     var isFunc = funcToken.tkClass === 1 /* Function */;
-                    if (isTokenComma && !isFunc) {
+                    var isArray = funcToken.tkClass === 2 /* ArrayOpen */;
+                    if (isTokenComma && !isFunc && !isArray) {
                         err(p, "Missing function", token);
                     }
-                    if (isFunc && !isTokenComma) {
+                    if ((isFunc || isArray) && !isTokenComma) {
                         // function code
                         if (startPoint !== stackLast + 1) { // in case there are 0 parameters
-                            onCloseParamOrFunc();
+                            onCloseParamOrArrayOrFunc();
                             funcToken.funcParams.push(token);
                         }
-                        token = _execExprFunction(p, funcToken);
+                        if (isFunc) {
+                            token = _execExprFunction(p, funcToken);
+                        }
+                        else {
+                            token = _execArray(p, funcToken);
+                        }
                     }
                     else {
                         // not a function
-                        onCloseParamOrFunc();
+                        onCloseParamOrArrayOrFunc();
                     }
                     if (!isTokenComma) {
                         stack[stackLast] = token;
@@ -475,21 +519,21 @@ var ABeamer;
                         state = 0 /* IdAndUnary */;
                     }
                     break;
-                case 6 /* LogicalUnary */:
-                case 5 /* Unary */:
+                case 8 /* LogicalUnary */:
+                case 7 /* Unary */:
                     if (state === 0 /* IdAndUnary */) {
-                        if (thisTkClass === 5 /* Unary */) {
+                        if (thisTkClass === 7 /* Unary */) {
                             state = 1 /* NoUnary */;
                         }
                         push();
                         break;
                     }
                 // it flows to TokenClass.Binary
-                case 7 /* Binary */:
+                case 9 /* Binary */:
                     if (state !== 2 /* Binary */) {
                         err(p, '', token);
                     }
-                    if (stackLast > 0 && stack[stackLast].tkClass === 2 /* Value */) {
+                    if (stackLast > 0 && stack[stackLast].tkClass === 4 /* Value */) {
                         op = stack[stackLast - 1];
                         if (op.canBinOp && _comparePriority(op, token)) {
                             calcStackLeft();
@@ -504,9 +548,10 @@ var ABeamer;
         // #debug-start
         if (p.args.isVerbose) {
             token = stack.length > 0 ? stack[0] : { paType: 2 /* String */ };
+            var v = _valueOfToken(token);
             p.args.story.logFrmt('expression', [
                 ['expression', p.expr],
-                ['value', token.paType === 2 /* String */ ? token.sValue : token.numValue],
+                ['value', v.toString()],
                 ['stack.length', stack.length],
                 ['stack', JSON.stringify(stack, undefined, 2)]
             ]);
@@ -516,10 +561,14 @@ var ABeamer;
             err(p, "Stack not empty");
         }
         token = stack[0];
-        if (stack[stackLast].tkClass !== 2 /* Value */) {
+        if (stack[stackLast].tkClass !== 4 /* Value */) {
             err(p, 'Not a value');
         }
-        return token.paType === 2 /* String */ ? token.sValue : token.numValue;
+        return _valueOfToken(token);
+    }
+    function _valueOfToken(token) {
+        return token.paType === 2 /* String */ ? token.sValue
+            : token.paType === 3 /* Array */ ? token.arrayValue : token.numValue;
     }
     // ------------------------------------------------------------------------
     //                               Error Handling
@@ -561,10 +610,10 @@ var ABeamer;
         if (value.paType !== 1 /* Number */) {
             err(p, ABeamer.Msgs.UnaryErr, op);
         }
-        if (op.tkType === 7 /* Minus */) {
+        if (op.tkType === 9 /* Minus */) {
             value.numValue = -value.numValue;
         }
-        else if (op.tkType === 19 /* LogicalNot */) {
+        else if (op.tkType === 21 /* LogicalNot */) {
             value.numValue = value.numValue ? 0 : 1;
         }
     }
@@ -572,13 +621,47 @@ var ABeamer;
     function _calcBinary(p, op, value1, value2) {
         var AnyNotNumber = value1.paType !== 1 /* Number */
             || value2.paType !== 1 /* Number */;
-        if (op.tkType !== 6 /* Plus */ && AnyNotNumber) {
-            err(p, '', value1); // @TODO: Find a message for this error
+        var is1stArray = value1.paType === 3 /* Array */;
+        var is2ndArray = value2.paType === 3 /* Array */;
+        var isArray = is1stArray && is2ndArray;
+        function NumbersOnly() {
+            if (AnyNotNumber) {
+                err(p, 'This op only supports numbers', value1);
+            }
         }
         var v;
-        switch (op.tkType) {
-            case 6 /* Plus */:
+        function execOp(f, allowOther) {
+            if (is1stArray || is2ndArray) {
+                if (!is1stArray || !is2ndArray) {
+                    ABeamer.throwErr("Can only add 2 arrays");
+                }
+                if (value1.arrayValue.length !== value2.arrayValue.length) {
+                    ABeamer.throwErr("Both arrays must have the same value");
+                }
+                value1.arrayValue.forEach(function (v1, index) {
+                    value1.arrayValue[index] = f(v1, value2.arrayValue[index]);
+                });
+                value1.paType = 3 /* Array */;
+                v = undefined;
+            }
+            else {
                 if (AnyNotNumber) {
+                    if (allowOther) {
+                        return false;
+                    }
+                    else {
+                        NumbersOnly();
+                    }
+                }
+                else {
+                    v = f(value1.numValue, value2.numValue);
+                }
+            }
+            return true;
+        }
+        switch (op.tkType) {
+            case 8 /* Plus */:
+                if (!execOp(function (a, b) { return a + b; }, true)) {
                     value1.sValue =
                         (value1.paType === 1 /* Number */
                             ? value1.numValue.toString() : value1.sValue)
@@ -587,44 +670,49 @@ var ABeamer;
                     value1.paType = 2 /* String */;
                     return;
                 }
-                else {
-                    v = value1.numValue + value2.numValue;
-                }
                 break;
-            case 7 /* Minus */:
-                v = value1.numValue - value2.numValue;
+            case 9 /* Minus */:
+                execOp(function (a, b) { return a - b; });
                 break;
-            case 8 /* Multiply */:
-                v = value1.numValue * value2.numValue;
+            case 10 /* Multiply */:
+                execOp(function (a, b) { return a * b; });
                 break;
-            case 9 /* Divide */:
-                v = value1.numValue / value2.numValue;
+            case 11 /* Divide */:
+                execOp(function (a, b) { return a / b; });
                 break;
-            case 10 /* Mod */:
-                v = value1.numValue % value2.numValue;
+            case 12 /* Mod */:
+                execOp(function (a, b) { return a % b; });
                 break;
-            case 11 /* Equal */:
+            case 13 /* Equal */:
+                NumbersOnly();
                 v = value1.numValue === value2.numValue ? 1 : 0;
                 break;
-            case 12 /* Different */:
+            case 14 /* Different */:
+                NumbersOnly();
                 v = value1.numValue !== value2.numValue ? 1 : 0;
                 break;
-            case 13 /* Lesser */:
+            case 15 /* Lesser */:
+                NumbersOnly();
                 v = value1.numValue < value2.numValue ? 1 : 0;
                 break;
-            case 14 /* Greater */:
+            case 16 /* Greater */:
+                NumbersOnly();
                 v = value1.numValue > value2.numValue ? 1 : 0;
                 break;
-            case 15 /* LessEqual */:
+            case 17 /* LessEqual */:
+                NumbersOnly();
                 v = value1.numValue <= value2.numValue ? 1 : 0;
                 break;
-            case 16 /* GreaterEqual */:
+            case 18 /* GreaterEqual */:
+                NumbersOnly();
                 v = value1.numValue >= value2.numValue ? 1 : 0;
                 break;
-            case 17 /* LogicalAnd */:
+            case 19 /* LogicalAnd */:
+                NumbersOnly();
                 v = value1.numValue && value2.numValue ? 1 : 0;
                 break;
-            case 18 /* LogicalOr */:
+            case 20 /* LogicalOr */:
+                NumbersOnly();
                 v = value1.numValue || value2.numValue ? 1 : 0;
                 break;
         }

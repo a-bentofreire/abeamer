@@ -76,6 +76,7 @@ namespace ABeamer {
     Any,
     Number,
     String,
+    Array,
   }
 
 
@@ -83,6 +84,7 @@ namespace ABeamer {
     paType?: ExFuncParamType;
     sValue?: string;
     numValue?: number;
+    arrayValue?: number[];
   }
 
 

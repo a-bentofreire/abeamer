@@ -161,6 +161,7 @@ declare namespace ABeamer {
     Any,
     Number,
     String,
+    Array,
   }
 
 
@@ -168,6 +169,7 @@ declare namespace ABeamer {
     paType?: ExFuncParamType;
     sValue?: string;
     numValue?: number;
+    arrayValue?: number[];
   }
 
 
@@ -234,7 +236,7 @@ declare namespace ABeamer {
     /** `t` used to interpolate an easing, oscillator or path via expression. */
     t?: number;
 
-    [name: string]: number | string | boolean;
+    [name: string]: number | string | boolean | number[];
   }
 
 
@@ -245,7 +247,7 @@ declare namespace ABeamer {
   }
 
 
-  export type ExprResult = string | number;
+  export type ExprResult = string | number | number[];
 
   export type ExprString = string;
 
@@ -488,8 +490,6 @@ declare namespace ABeamer {
    * Defines the path type, which is either string representing a predefined
    * path function or a custom function (see path function).
    * The path function interpolates from [0, 1].
-   * **WARNING** At the moment, path only supports uni-dimension expression paths.
-   * _Coming soon_ Multi-dimension expression paths.
    */
   export type PathHandler = PathName | string | ExprString | PathFunc;
 
@@ -776,7 +776,8 @@ declare namespace ABeamer {
   /**
    * **Dual properties** are properties that map one animation property into 2 [](DOM properties).
    */
-  export type DualPropName = 'left-top'
+  export type DualPropName = 'width-height'
+    | 'left-top'
     | 'right-top'
     | 'left-bottom'
     | 'right-bottom';
@@ -1866,26 +1867,6 @@ declare namespace ABeamer {
 
     /** Color to end the attack. If undefined, it uses the original color. */
     endColor?: string;
-  }
-
-
-  // ------------------------------------------------------------------------
-  //                               Shape Tasks
-  // ------------------------------------------------------------------------
-
-
-  export enum ChartTypes {
-    bar,
-  }
-
-  export type ChartTaskName = 'chart';
-
-  export type SeriesData = number[];
-
-
-  export interface BaseChartTaskParams extends AnyParams {
-    chartType?: ChartTypes | string;
-    series: SeriesData[];
   }
 
 

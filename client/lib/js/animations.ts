@@ -615,7 +615,7 @@ namespace ABeamer {
 
       if (acp.path) {
         this.path = _parseInterpolator<PathHandler, PathFunc, PathParams>(
-          acp.path.handler, acp.path.params, undefined,
+          acp.path.handler, acp.path.params, _expressionPath,
           _pathNumToStr, _pathFunctions, args);
       } else if (parent) {
         this.path = parent.path;

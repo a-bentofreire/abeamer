@@ -148,7 +148,7 @@ var ABeamer;
                 this.oscillator = parent.oscillator;
             }
             if (acp.path) {
-                this.path = _parseInterpolator(acp.path.handler, acp.path.params, undefined, ABeamer._pathNumToStr, ABeamer._pathFunctions, args);
+                this.path = _parseInterpolator(acp.path.handler, acp.path.params, ABeamer._expressionPath, ABeamer._pathNumToStr, ABeamer._pathFunctions, args);
             }
             else if (parent) {
                 this.path = parent.path;

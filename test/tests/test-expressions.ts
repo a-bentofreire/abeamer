@@ -48,7 +48,8 @@ namespace Tests {
     }`]);
   }
 
-
+  // @TODO: Implement array testing
+  // add('=[56.4, 6, 7]', 'simple array', '56.4,6,7');
   add('=  -5', 'simple value');
   add('= 4 -5', 'number sign');
   add('=  12 + 24', 'simple binary op');

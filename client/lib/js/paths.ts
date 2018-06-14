@@ -85,8 +85,6 @@ namespace ABeamer {
    * Defines the path type, which is either string representing a predefined
    * path function or a custom function (see path function).
    * The path function interpolates from [0, 1].
-   * **WARNING** At the moment, path only supports uni-dimension expression paths.
-   * _Coming soon_ Multi-dimension expression paths.
    */
   export type PathHandler = PathName | string | ExprString | PathFunc;
 
@@ -168,8 +166,8 @@ namespace ABeamer {
   export function _expressionPath(t: number, params: PathParams, stage: uint,
     args?: ABeamerArgs): number[] {
     _vars.t = t;
-    return [parseFloat(
-      calcExpr((params as _WorkExprMotionParams)._expression, args) as any)];
+    const v = calcExpr((params as _WorkExprMotionParams)._expression, args);
+    return Array.isArray(v) ? v : [parseFloat(v as any)];
   }
 
   // ------------------------------------------------------------------------

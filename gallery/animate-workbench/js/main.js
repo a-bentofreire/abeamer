@@ -11,11 +11,8 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     var scene1 = story.scenes[0];
     var expr = "=iff(t<0.2 or t>0.7, 0, 1)";
+    var pathExpr = '=[x0+(x1-x0)*t, y0-(y0-10)*t*t]';
     var tests = [{
-            enabled: true,
-            label: "easing:" + expr,
-            easing: expr,
-        }, {
             enabled: true,
             label: 'easeInQuart',
             // easing by Id
@@ -53,32 +50,59 @@ $(window).on("load", function () {
             oscillator: {
                 handler: 'harmonic',
             },
+        }, {
+            enabled: true,
+            label: "path: " + pathExpr,
+            path: { handler: pathExpr },
+        }, , {
+            enabled: true,
+            label: "easing:" + expr,
+            easing: expr,
         }];
     var h = story.height;
     var margin = 10;
     var d = 2; // duration in seconds
     var allowMultiple = true;
+    var x0 = margin;
+    var x1 = story.width - 2 * margin;
+    var y0 = h / 2;
     tests.forEach(function (test, index) {
         if (index && !allowMultiple) {
             return;
         }
+        var props = !test.path
+            ? [{
+                    prop: 'left',
+                    easing: test.easingX,
+                    valueStart: margin + "px",
+                    value: x1,
+                }, {
+                    prop: 'top',
+                    easing: test.easing,
+                    oscillator: test.oscillator,
+                    valueStart: h / 2 + "px",
+                    value: h / 8,
+                }]
+            : [{
+                    prop: 'left-top',
+                    path: test.path,
+                }];
         scene1
             .addAnimations([{
                 selector: '#dot',
                 duration: d + "s",
                 enabled: test.enabled,
-                props: [{
-                        prop: 'left',
-                        easing: test.easingX,
-                        valueStart: margin + "px",
-                        value: story.width - 2 * margin,
-                    }, {
-                        prop: 'top',
-                        easing: test.easing,
-                        oscillator: test.oscillator,
-                        valueStart: h / 2 + "px",
-                        value: h / 8,
+                tasks: [{
+                        handler: 'add-vars',
+                        params: {
+                            vars: {
+                                x0: x0,
+                                x1: x1,
+                                y0: y0,
+                            },
+                        },
                     }],
+                props: props,
             },
             {
                 selector: '#label',

@@ -114,7 +114,7 @@ namespace ABeamer {
     if (isStringTime) {
       const exprTime = ifExprCalc(timeOrFrame as string, args);
       if (exprTime !== undefined) {
-        timeOrFrame = exprTime;
+        timeOrFrame = exprTime as number | string;
         isStringTime = typeof timeOrFrame === 'string';
       }
     }

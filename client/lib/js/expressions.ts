@@ -18,6 +18,8 @@
  * ABeamer supports:
  *
  * - binary operators: `+`, `-`, `*`, `/`, `%` (modulus).
+ *      Work both with numbers and arrays.
+ *      `+` operator also concatenates textual values.
  *
  * - equality and comparison operators: `==`, `!=`, `<`, `>`, `<=`, `>=`.
  * - logical comparison: `and`, `or`.
@@ -30,6 +32,7 @@
  *       - `\'` - defines a single quote
  *       - `\n' - defines new line
  * - numerical values.
+ * - numerical arrays: [x,y,z]
  * - variables.
  *
  * ## Built-in Variables
@@ -56,10 +59,11 @@
  *  `t` - `t` used to interpolate an easing, oscillator or path via expression.
  * ## Examples
  *
- * `= 'A' + 'Beamer'`
- * `= round(12.4 + ceil(50.5) / 2 * (60 % 4))`
- * `= cos(60*deg2rad) * random()`
- * `= iff(fps < 20, 'too few frames', 'lots of frames')`
+ * `= 'A' + 'Beamer'`.
+ * `= round(12.4 + ceil(50.5) / 2 * (60 % 4))`.
+ * `= cos(60*deg2rad) * random()`.
+ * `= iff(fps < 20, 'too few frames', 'lots of frames')`.
+ * `=[2, 3] + [4, 5]`.
  */
 namespace ABeamer {
 
@@ -113,7 +117,7 @@ namespace ABeamer {
     /** `t` used to interpolate an easing, oscillator or path via expression. */
     t?: number;
 
-    [name: string]: number | string | boolean;
+    [name: string]: number | string | boolean | number[];
   }
 
 
@@ -124,7 +128,7 @@ namespace ABeamer {
   }
 
 
-  export type ExprResult = string | number;
+  export type ExprResult = string | number | number[];
 
   export type ExprString = string;
 
@@ -205,6 +209,8 @@ namespace ABeamer {
   const enum TokenType {
     None,
     Function,
+    ArrayOpen,
+    ArrayClose,
     Comma,
     ParamOpen,
     ParamClose,
@@ -229,6 +235,8 @@ namespace ABeamer {
   const enum TokenClass {
     None,
     Function,
+    ArrayOpen,
+    ArrayClose,
     Value,
     ParamOpen,
     ParamClose,
@@ -240,6 +248,8 @@ namespace ABeamer {
 
 
   enum Str2TokenType {
+    '[' = TokenType.ArrayOpen,
+    ']' = TokenType.ArrayClose,
     '(' = TokenType.ParamOpen,
     ')' = TokenType.ParamClose,
     '+' = TokenType.Plus,
@@ -271,6 +281,8 @@ namespace ABeamer {
   const opPriority: uint[] = [
     0,  // None,
     19, // Function,
+    19, // ArrayOpen,
+    19, // ArrayClose,
     19, // Comma,
     20, // ParamOpen,
     20, // ParamClose,
@@ -295,6 +307,8 @@ namespace ABeamer {
   const Type2Class: TokenClass[] = [
     TokenClass.None,
     TokenClass.Function,
+    TokenClass.ArrayOpen,
+    TokenClass.ArrayClose,
     TokenClass.Comma,
     TokenClass.ParamOpen,
     TokenClass.ParamClose,
@@ -398,14 +412,20 @@ namespace ABeamer {
               p.token.paType = ExFuncParamType.Number;
               p.token.numValue = varValue as number;
               p.token.sValue = undefined;
+              p.token.arrayValue = undefined;
+            } else if (varTypeOf === 'object' && Array.isArray(varValue)) {
+              p.token.paType = ExFuncParamType.Array;
+              p.token.arrayValue = varValue as number[];
+              p.token.sValue = undefined;
+              p.token.numValue = undefined;
             } else if (varTypeOf === 'boolean') {
               p.token.paType = ExFuncParamType.Number;
               p.token.numValue = (varValue as boolean) ? 1 : 0;
               p.token.sValue = undefined;
+              p.token.arrayValue = undefined;
             } else {
               err(p, `Unsupported type of ${varName}`);
             }
-
           }
         }
         break;
@@ -496,6 +516,26 @@ namespace ABeamer {
   }
 
   // ------------------------------------------------------------------------
+  //                               Execute Array
+  // ------------------------------------------------------------------------
+
+  function _execArray(p: ParseParams, funcToken: Token): Token {
+
+    const res: Token = {
+      paType: ExFuncParamType.Array;
+      sValue: undefined,
+      numValue: undefined,
+      arrayValue: funcToken.funcParams.map(param => {
+        return param.numValue;
+      }),
+      canBinOp: false,
+      tkClass: TokenClass.Value,
+      tkType: TokenType.Value,
+    };
+    return res;
+  }
+
+  // ------------------------------------------------------------------------
   //                               State Machine
   // ------------------------------------------------------------------------
 
@@ -570,7 +610,7 @@ namespace ABeamer {
       }
     }
 
-    function onCloseParamOrFunc(): void {
+    function onCloseParamOrArrayOrFunc(): void {
       calcStackLeft();
       if (startPoint !== stackLast) {
         err(p, '', token);
@@ -607,6 +647,8 @@ namespace ABeamer {
           calcStackRight();
           break;
 
+        case TokenClass.ArrayOpen:
+        // flows to TokenClass.Function
         case TokenClass.Function:
           token.funcParams = [];
         // flows to TokenClass.ParamOpen
@@ -620,6 +662,7 @@ namespace ABeamer {
 
         case TokenClass.Comma:
         case TokenClass.ParamClose:
+        case TokenClass.ArrayClose:
 
           if (!startPoint) {
             err(p, `Missing starting parenthesis`, token);
@@ -628,25 +671,30 @@ namespace ABeamer {
           const funcToken = stack[startPoint - 1];
           const isTokenComma = thisTkClass === TokenClass.Comma;
           const isFunc = funcToken.tkClass === TokenClass.Function;
+          const isArray = funcToken.tkClass === TokenClass.ArrayOpen;
 
-          if (isTokenComma && !isFunc) {
+          if (isTokenComma && !isFunc && !isArray) {
             err(p, `Missing function`, token);
           }
 
-          if (isFunc && !isTokenComma) {
+          if ((isFunc || isArray) && !isTokenComma) {
 
             // function code
             if (startPoint !== stackLast + 1) { // in case there are 0 parameters
-              onCloseParamOrFunc();
+              onCloseParamOrArrayOrFunc();
               funcToken.funcParams.push(token);
             }
 
-            token = _execExprFunction(p, funcToken);
+            if (isFunc) {
+              token = _execExprFunction(p, funcToken);
+            } else {
+              token = _execArray(p, funcToken);
+            }
 
           } else {
 
             // not a function
-            onCloseParamOrFunc();
+            onCloseParamOrArrayOrFunc();
           }
 
           if (!isTokenComma) {
@@ -690,9 +738,10 @@ namespace ABeamer {
     // #debug-start
     if (p.args.isVerbose) {
       token = stack.length > 0 ? stack[0] : { paType: ExFuncParamType.String };
+      const v = _valueOfToken(token);
       p.args.story.logFrmt('expression', [
         ['expression', p.expr],
-        ['value', token.paType === ExFuncParamType.String ? token.sValue : token.numValue],
+        ['value', v.toString()],
         ['stack.length', stack.length],
         ['stack', JSON.stringify(stack, undefined, 2)]]);
     }
@@ -708,7 +757,13 @@ namespace ABeamer {
       err(p, 'Not a value');
     }
 
-    return token.paType === ExFuncParamType.String ? token.sValue : token.numValue;
+    return _valueOfToken(token);
+  }
+
+
+  function _valueOfToken(token: Token): ExprResult {
+    return token.paType === ExFuncParamType.String ? token.sValue
+      : token.paType === ExFuncParamType.Array ? token.arrayValue : token.numValue;
   }
 
   // ------------------------------------------------------------------------
@@ -775,14 +830,55 @@ namespace ABeamer {
 
     const AnyNotNumber = value1.paType !== ExFuncParamType.Number
       || value2.paType !== ExFuncParamType.Number;
-    if (op.tkType !== TokenType.Plus && AnyNotNumber) {
-      err(p, '', value1); // @TODO: Find a message for this error
+    const is1stArray = value1.paType === ExFuncParamType.Array;
+    const is2ndArray = value2.paType === ExFuncParamType.Array;
+    const isArray = is1stArray && is2ndArray;
+
+    function NumbersOnly() {
+      if (AnyNotNumber) {
+        err(p, 'This op only supports numbers', value1);
+      }
     }
 
     let v: number;
+
+    function execOp(f: (a: number, b: number) => number,
+      allowOther?: boolean): boolean {
+
+      if (is1stArray || is2ndArray) {
+
+        if (!is1stArray || !is2ndArray) {
+          throwErr(`Can only add 2 arrays`);
+        }
+
+        if (value1.arrayValue.length !== value2.arrayValue.length) {
+          throwErr(`Both arrays must have the same value`);
+        }
+
+        value1.arrayValue.forEach((v1, index) => {
+          value1.arrayValue[index] = f(v1, value2.arrayValue[index]);
+        });
+        value1.paType = ExFuncParamType.Array;
+        v = undefined;
+
+      } else {
+
+        if (AnyNotNumber) {
+          if (allowOther) {
+            return false;
+          } else { NumbersOnly(); }
+
+        } else {
+          v = f(value1.numValue, value2.numValue);
+        }
+      }
+      return true;
+    }
+
+
     switch (op.tkType) {
       case TokenType.Plus:
-        if (AnyNotNumber) {
+        if (!execOp((a, b) => a + b, true)) {
           value1.sValue =
             (value1.paType === ExFuncParamType.Number
               ? value1.numValue.toString() : value1.sValue)
@@ -790,47 +886,52 @@ namespace ABeamer {
               ? value2.numValue.toString() : value2.sValue);
           value1.paType = ExFuncParamType.String;
           return;
-        } else {
-          v = value1.numValue + value2.numValue;
         }
         break;
       case TokenType.Minus:
-        v = value1.numValue - value2.numValue;
+        execOp((a, b) => a - b);
         break;
       case TokenType.Multiply:
-        v = value1.numValue * value2.numValue;
+        execOp((a, b) => a * b);
         break;
       case TokenType.Divide:
-        v = value1.numValue / value2.numValue;
+        execOp((a, b) => a / b);
         break;
       case TokenType.Mod:
-        v = value1.numValue % value2.numValue;
+        execOp((a, b) => a % b);
         break;
       case TokenType.Equal:
+        NumbersOnly();
         v = value1.numValue === value2.numValue ? 1 : 0;
         break;
       case TokenType.Different:
+        NumbersOnly();
         v = value1.numValue !== value2.numValue ? 1 : 0;
         break;
       case TokenType.Lesser:
+        NumbersOnly();
         v = value1.numValue < value2.numValue ? 1 : 0;
         break;
       case TokenType.Greater:
+        NumbersOnly();
         v = value1.numValue > value2.numValue ? 1 : 0;
         break;
       case TokenType.LessEqual:
+        NumbersOnly();
         v = value1.numValue <= value2.numValue ? 1 : 0;
         break;
       case TokenType.GreaterEqual:
+        NumbersOnly();
         v = value1.numValue >= value2.numValue ? 1 : 0;
         break;
       case TokenType.LogicalAnd:
+        NumbersOnly();
         v = value1.numValue && value2.numValue ? 1 : 0;
         break;
       case TokenType.LogicalOr:
+        NumbersOnly();
         v = value1.numValue || value2.numValue ? 1 : 0;
         break;
-
     }
     value1.numValue = v;
   }

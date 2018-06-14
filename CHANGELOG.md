@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.2.9] -
 ### Added
 - `Adapters` support `width-height` as dual-property.
+- Expressions support numerical arrays and binary ops on those arrays.
+### Fixed
+- Paths support expression paths.
+
 
 
 ## [0.2.8] -

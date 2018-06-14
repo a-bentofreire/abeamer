@@ -334,6 +334,10 @@ to install if you need to render, create gifs or movies on the local machine.
 * [Documentation](https://github.com/a-bentofreire/abeamer-docs)
 * [Gallery - Release version](https://github.com/a-bentofreire/abeamer-gallery-release)
 
+## What's new
+
+* Check out the [CHANGELOG](https://github.com/a-bentofreire/abeamer/blob/master/CHANGELOG.md).
+
 ## Roadmap & Known Issues
 
 * [Roadmap](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/roadmap/)
