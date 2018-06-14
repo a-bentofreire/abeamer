@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.2.9] -
+### Added
+- `Adapters` support `width-height` as dual-property.
+
+
 ## [0.2.8] -
 ### Fixed
 - `_initBrowser();` is only executed during `story.constructor` in order to work with JSFiddle
@@ -116,7 +121,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed `defaultDuration` from the gallery.
 - (DEV)exact framework supports plugins.
 - Improved cross-browser CSS support.
-- Adaptors have access to ABeamerArgs.
+- Adapters have access to ABeamerArgs.
 - Redesigned the render loop to support wait functions.
 - Improved `README.md`.
 - Redesigned `gallery/animate-speech`.

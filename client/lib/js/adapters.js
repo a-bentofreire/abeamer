@@ -107,6 +107,7 @@ var ABeamer;
         'top': [ABeamer.DPT_PIXEL, 'top'],
         'width': [ABeamer.DPT_PIXEL, 'width'],
         'height': [ABeamer.DPT_PIXEL, 'height'],
+        'width-height': [ABeamer.DPT_DUAL_PIXELS, ['width', 'height']],
         'left-top': [ABeamer.DPT_DUAL_PIXELS, ['left', 'top']],
         'right-top': [ABeamer.DPT_DUAL_PIXELS, ['right', 'top']],
         'left-bottom': [ABeamer.DPT_DUAL_PIXELS, ['left', 'bottom']],

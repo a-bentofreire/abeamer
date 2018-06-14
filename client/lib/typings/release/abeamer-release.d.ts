@@ -1869,4 +1869,24 @@ declare namespace ABeamer {
   }
 
 
+  // ------------------------------------------------------------------------
+  //                               Shape Tasks
+  // ------------------------------------------------------------------------
+
+
+  export enum ChartTypes {
+    bar,
+  }
+
+  export type ChartTaskName = 'chart';
+
+  export type SeriesData = number[];
+
+
+  export interface BaseChartTaskParams extends AnyParams {
+    chartType?: ChartTypes | string;
+    series: SeriesData[];
+  }
+
+
 }

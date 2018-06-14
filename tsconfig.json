@@ -20,6 +20,7 @@
         "release/",
         "gallery-release/",
         "private/",
+        "private-projects/**/typings/*",
         "client/lib/typings/release/abeamer-release.d.ts",
         "client/lib/typings/dev"
     ]

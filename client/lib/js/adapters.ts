@@ -86,7 +86,8 @@ namespace ABeamer {
   /**
    * **Dual properties** are properties that map one animation property into 2 [](DOM properties).
    */
-  export type DualPropName = 'left-top'
+  export type DualPropName = 'width-height'
+    | 'left-top'
     | 'right-top'
     | 'left-bottom'
     | 'right-bottom';
@@ -311,6 +312,7 @@ namespace ABeamer {
     'top': [DPT_PIXEL, 'top'],
     'width': [DPT_PIXEL, 'width'],
     'height': [DPT_PIXEL, 'height'],
+    'width-height': [DPT_DUAL_PIXELS, ['width', 'height']],
     'left-top': [DPT_DUAL_PIXELS, ['left', 'top']],
     'right-top': [DPT_DUAL_PIXELS, ['right', 'top']],
     'left-bottom': [DPT_DUAL_PIXELS, ['left', 'bottom']],
@@ -941,9 +943,6 @@ namespace ABeamer {
     }, {});
   }
 
-  /*         elMedia.play().then(() => {
-            elMedia.pause();
-          }); */
 
   export interface _WorkWaitForParams extends AnyParams {
     waitFor: WaitFor;
