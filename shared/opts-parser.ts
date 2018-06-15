@@ -28,7 +28,7 @@ export namespace OptsParser {
 
 
   /**
-   * Map of all the common options to both the cli and the server agent.
+   * Map of all the common options to both the cli and the render server agent.
    * Each key represents an option in both camelCase and Dash format.
    */
   export let argOpts = {

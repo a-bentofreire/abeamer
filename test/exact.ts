@@ -946,7 +946,7 @@ export namespace Exact {
 
   /**
    * Creates the command line.
-   * Usage: execute the server agent.
+   * Usage: execute the render server agent.
    */
   function buildCmdLine(rd: ExactResult): void {
     const params = rd.params;

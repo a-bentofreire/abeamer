@@ -83,7 +83,9 @@ declare namespace ABeamer {
   }
 
 
-  export interface I8nParams { [name: string]: (number | string); }
+  export interface I8nParams {
+    [name: string]: (number | string);
+  }
 
 
   export function i8nMsg(msg: string, params?: I8nParams): string;

@@ -42,7 +42,7 @@ via [teleporting](teleporter.md) then you don't need to install nodejs.
 ### Can I download just the animation library?
 
 Yes, you can.  
-Here is the link: @TODO: add link
+Download from [here](https://github.com/a-bentofreire/abeamer-release/archive/master.zip).  
 
 ### I can't install puppeteer.   
 
@@ -115,7 +115,7 @@ You need to modify `$abeamer` fields into `@abeamer` on `abeamer.ini` file.
 
 ### Why is abeamer.ini an .ini file and not a .scss file?
 
-`abeamer.ini` is read both by scss compiler and ABeamer server agent.  
+`abeamer.ini` is read both by scss compiler and ABeamer render server agent.  
 It only allows a small subset of scss specification.   
 
 ### I don't known how to program, can I use ABeamer?

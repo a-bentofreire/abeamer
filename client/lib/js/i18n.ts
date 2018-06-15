@@ -12,6 +12,12 @@
  *
  * ## Description
  *
+ * ABeamer allows to localize the name of functions and other functionalities
+ * such the names of tasks, flyovers and scene transitions.
+ * The names can include non-latin characters.
+ *
+ * Fill Localization with the localize data, and add it
+ * via `ABeamer.pluginManager.addLocalization`.
  */
 namespace ABeamer {
 
@@ -61,7 +67,9 @@ namespace ABeamer {
   }
 
 
-  export interface I8nParams { [name: string]: (number | string); }
+  export interface I8nParams {
+    [name: string]: (number | string);
+  }
 
   // #export-section-end: release
   // -------------------------------

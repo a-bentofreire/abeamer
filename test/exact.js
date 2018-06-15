@@ -565,7 +565,7 @@ var Exact;
     // ------------------------------------------------------------------------
     /**
      * Creates the command line.
-     * Usage: execute the server agent.
+     * Usage: execute the render server agent.
      */
     function buildCmdLine(rd) {
         var params = rd.params;

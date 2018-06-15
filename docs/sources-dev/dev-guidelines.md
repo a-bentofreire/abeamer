@@ -17,7 +17,7 @@ The following list defines the fundamental design Principles that both code and 
 - D05. ABeamer must have as complete as possible information regarding types and interfaces for any end-user who uses TypeScript.
 - D06. Except for any specific gallery example, any developer **must** be able to any operation offline, including coding, testing, building and documenting.
 - D07. The web browser library must have absolute minimum dependencies and these must be included in the installation.
-- D08. Both the server agent and command line can only require: `nodejs`, `ffmpeg` and a server such as `puppeteer`.
+- D08. Both the render server agent and command line can only require: `nodejs`, `ffmpeg` and a server such as `puppeteer`.
 
 # Code Formating Rules
 

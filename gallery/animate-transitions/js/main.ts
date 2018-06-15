@@ -191,7 +191,7 @@ $(window).on("load", () => {
 
 
   // use this code lines in production mode.
-  // it doesn't requires a server agent.
+  // it doesn't requires a render server agent.
   // send storyToTeleport via ajax to the remote server.
   // along with login/password, assets and other data.
 

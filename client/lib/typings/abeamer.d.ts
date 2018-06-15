@@ -595,7 +595,7 @@ declare namespace ABeamer {
      * This method requires that:
      *
      * 1. Is on teleporting mode `isTeleporting === true`
-     * 2. The server agent. `abeamer render ...`
+     * 2. The render server agent. `abeamer render ...`
      *
      * Use this method instead of `getStoryToTeleport`.
      */

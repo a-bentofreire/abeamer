@@ -10,6 +10,7 @@ import * as sysFs from "fs";
 import * as sysPath from "path";
 import { fsix } from "../vendor/fsix.js";
 import { DevPaths } from "../dev-paths.js";
+import * as versionLib from '../version.js';
 import { DevWebLinks as webLinks } from "../dev-web-links.js";
 
 /** @module developer | This module won't be part of release version */
@@ -236,7 +237,6 @@ export namespace BuildDocs {
     DocIdType.ClassName, DocIdType.FunctionName,
   ];
 
-
   class DocParser {
 
     outLines: string[] = [];
@@ -351,6 +351,7 @@ export namespace BuildDocs {
       if (svJsDocs.length && this.lastJsDocsLineNr === this.lastPeekLineNr) {
         const formattedJsDocs = formatJsDocsMarkdown(svJsDocs.join('\n'), this.localWebLinks);
         this.outLines.push(formattedJsDocs);
+      } else {
       }
 
       return true;
@@ -462,6 +463,7 @@ export namespace BuildDocs {
         let line = this.getLine();
         this.addId(id, DocIdType.FunctionName,
           this._processDefContent(line, false), [], undefined, exportTag);
+
         while (true) {
           line = this.getLine();
           const [, endSpaces] = line.match(/^(\s*)\}\s*$/) || EMPTY;
@@ -512,6 +514,13 @@ export namespace BuildDocs {
       this.inpLineNr = 0;
       this.inpLineCount = this.inpLines.length;
       while (!this.isFinished()) {
+
+        // if (this.getLine(false).includes('@stop-processing')) {
+        //   console.log(`this.inpLineNr: ${this.inpLineNr}`);
+        //   console.log(this.inpLines);
+        //   break;
+        // }
+
         const curLineNr = this.inpLineNr;
         this.parseJsDocs();
         if (this.isInsideClassOrInterface) {
@@ -558,7 +567,9 @@ export namespace BuildDocs {
     constructor(templateFileName: string, targetName) {
       this.yamlDoc = yaml.safeLoad(fsix.readUtf8Sync(
         templateFileName));
-      this.yamlDoc.site_name = this.yamlDoc.site_name.replace(/%target%/, targetName);
+      this.yamlDoc.site_name = this.yamlDoc.site_name
+        .replace(/%target%/, targetName)
+        .replace(/%version%/, versionLib.VERSION);
     }
 
 
@@ -686,7 +697,7 @@ export namespace BuildDocs {
     // if (isEndUser || inpFileName.indexOf('story') === -1) { return; }
 
 
-    const inpText = fsix.readUtf8Sync(inpFileName);
+    let inpText = fsix.readUtf8Sync(inpFileName);
     const matches = inpText.match(
       /\/\*\*\s*@module ([\w+\-]+)(?:\s*\|.*)\n(?:(?:.|\n)*?)\/\*\*((?:.|\n)*?)\*\//) || EMPTY;
     const moduleType = matches[1] || '';
@@ -700,6 +711,7 @@ export namespace BuildDocs {
       let preDocText = '';
       if (isEndUser && sysFs.existsSync(apiFileName)) {
         preDocText = fsix.readUtf8Sync(apiFileName) + '\n';
+        // inpText = inpText.replace(/(namespace)/, '// @stop-processing\n$1');
       }
 
 
@@ -708,7 +720,7 @@ export namespace BuildDocs {
 
         docParser.parseFileData(preDocText + inpText);
         if (docParser.outLines.length) {
-          outText += '  \n<div class=api-header>&nbsp;</div>\n#API\n' + docParser.outLines.join('\n');
+          outText += '  \n  \n<div class=api-header>&nbsp;</div>\n#API\n' + docParser.outLines.join('\n');
         }
       }
 

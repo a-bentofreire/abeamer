@@ -16,7 +16,7 @@
  * - Manage scene transitions.
  * - Manage flyovers.
  * - Start the rendering process.
- * - Communicate with the server agent.
+ * - Communicate with the render server agent.
  * - Load the complete story from a configuration file.
  *
  * The workflow summary is:
@@ -24,8 +24,8 @@
  * - A story automatically creates DOM scenes.
  * - In each scene, the user adds its animations.
  * - The user executes `story.render` which will process the animation pipeline
- * frame by frame and sends it to the server agent.
- * - The server agent will communicate with a headless server such as puppeteer
+ * frame by frame and sends it to the render server agent.
+ * - The render server agent will communicate with a headless server such as puppeteer
  * to store each frame on the disk.
  *
  * @see workflow
@@ -592,13 +592,13 @@ var ABeamer;
          * This method requires that:
          *
          * 1. Is on teleporting mode `isTeleporting === true`
-         * 2. The server agent. `abeamer render ...`
+         * 2. The render server agent. `abeamer render ...`
          *
          * Use this method instead of `getStoryToTeleport`.
          */
         _Story.prototype.teleport = function (frameOpts, isPretty) {
             if (!this.hasServer) {
-                console.warn("To teleport it requires the server agent to be running");
+                console.warn("To teleport it requires the render server agent to be running");
             }
             this._sendCmd(ABeamer._SRV_CNT.MSG_TELEPORT, this.getStoryToTeleport(frameOpts, isPretty));
         };

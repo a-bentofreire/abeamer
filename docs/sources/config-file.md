@@ -9,7 +9,7 @@ Documentation of the `abeamer.ini` file and `story.json` format.
 Due the fact that html page layout has its own quirks, it's many times necessary
 for the `.scss` files have access to the page dimensions to correctly position elements within the page.  
 Since scss can't import json files, it's thus required to have `.scss` file with information regarding page dimensions.  
-The server agent also requires to have access to such information.  
+The render server agent also requires to have access to such information.  
 Instead of having a complex communication system or different files (one `.json` and other `.scss`) format, 
 having a solution with one single `.ini` file with a simple format that serves all purposes turn out to be one of the simplest solutions.  
 Although, it has `.scss` format, it was decided to have `.ini` extension to prevent 

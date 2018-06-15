@@ -1,4 +1,4 @@
-site_name: ABeamer - %target% Documentation - English
+site_name: ABeamer %version% - %target% - English
 repo_url: 'https://github.com/a-bentofreire/abeamer-docs.github.io'
 site_author: Alexandre Bento Freire
 copyright: ⓒ 2018 Alexandre Bento Freire

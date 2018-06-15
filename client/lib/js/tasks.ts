@@ -34,11 +34,40 @@
  *
  * - *Complex animations*: A task can simplify the creation of a complex animation.
  *
- * ## Special Effects
+ * ## F/X
  *
- * One of the important features in a batch animation is to produce special effects.
- * In ABeamer this is archive using tasks.
+ * If you just want to do a single-shot animation, use `scene.addAnimations`,
+ * but if you want to reuse the animation or want to break down the complexity
+ * into multiple parts, the best is to create a task.
  *
+ * A task implementation is a function with the following syntax:
+ * ```typescript
+ * function myTaskFunc(anime: Animation, wkTask: WorkTask,
+ *   params: FactoryTaskParams, stage?: uint, args?: ABeamerArgs): TaskResult;
+ * ```
+ * And add this task to ABeamer using `ABeamer.pluginManager.addTasks([['my-task', myTaskFunc]]);`.
+ *
+ * If the task just uses plain DOM, the simplest is to:
+ * - inject DOM by using the animation `selector`, and then
+ * ```typescript
+ *     switch (stage) {
+ *        case TS_INIT:
+ *          const adapters = args.scene.getElementAdapters(anime.selector);
+ *          elAdapters.forEach((elAdapter, elIndex) => {
+ *            const html = elAdapter.getProp('html', args);
+ *            const myPiece = '<div>Hello</div>';
+ *            elAdapter.setProp('html', html + myPiece, args);
+ *          });
+ *     }
+ * ```
+ *
+ * - inject animation properties into the pipeline by:
+ * ```typescript
+ *     switch (stage) {
+ *        case TS_INIT:
+ *          anime.props.push({ prop: 'text', value: ['hello'] });
+ *     }
+ * ```
  */
 namespace ABeamer {
 

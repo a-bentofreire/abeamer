@@ -19,7 +19,7 @@ var plugin_injector_js_1 = require("./plugin-injector.js");
 /**
  * ## Description
  *
- * A **Server Agent** executes a server render, usually a headless web browser,
+ * A **Render Server Agent** executes a server render, usually a headless web browser,
  * sends order to start rendering, captures the render and saves it into a file.
  *
  */

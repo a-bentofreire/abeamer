@@ -22,7 +22,7 @@ var OptsParser;
     OptsParser.DEFAULT_MAX_FRAME_COUNT = 20 * 60 * 60 * 1; // limits to 1h at 20fps
     OptsParser.DEFAULT_PROGRESS = 25;
     /**
-     * Map of all the common options to both the cli and the server agent.
+     * Map of all the common options to both the cli and the render server agent.
      * Each key represents an option in both camelCase and Dash format.
      */
     OptsParser.argOpts = {

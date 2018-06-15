@@ -9,6 +9,7 @@ var sysFs = require("fs");
 var sysPath = require("path");
 var fsix_js_1 = require("../vendor/fsix.js");
 var dev_paths_js_1 = require("../dev-paths.js");
+var versionLib = require("../version.js");
 var dev_web_links_js_1 = require("../dev-web-links.js");
 /** @module developer | This module won't be part of release version */
 /**
@@ -275,6 +276,8 @@ var BuildDocs;
                 var formattedJsDocs = formatJsDocsMarkdown(svJsDocs.join('\n'), this.localWebLinks);
                 this.outLines.push(formattedJsDocs);
             }
+            else {
+            }
             return true;
         };
         DocParser.prototype.parseJsDocs = function () {
@@ -398,6 +401,11 @@ var BuildDocs;
             this.inpLineNr = 0;
             this.inpLineCount = this.inpLines.length;
             while (!this.isFinished()) {
+                // if (this.getLine(false).includes('@stop-processing')) {
+                //   console.log(`this.inpLineNr: ${this.inpLineNr}`);
+                //   console.log(this.inpLines);
+                //   break;
+                // }
                 var curLineNr = this.inpLineNr;
                 this.parseJsDocs();
                 if (this.isInsideClassOrInterface) {
@@ -427,7 +435,9 @@ var BuildDocs;
         function MkDocsYml(templateFileName, targetName) {
             this.folderMap = {};
             this.yamlDoc = yaml.safeLoad(fsix_js_1.fsix.readUtf8Sync(templateFileName));
-            this.yamlDoc.site_name = this.yamlDoc.site_name.replace(/%target%/, targetName);
+            this.yamlDoc.site_name = this.yamlDoc.site_name
+                .replace(/%target%/, targetName)
+                .replace(/%version%/, versionLib.VERSION);
         }
         MkDocsYml.prototype.save = function (dstFileName) {
             sysFs.writeFileSync(dstFileName, yaml.safeDump(this.yamlDoc));
@@ -534,12 +544,13 @@ var BuildDocs;
             var preDocText = '';
             if (isEndUser && sysFs.existsSync(apiFileName)) {
                 preDocText = fsix_js_1.fsix.readUtf8Sync(apiFileName) + '\n';
+                // inpText = inpText.replace(/(namespace)/, '// @stop-processing\n$1');
             }
             if ((!isEndUser) || moduleType === 'end-user') {
                 var docParser = new DocParser(localWebLinks, isEndUser);
                 docParser.parseFileData(preDocText + inpText);
                 if (docParser.outLines.length) {
-                    outText += '  \n<div class=api-header>&nbsp;</div>\n#API\n' + docParser.outLines.join('\n');
+                    outText += '  \n  \n<div class=api-header>&nbsp;</div>\n#API\n' + docParser.outLines.join('\n');
                 }
             }
             mkDocsYml.addSourceFile(mkDocsOpts, outFileName, inpText);

@@ -43,7 +43,7 @@
  *
  * - The client either runs on a remote link or runs under a live server.
  *   ABeamer includes a live server. Just execute `abeamer serve`
- * - The server agent must execute the url from a live server.
+ * - The render server agent must execute the url from a live server.
  *
  * With the current technology still has following limitations,
  * some of them imposed due security reasons:

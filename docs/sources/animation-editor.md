@@ -6,7 +6,7 @@ ABeamer Animation Editor is the missing key component on the ABeamer EcoSystem.
 At the moment, the ABeamer EcoSystem encompasses:
 
 - A web browser TypeScript/JavaScript library.   
-- A server agent.   
+- A render server agent.   
 - A command line utility.   
 
 With these components, from HTML/CSS beginner to the TypeScript/JavaScript expert 
