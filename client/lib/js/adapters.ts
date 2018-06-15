@@ -181,6 +181,11 @@ namespace ABeamer {
 
   export type PElement = HTMLElement | VirtualElement;
 
+
+  export interface VirtualAnimator extends VirtualElement {
+    selector: string;
+  }
+
   // ------------------------------------------------------------------------
   //                               Scene Selectors
   // ------------------------------------------------------------------------
@@ -287,6 +292,7 @@ namespace ABeamer {
   export const DPT_CLASS = 7;
   export const DPT_MEDIA_TIME = 8;
   export const DPT_SRC = 9;
+  export const DPT_ELEMENT = 10;
 
   /**
    * Maps user property names to DOM property names.
@@ -295,6 +301,7 @@ namespace ABeamer {
    * This map is used to handle the special cases.
    */
   const domPropMapper: { [name: string]: [uint, any] } = {
+    'element': [DPT_ELEMENT, ''],
     'uid': [DPT_ATTR_FUNC, 'data-abeamer'],
     'id': [DPT_ATTR, 'id'],
     'html': [DPT_ATTR, 'innerHTML'],
@@ -470,6 +477,9 @@ namespace ABeamer {
       || [DPT_STYLE, propName];
 
     switch (propType) {
+      case DPT_ELEMENT:
+        return adapter.htmlElement as any;
+
       case DPT_MEDIA_TIME:
       // flows to `DPT_CLASS`.
       case DPT_CLASS:
@@ -541,6 +551,7 @@ namespace ABeamer {
       // @TODO: Discover to clear data when is no longer used
       // this.compStyle = undefined;
     }
+
 
     waitFor?(waitFor: WaitFor, onDone: DoneFunc, args?: ABeamerArgs): void {
       switch (waitFor.what) {
@@ -620,10 +631,20 @@ namespace ABeamer {
   export function _getVirtualElement(story: _StoryImpl,
     fullId: string): PElement {
 
+    const selector = fullId.substr(1);
+
+    const animator = story.virtualAnimators.find(vAnimator =>
+      vAnimator.selector === selector,
+    );
+
+    if (animator) {
+      return animator;
+    }
+
     if (!story.onGetVirtualElement) {
       throwErr(`Story must have onGetVirtualElement to support virtual elements mapping`);
     }
-    return story.onGetVirtualElement(fullId.substr(1), story._args);
+    return story.onGetVirtualElement(selector, story._args);
   }
 
   // ------------------------------------------------------------------------

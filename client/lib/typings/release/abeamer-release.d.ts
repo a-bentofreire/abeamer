@@ -59,7 +59,9 @@ declare namespace ABeamer {
     MustNatPositive = 'The value of %p% must be a natural positive',
     MustNatNotNegative = 'The value of %p% must be a natural non-negative',
     MustBeANumber = 'The value of %p% must be a number',
+    MustBeAString = 'The value of %p% must be textual',
     MustBeANumberOrExpr = 'The value of %p% must be a number or an expression',
+    MustBeAStringOrExpr = 'The value of %p% must be textual or an expression',
     Unknown = 'Unknown %p%',
     UnknownOf = 'Unknown "%type%" %p%',
     UnknownType = 'Unknown type of %p%',
@@ -268,8 +270,14 @@ declare namespace ABeamer {
   export function ifExprCalcNum(expr: string, defNumber: number | undefined,
     args: ABeamerArgs): number | undefined;
 
-  export function ExprOrNumToNum(param: string | number,
-    defValue: number, args: ABeamerArgs): number | undefined;
+  export function ifExprCalcStr(expr: string, defString: string | undefined,
+    args: ABeamerArgs): string | undefined;
+
+  export function ExprOrNumToNum(param: ExprString | number,
+    defValue: number | undefined, args: ABeamerArgs): number | undefined;
+
+  export function ExprOrStrToStr(param: ExprString | string,
+    defValue: string | undefined, args: ABeamerArgs): string | undefined;
 
   // ------------------------------------------------------------------------
   //                               Easings
@@ -870,6 +878,11 @@ declare namespace ABeamer {
 
 
   export type PElement = HTMLElement | VirtualElement;
+
+
+  export interface VirtualAnimator extends VirtualElement {
+    selector: string;
+  }
 
   // ------------------------------------------------------------------------
   //                               Scene Selectors
@@ -1867,6 +1880,70 @@ declare namespace ABeamer {
 
     /** Color to end the attack. If undefined, it uses the original color. */
     endColor?: string;
+  }
+
+
+  // ------------------------------------------------------------------------
+  //                               Shape Tasks
+  // ------------------------------------------------------------------------
+
+
+  export enum ChartTypes {
+    bar,
+    line,
+    area,
+    mixed,
+  }
+
+  export type ChartTaskName = 'chart';
+
+  export type SeriesData = number[];
+
+
+  export interface BaseChartTaskParams extends AnyParams {
+    chartType?: ChartTypes | string;
+    dataFrame: SeriesData[];
+    animeSelector: string;
+  }
+
+
+  export interface AxisChartTaskParams extends BaseChartTaskParams {
+
+    /** Chart Type per series. Use only if charType is `mixed`. */
+    charTypes?: (ChartTypes | string)[];
+
+    // labels X
+    labelsX?: string[];
+    labelsXHeight?: uint | ExprString;
+    labelsXFontColor?: string | ExprString;
+    labelsXFontFamily?: string | ExprString;
+    labelsXFontSize?: uint | ExprString;
+
+    // labels Y
+    labelsY?: string[];
+    labelsYWidth?: uint | ExprString;
+    labelsYFontColor?: string | ExprString;
+    labelsYFontFamily?: string | ExprString;
+    labelsYFontSize?: uint | ExprString;
+
+    // bar chart
+    barWidth?: uint | ExprString;
+    barMaxHeight?: uint | ExprString;
+    barSpacing?: uint | ExprString;
+    barSeriesSpacing?: uint | ExprString;
+    barHeightStart?: number | ExprString;
+
+    // colors
+    fillColors?: string[];
+    strokeColors?: string[];
+    stokeWidth?: uint[];
+    xAxisColor?: string | ExprString;
+    yAxisColor?: string | ExprString;
+    y0LineColor?: string | ExprString;
+
+    // limits
+    maxValue?: number | ExprString;
+    minValue?: number | ExprString;
   }
 
 

@@ -11,7 +11,7 @@
  *
  * A **shape task** creates a configurable shape by creating a `svg` tag.
  *
- * This plugin has the following built-in shape tasks:
+ * This plugin has the following built-in shapes:
  *
  * - `rectangle` - rectangle shape including round rectangle via cx,cy fields.
  * - `line` - x,y and directional shape.

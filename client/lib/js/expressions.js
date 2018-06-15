@@ -761,6 +761,22 @@ var ABeamer;
     }
     ABeamer.ifExprCalcNum = ifExprCalcNum;
     /**
+     * If it's an expression, it computes its value and returns its numerical value.
+     * Returns `defNumber` if it's not an expression.
+     * Used mostly by plugin creators and developers.
+     */
+    function ifExprCalcStr(expr, defString, args) {
+        if (!isExpr(expr)) {
+            return defString;
+        }
+        var exprValue = calcExpr(expr, args);
+        if (args.isStrict && exprValue !== undefined && typeof exprValue !== 'string') {
+            ABeamer.throwI8n(ABeamer.Msgs.MustBeAString, { p: expr });
+        }
+        return exprValue !== undefined ? exprValue : defString;
+    }
+    ABeamer.ifExprCalcStr = ifExprCalcStr;
+    /**
      * Checks if it's an expression, if it is, it computes and returns
      * the value as a number. Otherwise, returns the parameter as a number.
      * Used mostly by plugin creators and developers.
@@ -775,5 +791,20 @@ var ABeamer;
         return ifExprCalcNum(param, param !== undefined ? param : defValue, args);
     }
     ABeamer.ExprOrNumToNum = ExprOrNumToNum;
+    /**
+     * Checks if it's an expression, if it is, it computes and returns
+     * the value as a number. Otherwise, returns the parameter as a number.
+     * Used mostly by plugin creators and developers.
+     */
+    function ExprOrStrToStr(param, defValue, args) {
+        if (args.isStrict && param !== undefined) {
+            var typeofP = typeof param;
+            if (typeofP !== 'string') {
+                ABeamer.throwI8n(ABeamer.Msgs.MustBeAStringOrExpr, { p: param });
+            }
+        }
+        return ifExprCalcStr(param, param !== undefined ? param : defValue, args);
+    }
+    ABeamer.ExprOrStrToStr = ExprOrStrToStr;
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=expressions.js.map

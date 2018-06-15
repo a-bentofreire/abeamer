@@ -7,13 +7,13 @@
 
 ### Coming soon
 
-- Expressions with Numeric Array.
-- Expressions with 'NOT' operators.
+- Improve Charts.
 - Improve video sync parameters.
+- Functions and operators for Numeric Arrays inside Expressions.
+- Expressions with 'NOT' operators.
 - Slide elements.
 - Improved Shape task with animation support.
 - Arrow shape task.
-- Chart tasks.
 - SVG adapters.
 - Improved factory task.
 - Repeater task.

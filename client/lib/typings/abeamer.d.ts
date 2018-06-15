@@ -496,6 +496,7 @@ declare namespace ABeamer {
     onGetVirtualElement?: (id: string, args?: ABeamerArgs) => VirtualElement;
 
 
+    virtualAnimators?: VirtualAnimator[];
     /**
      * Adds scenes defined in the html by `.abeamer-scene` class.
      * These classes are added automatically during Story constructor.

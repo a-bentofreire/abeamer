@@ -491,6 +491,9 @@ namespace ABeamer {
     onGetVirtualElement?: (id: string, args?: ABeamerArgs) => VirtualElement;
 
 
+    virtualAnimators?: VirtualAnimator[] = [];
+
+
     /**
      * Sets up the Story and adds the Default Scenes.
      */

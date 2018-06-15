@@ -83,6 +83,7 @@ var ABeamer;
     ABeamer.DPT_CLASS = 7;
     ABeamer.DPT_MEDIA_TIME = 8;
     ABeamer.DPT_SRC = 9;
+    ABeamer.DPT_ELEMENT = 10;
     /**
      * Maps user property names to DOM property names.
      *
@@ -90,6 +91,7 @@ var ABeamer;
      * This map is used to handle the special cases.
      */
     var domPropMapper = {
+        'element': [ABeamer.DPT_ELEMENT, ''],
         'uid': [ABeamer.DPT_ATTR_FUNC, 'data-abeamer'],
         'id': [ABeamer.DPT_ATTR, 'id'],
         'html': [ABeamer.DPT_ATTR, 'innerHTML'],
@@ -239,6 +241,8 @@ var ABeamer;
         var _a = domPropMapper[propName]
             || [ABeamer.DPT_STYLE, propName], propType = _a[0], domPropName = _a[1];
         switch (propType) {
+            case ABeamer.DPT_ELEMENT:
+                return adapter.htmlElement;
             case ABeamer.DPT_MEDIA_TIME:
             // flows to `DPT_CLASS`.
             case ABeamer.DPT_CLASS:
@@ -363,10 +367,17 @@ var ABeamer;
      * Safely retrieves the Virtual Element from `story.onGetVirtualElement`.
      */
     function _getVirtualElement(story, fullId) {
+        var selector = fullId.substr(1);
+        var animator = story.virtualAnimators.find(function (vAnimator) {
+            return vAnimator.selector === selector;
+        });
+        if (animator) {
+            return animator;
+        }
         if (!story.onGetVirtualElement) {
             ABeamer.throwErr("Story must have onGetVirtualElement to support virtual elements mapping");
         }
-        return story.onGetVirtualElement(fullId.substr(1), story._args);
+        return story.onGetVirtualElement(selector, story._args);
     }
     ABeamer._getVirtualElement = _getVirtualElement;
     // ------------------------------------------------------------------------

@@ -116,6 +116,7 @@ var ABeamer;
              * @default true
              */
             this.toExitOnRenderFinished = true;
+            this.virtualAnimators = [];
             /**
              * Returns the play speed that best matches the fps.
              */

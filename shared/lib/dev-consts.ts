@@ -10,7 +10,7 @@ export namespace DevConsts {
   // version
   // -------------
 
-  export const VERSION = "0.2.9";
+  export const VERSION = "0.2.11";
 
   // -------------
   // consts
@@ -38,7 +38,9 @@ export namespace DevConsts {
     MustNatPositive = 'The value of %p% must be a natural positive',
     MustNatNotNegative = 'The value of %p% must be a natural non-negative',
     MustBeANumber = 'The value of %p% must be a number',
+    MustBeAString = 'The value of %p% must be textual',
     MustBeANumberOrExpr = 'The value of %p% must be a number or an expression',
+    MustBeAStringOrExpr = 'The value of %p% must be textual or an expression',
     Unknown = 'Unknown %p%',
     UnknownOf = 'Unknown "%type%" %p%',
     UnknownType = 'Unknown type of %p%',
@@ -197,6 +199,7 @@ export namespace DevConsts {
   export const DPT_CLASS = 7;
   export const DPT_MEDIA_TIME = 8;
   export const DPT_SRC = 9;
+  export const DPT_ELEMENT = 10;
 
   // -------------
   // transitions

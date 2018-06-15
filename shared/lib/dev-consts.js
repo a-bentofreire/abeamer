@@ -9,7 +9,7 @@ var DevConsts;
     // -------------
     // version
     // -------------
-    DevConsts.VERSION = "0.2.9";
+    DevConsts.VERSION = "0.2.11";
     // -------------
     // consts
     // -------------
@@ -32,7 +32,9 @@ var DevConsts;
         Msgs["MustNatPositive"] = "The value of %p% must be a natural positive";
         Msgs["MustNatNotNegative"] = "The value of %p% must be a natural non-negative";
         Msgs["MustBeANumber"] = "The value of %p% must be a number";
+        Msgs["MustBeAString"] = "The value of %p% must be textual";
         Msgs["MustBeANumberOrExpr"] = "The value of %p% must be a number or an expression";
+        Msgs["MustBeAStringOrExpr"] = "The value of %p% must be textual or an expression";
         Msgs["Unknown"] = "Unknown %p%";
         Msgs["UnknownOf"] = "Unknown \"%type%\" %p%";
         Msgs["UnknownType"] = "Unknown type of %p%";
@@ -177,6 +179,7 @@ var DevConsts;
     DevConsts.DPT_CLASS = 7;
     DevConsts.DPT_MEDIA_TIME = 8;
     DevConsts.DPT_SRC = 9;
+    DevConsts.DPT_ELEMENT = 10;
     // -------------
     // transitions
     // -------------

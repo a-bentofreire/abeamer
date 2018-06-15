@@ -4,13 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.2.11] -
+### Changed
+- Improved `README.md`.
+### Added
+- Added more utility functions in `expressions`.
+- Added `virtualAnimators`.
+- First version of `chart` tasks.
+
+
+## [0.2.10] -
+- This version was used to overcome a critical bug on `npm publish` in npm@5.6.0
+that fails to find the README.md, and it's not possible to update to
+npm@6.1.0 because it has a critical bug on `npm update`, plus countless false positives
+in `npm audit`.
+Until npm team finds an acceptable solution it will be used npm@5.6.0 for all except for `npm publish`.
+
+
 ## [0.2.9] -
 ### Added
 - `Adapters` support `width-height` as dual-property.
 - Expressions support numerical arrays and binary ops on those arrays.
 ### Fixed
 - Paths support expression paths.
-
 
 
 ## [0.2.8] -

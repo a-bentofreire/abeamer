@@ -522,7 +522,7 @@ namespace ABeamer {
   function _execArray(p: ParseParams, funcToken: Token): Token {
 
     const res: Token = {
-      paType: ExFuncParamType.Array;
+      paType: ExFuncParamType.Array,
       sValue: undefined,
       numValue: undefined,
       arrayValue: funcToken.funcParams.map(param => {
@@ -987,12 +987,30 @@ namespace ABeamer {
 
 
   /**
+   * If it's an expression, it computes its value and returns its numerical value.
+   * Returns `defNumber` if it's not an expression.
+   * Used mostly by plugin creators and developers.
+   */
+  export function ifExprCalcStr(expr: string, defString: string | undefined,
+    args: ABeamerArgs): string | undefined {
+
+    if (!isExpr(expr)) { return defString; }
+
+    const exprValue = calcExpr(expr, args);
+    if (args.isStrict && exprValue !== undefined && typeof exprValue !== 'string') {
+      throwI8n(Msgs.MustBeAString, { p: expr });
+    }
+    return exprValue !== undefined ? exprValue as string : defString;
+  }
+
+
+  /**
    * Checks if it's an expression, if it is, it computes and returns
    * the value as a number. Otherwise, returns the parameter as a number.
    * Used mostly by plugin creators and developers.
    */
-  export function ExprOrNumToNum(param: string | number,
-    defValue: number, args: ABeamerArgs): number | undefined {
+  export function ExprOrNumToNum(param: ExprString | number,
+    defValue: number | undefined, args: ABeamerArgs): number | undefined {
 
     if (args.isStrict && param !== undefined) {
       const typeofP = typeof param;
@@ -1003,5 +1021,25 @@ namespace ABeamer {
 
     return ifExprCalcNum(param as string,
       param !== undefined ? param as number : defValue, args);
+  }
+
+
+  /**
+   * Checks if it's an expression, if it is, it computes and returns
+   * the value as a number. Otherwise, returns the parameter as a number.
+   * Used mostly by plugin creators and developers.
+   */
+  export function ExprOrStrToStr(param: ExprString | string,
+    defValue: string | undefined, args: ABeamerArgs): string | undefined {
+
+    if (args.isStrict && param !== undefined) {
+      const typeofP = typeof param;
+      if (typeofP !== 'string') {
+        throwI8n(Msgs.MustBeAStringOrExpr, { p: param });
+      }
+    }
+
+    return ifExprCalcStr(param as string,
+      param !== undefined ? param as string : defValue, args);
   }
 }

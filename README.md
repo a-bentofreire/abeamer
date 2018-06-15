@@ -1,5 +1,5 @@
 ## Description
-![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/developer-badge.gif)![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/v-0.2.9.gif)  
+![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/developer-badge.gif)![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/v-0.2.11.gif)  
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-abeamer/story-frames/story.gif)  
   
@@ -23,7 +23,7 @@ the story to the company's machine to render the frame images and generate anima
 ABeamer includes a web browser library, a server agent and a command line utility.  
 For the ABeamer Animation Editor, read [Animation Editor](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/animation-editor/).
   
-- ABeamer **web browser library** is a highly extensible TypeScript/JavaScript 
+- ABeamer **web browser library** is a highly extensible TypeScript/JavaScript library 
 bundled with a rich [toolset](#toolset) reducing the time to build complex animations.  
 - ABeamer **server agent** is designed to communicate with a render server, usually a headless web browser, in order to save 
 each frame to the disk. It can run either with the full potential supporting [Code Handlers](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/glossary/#code-handler) 
@@ -75,7 +75,7 @@ and [F/X](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-virtual/story-frames/story.gif)  
   
-* DOM and Virtual Elements and Scenes.
+* DOM and Virtual Elements, Animators and Scenes.
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-localization/story-frames/story.gif)  
   
@@ -170,7 +170,7 @@ The interpolators are chained in the following order: easing→oscillator→path
 
 ABeamer has a rich toolset. Extensibility and teleportation are the key features of these tools.  
 Unless is noticed, all the built-in tools support teleportation.  
-Just like in the case of interpolators, Code Handlers aren't teleported, and the tools can be extended via plugins but only official plugins are teleportable.  
+Just like in the case of interpolators, [Code Handlers](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/glossary/#code-handler) aren't teleported, and the tools can be extended via plugins but only official plugins are teleportable.  
 
 ABeamer has the following tools:
   
@@ -211,10 +211,14 @@ ABeamer has the following tools:
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-shapes/story-frames/story.gif)  
   
 * `shape` task.
-
+  
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-speech/story-frames/story.gif)  
   
 * `speech` shape task.
+  
+![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-charts/story-frames/story.gif)  
+  
+* `charts` task.
 
 and much more [coming soon](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/roadmap/).
 
@@ -234,9 +238,9 @@ However, in order to render frames, generate gifs and movies, it requires:
 
 Try these examples online without any installation:
 
-- [Hello world](https://jsfiddle.net/abentofreire/peax4f9n/)
-- [Image Overlays](https://jsfiddle.net/abentofreire/dj9m7ztf/12/)
-- [E-Commerce](https://jsfiddle.net/abentofreire/dkztn53o/)
+- [Hello world](https://jsfiddle.net/abentofreire/peax4f9n/4/)
+- [Image Overlays](https://jsfiddle.net/abentofreire/dj9m7ztf/17/)
+- [E-Commerce](https://jsfiddle.net/abentofreire/dkztn53o/2/)
 
 ## Getting started
 
@@ -265,6 +269,12 @@ The bare-bones of a `html` file:
            <p id="hello">Hello world</p>
       </div>
   </div>
+```
+  
+The bare-bones of a `abeamer.ini` file:   
+```scss
+$abeamer-width: 200;
+$abeamer-height: 100;
 ```
   
 The bare-bones of a `scss` file:   
@@ -336,7 +346,7 @@ to install if you need to render, create gifs or movies on the local machine.
 
 ## What's new
 
-* Check out the [CHANGELOG](https://github.com/a-bentofreire/abeamer/blob/master/CHANGELOG.md).
+* Check out the [CHANGELOG](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/blob/master/CHANGELOG.md).
 
 ## Roadmap & Known Issues
 
