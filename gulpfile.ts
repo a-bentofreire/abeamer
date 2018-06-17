@@ -396,6 +396,15 @@ namespace Gulp {
   });
 
 
+  (gulp as any).task('rel:cli-chmod', ['rel:cli-minify'], (cb) => {
+    // this task is done only for testing purposes since
+    // `npm publish` doesn't uses the `chmod u+x`.
+    const RELEASE_CLI_FILE = `${RELEASE_PATH}/cli/abeamer-cli.js`;
+    sysFs.chmodSync(RELEASE_CLI_FILE, 0o744);
+    cb();
+  });
+
+
   gulp.task('rel:shared', () => {
     return mergeStream(['', '/vendor', '/lib'].map((subPath) => {
       return gulp.src([
@@ -420,6 +429,7 @@ namespace Gulp {
       .pipe(gulp.dest(`${RELEASE_PATH}/server`))
       .pipe(gulpPreserveTime());
   });
+
 
 
   // copies package.json cleaning the unnecessary config
@@ -501,7 +511,7 @@ namespace Gulp {
     'rel:client-js-join',
     'rel:root',
     'rel:README',
-    'rel:cli-minify',
+    'rel:cli-chmod',
     'rel:shared',
     'rel:server-minify',
     'rel:jquery-typings',

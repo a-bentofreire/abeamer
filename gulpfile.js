@@ -280,6 +280,13 @@ var Gulp;
             .pipe(gulpReplace(/("use strict";)/, CLI_UUID + COPYRIGHTS + '$1\n'))
             .pipe(gulp.dest(RELEASE_PATH + "/cli"));
     });
+    gulp.task('rel:cli-chmod', ['rel:cli-minify'], function (cb) {
+        // this task is done only for testing purposes since
+        // `npm publish` doesn't uses the `chmod u+x`.
+        var RELEASE_CLI_FILE = RELEASE_PATH + "/cli/abeamer-cli.js";
+        sysFs.chmodSync(RELEASE_CLI_FILE, 484);
+        cb();
+    });
     gulp.task('rel:shared', function () {
         return mergeStream(['', '/vendor', '/lib'].map(function (subPath) {
             return gulp.src([
@@ -360,7 +367,7 @@ var Gulp;
             .pipe(gulp.dest(RELEASE_PATH + "/" + dev_paths_js_1.DevPaths.TYPINGS_PATH))
             .pipe(gulpPreserveTime());
     });
-    gulp.task('build-release', ['rel:clean'], gulpSequence('rel:client', 'rel:gallery', 'rel:gallery-html', 'rel:client-js-join', 'rel:root', 'rel:README', 'rel:cli-minify', 'rel:shared', 'rel:server-minify', 'rel:jquery-typings', 'rel:build-package.json', 'rel:build-tsconfig.ts', 'rel:build-abeamer.d.ts', 'rel:build-plugins-list.json'));
+    gulp.task('build-release', ['rel:clean'], gulpSequence('rel:client', 'rel:gallery', 'rel:gallery-html', 'rel:client-js-join', 'rel:root', 'rel:README', 'rel:cli-chmod', 'rel:shared', 'rel:server-minify', 'rel:jquery-typings', 'rel:build-package.json', 'rel:build-tsconfig.ts', 'rel:build-abeamer.d.ts', 'rel:build-plugins-list.json'));
     // ------------------------------------------------------------------------
     //                               Builds Shared Modules from Client
     // ------------------------------------------------------------------------

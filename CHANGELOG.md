@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Added extra file and directory exists tests to server-agent.
 - Added more examples to the command line documentation.
-
+### Changed
+- (DEV)`gulp build-release` makes `chmod u+x` for `cli/abeamer-cli.js`.
 
 ## [0.2.11] -
 ### Changed
