@@ -280,8 +280,6 @@ var Cli;
                                 + '\n\n' + all;
                         });
                     }
-                    // readjusts file paths
-                    text = text.replace(/\.\.\/\.\.\/client\/lib/g, 'abeamer');
                     break;
             }
             return text;

@@ -106,7 +106,13 @@ var Gulp;
     // ------------------------------------------------------------------------
     //                               updateHtmlPages
     // ------------------------------------------------------------------------
-    function updateHtmlPages(srcPath, destPath, newScriptFiles) {
+    /**
+     * Updates the html links.
+     * For release and release-gallery it removes the individual links,
+     * and replaces with the compiled version.
+     * In other cases, just updates links.
+     */
+    function updateHtmlPages(srcPath, destPath, newScriptFiles, setReleaseLinks) {
         return gulp.src(srcPath)
             .pipe(gulpReplace(/<body>((?:.|\n)+)<\/body>/, function (all, p) {
             var lines = p.split('\n');
@@ -120,7 +126,7 @@ var Gulp;
                     }
                     else if (state === 1 && line.trim()) {
                         newScriptFiles.forEach(function (srcFile) {
-                            outLines.push("    <script src=\"" + srcFile + ".js\"></script>");
+                            outLines.push("  <script src=\"" + srcFile + ".js\"></script>");
                         });
                         state = 2;
                     }
@@ -128,6 +134,9 @@ var Gulp;
                 outLines.push(line);
             });
             return '<body>' + outLines.join('\n') + '</body>';
+        }))
+            .pipe(gulpReplace(/^(?:.|\n)+$/, function (all) {
+            return setReleaseLinks ? all.replace(/\.\.\/\.\.\/client\/lib/g, 'abeamer') : all;
         }))
             .pipe(gulp.dest(destPath));
     }
@@ -266,7 +275,7 @@ var Gulp;
             .pipe(gulpPreserveTime());
     });
     gulp.task('rel:gallery-html', function () {
-        return mergeStream(updateHtmlPages(dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + releaseDemosRegEx + "/*.html", RELEASE_PATH + "/gallery", ["../../" + dev_paths_js_1.DevPaths.JS_PATH + "/abeamer.min"])
+        return mergeStream(updateHtmlPages(dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + releaseDemosRegEx + "/*.html", RELEASE_PATH + "/gallery", ["../../" + dev_paths_js_1.DevPaths.JS_PATH + "/abeamer.min"], true)
             .pipe(gulpPreserveTime()));
     });
     gulp.task('rel:cli-minify', function () {
@@ -408,7 +417,7 @@ var Gulp;
     });
     gulp.task('gal-rel:update-html-files', ['gal-rel:copy-files'], function () {
         return mergeStream(build_gallery_release_js_1.BuildGalleryRelease.releaseExamples.map(function (ex) {
-            return updateHtmlPages(ex.srcFullPath + "/*.html", ex.dstFullPath, ["../../" + dev_paths_js_1.DevPaths.JS_PATH + "/abeamer.min"]);
+            return updateHtmlPages(ex.srcFullPath + "/*.html", ex.dstFullPath, ["../../" + dev_paths_js_1.DevPaths.JS_PATH + "/abeamer.min"], true);
         }));
     });
     gulp.task('gal-rel:create-zip', ['gal-rel:update-html-files'], function () {
@@ -456,7 +465,7 @@ var Gulp;
         var newScriptFiles = libModules.map(function (srcFile) {
             return "../../" + dev_paths_js_1.DevPaths.JS_PATH + "/" + srcFile;
         });
-        return mergeStream(updateHtmlPages('${DevPaths.GALLERY_PATH}/*/*.html', DEST_PATH, newScriptFiles));
+        return mergeStream(updateHtmlPages(dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/*.html", DEST_PATH, newScriptFiles, false));
     });
     // ------------------------------------------------------------------------
     //                               Updates Test List

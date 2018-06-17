@@ -217,7 +217,7 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
 
   export function buildGifs(): void {
     populateReleaseExamples();
-    releaseExamples.forEach((example, index) => {
+    releaseExamples.forEach((example/* , index */) => {
       if (example.noGifImage) { return; }
       // if (example.folder === 'animate-attack-task') { // use to test one example only
 

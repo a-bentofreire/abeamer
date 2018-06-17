@@ -174,8 +174,14 @@ namespace Gulp {
   //                               updateHtmlPages
   // ------------------------------------------------------------------------
 
+  /**
+   * Updates the html links.
+   * For release and release-gallery it removes the individual links,
+   * and replaces with the compiled version.
+   * In other cases, just updates links.
+   */
   function updateHtmlPages(srcPath: string, destPath: string,
-    newScriptFiles: string[]) {
+    newScriptFiles: string[], setReleaseLinks: boolean): NodeJS.ReadWriteStream {
 
     return gulp.src(srcPath)
       .pipe(gulpReplace(/<body>((?:.|\n)+)<\/body>/, (all, p: string) => {
@@ -189,7 +195,7 @@ namespace Gulp {
               return;
             } else if (state === 1 && line.trim()) {
               newScriptFiles.forEach(srcFile => {
-                outLines.push(`    <script src="${srcFile}.js"></script>`);
+                outLines.push(`  <script src="${srcFile}.js"></script>`);
               });
               state = 2;
             }
@@ -198,6 +204,11 @@ namespace Gulp {
         });
         return '<body>' + outLines.join('\n') + '</body>';
       }))
+
+      .pipe(gulpReplace(/^(?:.|\n)+$/, (all: string) =>
+        setReleaseLinks ? all.replace(/\.\.\/\.\.\/client\/lib/g, 'abeamer') : all,
+      ))
+
       .pipe(gulp.dest(destPath));
   }
 
@@ -377,7 +388,8 @@ namespace Gulp {
     return mergeStream(
       updateHtmlPages(`${DevPaths.GALLERY_PATH}/${releaseDemosRegEx}/*.html`,
         `${RELEASE_PATH}/gallery`,
-        [`../../${DevPaths.JS_PATH}/abeamer.min`])
+        [`../../${DevPaths.JS_PATH}/abeamer.min`],
+        true)
         .pipe(gulpPreserveTime()));
   });
 
@@ -577,7 +589,7 @@ namespace Gulp {
   (gulp as any).task('gal-rel:update-html-files', ['gal-rel:copy-files'], () => {
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       return updateHtmlPages(`${ex.srcFullPath}/*.html`, ex.dstFullPath,
-        [`../../${DevPaths.JS_PATH}/abeamer.min`]);
+        [`../../${DevPaths.JS_PATH}/abeamer.min`], true);
     }));
   });
 
@@ -639,7 +651,7 @@ namespace Gulp {
     rimraf.sync(`${DEST_PATH}/**`);
     const newScriptFiles = libModules.map(srcFile =>
       `../../${DevPaths.JS_PATH}/${srcFile}`);
-    return mergeStream(updateHtmlPages('${DevPaths.GALLERY_PATH}/*/*.html', DEST_PATH, newScriptFiles));
+    return mergeStream(updateHtmlPages(`${DevPaths.GALLERY_PATH}/*/*.html`, DEST_PATH, newScriptFiles, false));
   });
 
   // ------------------------------------------------------------------------

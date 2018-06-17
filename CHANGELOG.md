@@ -8,11 +8,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Fixed `abeamer create .` and `abeamer create`.
 - Fixed command line error messages.
+- Fixes `gallery-release` links in order to allow to override a created project.
+- (DEV) Fixes `gulp update-gallery-scripts`.
 ### Added
 - Added extra file and directory exists tests to server-agent.
 - Added more examples to the command line documentation.
 ### Changed
 - (DEV)`gulp build-release` makes `chmod u+x` for `cli/abeamer-cli.js`.
+- Sets gallery html files spacing to 2 spaces.
+
 
 ## [0.2.11] -
 ### Changed

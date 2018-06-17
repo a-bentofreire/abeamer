@@ -157,7 +157,7 @@ var BuildGalleryRelease;
     // ------------------------------------------------------------------------
     function buildGifs() {
         populateReleaseExamples();
-        BuildGalleryRelease.releaseExamples.forEach(function (example, index) {
+        BuildGalleryRelease.releaseExamples.forEach(function (example /* , index */) {
             if (example.noGifImage) {
                 return;
             }
