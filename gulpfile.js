@@ -153,9 +153,6 @@ var Gulp;
         sysFs.writeFileSync("./" + dev_paths_js_1.DevPaths.JS_PATH + "/version.ts", WARN_MSG + ("namespace ABeamer {\n  " + VERSION_OUT + "\n}\n"));
         var outBadgeFileBase = "v-" + version + ".gif";
         var outBadgeFileName = "" + BADGES_FOLDER + outBadgeFileBase;
-        // let vBadgeData = fsix.readUtf8Sync(`${BADGES_FOLDER}/v-template.svg`);
-        // vBadgeData = vBadgeData.replace(/\(\(version\)\)/g, version);
-        // sysFs.writeFileSync(`${BADGES_FOLDER}/${outBadgeFileName}`, vBadgeData);
         if (!sysFs.existsSync(outBadgeFileName)) {
             var path_1 = "gallery/animate-badges";
             var url = "http://localhost:9000/" + path_1 + "/?name=version&value=" + version;
@@ -167,6 +164,7 @@ var Gulp;
                 if (stderr) {
                     console.error(stderr);
                     console.error('Badge Animated Gif Creation Failed');
+                    console.log('Check out if the live server is running');
                 }
                 else {
                     var gifCmdLine = "node ./cli/abeamer-cli.js gif ./" + path_1 + "/ --loop 1 --gif " + outBadgeFileName;

@@ -38,16 +38,32 @@ var http_server_ex_js_1 = require("../shared/vendor/http-server-ex.js");
  *  Creates a JavaScript project without TypeScript.
  *  `abeamer create foo-js --width 384 --height 288 --fps 30 --no-typescript`.
  *
- *  Starts the live server.
+ *  Starts the live server on port 9000. The url is `http://localhost:9000/`.
  * `abeamer serve`.
  *
  *  Starts the live server with list directory option if search part of url is `?dir`.
+ *  The url is `http://localhost:9000/?dir`
  * `abeamer serve --list-dir`.
  *
- *  Generate the animations in file image sequences and deletes the previous images.
+ *  Starts the live server on port 8000. The url is `http://localhost:8000/`.
+ * `abeamer serve --port 8000`.
+ *
+ *  Generate the animations in file image sequences from the project in the current directory.
+ * `abeamer render`.
+ *
+ *  Same as above, but deletes the previous images and the project is on directory `foo`.
  * `abeamer render --dp foo`.
  *
- *  Same as above, but it outputs detailed information about what is happening.
+ *  Same as the first render, but it renders from a live server.
+ *  Required if it's loading `.json` files or is teleporting.
+ * `abeamer render --url http://localhost:9000/foo/index.html`
+ *
+ *  Generates only the `story.json` file, it doesn't generates the file image sequence.
+ *  This should be used only for testing. Teleporting should be done from the web browser library,
+ *  and the teleported story via Ajax to the cloud.
+ * `abeamer render --url http://localhost:9000/foo/index.html --teleport`
+ *
+ *  Same as the first render, but with verbose logging.
  * `abeamer render --ll 3 --dp foo`.
  *
  *  Creates an animated gif from the previous generated image sequence on `foo/story-frames/story.gif`.
@@ -121,6 +137,16 @@ var Cli;
         console.log("abeamer [command] [options] [project-name|report-name]\nThe commands are:\n    " + CMD_CREATE + " creates a project with project-name\n    " + CMD_SERVE + "  starts a live server. Use it in case you need to load the config from JSON file\n    " + CMD_RENDER + " runs your project in the context of the headless browser.\n    " + CMD_GIF + "    creates an animated gif from the project-name or report-name\n    " + CMD_MOVIE + "  creates a movie from the project-name or report-name\n\n    e.g.\n      echo \"create folder foo and copy necessary files\"\n      abeamer " + CMD_CREATE + " --width 640 --height 480 --fps 25 foo\n\n      cd foo\n\n      echo \"start a live server\"\n      echo \"only required if you need to load your configuration from json file\"\n      abeamer " + CMD_SERVE + "\n\n      echo \"generates the png files and a report on story-frames folder\"\n      abeamer " + CMD_RENDER + "\n\n      echo \"creates story.gif file on story-frames folder\"\n      abeamer " + CMD_GIF + "\n\n      echo \"creates story.mp4 file on story-frames folder\"\n      abeamer " + CMD_MOVIE + "\n\n      For more information, read:\n      https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/abeamer-cli/\n\n");
         opts_parser_js_1.OptsParser.printUsage();
     }
+    // ------------------------------------------------------------------------
+    //                               Fix Folder Name
+    // ------------------------------------------------------------------------
+    // function fixFolderName(folderName: string): string {
+    //   folderName = fsix.toPosixSlash(folderName);
+    //   if (folderName.search(/^.\/?$/) !== -1) {
+    //     sysProcess.cwd()
+    //   }
+    //   return folderName;
+    // }
     // ------------------------------------------------------------------------
     //                               Parse Arguments
     // ------------------------------------------------------------------------
@@ -198,8 +224,11 @@ var Cli;
     // ------------------------------------------------------------------------
     function commandCreate() {
         var projName = fsix_js_1.fsix.toPosixSlash(cmdParam);
-        if (projName === '' || projName[0] === '-'
-            || projName.search(/[\"\'\?\*\+]/) !== -1) {
+        if (!projName) {
+            throw "Missing project name";
+        }
+        if (projName[0] === '-' || projName.search(/[\"\'\?\*\+]/) !== -1
+            || projName.search(/^[\.\/]+$/) !== -1) {
             throw "Error: " + projName + " is not valid project name";
         }
         if (sysFs.existsSync(projName)) {
@@ -272,7 +301,7 @@ var Cli;
             return !fileBase.match(/plugins-list\.json$/);
         });
         if (logLevel > consts_js_1.Consts.LL_SILENT) {
-            console.log("Project " + projName + " created");
+            console.log("Project " + projName + " created.\n- frame-width: " + width + "px\n- frame-height: " + height + "px\n- fps: " + fps + "\nTo modify the the frame dimensions, edit [abeamer.ini] and recompile the [css/main.scss] file.\nTo modify the fps, edit the [js/main.ts] file.\n");
         }
     }
     /**
@@ -327,6 +356,15 @@ var Cli;
         }
     }
     // ------------------------------------------------------------------------
+    //                               Utilities
+    // ------------------------------------------------------------------------
+    function fileMustExists(fileName) {
+        if (!sysFs.existsSync(fileName)) {
+            throw fileName + " must exist";
+        }
+        return fileName;
+    }
+    // ------------------------------------------------------------------------
     //                                Command: Render
     // ------------------------------------------------------------------------
     function commandRender() {
@@ -336,7 +374,7 @@ var Cli;
             throw "Unknown " + serverName;
         }
         // if use hasn't provided the folder name nor config file
-        if (!cmdParam && !argOpts.config.value) {
+        if (!cmdParam && argOpts.config.value) {
             outArgs.push('.');
         }
         outArgs.splice(0, 0, fsix_js_1.fsix.toPosixSlash(__dirname) + "/../server/server-agent-" + serverName + ".js");
@@ -479,7 +517,7 @@ var Cli;
         main();
     }
     catch (err) {
-        console.log(err);
+        console.error(err.message || err.toString());
     }
 })(Cli || (Cli = {}));
 //# sourceMappingURL=abeamer-cli.js.map

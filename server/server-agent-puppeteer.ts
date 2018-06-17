@@ -46,6 +46,7 @@ namespace ServerAgent {
     args,
     sysOs.platform(), sysProcess.cwd(),
     sysFs.existsSync,
+    (fileName: string) => sysFs.statSync(fileName).isDirectory(),
     sysFs.unlinkSync,
     fsix.mkdirpSync,
     fsix.readUtf8Sync,

@@ -55,8 +55,7 @@ export namespace ServerAgent {
 
   function dirName(filename: string): string {
     const lastSlash = filename.lastIndexOf('/');
-    if (lastSlash === -1) { throw 'Missing Folder'; }
-    return filename.substr(0, lastSlash);
+    return lastSlash === -1 ? '.' : filename.substr(0, lastSlash);
   }
 
 
@@ -107,6 +106,7 @@ export namespace ServerAgent {
       public args: string[],
       public platform: string, public cwd: string,
       public existsSync: (fileName: string) => boolean,
+      public isDirectory: (fileName: string) => boolean,
       public unlinkSync: (fileName: string) => void,
       public mkdirpSync: (path: string) => void,
       public readUtf8Sync: (fileName: string) => any,
@@ -225,11 +225,16 @@ export namespace ServerAgent {
 
       const self = this;
 
-      function getConfigFileName(value: string, needsToAddIni): string {
+      function getConfigFileName(value: string): string {
         let configFileName = toPosixSlash(value);
         if (!configFileName) { return ''; }
-        if (needsToAddIni || configFileName.match(/^\/$/)) {
+
+        if (self.existsSync(configFileName) && self.isDirectory(configFileName)) {
           configFileName = self.posixPathJoin(configFileName, 'abeamer.ini');
+        }
+
+        if (!self.existsSync(configFileName)) {
+          throw `Config file ${configFileName} doesn't exists`;
         }
         return configFileName;
       }
@@ -239,7 +244,7 @@ export namespace ServerAgent {
         switch (option) {
 
           case '@param':
-            parseOption('config', getConfigFileName(toPosixSlash(value), true));
+            parseOption('config', getConfigFileName(toPosixSlash(value)));
             break;
 
           case 'version':
@@ -375,7 +380,7 @@ export namespace ServerAgent {
             break;
 
           case 'config':
-            const configFileName = getConfigFileName(value, false);
+            const configFileName = getConfigFileName(value);
             if (!configFileName) { return 0; }
 
             if (self.isVerbose) { console.log(`Loading Config ${configFileName}`); }
@@ -528,7 +533,7 @@ export namespace ServerAgent {
               break;
           }
         } catch (error) {
-          self.handleError(error);
+          self.handleError(error.message);
         }
       }
     }
@@ -643,7 +648,7 @@ export namespace ServerAgent {
       } catch (error) {
         console.log(`Server Error: ${error.message || error.toString()}`);
         this.exitServer(OptsParser.ON_ERROR_EXIT_VALUE);
-        throw error;
+        // throw error;
       }
     }
   }

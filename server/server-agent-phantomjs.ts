@@ -83,7 +83,9 @@ namespace Server {
 
   const server = new (PhantomjsServerAgent as any)('phantomjs',
     phantomSystem.args.slice(),
-    phantomSystem.os.name, phantomFs.workingDirectory, phantomFs.exists,
+    phantomSystem.os.name, phantomFs.workingDirectory,
+    phantomFs.isDirectory,
+    phantomFs.exists,
     phantomFs.remove,
     phantomFs.makeTree,
 

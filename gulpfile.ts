@@ -238,10 +238,6 @@ namespace Gulp {
 
     const outBadgeFileBase = `v-${version}.gif`;
     const outBadgeFileName = `${BADGES_FOLDER}${outBadgeFileBase}`;
-    // let vBadgeData = fsix.readUtf8Sync(`${BADGES_FOLDER}/v-template.svg`);
-    // vBadgeData = vBadgeData.replace(/\(\(version\)\)/g, version);
-    // sysFs.writeFileSync(`${BADGES_FOLDER}/${outBadgeFileName}`, vBadgeData);
-
     if (!sysFs.existsSync(outBadgeFileName)) {
       const path = `gallery/animate-badges`;
       const url = `http://localhost:9000/${path}/?name=version&value=${version}`;
@@ -254,6 +250,7 @@ namespace Gulp {
         if (stderr) {
           console.error(stderr);
           console.error('Badge Animated Gif Creation Failed');
+          console.log('Check out if the live server is running');
         } else {
           const gifCmdLine = `node ./cli/abeamer-cli.js gif ./${path}/ --loop 1 --gif ${outBadgeFileName}`;
           console.log(gifCmdLine);

@@ -43,16 +43,32 @@ import { HttpServerEx } from "../shared/vendor/http-server-ex.js";
  *  Creates a JavaScript project without TypeScript.
  *  `abeamer create foo-js --width 384 --height 288 --fps 30 --no-typescript`.
  *
- *  Starts the live server.
+ *  Starts the live server on port 9000. The url is `http://localhost:9000/`.
  * `abeamer serve`.
  *
  *  Starts the live server with list directory option if search part of url is `?dir`.
+ *  The url is `http://localhost:9000/?dir`
  * `abeamer serve --list-dir`.
  *
- *  Generate the animations in file image sequences and deletes the previous images.
+ *  Starts the live server on port 8000. The url is `http://localhost:8000/`.
+ * `abeamer serve --port 8000`.
+ *
+ *  Generate the animations in file image sequences from the project in the current directory.
+ * `abeamer render`.
+ *
+ *  Same as above, but deletes the previous images and the project is on directory `foo`.
  * `abeamer render --dp foo`.
  *
- *  Same as above, but it outputs detailed information about what is happening.
+ *  Same as the first render, but it renders from a live server.
+ *  Required if it's loading `.json` files or is teleporting.
+ * `abeamer render --url http://localhost:9000/foo/index.html`
+ *
+ *  Generates only the `story.json` file, it doesn't generates the file image sequence.
+ *  This should be used only for testing. Teleporting should be done from the web browser library,
+ *  and the teleported story via Ajax to the cloud.
+ * `abeamer render --url http://localhost:9000/foo/index.html --teleport`
+ *
+ *  Same as the first render, but with verbose logging.
  * `abeamer render --ll 3 --dp foo`.
  *
  *  Creates an animated gif from the previous generated image sequence on `foo/story-frames/story.gif`.
@@ -180,6 +196,18 @@ The commands are:
   }
 
   // ------------------------------------------------------------------------
+  //                               Fix Folder Name
+  // ------------------------------------------------------------------------
+
+  // function fixFolderName(folderName: string): string {
+  //   folderName = fsix.toPosixSlash(folderName);
+  //   if (folderName.search(/^.\/?$/) !== -1) {
+  //     sysProcess.cwd()
+  //   }
+  //   return folderName;
+  // }
+
+  // ------------------------------------------------------------------------
   //                               Parse Arguments
   // ------------------------------------------------------------------------
 
@@ -269,8 +297,13 @@ The commands are:
   function commandCreate(): void {
 
     const projName = fsix.toPosixSlash(cmdParam);
-    if (projName === '' || projName[0] === '-'
-      || projName.search(/[\"\'\?\*\+]/) !== -1) {
+
+    if (!projName) {
+      throw `Missing project name`;
+    }
+
+    if (projName[0] === '-' || projName.search(/[\"\'\?\*\+]/) !== -1
+      || projName.search(/^[\.\/]+$/) !== -1) {
       throw `Error: ${projName} is not valid project name`;
     }
 
@@ -354,7 +387,15 @@ The commands are:
         return !fileBase.match(/plugins-list\.json$/);
       });
 
-    if (logLevel > Consts.LL_SILENT) { console.log(`Project ${projName} created`); }
+    if (logLevel > Consts.LL_SILENT) {
+      console.log(`Project ${projName} created.
+- frame-width: ${width}px
+- frame-height: ${height}px
+- fps: ${fps}
+To modify the the frame dimensions, edit [abeamer.ini] and recompile the [css/main.scss] file.
+To modify the fps, edit the [js/main.ts] file.
+`);
+    }
   }
 
 
@@ -419,6 +460,17 @@ The commands are:
   }
 
   // ------------------------------------------------------------------------
+  //                               Utilities
+  // ------------------------------------------------------------------------
+
+  function fileMustExists(fileName: string): string {
+    if (!sysFs.existsSync(fileName)) {
+      throw `${fileName} must exist`;
+    }
+    return fileName;
+  }
+
+  // ------------------------------------------------------------------------
   //                                Command: Render
   // ------------------------------------------------------------------------
 
@@ -432,7 +484,7 @@ The commands are:
     }
 
     // if use hasn't provided the folder name nor config file
-    if (!cmdParam && !argOpts.config.value) { outArgs.push('.'); }
+    if (!cmdParam && argOpts.config.value as string) { outArgs.push('.'); }
 
     outArgs.splice(0, 0, `${fsix.toPosixSlash(__dirname)}/../server/server-agent-${serverName}.js`);
 
@@ -455,7 +507,6 @@ The commands are:
     dirname: string;
     framespattern: string;
   }
-
 
   function getReport(): Report {
     let reportFileName = fsix.toPosixSlash(cmdParam || '.');
@@ -501,7 +552,7 @@ The commands are:
 
     const args = ['-delay', `1x${report.fps}`];
     const loop = argOpts['loop'].value as string || '0';
-     args.push('-loop', loop);
+    args.push('-loop', loop);
     if (toOptimize) { args.push('-strip', '-layers', 'optimize', '-alpha', 'deactivate'); }
 
     args.push(report.framespattern.replace(/\%\d*d/, '*'), gifFileName);
@@ -608,6 +659,6 @@ The commands are:
   try {
     main();
   } catch (err) {
-    console.log(err);
+    console.error(err.message || err.toString());
   }
 }

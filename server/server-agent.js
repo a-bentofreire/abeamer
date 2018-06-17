@@ -45,10 +45,7 @@ var ServerAgent;
      */
     function dirName(filename) {
         var lastSlash = filename.lastIndexOf('/');
-        if (lastSlash === -1) {
-            throw 'Missing Folder';
-        }
-        return filename.substr(0, lastSlash);
+        return lastSlash === -1 ? '.' : filename.substr(0, lastSlash);
     }
     // this function is credited to @Flygenring
     // https://stackoverflow.com/questions/10830357/javascript-toisostring-ignores-timezone-offset
@@ -62,13 +59,14 @@ var ServerAgent;
     var toExitOnError = true;
     var isFirstFrame = true;
     var BaseServer = /** @class */ (function () {
-        function BaseServer(serverName, args, platform, cwd, existsSync, unlinkSync, mkdirpSync, readUtf8Sync, writeFileSync, posixPathJoin) {
+        function BaseServer(serverName, args, platform, cwd, existsSync, isDirectory, unlinkSync, mkdirpSync, readUtf8Sync, writeFileSync, posixPathJoin) {
             var _this = this;
             this.serverName = serverName;
             this.args = args;
             this.platform = platform;
             this.cwd = cwd;
             this.existsSync = existsSync;
+            this.isDirectory = isDirectory;
             this.unlinkSync = unlinkSync;
             this.mkdirpSync = mkdirpSync;
             this.readUtf8Sync = readUtf8Sync;
@@ -189,20 +187,23 @@ var ServerAgent;
         BaseServer.prototype.parseArguments = function (args) {
             var argI = 1;
             var self = this;
-            function getConfigFileName(value, needsToAddIni) {
+            function getConfigFileName(value) {
                 var configFileName = toPosixSlash(value);
                 if (!configFileName) {
                     return '';
                 }
-                if (needsToAddIni || configFileName.match(/^\/$/)) {
+                if (self.existsSync(configFileName) && self.isDirectory(configFileName)) {
                     configFileName = self.posixPathJoin(configFileName, 'abeamer.ini');
+                }
+                if (!self.existsSync(configFileName)) {
+                    throw "Config file " + configFileName + " doesn't exists";
                 }
                 return configFileName;
             }
             function parseOption(option, value) {
                 switch (option) {
                     case '@param':
-                        parseOption('config', getConfigFileName(toPosixSlash(value), true));
+                        parseOption('config', getConfigFileName(toPosixSlash(value)));
                         break;
                     case 'version':
                         console.log(version_js_1.VERSION);
@@ -337,7 +338,7 @@ var ServerAgent;
                         self.serverName = value;
                         break;
                     case 'config':
-                        var configFileName = getConfigFileName(value, false);
+                        var configFileName = getConfigFileName(value);
                         if (!configFileName) {
                             return 0;
                         }
@@ -474,7 +475,7 @@ var ServerAgent;
                     }
                 }
                 catch (error) {
-                    self.handleError(error);
+                    self.handleError(error.message);
                 }
             }
         };
@@ -582,7 +583,7 @@ var ServerAgent;
             catch (error) {
                 console.log("Server Error: " + (error.message || error.toString()));
                 this.exitServer(opts_parser_js_1.OptsParser.ON_ERROR_EXIT_VALUE);
-                throw error;
+                // throw error;
             }
         };
         return BaseServer;
