@@ -10,12 +10,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed command line error messages.
 - Fixes `gallery-release` links in order to allow to override a created project.
 - (DEV) Fixes `gulp update-gallery-scripts`.
+- Fixes `abeamer render --inject` plugins.
+- Fixes the creation of `gallery-release/remote-server/code.zip`.
+- Fixes adding `assets` folder to `gallery-release/remote-server`.
 ### Added
 - Added extra file and directory exists tests to server-agent.
 - Added more examples to the command line documentation.
 ### Changed
 - (DEV)`gulp build-release` makes `chmod u+x` for `cli/abeamer-cli.js`.
 - Sets gallery html files spacing to 2 spaces.
+- Updated teleporter documentation.
 
 
 ## [0.2.11] -

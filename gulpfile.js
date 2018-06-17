@@ -409,9 +409,14 @@ var Gulp;
     });
     gulp.task('gal-rel:copy-files', ['gal-rel:get-examples'], function () {
         return mergeStream(build_gallery_release_js_1.BuildGalleryRelease.releaseExamples.map(function (ex) {
-            return gulp.src([ex.srcFullPath + "/**",
+            var srcList = [ex.srcFullPath + "/**",
                 "!" + ex.srcFullPath + "/*.html",
-                "!" + ex.srcFullPath + "/story-frames/*.png"], { dot: true })
+                "!" + ex.srcFullPath + "/story.json",
+                "!" + ex.srcFullPath + "/story-frames/*.png"];
+            if (ex.srcFullPath.includes('remote-server')) {
+                srcList.push("!" + ex.srcFullPath + "/assets{/**,}");
+            }
+            return gulp.src(srcList, { dot: true })
                 .pipe(gulp.dest(ex.dstFullPath));
         }));
     });
@@ -424,6 +429,7 @@ var Gulp;
         return mergeStream(build_gallery_release_js_1.BuildGalleryRelease.releaseExamples.map(function (ex) {
             return gulp.src([
                 ex.dstFullPath + "/**",
+                ex.dstFullPath + "/.allowed-plugins.json",
                 "!" + ex.dstFullPath + "/*.zip",
                 "!" + ex.dstFullPath + "/story-frames/*.{json,gif,mp4}",
             ])

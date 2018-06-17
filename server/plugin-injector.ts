@@ -47,7 +47,7 @@ export namespace PluginInjector {
 
 
   export function processUrl(url: string): string {
-    return url.search(/^http/) !== -1 ? url : `../../client/lib/${url}`;
+    return url.search(/^http/) !== -1 ? url : `abeamer/${url}`;
   }
 
 

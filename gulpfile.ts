@@ -578,9 +578,14 @@ namespace Gulp {
 
   (gulp as any).task('gal-rel:copy-files', ['gal-rel:get-examples'], () => {
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
-      return gulp.src([`${ex.srcFullPath}/**`,
+      const srcList = [`${ex.srcFullPath}/**`,
       `!${ex.srcFullPath}/*.html`,
-      `!${ex.srcFullPath}/story-frames/*.png`], { dot: true })
+      `!${ex.srcFullPath}/story.json`,
+      `!${ex.srcFullPath}/story-frames/*.png`];
+      if (ex.srcFullPath.includes('remote-server')) {
+        srcList.push(`!${ex.srcFullPath}/assets{/**,}`);
+      }
+      return gulp.src(srcList, { dot: true })
         .pipe(gulp.dest(ex.dstFullPath));
     }));
   });
@@ -598,6 +603,7 @@ namespace Gulp {
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       return gulp.src([
         `${ex.dstFullPath}/**`,
+        `${ex.dstFullPath}/.allowed-plugins.json`,
         `!${ex.dstFullPath}/*.zip`,
         `!${ex.dstFullPath}/story-frames/*.{json,gif,mp4}`,
       ])
@@ -618,6 +624,7 @@ namespace Gulp {
 
 
   (gulp as any).task('build-gallery-release-local', ['build-gallery-release']);
+
   // ------------------------------------------------------------------------
   //                               Deletes gallery story-frames folder
   // ------------------------------------------------------------------------

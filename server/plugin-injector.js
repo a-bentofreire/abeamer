@@ -21,7 +21,7 @@ var PluginInjector;
     }
     PluginInjector.loadAllowedPlugins = loadAllowedPlugins;
     function processUrl(url) {
-        return url.search(/^http/) !== -1 ? url : "../../client/lib/" + url;
+        return url.search(/^http/) !== -1 ? url : "abeamer/" + url;
     }
     PluginInjector.processUrl = processUrl;
     function inject(existsSync, readUtf8Sync, writeFileSync) {

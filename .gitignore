@@ -11,8 +11,7 @@ gallery/**/story-frames/
 test/tests.run/
 docs/build
 shared/dev-builders/output
-release/
-release/*
+release{/**,}
 *.js.map
 **/*.bak.*
 *.bak.md
