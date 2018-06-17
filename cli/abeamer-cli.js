@@ -374,7 +374,7 @@ var Cli;
             throw "Unknown " + serverName;
         }
         // if use hasn't provided the folder name nor config file
-        if (!cmdParam && argOpts.config.value) {
+        if (!cmdParam && !argOpts.config.value) {
             outArgs.push('.');
         }
         outArgs.splice(0, 0, fsix_js_1.fsix.toPosixSlash(__dirname) + "/../server/server-agent-" + serverName + ".js");

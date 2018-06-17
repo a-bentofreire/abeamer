@@ -154,6 +154,13 @@ export namespace OptsParser {
   export const isOption = (arg: string) => arg.indexOf('--') === 0;
 
 
+  /**
+   * Iterates the command line arguments.
+   * For each option, it calls callback.
+   * If callback returns different from `undefined`, it exists immediately with
+   * the return value of the callback.
+   * Otherwise it iterates until all arguments are consumed and returns undefined.
+   */
   export function iterateArgOpts(toParseValue: boolean,
     getNext: () => string,
     callback: (option: string | 'param',
@@ -173,6 +180,7 @@ export namespace OptsParser {
         if (opt === undefined) {
           throw `Unknown option ${optName}`;
         }
+
         opt.hasOption = true;
         if (opt.param) {
           opt.value = getNext();

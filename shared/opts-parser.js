@@ -90,6 +90,13 @@ var OptsParser;
     // ------------------------------------------------------------------------
     /** Returns true, if the argument is an option */
     OptsParser.isOption = function (arg) { return arg.indexOf('--') === 0; };
+    /**
+     * Iterates the command line arguments.
+     * For each option, it calls callback.
+     * If callback returns different from `undefined`, it exists immediately with
+     * the return value of the callback.
+     * Otherwise it iterates until all arguments are consumed and returns undefined.
+     */
     function iterateArgOpts(toParseValue, getNext, callback) {
         do {
             var name_1 = (getNext() || '').trim();
