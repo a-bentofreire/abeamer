@@ -61,7 +61,7 @@ CHROME_BIN=<full-chrome-path-including-file-name>
 ---------------------
 ## Execution
 
-### When I render, it gives an error
+### When I render, it gives an error.
 
 ABeamer has included a render server agent, and this one requires a server.  
 The default server is `puppeteer`, you can install it via:  
@@ -74,6 +74,12 @@ set the environment variable to:
 CHROME_PATH=<full-chrome-path-including-file-name>
 ```
 
+### It doesn't creates a gif file.
+
+On Windows, the system includes a program called `convert`.  
+It's necessary to add the `imagemagick` at the beginning of the system path.  
+`SET PATH=<my-imagemagik-path>;%PATH%`
+
 ### My animation doesn't changes the current physical position.
 
 In order for an element to change its position, in necessary that:  
@@ -85,18 +91,18 @@ In order for an element to change its position, in necessary that:
    - The property had been previously animated.  
 2. The `value` be defined numerically not in pixels.  
 
-
-
 ### How do I change the output frame size?
 
 Inside `abeamer.ini` there are two fields: `$abeamer-width` and `$abeamer-height`.  
-After modifying these two fields, recompile the `js/main.scss` using SCSS compiler.   
+After modifying these two fields, recompile the `js/main.scss` using a SCSS compiler.   
 
 ### Can I use only JavaScript without TypeScript?
 
 Yes, you can.  
 ABeamer provides TypeScript typings for convenience and documentation purposes, 
 but all the functions and constants are designed to be used without TypeScript.   
+When creating a new project, add the option `--no-typescript`.  
+Example: `abeamer create foo-js --width 384 --height 288 --fps 30 --no-typescript`.
 
 ### Can I use only CSS without SCSS?
 

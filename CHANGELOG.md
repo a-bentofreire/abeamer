@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - (DEV)`gulp build-release` makes `chmod u+x` for `cli/abeamer-cli.js`.
 - Sets gallery html files spacing to 2 spaces.
 - Updated teleporter documentation.
+- Improved the `README` files.
 
 
 ## [0.2.11] -

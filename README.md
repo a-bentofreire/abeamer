@@ -18,6 +18,15 @@ and special effects to their images or videos by just using the web browser
 and then [teleport](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/teleporter/) 
 the story to the company's machine to render the frame images and generate animated gifs or videos.  
 
+## What's new
+
+In the version 0.2.11, it was added the alpha version of the charts plugin.
+In the next versions, this plugin will be improved to reach beta version.
+In this version 0.2.12, the command line and teleporter were both improved 
+and fixed small bugs.
+  
+For more details see the [CHANGELOG](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/blob/master/CHANGELOG.md).
+
 ## Components
 
 ABeamer includes a web browser library, a render server agent and a command line utility.  
@@ -233,8 +242,15 @@ but it won't execute the command-line utility.
 
 However, in order to render frames, generate gifs and movies, it requires:
 1. [nodejs](https://nodejs.org/en/).
-2. To render, it requires a render server [puppeteer](https://www.npmjs.com/package/puppeteer) `npm install -g puppeteer`.
-3. To generate gifs, it requires to have [imagemagick](https://www.imagemagick.org) on system path.
+     
+2. To render, it requires [puppeteer](https://www.npmjs.com/package/puppeteer) render server `npm install -g puppeteer`.  
+   Puppeteer installs Chromium by default, since Chromium is outdated and has less features than Chrome,  
+   before installing puppeteer, read the following [note](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/faq/#can-i-install-puppeteer-without-chromium).   
+   ABeamer also supports `phantomjs` but since its features are outdated is preferable to use `puppeteer`.  
+     
+3. To generate gifs, it requires to have [imagemagick](https://www.imagemagick.org) on system path.  
+   For Windows users, read the following [note](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/faq/#it-doesnt-creates-a-gif-file).
+     
 4. To create movies, it requires to have [ffmpeg](https://www.ffmpeg.org/) on the system path.
 
 ## Playground
@@ -346,10 +362,6 @@ to install if you need to render, create gifs or movies on the local machine.
 * [Release version](https://github.com/a-bentofreire/abeamer-release)
 * [Documentation](https://github.com/a-bentofreire/abeamer-docs)
 * [Gallery - Release version](https://github.com/a-bentofreire/abeamer-gallery-release)
-
-## What's new
-
-* Check out the [CHANGELOG](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/blob/master/CHANGELOG.md).
 
 ## Roadmap & Known Issues
 
