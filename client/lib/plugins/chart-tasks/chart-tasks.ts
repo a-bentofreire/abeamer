@@ -21,6 +21,7 @@
  *
  * This plugin has the following built-in charts:
  *
+ * - `marker`.
  * - `bar`.
  * - `line`.
  * - `area`.
@@ -43,8 +44,9 @@ namespace ABeamer {
 
   export enum ChartTypes {
     bar,
-    line,
     area,
+    line,
+    marker,
     mixed,
   }
 
@@ -55,8 +57,67 @@ namespace ABeamer {
 
   export interface BaseChartTaskParams extends AnyParams {
     chartType?: ChartTypes | string;
-    dataFrame: SeriesData[];
-    animeSelector: string;
+    data: SeriesData[];
+    animeSelector?: string;
+  }
+
+
+  export enum ChartCaptionOrientation {
+    horizontal,
+    vertical,
+  }
+
+  export enum ChartCaptionPosition {
+    top,
+    bottom,
+    left,
+    right,
+  }
+
+  export interface ChartCaptions {
+    fontColor?: string | ExprString;
+    fontFamily?: string | ExprString;
+    fontSize?: uint | ExprString;
+    marginTop?: uint | ExprString;
+    marginBottom?: uint | ExprString;
+  }
+
+
+  export interface ChartLabels extends ChartCaptions {
+    labels?: string[];
+  }
+
+
+  export type ChartLabelsX = ChartLabels;
+
+  export type ChartLabelsY = ChartLabels;
+
+
+  export enum ChartPointShape {
+    circle,
+    square,
+    diamond,
+  }
+
+
+  export interface ChartMarkers {
+    visible?: boolean | boolean[] | boolean[][];
+    shape?: (ChartPointShape | string) | (ChartPointShape | string)[]
+    | (ChartPointShape | string)[][];
+    size?: uint | uint[] | uint[][];
+    color?: string | string[] | string[][];
+  }
+
+
+  export interface ChartLine {
+    visible?: boolean;
+    color?: string | ExprString;
+    width?: number | ExprString;
+  }
+
+
+  export interface ChartTitle extends ChartCaptions {
+    caption: string | ExprString;
   }
 
 
@@ -65,38 +126,41 @@ namespace ABeamer {
     /** Chart Type per series. Use only if charType is `mixed`. */
     charTypes?: (ChartTypes | string)[];
 
+    // title
+    title?: string | ExprString | ChartTitle;
+
     // labels X
-    labelsX?: string[];
-    labelsXHeight?: uint | ExprString;
-    labelsXFontColor?: string | ExprString;
-    labelsXFontFamily?: string | ExprString;
-    labelsXFontSize?: uint | ExprString;
+    labelsX?: ChartLabelsX;
 
     // labels Y
-    labelsY?: string[];
-    labelsYWidth?: uint | ExprString;
-    labelsYFontColor?: string | ExprString;
-    labelsYFontFamily?: string | ExprString;
-    labelsYFontSize?: uint | ExprString;
+    labelsY?: ChartLabelsY;
 
-    // bar chart
-    barWidth?: uint | ExprString;
-    barMaxHeight?: uint | ExprString;
-    barSpacing?: uint | ExprString;
-    barSeriesSpacing?: uint | ExprString;
-    barHeightStart?: number | ExprString;
+    // markers
+    markers?: ChartMarkers;
+
+    // columns
+    colWidth?: uint | ExprString;
+    colMaxHeight?: uint | ExprString;
+    colSpacing?: uint | ExprString;
+    colInterSpacing?: uint | ExprString;
 
     // colors
-    fillColors?: string[];
-    strokeColors?: string[];
-    stokeWidth?: uint[];
-    xAxisColor?: string | ExprString;
-    yAxisColor?: string | ExprString;
-    y0LineColor?: string | ExprString;
+    fillColors?: string[] | string;
+    negativeFillColors?: string[] | string;
+    strokeColors?: string[] | string;
+    stokeWidth?: uint[] | uint;
+    xAxis?: ChartLine;
+    yAxis?: ChartLine;
+    y0Line?: ChartLine;
 
     // limits
     maxValue?: number | ExprString;
     minValue?: number | ExprString;
+
+    // animation
+    colHeightStart?: number | ExprString;
+    deviationStart?: number | ExprString;
+    sweepStart?: number | ExprString;
   }
 
   // #export-section-end: release
@@ -116,13 +180,22 @@ namespace ABeamer {
   });
 
 
-  function _parseSeriesList<T>(numSeries: int, list: T[],
+  function _parseSeriesList<T>(numSeries: int, list: T[] | T,
     defaultValue: T, args: ABeamerArgs): T[] {
 
     const res = [];
     for (let i = 0; i < numSeries; i++) {
-      if (list && i < list.length) {
-        res.push(list[i]);
+
+      if (list) {
+        if (Array.isArray(list)) {
+          if (i < list.length) {
+            res.push(list[i]);
+          } else {
+            res.push(defaultValue);
+          }
+        } else {
+          res.push(list);
+        }
       } else {
         res.push(defaultValue);
       }
@@ -134,25 +207,67 @@ namespace ABeamer {
   //                               _WkChart
   // ------------------------------------------------------------------------
 
-  interface _WkChart {
+  abstract class _WkChart {
 
-    canvas: HTMLCanvasElement;
-    context: CanvasRenderingContext2D;
-    w: uint;
-    h: uint;
+    protected canvas: HTMLCanvasElement;
+    protected context: CanvasRenderingContext2D;
+    protected chartWidth: uint;
+    protected chartHeight: uint;
 
-    chartType: ChartTypes;
-    min: number;
-    max: number;
-    seriesLen: uint;
-    dataFrame: SeriesData[];
+    protected chartType: ChartTypes;
+    protected min: number;
+    protected max: number;
+    protected avg: number;
+    protected seriesLen: uint;
+    protected data: SeriesData[];
 
-    animator: _ChartVirtualAnimator;
+    protected animator: _ChartVirtualAnimator;
+
+
+    constructor(protected args: ABeamerArgs) { }
+
+    abstract _initChart(params: BaseChartTaskParams): void;
+
+    abstract _drawChart(params: BaseChartTaskParams): void;
+
+
+    _init(elAdapter: ElementAdapter, chartType: ChartTypes,
+      animator: _ChartVirtualAnimator | undefined): void {
+
+      this.canvas = elAdapter.getProp('element', this.args) as any;
+      if (!this.canvas) {
+        throwErr(`Didn't find the ${elAdapter.getId()}`);
+      }
+
+      this.context = this.canvas.getContext('2d');
+      this.chartWidth = this.canvas.width;
+      this.chartHeight = this.canvas.height;
+      this.chartType = chartType;
+      this.animator = animator;
+    }
+
+
+    _initData(data: SeriesData[]): void {
+      let max = -Number.MIN_VALUE;
+      let min = Number.MAX_VALUE;
+      const firstSeriesLen = data[0].length;
+      data.forEach(series => {
+        if (series.length !== firstSeriesLen) {
+          throwErr(`Every Series must have the same length`);
+        }
+        series.forEach(point => {
+          max = Math.max(max, point);
+          min = Math.min(min, point);
+        });
+      });
+
+      this.min = min;
+      this.max = max;
+      this.avg = (max - min) / 2;
+      this.seriesLen = firstSeriesLen;
+      this.data = data;
+    }
   }
-
-
-  type _ChartFunc = (params: BaseChartTaskParams, out: _WkChart,
-    stage: uint, args: ABeamerArgs) => void;
 
   // ------------------------------------------------------------------------
   //                               _ChartVirtualAnimator
@@ -164,7 +279,6 @@ namespace ABeamer {
     params: BaseChartTaskParams;
     props: AnyParams = {};
     selector: string;
-    chartFunc: _ChartFunc;
 
 
     getProp(name: PropName): PropValue {
@@ -176,57 +290,107 @@ namespace ABeamer {
       this.props[name] = value;
       if (name !== 'uid') {
         this.charts.forEach(chart => {
-          this.chartFunc(this.params, chart, TS_ANIME_LOOP, args);
+          chart._drawChart(this.params);
         });
       }
     }
   }
 
   // ------------------------------------------------------------------------
-  //                               Labels
+  //                               Captions
   // ------------------------------------------------------------------------
 
-  interface _Labels {
-    values: string[];
-    fontColor: string;
-    fontFamily: string;
-    fontSize: uint;
+  interface _WkChartCaptions {
+    fontColor?: string;
+    fontFamily?: string;
+    fontSize?: uint;
+    marginTop?: uint;
+    marginBottom?: uint;
+    orientation?: uint;
+    position?: uint;
+    width?: uint;
+    height?: uint;
+    x?: uint;
+    y?: uint;
   }
 
 
-  function _setUpLabelsFont(l: _Labels, ctx: CanvasRenderingContext2D): void {
+  function _setUpCaptionsFont(l: _WkChartCaptions, ctx: CanvasRenderingContext2D): void {
     ctx.font = `${l.fontSize}px ${l.fontFamily}`;
     ctx.fillStyle = l.fontColor;
   }
 
+  // ------------------------------------------------------------------------
+  //                               Labels
+  // ------------------------------------------------------------------------
 
-  function _alignLabels(l: _Labels, ctx: CanvasRenderingContext2D,
+  interface _WkChartLabels extends _WkChartCaptions {
+    captions?: string[];
+  }
+
+
+  function _alignCaptions(l: _WkChartCaptions, ctx: CanvasRenderingContext2D,
     text: string, width: uint): uint {
+
     const sz = ctx.measureText(text);
     return (width - sz.width) / 2;
+  }
+
+  // ------------------------------------------------------------------------
+  //                               Line
+  // ------------------------------------------------------------------------
+
+  interface _WkChartLine {
+    visible: boolean;
+    color: string;
+    width: number;
+  }
+
+  // ------------------------------------------------------------------------
+  //                               Points
+  // ------------------------------------------------------------------------
+
+  interface _WkChartTitle extends _WkChartCaptions {
+    caption?: string;
+  }
+
+  // ------------------------------------------------------------------------
+  //                               Points
+  // ------------------------------------------------------------------------
+
+  interface _WkChartMarkers {
+    visible?: boolean[][];
+    shape?: ChartPointShape[][];
+    size?: uint[][];
+    color?: string[][];
   }
 
   // ------------------------------------------------------------------------
   //                               Bar Chart
   // ------------------------------------------------------------------------
 
-  interface _WkAxisChart extends _WkChart {
+  class _WkAxisChart extends _WkChart {
 
     /** Chart Type per series. Use only if charType is `mixed`. */
     chartTypes: ChartTypes[];
 
     // axis
-    xAxisColor: string;
-    yAxisColor: string;
-    y0LineColor: string;
+    xAxis: _WkChartLine;
+    yAxis: _WkChartLine;
+    y0Line: _WkChartLine;
+
+    // title
+    title: _WkChartTitle = {};
 
     // labels X
-    labelsX: _Labels;
-    labelsXHeight: uint;
+    labelsX: _WkChartLabels;
 
     // labels Y
-    labelsY: _Labels;
-    labelsYWidth: uint;
+    labelsY: _WkChartLabels;
+
+    // points
+    markers: _WkChartMarkers;
+    hasMarkers: boolean;
 
     // bar chart
     barWidth: uint;
@@ -236,241 +400,476 @@ namespace ABeamer {
 
     // colors
     fillColors: string[];
+    negativeFillColors: string[];
     stokeColors: string[];
     stokeWidth: uint[];
 
     // limits
     maxValue: number;
     minValue: number;
-  }
+    avgValue: number;
 
+    // overflow
+    overflow: uint = 0;
 
-  /** Initializes all the Axis Chart parameters. */
-  function _initAxisChart(params: AxisChartTaskParams,
-    chart: _WkAxisChart, args: ABeamerArgs): void {
+    // graph  (x0, y0) = (left, bottom)
+    graphX0: uint = 0;
+    graphY0: uint;
+    graphX1: uint;
+    graphY1: uint = 0;
 
-    chart.chartTypes = chart.dataFrame.map((series, seriesIndex) => {
-      if (chart.chartType !== ChartTypes.mixed) {
-        return chart.chartType;
+    protected _initCaptions(defPosition: ChartCaptionPosition, captions: string[],
+      labThis: ChartLabels, labOther: ChartLabels): _WkChartCaptions {
+
+      const res: _WkChartCaptions = {
+        fontColor: ExprOrStrToStr(labThis.fontColor || labOther.fontColor,
+          'black', this.args),
+        fontFamily: ExprOrStrToStr(labThis.fontFamily || labOther.fontFamily,
+          'sans-serif', this.args),
+        fontSize: ExprOrNumToNum(labThis.fontSize || labOther.fontSize,
+          12, this.args),
+        marginTop: ExprOrNumToNum(labThis.marginTop, 0, this.args),
+        marginBottom: ExprOrNumToNum(labThis.marginBottom, 0, this.args),
+        position: defPosition,
+        orientation: ChartCaptionOrientation.horizontal,
+      };
+
+      _setUpCaptionsFont(res, this.context);
+      const joinChar = res.position === ChartCaptionPosition.top ||
+        res.position === ChartCaptionPosition.bottom ? ' ' : '\n';
+
+      const joinedText = captions.join(joinChar);
+      const sz = this.context.measureText(joinedText);
+      res.width = sz.width;
+      res.height = res.fontSize;
+
+      let d: uint;
+      switch (res.position) {
+        case ChartCaptionPosition.top:
+          res.y = this.graphY1 + res.height + res.marginTop;
+          d = res.height + res.marginTop + res.marginBottom;
+          this.graphY1 += d;
+          break;
+
+        case ChartCaptionPosition.bottom:
+          res.y = this.graphY0 - res.marginBottom;
+          d = res.height + res.marginTop + res.marginBottom;
+          this.graphY0 -= d;
+          break;
       }
-
-      if (!params.charTypes || params.charTypes.length <= seriesIndex) {
-        return ChartTypes.bar;
-      }
-
-      const chartType = params.charTypes[seriesIndex];
-      return typeof chartType === 'string' ? ChartTypes[chartType] : chartType;
-    });
-
-
-    // axis
-    chart.xAxisColor = ExprOrStrToStr(params.xAxisColor, 'black', args);
-    chart.yAxisColor = ExprOrStrToStr(params.yAxisColor, 'black', args);
-    chart.y0LineColor = ExprOrStrToStr(params.y0LineColor, 'black', args);
-
-    // labels X
-    chart.labelsXHeight = ExprOrNumToNum(params.labelsXHeight, 10, args);
-    chart.labelsX = {
-      values: params.labelsX,
-      fontColor: ExprOrStrToStr(params.labelsXFontColor || params.labelsYFontColor, 'black', args),
-      fontFamily: ExprOrStrToStr(params.labelsXFontFamily || params.labelsYFontFamily, 'sans-serif', args),
-      fontSize: ExprOrNumToNum(params.labelsXFontSize || params.labelsXFontSize, 12, args),
-    };
-
-    // labels Y
-    chart.labelsYWidth = ExprOrNumToNum(params.labelsYWidth, 20, args);
-    chart.labelsY = {
-      values: params.labelsY,
-      fontColor: ExprOrStrToStr(params.labelsYFontColor || params.labelsXFontColor, 'black', args),
-      fontFamily: ExprOrStrToStr(params.labelsYFontFamily || params.labelsXFontFamily, 'sans-serif', args),
-      fontSize: ExprOrNumToNum(params.labelsYFontSize || params.labelsXFontSize, 12, args),
-    };
-
-    // bar chart
-    chart.barWidth = ExprOrNumToNum(params.barWidth, 20, args);
-    chart.barMaxHeight = ExprOrNumToNum(params.barMaxHeight, 100, args);
-    chart.barSpacing = ExprOrNumToNum(params.barSpacing, 5, args);
-    chart.barSeriesSpacing = ExprOrNumToNum(params.barSeriesSpacing, 0, args);
-
-    const barHeightV = ExprOrNumToNum(params.barHeightStart, 0, args);
-    chart.animator.props['bar-height'] = barHeightV;
-
-    // limits
-    chart.maxValue = ExprOrNumToNum(params.maxValue, chart.max, args);
-    chart.minValue = ExprOrNumToNum(params.minValue, Math.min(chart.min, 0), args);
-
-    // colors
-    chart.fillColors = _parseSeriesList<string>(chart.dataFrame.length, params.fillColors,
-      'white', args);
-    chart.stokeColors = _parseSeriesList<string>(chart.dataFrame.length, params.strokeColors,
-      'black', args);
-    chart.stokeWidth = _parseSeriesList<uint>(chart.dataFrame.length, params.strokeWidth,
-      1, args);
-  }
-
-
-  /** Implements Axis Chart animation. */
-  function _axisChart(params: AxisChartTaskParams,
-    chart: _WkAxisChart, stage: uint, args: ABeamerArgs): void {
-
-    let barHeightV;
-
-    switch (stage) {
-      case TS_INIT:
-        _initAxisChart(params, chart, args);
-      case TS_ANIME_LOOP:
-        barHeightV = chart.animator.props['bar-height'];
-        break;
-      default:
-        return;
+      return res;
     }
 
-    const w = chart.w;
-    const h = chart.h;
-    const ctx = chart.context;
-    const x0 = chart.labelsYWidth;
 
-    // bar
-    const xbd = chart.barWidth;
-    const xs = chart.barSpacing;
-    const xss = chart.barSeriesSpacing;
+    protected _initLabels(params: AxisChartTaskParams): void {
+      const labelsX: ChartLabelsX = params.labelsX || {};
+      const labelsY: ChartLabelsY = params.labelsY || {};
+      let labels;
 
-    const labelsXHeight = chart.labelsXHeight;
-    const y0 = h - labelsXHeight;
-    const topMargin = 1;
-    const yd = y0 - topMargin;
-    const vM = chart.maxValue;
-    const vm = chart.minValue;
-    const vMd = vM - vm;
+      // labels X
+      labels = labelsX.labels;
+      if (labels) {
+        this.labelsX = this._initCaptions(ChartCaptionPosition.bottom,
+          labels, labelsX, labelsY);
+        this.labelsX.captions = labels;
+      }
 
-    const hasY0Line = vM * vm < 0;
-    const vy0Line = hasY0Line ? 0 : vm >= 0 ? vm : vM;
-    const vy0LineClip = (vy0Line - vm) / vMd;
-    const axis0Y = y0 - yd * vy0LineClip;
+      // labels Y
+      labels = labelsX.labels;
+      if (labels) {
+        this.labelsY = this._initCaptions(ChartCaptionPosition.left,
+          labels, labelsY, labelsX);
+        this.labelsY.captions = labels;
+      }
+    }
 
-    const dataFrame = chart.dataFrame;
-    const seriesLen = chart.seriesLen;
 
-    // computes x-shift created by side-by-side bars.
-    // only bar charts cause a x-shift.
-    const xShiftPerSeries = [];
-    let xShift = 0;
+    protected _initTitle(params: AxisChartTaskParams) {
+      let title = params.title || {} as ChartTitle;
+      if (typeof title === 'string') {
+        title = {
+          caption: title as string,
+        };
+      }
 
-    dataFrame.forEach((series, seriesI) => {
-      if (chart.chartTypes[seriesI] === ChartTypes.bar) {
-        if (xShift) {
-          xShift += xss;
+      if (title.caption) {
+        this.title = this._initCaptions(ChartCaptionPosition.top,
+          [title.caption], title, title);
+        this.title.caption = ExprOrStrToStr(title.caption, '', this.args);
+      }
+    }
+
+
+    protected _initLine(line: ChartLine): _WkChartLine {
+
+      return {
+        visible: line.visible !== undefined ? line.visible : true,
+        color: ExprOrStrToStr(line.color, '#7c7c7c', this.args),
+        width: ExprOrNumToNum(line.width, 1, this.args),
+      };
+    }
+
+
+    protected _fillArrayArrayParam<TI, TO>(param: TI | TI[] | TI[][],
+      defValue: TI, strMapper?: any): TO[][] {
+
+      const res: TO[][] = [];
+
+      if (param === undefined) {
+        param = defValue;
+      }
+
+      const isParamArray = Array.isArray(param);
+      if (!isParamArray && strMapper && typeof param === 'string') {
+        param = strMapper[param];
+      }
+
+      this.data.forEach((series, seriesI) => {
+        let resItem = [];
+        if (!isParamArray) {
+          resItem = series.map(v => param);
+        } else {
+
+          let subParam = param[seriesI];
+          const isSubParamArray = Array.isArray(subParam);
+          if (!isSubParamArray && strMapper && typeof subParam === 'string') {
+            subParam = strMapper[subParam];
+          }
+
+          if (!isSubParamArray) {
+            resItem = series.map(v => subParam);
+          } else {
+            resItem = series.map((v, i) => {
+              let itemParam = subParam[i];
+              if (strMapper && typeof itemParam === 'string') {
+                itemParam = strMapper[itemParam];
+              }
+              return itemParam;
+            });
+          }
         }
-        xShiftPerSeries.push(xShift);
-        xShift += xbd;
-      } else {
-        xShiftPerSeries.push(0);
-      }
-    });
-    if (!xShift) {
-      xShift += xbd;
+        res.push(resItem);
+      });
+      return res;
     }
-    const dataFrameWidths = xShift + xs;
-    // the last bar doesn't needs barSpacing
-    const totalWidth = dataFrameWidths * seriesLen - xs;
-    const x1 = x0 + totalWidth;
 
-    ctx.clearRect(0, 0, w, h);
 
-    const y = axis0Y;
-    // data points
-    dataFrame.forEach((series, seriesI) => {
+    protected _initMarkers(params: AxisChartTaskParams): void {
+      const markers: _WkChartMarkers = {};
+      this.hasMarkers = params.markers !== undefined || this.chartTypes
+        .findIndex(cType => cType === ChartTypes.marker) !== -1;
 
-      let xPrev: int;
-      let yPrev: int;
-      let points: int[][] = [];
+      const pMarkers = params.markers || {};
 
-      const chartType = chart.chartTypes[seriesI];
-      ctx.lineWidth = chart.stokeWidth[seriesI];
-      ctx.strokeStyle = chart.stokeColors[seriesI];
-      ctx.fillStyle = chart.fillColors[seriesI];
+      if (this.hasMarkers) {
+        markers.visible = this._fillArrayArrayParam<boolean, boolean>(
+          pMarkers.visible, this.chartType === ChartTypes.marker);
+        markers.shape = this._fillArrayArrayParam<ChartPointShape | string, ChartPointShape>(
+          pMarkers.shape, ChartPointShape.square, ChartPointShape);
+        markers.size = this._fillArrayArrayParam<uint, uint>(
+          pMarkers.size, 5);
+        markers.color = this._fillArrayArrayParam<string, string>(
+          pMarkers.color, 'black');
+      }
+      this.markers = markers;
+    }
 
-      for (let i = 0; i < seriesLen; i++) {
-        const x = x0 + dataFrameWidths * i + xShiftPerSeries[seriesI];
-        const v = series[i];
-        const vClip = (v - vy0Line) / vMd;
-        const vT = vClip * barHeightV;
-        const ybd = -yd * vT;
-        const xbd2 = dataFrameWidths / 2;
 
-        switch (chartType) {
-          case ChartTypes.bar:
-            ctx.fillRect(x, y, xbd, ybd);
-            ctx.strokeRect(x, y, xbd, ybd);
-            break;
+    protected _drawMarkers(dataPixels: int[][][]): void {
+      const points = this.markers;
+      const ctx = this.context;
 
-          case ChartTypes.line:
-            if (i) {
-              ctx.moveTo(xPrev, yPrev);
-              ctx.lineTo(x + xbd2, y + ybd);
-              ctx.stroke();
+      this.data.forEach((series, seriesI) => {
+        for (let i = 0; i < series.length; i++) {
+          if (points.visible[seriesI][i]) {
+            ctx.fillStyle = points.color[seriesI][i];
+            const size = points.size[seriesI][i];
+            const sizeDiv2 = size / 2;
+            const [x, y] = dataPixels[seriesI][i];
+            switch (points.shape[seriesI][i]) {
+              case ChartPointShape.circle:
+                ctx.beginPath();
+                ctx.arc(x, y, sizeDiv2, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+
+              case ChartPointShape.diamond:
+                ctx.beginPath();
+                ctx.moveTo(x - sizeDiv2, y);
+                ctx.lineTo(x, y - sizeDiv2);
+                ctx.lineTo(x + sizeDiv2, y);
+                ctx.lineTo(x, y + sizeDiv2);
+                ctx.fill();
+                break;
+
+              case ChartPointShape.square:
+                ctx.fillRect(x - sizeDiv2, y - sizeDiv2, sizeDiv2, sizeDiv2);
+                break;
             }
-            xPrev = x + xbd2;
-            yPrev = y + ybd;
-            break;
+          }
+        }
+      });
+    }
 
-          case ChartTypes.area:
-            points.push([x + xbd2, y + ybd]);
-            break;
+
+    protected _drawLine(line: _WkChartLine,
+      x0: uint, y0: uint, x1: uint, y1: uint): void {
+
+      const ctx = this.context;
+      ctx.beginPath();
+      ctx.strokeStyle = line.color;
+      ctx.lineWidth = line.width;
+      ctx.moveTo(x0, y0);
+      ctx.lineTo(x1, y1);
+      ctx.stroke();
+    }
+
+
+    /** Initializes all the Axis Chart parameters. */
+    _initChart(params: AxisChartTaskParams): void {
+
+      this.chartTypes = this.data.map((series, seriesIndex) => {
+        if (this.chartType !== ChartTypes.mixed) {
+          return this.chartType;
+        }
+
+        if (!params.charTypes || params.charTypes.length <= seriesIndex) {
+          return ChartTypes.bar;
+        }
+
+        const chartType = params.charTypes[seriesIndex];
+        return typeof chartType === 'string' ? ChartTypes[chartType] : chartType;
+      });
+
+      // axis
+      this.xAxis = this._initLine(params.xAxis || {});
+      this.yAxis = this._initLine(params.yAxis || {});
+      this.y0Line = this._initLine(params.y0Line || {});
+
+      // bar chart
+      this.barWidth = ExprOrNumToNum(params.colWidth, 20, this.args);
+      this.barMaxHeight = ExprOrNumToNum(params.colMaxHeight, 100, this.args);
+      this.barSpacing = ExprOrNumToNum(params.colSpacing, 5, this.args);
+      this.barSeriesSpacing = ExprOrNumToNum(params.colInterSpacing, 0, this.args);
+
+      // limits
+      this.maxValue = ExprOrNumToNum(params.maxValue, this.max, this.args);
+      this.minValue = ExprOrNumToNum(params.minValue, Math.min(this.min, 0), this.args);
+      this.avgValue = this.avg;
+
+      // colors
+      this.fillColors = _parseSeriesList<string>(this.data.length, params.fillColors,
+        'white', this.args);
+      this.negativeFillColors = !params.negativeFillColors ? this.fillColors :
+        _parseSeriesList<string>(this.data.length, params.negativeFillColors,
+          'white', this.args);
+      this.stokeColors = _parseSeriesList<string>(this.data.length, params.strokeColors,
+        'black', this.args);
+      this.stokeWidth = _parseSeriesList<uint>(this.data.length, params.strokeWidth,
+        1, this.args);
+
+      this.graphX1 = this.chartWidth;
+      this.graphY0 = this.chartHeight;
+      this._initMarkers(params);
+      this._initTitle(params);
+      this._initLabels(params);
+
+      // animation
+      if (this.animator) {
+        this.animator.props['col-height'] = ExprOrNumToNum(params.colHeightStart, 1, this.args);
+        this.animator.props['deviation'] = ExprOrNumToNum(params.deviationStart, 1, this.args);
+        this.animator.props['sweep'] = ExprOrNumToNum(params.sweepStart, 1, this.args);
+      }
+    }
+
+
+    /** Implements Axis Chart animation. */
+    _drawChart(params: AxisChartTaskParams): void {
+
+      const animator = this.animator;
+      const barHeightV = animator ? animator.props['col-height'] : 1;
+      const deviationV = animator ? animator.props['deviation'] : 1;
+      const sweepV = animator ? animator.props['sweep'] : 1;
+
+      const chartWidth = this.chartWidth;
+      const chartHeight = this.chartHeight;
+      const ctx = this.context;
+      const x0 = this.graphX0;
+      const y0 = this.graphY0;
+      const topMargin = 1;
+      const yLength = y0 - this.graphY1 - topMargin;
+
+      // bar
+      const barWidth = this.barWidth;
+      const barSpacing = this.barSpacing;
+      const barSeriesSpacing = this.barSeriesSpacing;
+
+      // values
+      const maxValue = this.maxValue;
+      const minValue = this.minValue;
+      const valueRange = maxValue - minValue;
+
+      // y0 line
+      const hasY0Line = maxValue * minValue < 0;
+      const vy0Line = hasY0Line ? 0 : minValue >= 0 ? minValue : maxValue;
+      const vy0LineClip = (vy0Line - minValue) / valueRange;
+      const axis0Y = y0 - yLength * vy0LineClip;
+
+      // data
+      const data = this.data;
+      const seriesLen = this.seriesLen;
+
+      const maxSeriesLen = sweepV >= 1 ? seriesLen :
+        Math.max(Math.min(Math.floor(seriesLen * sweepV) + 1, seriesLen), 0);
+
+      // computes x-shift created by side-by-side bars.
+      // only bar charts cause a x-shift.
+      const xShiftPerSeries = [];
+      let xShift = 0;
+
+      data.forEach((series, seriesI) => {
+        if (this.chartTypes[seriesI] === ChartTypes.bar) {
+          if (xShift) {
+            xShift += barSeriesSpacing;
+          }
+          xShiftPerSeries.push(xShift);
+          xShift += barWidth;
+        } else {
+          xShiftPerSeries.push(0);
+        }
+      });
+      if (!xShift) {
+        xShift += barWidth;
+      }
+      const dataWidths = xShift + barSpacing;
+      // the last bar doesn't needs barSpacing
+      const totalWidth = dataWidths * seriesLen - barSpacing;
+      const x1 = x0 + totalWidth;
+
+      ctx.clearRect(0, 0, chartWidth, chartHeight);
+
+      const y = axis0Y;
+      const dataMidPixels: int[][][] = [];
+      // data points
+      data.forEach((series, seriesI) => {
+
+        let xPrev: int;
+        let yPrev: int;
+        const seriesPixels: int[][] = [];
+        const seriesMidPixels: int[][] = [];
+
+        const chartType = this.chartTypes[seriesI];
+        ctx.lineWidth = this.stokeWidth[seriesI];
+        ctx.strokeStyle = this.stokeColors[seriesI];
+
+        for (let i = 0; i < maxSeriesLen; i++) {
+
+          let v = series[i];
+          if (Math.abs(deviationV - 1) > 1e-6) {
+            v = this.avgValue - ((this.avgValue - v) * deviationV);
+          }
+
+          ctx.fillStyle = v >= 0 ? this.fillColors[seriesI] :
+            this.negativeFillColors[seriesI];
+
+          const x = x0 + dataWidths * i + xShiftPerSeries[seriesI];
+          const vClip = (v - vy0Line) / valueRange;
+          const vT = vClip * barHeightV;
+          const yLen = -yLength * vT;
+          const xLen = dataWidths / 2;
+
+          let xNew = xLen + x;
+          let yNew = yLen + y;
+
+          if ((i === maxSeriesLen - 1) && (sweepV < 1)) {
+            const leftSweep = (sweepV - i / seriesLen);
+            const reSweep = leftSweep / (1 / seriesLen);
+            xNew = ((xNew - xPrev) * reSweep) + xPrev;
+            yNew = ((yNew - yPrev) * reSweep) + yPrev;
+          }
+
+          let xMidNew = xNew;
+          const yMidNew = yNew;
+
+          switch (chartType) {
+            case ChartTypes.bar:
+              ctx.fillRect(x, y, barWidth, yLen);
+              ctx.strokeRect(x, y, barWidth, yLen);
+              xMidNew = x + barWidth / 2;
+              break;
+
+            case ChartTypes.line:
+              if (i) {
+                ctx.beginPath();
+                ctx.moveTo(xPrev, yPrev);
+                ctx.lineTo(xNew, yNew);
+                ctx.stroke();
+              }
+              break;
+          }
+
+          xPrev = xNew;
+          yPrev = yNew;
+          seriesPixels.push([xNew, yNew]);
+          seriesMidPixels.push([xMidNew, yMidNew]);
+        }
+
+        if (chartType === ChartTypes.area) {
+          ctx.beginPath();
+          ctx.moveTo(seriesPixels[0][0], y);
+          seriesPixels.forEach(point => {
+            ctx.lineTo(point[0], point[1]);
+          });
+          ctx.lineTo(seriesPixels[seriesPixels.length - 1][0], y);
+          ctx.lineTo(seriesPixels[0][0], y);
+          ctx.fill();
+          ctx.stroke();
+        }
+
+        dataMidPixels.push(seriesMidPixels);
+      });
+
+      ctx.lineWidth = 1;
+
+      // markers
+      if (this.hasMarkers) {
+        this._drawMarkers(dataMidPixels);
+      }
+
+      // titles
+      const titleCaption = this.title.caption;
+      if (this.title.caption) {
+        _setUpCaptionsFont(this.title, ctx);
+        const titleXPos = _alignCaptions(this.title, ctx,
+          titleCaption, x1 - x0);
+        ctx.fillText(titleCaption, x0 + titleXPos, this.title.y);
+      }
+
+      // labels
+      if (this.labelsX) {
+        _setUpCaptionsFont(this.labelsX, ctx);
+        for (let i = 0; i < seriesLen; i++) {
+          const x = x0 + dataWidths * i;
+          const text = this.labelsX.captions[i];
+          const deltaX = _alignCaptions(this.labelsX, ctx, text, xShift);
+          ctx.fillText(text, x + deltaX, this.labelsX.y);
         }
       }
 
-      if (chartType === ChartTypes.area) {
-        ctx.beginPath();
-        ctx.moveTo(points[0][0], y);
-        points.forEach(point => {
-          ctx.lineTo(point[0], point[1]);
-        });
-        ctx.lineTo(points[points.length - 1][0], y);
-        ctx.lineTo(points[0][0], y);
-        ctx.fill();
-        ctx.stroke();
+      // y0Line
+      if (hasY0Line && this.y0Line.visible) {
+        this._drawLine(this.y0Line, x0, axis0Y, x1, axis0Y);
       }
-    });
 
-    ctx.lineWidth = 1;
-
-    // labels
-    if (labelsXHeight && chart.labelsX.values) {
-      for (let i = 0; i < seriesLen; i++) {
-        const x = x0 + dataFrameWidths * i;
-        const text = chart.labelsX.values[i];
-        _setUpLabelsFont(chart.labelsX, ctx);
-        const deltaX = _alignLabels(chart.labelsX, ctx, text, xShift);
-        ctx.fillText(text, x + deltaX, y0 + labelsXHeight);
+      // x-axis
+      if (this.xAxis.visible) {
+        this._drawLine(this.xAxis, x0, y0, x1, y0);
       }
-    }
 
-    // y0Line
-    if (hasY0Line && chart.y0LineColor) {
-      ctx.beginPath();
-      ctx.strokeStyle = chart.y0LineColor;
-      ctx.moveTo(x0, axis0Y);
-      ctx.lineTo(x1, axis0Y);
-      ctx.stroke();
-    }
-
-    // x-axis
-    if (chart.xAxisColor) {
-      ctx.beginPath();
-      ctx.strokeStyle = chart.xAxisColor;
-      ctx.moveTo(x0, y0);
-      ctx.lineTo(x1, y0);
-      ctx.stroke();
-    }
-
-    // y-axis
-    if (chart.yAxisColor) {
-      ctx.beginPath();
-      ctx.strokeStyle = chart.yAxisColor;
-      ctx.moveTo(x0, y0);
-      ctx.lineTo(x0, y0 - yd);
-      ctx.stroke();
+      // y-axis
+      if (this.yAxis.visible) {
+        this._drawLine(this.yAxis, x0, y0, x0, y0 - yLength);
+      }
     }
   }
 
@@ -492,77 +891,47 @@ namespace ABeamer {
           cType = ChartTypes[cType] as ChartTypes;
         }
 
-        let chartFunc: _ChartFunc;
 
-        switch (cType) {
-          case ChartTypes.bar:
-          case ChartTypes.line:
-          case ChartTypes.area:
-          case ChartTypes.mixed:
-            chartFunc = _axisChart;
-            break;
-          default:
-            throwI8n(Msgs.UnknownType, { p: params.chartType });
-        }
-
-        const dataFrame = params.dataFrame;
-        if (!dataFrame.length) {
+        const data = params.data;
+        if (!data.length) {
           throwErr(`Series have empty data`);
         }
 
-        if (!params.animeSelector) {
-          throwI8n(Msgs.NoEmptySelector, { p: `animeSelector` });
-        }
+        let animator: _ChartVirtualAnimator;
 
-        const animator = new _ChartVirtualAnimator();
-        animator.selector = params.animeSelector;
-        animator.chartFunc = chartFunc;
-        animator.params = params;
-        args.story.virtualAnimators.push(animator);
+        if (params.animeSelector) {
+          animator = new _ChartVirtualAnimator();
+          animator.selector = params.animeSelector;
+          animator.params = params;
+          args.story.virtualAnimators.push(animator);
+        }
 
         const elAdapters = args.scene.getElementAdapters(anime.selector);
         args.vars.elCount = elAdapters.length;
         elAdapters.forEach((elAdapter, elIndex) => {
 
           args.vars.elIndex = elIndex;
-          let max = -Number.MIN_VALUE;
-          let min = Number.MAX_VALUE;
-          const firstSeriesLen = dataFrame[0].length;
-          dataFrame.forEach(series => {
-            if (series.length !== firstSeriesLen) {
-              throwErr(`Every Series must have the same length`);
-            }
-            series.forEach(point => {
-              max = Math.max(max, point);
-              min = Math.min(min, point);
-            });
-          });
 
-          const canvas: HTMLCanvasElement = elAdapter.getProp('element', args) as any;
-          const w = canvas.width;
-          const h = canvas.height;
+          let chart: _WkChart;
 
-          if (!canvas) {
-            throwErr(`Didn't find the ${elAdapter.getId()}`);
+          switch (cType) {
+            case ChartTypes.marker:
+            case ChartTypes.bar:
+            case ChartTypes.line:
+            case ChartTypes.area:
+            case ChartTypes.mixed:
+              chart = new _WkAxisChart(args);
+              break;
+            default:
+              throwI8n(Msgs.UnknownType, { p: params.chartType });
           }
 
-          const chart: _WkChart = {
-            canvas,
-            context: canvas.getContext('2d'),
-            w,
-            h,
+          chart._init(elAdapter, cType as ChartTypes, animator);
+          chart._initData(data);
+          chart._initChart(params);
+          chart._drawChart(params);
 
-            chartType: cType as ChartTypes,
-            min,
-            max,
-            seriesLen: firstSeriesLen,
-            dataFrame,
-
-            animator,
-          };
-
-          chartFunc(params, chart, stage, args);
-          animator.charts.push(chart);
+          if (animator) { animator.charts.push(chart); }
         });
         break;
     }

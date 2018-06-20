@@ -17,16 +17,18 @@ $(window).on("load", function () {
                     handler: 'chart',
                     params: {
                         chartType: ABeamer.ChartTypes.mixed,
-                        dataFrame: [
+                        data: [
                             [23000, 32000, 45000, 15000, 50400, 60000],
                             [30000, 42000, 50000, 16000, 48400, 65000],
                             [20000, 45000, 51000, 18000, 49400, 45000],
                         ],
                         charTypes: [ABeamer.ChartTypes.bar, ABeamer.ChartTypes.bar, ABeamer.ChartTypes.line],
-                        labelsX: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        labelsX: {
+                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        },
                         animeSelector: 'bar-chart-anime',
-                        barHeightStart: 0.2,
-                        barSeriesSpacing: 1,
+                        colHeightStart: 0.2,
+                        colInterSpacing: 1,
                         fillColors: ['#ffecad', '#adffb9', ''],
                         strokeColors: ['#9c9c9c', '#9c9c9c', '#dd5252'],
                         strokeWidth: [1, 1, 2],
@@ -40,13 +42,13 @@ $(window).on("load", function () {
                     handler: 'chart',
                     params: {
                         chartType: ABeamer.ChartTypes.area,
-                        dataFrame: [
+                        data: [
                             [30000, 42000, 50000],
                             [13000, 12000, 35000],
                         ],
                         animeSelector: 'area-chart-anime',
-                        barHeightStart: 0.2,
-                        barSeriesSpacing: 1,
+                        colHeightStart: 0.2,
+                        colInterSpacing: 1,
                         fillColors: ['#ffecad', '#adffb9'],
                         strokeColors: ['#9c9c9c', '#9c9c9c'],
                         strokeWidth: [2, 2],
@@ -58,14 +60,14 @@ $(window).on("load", function () {
             selector: '%bar-chart-anime',
             duration: '1s',
             props: [{
-                    prop: 'bar-height',
+                    prop: 'col-height',
                     value: 1,
                 }],
         }, {
             selector: '%area-chart-anime',
             duration: '1s',
             props: [{
-                    prop: 'bar-height',
+                    prop: 'col-height',
                     value: 1,
                 }],
         }])

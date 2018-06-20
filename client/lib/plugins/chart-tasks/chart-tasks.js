@@ -1,4 +1,14 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 // uuid: ce496037-5728-4543-b2b1-f8a9aaa3d0f0
 // ------------------------------------------------------------------------
 // Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
@@ -17,6 +27,7 @@
  *
  * This plugin has the following built-in charts:
  *
+ * - `marker`.
  * - `bar`.
  * - `line`.
  * - `area`.
@@ -38,10 +49,29 @@ var ABeamer;
     var ChartTypes;
     (function (ChartTypes) {
         ChartTypes[ChartTypes["bar"] = 0] = "bar";
-        ChartTypes[ChartTypes["line"] = 1] = "line";
-        ChartTypes[ChartTypes["area"] = 2] = "area";
-        ChartTypes[ChartTypes["mixed"] = 3] = "mixed";
+        ChartTypes[ChartTypes["area"] = 1] = "area";
+        ChartTypes[ChartTypes["line"] = 2] = "line";
+        ChartTypes[ChartTypes["marker"] = 3] = "marker";
+        ChartTypes[ChartTypes["mixed"] = 4] = "mixed";
     })(ChartTypes = ABeamer.ChartTypes || (ABeamer.ChartTypes = {}));
+    var ChartCaptionOrientation;
+    (function (ChartCaptionOrientation) {
+        ChartCaptionOrientation[ChartCaptionOrientation["horizontal"] = 0] = "horizontal";
+        ChartCaptionOrientation[ChartCaptionOrientation["vertical"] = 1] = "vertical";
+    })(ChartCaptionOrientation = ABeamer.ChartCaptionOrientation || (ABeamer.ChartCaptionOrientation = {}));
+    var ChartCaptionPosition;
+    (function (ChartCaptionPosition) {
+        ChartCaptionPosition[ChartCaptionPosition["top"] = 0] = "top";
+        ChartCaptionPosition[ChartCaptionPosition["bottom"] = 1] = "bottom";
+        ChartCaptionPosition[ChartCaptionPosition["left"] = 2] = "left";
+        ChartCaptionPosition[ChartCaptionPosition["right"] = 3] = "right";
+    })(ChartCaptionPosition = ABeamer.ChartCaptionPosition || (ABeamer.ChartCaptionPosition = {}));
+    var ChartPointShape;
+    (function (ChartPointShape) {
+        ChartPointShape[ChartPointShape["circle"] = 0] = "circle";
+        ChartPointShape[ChartPointShape["square"] = 1] = "square";
+        ChartPointShape[ChartPointShape["diamond"] = 2] = "diamond";
+    })(ChartPointShape = ABeamer.ChartPointShape || (ABeamer.ChartPointShape = {}));
     // #export-section-end: release
     // -------------------------------
     // ------------------------------------------------------------------------
@@ -58,8 +88,18 @@ var ABeamer;
     function _parseSeriesList(numSeries, list, defaultValue, args) {
         var res = [];
         for (var i = 0; i < numSeries; i++) {
-            if (list && i < list.length) {
-                res.push(list[i]);
+            if (list) {
+                if (Array.isArray(list)) {
+                    if (i < list.length) {
+                        res.push(list[i]);
+                    }
+                    else {
+                        res.push(defaultValue);
+                    }
+                }
+                else {
+                    res.push(list);
+                }
             }
             else {
                 res.push(defaultValue);
@@ -67,6 +107,45 @@ var ABeamer;
         }
         return res;
     }
+    // ------------------------------------------------------------------------
+    //                               _WkChart
+    // ------------------------------------------------------------------------
+    var _WkChart = /** @class */ (function () {
+        function _WkChart(args) {
+            this.args = args;
+        }
+        _WkChart.prototype._init = function (elAdapter, chartType, animator) {
+            this.canvas = elAdapter.getProp('element', this.args);
+            if (!this.canvas) {
+                ABeamer.throwErr("Didn't find the " + elAdapter.getId());
+            }
+            this.context = this.canvas.getContext('2d');
+            this.chartWidth = this.canvas.width;
+            this.chartHeight = this.canvas.height;
+            this.chartType = chartType;
+            this.animator = animator;
+        };
+        _WkChart.prototype._initData = function (data) {
+            var max = -Number.MIN_VALUE;
+            var min = Number.MAX_VALUE;
+            var firstSeriesLen = data[0].length;
+            data.forEach(function (series) {
+                if (series.length !== firstSeriesLen) {
+                    ABeamer.throwErr("Every Series must have the same length");
+                }
+                series.forEach(function (point) {
+                    max = Math.max(max, point);
+                    min = Math.min(min, point);
+                });
+            });
+            this.min = min;
+            this.max = max;
+            this.avg = (max - min) / 2;
+            this.seriesLen = firstSeriesLen;
+            this.data = data;
+        };
+        return _WkChart;
+    }());
     // ------------------------------------------------------------------------
     //                               _ChartVirtualAnimator
     // ------------------------------------------------------------------------
@@ -83,208 +162,398 @@ var ABeamer;
             this.props[name] = value;
             if (name !== 'uid') {
                 this.charts.forEach(function (chart) {
-                    _this.chartFunc(_this.params, chart, ABeamer.TS_ANIME_LOOP, args);
+                    chart._drawChart(_this.params);
                 });
             }
         };
         return _ChartVirtualAnimator;
     }());
-    function _setUpLabelsFont(l, ctx) {
+    function _setUpCaptionsFont(l, ctx) {
         ctx.font = l.fontSize + "px " + l.fontFamily;
         ctx.fillStyle = l.fontColor;
     }
-    function _alignLabels(l, ctx, text, width) {
+    function _alignCaptions(l, ctx, text, width) {
         var sz = ctx.measureText(text);
         return (width - sz.width) / 2;
     }
-    /** Initializes all the Axis Chart parameters. */
-    function _initAxisChart(params, chart, args) {
-        chart.chartTypes = chart.dataFrame.map(function (series, seriesIndex) {
-            if (chart.chartType !== ChartTypes.mixed) {
-                return chart.chartType;
-            }
-            if (!params.charTypes || params.charTypes.length <= seriesIndex) {
-                return ChartTypes.bar;
-            }
-            var chartType = params.charTypes[seriesIndex];
-            return typeof chartType === 'string' ? ChartTypes[chartType] : chartType;
-        });
-        // axis
-        chart.xAxisColor = ABeamer.ExprOrStrToStr(params.xAxisColor, 'black', args);
-        chart.yAxisColor = ABeamer.ExprOrStrToStr(params.yAxisColor, 'black', args);
-        chart.y0LineColor = ABeamer.ExprOrStrToStr(params.y0LineColor, 'black', args);
-        // labels X
-        chart.labelsXHeight = ABeamer.ExprOrNumToNum(params.labelsXHeight, 10, args);
-        chart.labelsX = {
-            values: params.labelsX,
-            fontColor: ABeamer.ExprOrStrToStr(params.labelsXFontColor || params.labelsYFontColor, 'black', args),
-            fontFamily: ABeamer.ExprOrStrToStr(params.labelsXFontFamily || params.labelsYFontFamily, 'sans-serif', args),
-            fontSize: ABeamer.ExprOrNumToNum(params.labelsXFontSize || params.labelsXFontSize, 12, args),
-        };
-        // labels Y
-        chart.labelsYWidth = ABeamer.ExprOrNumToNum(params.labelsYWidth, 20, args);
-        chart.labelsY = {
-            values: params.labelsY,
-            fontColor: ABeamer.ExprOrStrToStr(params.labelsYFontColor || params.labelsXFontColor, 'black', args),
-            fontFamily: ABeamer.ExprOrStrToStr(params.labelsYFontFamily || params.labelsXFontFamily, 'sans-serif', args),
-            fontSize: ABeamer.ExprOrNumToNum(params.labelsYFontSize || params.labelsXFontSize, 12, args),
-        };
-        // bar chart
-        chart.barWidth = ABeamer.ExprOrNumToNum(params.barWidth, 20, args);
-        chart.barMaxHeight = ABeamer.ExprOrNumToNum(params.barMaxHeight, 100, args);
-        chart.barSpacing = ABeamer.ExprOrNumToNum(params.barSpacing, 5, args);
-        chart.barSeriesSpacing = ABeamer.ExprOrNumToNum(params.barSeriesSpacing, 0, args);
-        var barHeightV = ABeamer.ExprOrNumToNum(params.barHeightStart, 0, args);
-        chart.animator.props['bar-height'] = barHeightV;
-        // limits
-        chart.maxValue = ABeamer.ExprOrNumToNum(params.maxValue, chart.max, args);
-        chart.minValue = ABeamer.ExprOrNumToNum(params.minValue, Math.min(chart.min, 0), args);
-        // colors
-        chart.fillColors = _parseSeriesList(chart.dataFrame.length, params.fillColors, 'white', args);
-        chart.stokeColors = _parseSeriesList(chart.dataFrame.length, params.strokeColors, 'black', args);
-        chart.stokeWidth = _parseSeriesList(chart.dataFrame.length, params.strokeWidth, 1, args);
-    }
-    /** Implements Axis Chart animation. */
-    function _axisChart(params, chart, stage, args) {
-        var barHeightV;
-        switch (stage) {
-            case ABeamer.TS_INIT:
-                _initAxisChart(params, chart, args);
-            case ABeamer.TS_ANIME_LOOP:
-                barHeightV = chart.animator.props['bar-height'];
-                break;
-            default:
-                return;
+    // ------------------------------------------------------------------------
+    //                               Bar Chart
+    // ------------------------------------------------------------------------
+    var _WkAxisChart = /** @class */ (function (_super) {
+        __extends(_WkAxisChart, _super);
+        function _WkAxisChart() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            // title
+            _this.title = {};
+            // overflow
+            _this.overflow = 0;
+            // graph  (x0, y0) = (left, bottom)
+            _this.graphX0 = 0;
+            _this.graphY1 = 0;
+            return _this;
         }
-        var w = chart.w;
-        var h = chart.h;
-        var ctx = chart.context;
-        var x0 = chart.labelsYWidth;
-        // bar
-        var xbd = chart.barWidth;
-        var xs = chart.barSpacing;
-        var xss = chart.barSeriesSpacing;
-        var labelsXHeight = chart.labelsXHeight;
-        var y0 = h - labelsXHeight;
-        var topMargin = 1;
-        var yd = y0 - topMargin;
-        var vM = chart.maxValue;
-        var vm = chart.minValue;
-        var vMd = vM - vm;
-        var hasY0Line = vM * vm < 0;
-        var vy0Line = hasY0Line ? 0 : vm >= 0 ? vm : vM;
-        var vy0LineClip = (vy0Line - vm) / vMd;
-        var axis0Y = y0 - yd * vy0LineClip;
-        var dataFrame = chart.dataFrame;
-        var seriesLen = chart.seriesLen;
-        // computes x-shift created by side-by-side bars.
-        // only bar charts cause a x-shift.
-        var xShiftPerSeries = [];
-        var xShift = 0;
-        dataFrame.forEach(function (series, seriesI) {
-            if (chart.chartTypes[seriesI] === ChartTypes.bar) {
-                if (xShift) {
-                    xShift += xss;
+        _WkAxisChart.prototype._initCaptions = function (defPosition, captions, labThis, labOther) {
+            var res = {
+                fontColor: ABeamer.ExprOrStrToStr(labThis.fontColor || labOther.fontColor, 'black', this.args),
+                fontFamily: ABeamer.ExprOrStrToStr(labThis.fontFamily || labOther.fontFamily, 'sans-serif', this.args),
+                fontSize: ABeamer.ExprOrNumToNum(labThis.fontSize || labOther.fontSize, 12, this.args),
+                marginTop: ABeamer.ExprOrNumToNum(labThis.marginTop, 0, this.args),
+                marginBottom: ABeamer.ExprOrNumToNum(labThis.marginBottom, 0, this.args),
+                position: defPosition,
+                orientation: ChartCaptionOrientation.horizontal,
+            };
+            _setUpCaptionsFont(res, this.context);
+            var joinChar = res.position === ChartCaptionPosition.top ||
+                res.position === ChartCaptionPosition.bottom ? ' ' : '\n';
+            var joinedText = captions.join(joinChar);
+            var sz = this.context.measureText(joinedText);
+            res.width = sz.width;
+            res.height = res.fontSize;
+            var d;
+            switch (res.position) {
+                case ChartCaptionPosition.top:
+                    res.y = this.graphY1 + res.height + res.marginTop;
+                    d = res.height + res.marginTop + res.marginBottom;
+                    this.graphY1 += d;
+                    break;
+                case ChartCaptionPosition.bottom:
+                    res.y = this.graphY0 - res.marginBottom;
+                    d = res.height + res.marginTop + res.marginBottom;
+                    this.graphY0 -= d;
+                    break;
+            }
+            return res;
+        };
+        _WkAxisChart.prototype._initLabels = function (params) {
+            var labelsX = params.labelsX || {};
+            var labelsY = params.labelsY || {};
+            var labels;
+            // labels X
+            labels = labelsX.labels;
+            if (labels) {
+                this.labelsX = this._initCaptions(ChartCaptionPosition.bottom, labels, labelsX, labelsY);
+                this.labelsX.captions = labels;
+            }
+            // labels Y
+            labels = labelsX.labels;
+            if (labels) {
+                this.labelsY = this._initCaptions(ChartCaptionPosition.left, labels, labelsY, labelsX);
+                this.labelsY.captions = labels;
+            }
+        };
+        _WkAxisChart.prototype._initTitle = function (params) {
+            var title = params.title || {};
+            if (typeof title === 'string') {
+                title = {
+                    caption: title,
+                };
+            }
+            if (title.caption) {
+                this.title = this._initCaptions(ChartCaptionPosition.top, [title.caption], title, title);
+                this.title.caption = ABeamer.ExprOrStrToStr(title.caption, '', this.args);
+            }
+        };
+        _WkAxisChart.prototype._initLine = function (line) {
+            return {
+                visible: line.visible !== undefined ? line.visible : true,
+                color: ABeamer.ExprOrStrToStr(line.color, '#7c7c7c', this.args),
+                width: ABeamer.ExprOrNumToNum(line.width, 1, this.args),
+            };
+        };
+        _WkAxisChart.prototype._fillArrayArrayParam = function (param, defValue, strMapper) {
+            var res = [];
+            if (param === undefined) {
+                param = defValue;
+            }
+            var isParamArray = Array.isArray(param);
+            if (!isParamArray && strMapper && typeof param === 'string') {
+                param = strMapper[param];
+            }
+            this.data.forEach(function (series, seriesI) {
+                var resItem = [];
+                if (!isParamArray) {
+                    resItem = series.map(function (v) { return param; });
                 }
-                xShiftPerSeries.push(xShift);
-                xShift += xbd;
+                else {
+                    var subParam_1 = param[seriesI];
+                    var isSubParamArray = Array.isArray(subParam_1);
+                    if (!isSubParamArray && strMapper && typeof subParam_1 === 'string') {
+                        subParam_1 = strMapper[subParam_1];
+                    }
+                    if (!isSubParamArray) {
+                        resItem = series.map(function (v) { return subParam_1; });
+                    }
+                    else {
+                        resItem = series.map(function (v, i) {
+                            var itemParam = subParam_1[i];
+                            if (strMapper && typeof itemParam === 'string') {
+                                itemParam = strMapper[itemParam];
+                            }
+                            return itemParam;
+                        });
+                    }
+                }
+                res.push(resItem);
+            });
+            return res;
+        };
+        _WkAxisChart.prototype._initMarkers = function (params) {
+            var markers = {};
+            this.hasMarkers = params.markers !== undefined || this.chartTypes
+                .findIndex(function (cType) { return cType === ChartTypes.marker; }) !== -1;
+            var pMarkers = params.markers || {};
+            if (this.hasMarkers) {
+                markers.visible = this._fillArrayArrayParam(pMarkers.visible, this.chartType === ChartTypes.marker);
+                markers.shape = this._fillArrayArrayParam(pMarkers.shape, ChartPointShape.square, ChartPointShape);
+                markers.size = this._fillArrayArrayParam(pMarkers.size, 5);
+                markers.color = this._fillArrayArrayParam(pMarkers.color, 'black');
             }
-            else {
-                xShiftPerSeries.push(0);
-            }
-        });
-        if (!xShift) {
-            xShift += xbd;
-        }
-        var dataFrameWidths = xShift + xs;
-        // the last bar doesn't needs barSpacing
-        var totalWidth = dataFrameWidths * seriesLen - xs;
-        var x1 = x0 + totalWidth;
-        ctx.clearRect(0, 0, w, h);
-        var y = axis0Y;
-        // data points
-        dataFrame.forEach(function (series, seriesI) {
-            var xPrev;
-            var yPrev;
-            var points = [];
-            var chartType = chart.chartTypes[seriesI];
-            ctx.lineWidth = chart.stokeWidth[seriesI];
-            ctx.strokeStyle = chart.stokeColors[seriesI];
-            ctx.fillStyle = chart.fillColors[seriesI];
-            for (var i = 0; i < seriesLen; i++) {
-                var x = x0 + dataFrameWidths * i + xShiftPerSeries[seriesI];
-                var v = series[i];
-                var vClip = (v - vy0Line) / vMd;
-                var vT = vClip * barHeightV;
-                var ybd = -yd * vT;
-                var xbd2 = dataFrameWidths / 2;
-                switch (chartType) {
-                    case ChartTypes.bar:
-                        ctx.fillRect(x, y, xbd, ybd);
-                        ctx.strokeRect(x, y, xbd, ybd);
-                        break;
-                    case ChartTypes.line:
-                        if (i) {
-                            ctx.moveTo(xPrev, yPrev);
-                            ctx.lineTo(x + xbd2, y + ybd);
-                            ctx.stroke();
+            this.markers = markers;
+        };
+        _WkAxisChart.prototype._drawMarkers = function (dataPixels) {
+            var points = this.markers;
+            var ctx = this.context;
+            this.data.forEach(function (series, seriesI) {
+                for (var i = 0; i < series.length; i++) {
+                    if (points.visible[seriesI][i]) {
+                        ctx.fillStyle = points.color[seriesI][i];
+                        var size = points.size[seriesI][i];
+                        var sizeDiv2 = size / 2;
+                        var _a = dataPixels[seriesI][i], x = _a[0], y = _a[1];
+                        switch (points.shape[seriesI][i]) {
+                            case ChartPointShape.circle:
+                                ctx.beginPath();
+                                ctx.arc(x, y, sizeDiv2, 0, Math.PI * 2);
+                                ctx.fill();
+                                break;
+                            case ChartPointShape.diamond:
+                                ctx.beginPath();
+                                ctx.moveTo(x - sizeDiv2, y);
+                                ctx.lineTo(x, y - sizeDiv2);
+                                ctx.lineTo(x + sizeDiv2, y);
+                                ctx.lineTo(x, y + sizeDiv2);
+                                ctx.fill();
+                                break;
+                            case ChartPointShape.square:
+                                ctx.fillRect(x - sizeDiv2, y - sizeDiv2, sizeDiv2, sizeDiv2);
+                                break;
                         }
-                        xPrev = x + xbd2;
-                        yPrev = y + ybd;
-                        break;
-                    case ChartTypes.area:
-                        points.push([x + xbd2, y + ybd]);
-                        break;
+                    }
+                }
+            });
+        };
+        _WkAxisChart.prototype._drawLine = function (line, x0, y0, x1, y1) {
+            var ctx = this.context;
+            ctx.beginPath();
+            ctx.strokeStyle = line.color;
+            ctx.lineWidth = line.width;
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(x1, y1);
+            ctx.stroke();
+        };
+        /** Initializes all the Axis Chart parameters. */
+        _WkAxisChart.prototype._initChart = function (params) {
+            var _this = this;
+            this.chartTypes = this.data.map(function (series, seriesIndex) {
+                if (_this.chartType !== ChartTypes.mixed) {
+                    return _this.chartType;
+                }
+                if (!params.charTypes || params.charTypes.length <= seriesIndex) {
+                    return ChartTypes.bar;
+                }
+                var chartType = params.charTypes[seriesIndex];
+                return typeof chartType === 'string' ? ChartTypes[chartType] : chartType;
+            });
+            // axis
+            this.xAxis = this._initLine(params.xAxis || {});
+            this.yAxis = this._initLine(params.yAxis || {});
+            this.y0Line = this._initLine(params.y0Line || {});
+            // bar chart
+            this.barWidth = ABeamer.ExprOrNumToNum(params.colWidth, 20, this.args);
+            this.barMaxHeight = ABeamer.ExprOrNumToNum(params.colMaxHeight, 100, this.args);
+            this.barSpacing = ABeamer.ExprOrNumToNum(params.colSpacing, 5, this.args);
+            this.barSeriesSpacing = ABeamer.ExprOrNumToNum(params.colInterSpacing, 0, this.args);
+            // limits
+            this.maxValue = ABeamer.ExprOrNumToNum(params.maxValue, this.max, this.args);
+            this.minValue = ABeamer.ExprOrNumToNum(params.minValue, Math.min(this.min, 0), this.args);
+            this.avgValue = this.avg;
+            // colors
+            this.fillColors = _parseSeriesList(this.data.length, params.fillColors, 'white', this.args);
+            this.negativeFillColors = !params.negativeFillColors ? this.fillColors :
+                _parseSeriesList(this.data.length, params.negativeFillColors, 'white', this.args);
+            this.stokeColors = _parseSeriesList(this.data.length, params.strokeColors, 'black', this.args);
+            this.stokeWidth = _parseSeriesList(this.data.length, params.strokeWidth, 1, this.args);
+            this.graphX1 = this.chartWidth;
+            this.graphY0 = this.chartHeight;
+            this._initMarkers(params);
+            this._initTitle(params);
+            this._initLabels(params);
+            // animation
+            if (this.animator) {
+                this.animator.props['col-height'] = ABeamer.ExprOrNumToNum(params.colHeightStart, 1, this.args);
+                this.animator.props['deviation'] = ABeamer.ExprOrNumToNum(params.deviationStart, 1, this.args);
+                this.animator.props['sweep'] = ABeamer.ExprOrNumToNum(params.sweepStart, 1, this.args);
+            }
+        };
+        /** Implements Axis Chart animation. */
+        _WkAxisChart.prototype._drawChart = function (params) {
+            var _this = this;
+            var animator = this.animator;
+            var barHeightV = animator ? animator.props['col-height'] : 1;
+            var deviationV = animator ? animator.props['deviation'] : 1;
+            var sweepV = animator ? animator.props['sweep'] : 1;
+            var chartWidth = this.chartWidth;
+            var chartHeight = this.chartHeight;
+            var ctx = this.context;
+            var x0 = this.graphX0;
+            var y0 = this.graphY0;
+            var topMargin = 1;
+            var yLength = y0 - this.graphY1 - topMargin;
+            // bar
+            var barWidth = this.barWidth;
+            var barSpacing = this.barSpacing;
+            var barSeriesSpacing = this.barSeriesSpacing;
+            // values
+            var maxValue = this.maxValue;
+            var minValue = this.minValue;
+            var valueRange = maxValue - minValue;
+            // y0 line
+            var hasY0Line = maxValue * minValue < 0;
+            var vy0Line = hasY0Line ? 0 : minValue >= 0 ? minValue : maxValue;
+            var vy0LineClip = (vy0Line - minValue) / valueRange;
+            var axis0Y = y0 - yLength * vy0LineClip;
+            // data
+            var data = this.data;
+            var seriesLen = this.seriesLen;
+            var maxSeriesLen = sweepV >= 1 ? seriesLen :
+                Math.max(Math.min(Math.floor(seriesLen * sweepV) + 1, seriesLen), 0);
+            // computes x-shift created by side-by-side bars.
+            // only bar charts cause a x-shift.
+            var xShiftPerSeries = [];
+            var xShift = 0;
+            data.forEach(function (series, seriesI) {
+                if (_this.chartTypes[seriesI] === ChartTypes.bar) {
+                    if (xShift) {
+                        xShift += barSeriesSpacing;
+                    }
+                    xShiftPerSeries.push(xShift);
+                    xShift += barWidth;
+                }
+                else {
+                    xShiftPerSeries.push(0);
+                }
+            });
+            if (!xShift) {
+                xShift += barWidth;
+            }
+            var dataWidths = xShift + barSpacing;
+            // the last bar doesn't needs barSpacing
+            var totalWidth = dataWidths * seriesLen - barSpacing;
+            var x1 = x0 + totalWidth;
+            ctx.clearRect(0, 0, chartWidth, chartHeight);
+            var y = axis0Y;
+            var dataMidPixels = [];
+            // data points
+            data.forEach(function (series, seriesI) {
+                var xPrev;
+                var yPrev;
+                var seriesPixels = [];
+                var seriesMidPixels = [];
+                var chartType = _this.chartTypes[seriesI];
+                ctx.lineWidth = _this.stokeWidth[seriesI];
+                ctx.strokeStyle = _this.stokeColors[seriesI];
+                for (var i = 0; i < maxSeriesLen; i++) {
+                    var v = series[i];
+                    if (Math.abs(deviationV - 1) > 1e-6) {
+                        v = _this.avgValue - ((_this.avgValue - v) * deviationV);
+                    }
+                    ctx.fillStyle = v >= 0 ? _this.fillColors[seriesI] :
+                        _this.negativeFillColors[seriesI];
+                    var x = x0 + dataWidths * i + xShiftPerSeries[seriesI];
+                    var vClip = (v - vy0Line) / valueRange;
+                    var vT = vClip * barHeightV;
+                    var yLen = -yLength * vT;
+                    var xLen = dataWidths / 2;
+                    var xNew = xLen + x;
+                    var yNew = yLen + y;
+                    if ((i === maxSeriesLen - 1) && (sweepV < 1)) {
+                        var leftSweep = (sweepV - i / seriesLen);
+                        var reSweep = leftSweep / (1 / seriesLen);
+                        xNew = ((xNew - xPrev) * reSweep) + xPrev;
+                        yNew = ((yNew - yPrev) * reSweep) + yPrev;
+                    }
+                    var xMidNew = xNew;
+                    var yMidNew = yNew;
+                    switch (chartType) {
+                        case ChartTypes.bar:
+                            ctx.fillRect(x, y, barWidth, yLen);
+                            ctx.strokeRect(x, y, barWidth, yLen);
+                            xMidNew = x + barWidth / 2;
+                            break;
+                        case ChartTypes.line:
+                            if (i) {
+                                ctx.beginPath();
+                                ctx.moveTo(xPrev, yPrev);
+                                ctx.lineTo(xNew, yNew);
+                                ctx.stroke();
+                            }
+                            break;
+                    }
+                    xPrev = xNew;
+                    yPrev = yNew;
+                    seriesPixels.push([xNew, yNew]);
+                    seriesMidPixels.push([xMidNew, yMidNew]);
+                }
+                if (chartType === ChartTypes.area) {
+                    ctx.beginPath();
+                    ctx.moveTo(seriesPixels[0][0], y);
+                    seriesPixels.forEach(function (point) {
+                        ctx.lineTo(point[0], point[1]);
+                    });
+                    ctx.lineTo(seriesPixels[seriesPixels.length - 1][0], y);
+                    ctx.lineTo(seriesPixels[0][0], y);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+                dataMidPixels.push(seriesMidPixels);
+            });
+            ctx.lineWidth = 1;
+            // markers
+            if (this.hasMarkers) {
+                this._drawMarkers(dataMidPixels);
+            }
+            // titles
+            var titleCaption = this.title.caption;
+            if (this.title.caption) {
+                _setUpCaptionsFont(this.title, ctx);
+                var titleXPos = _alignCaptions(this.title, ctx, titleCaption, x1 - x0);
+                ctx.fillText(titleCaption, x0 + titleXPos, this.title.y);
+            }
+            // labels
+            if (this.labelsX) {
+                _setUpCaptionsFont(this.labelsX, ctx);
+                for (var i = 0; i < seriesLen; i++) {
+                    var x = x0 + dataWidths * i;
+                    var text = this.labelsX.captions[i];
+                    var deltaX = _alignCaptions(this.labelsX, ctx, text, xShift);
+                    ctx.fillText(text, x + deltaX, this.labelsX.y);
                 }
             }
-            if (chartType === ChartTypes.area) {
-                ctx.beginPath();
-                ctx.moveTo(points[0][0], y);
-                points.forEach(function (point) {
-                    ctx.lineTo(point[0], point[1]);
-                });
-                ctx.lineTo(points[points.length - 1][0], y);
-                ctx.lineTo(points[0][0], y);
-                ctx.fill();
-                ctx.stroke();
+            // y0Line
+            if (hasY0Line && this.y0Line.visible) {
+                this._drawLine(this.y0Line, x0, axis0Y, x1, axis0Y);
             }
-        });
-        ctx.lineWidth = 1;
-        // labels
-        if (labelsXHeight && chart.labelsX.values) {
-            for (var i = 0; i < seriesLen; i++) {
-                var x = x0 + dataFrameWidths * i;
-                var text = chart.labelsX.values[i];
-                _setUpLabelsFont(chart.labelsX, ctx);
-                var deltaX = _alignLabels(chart.labelsX, ctx, text, xShift);
-                ctx.fillText(text, x + deltaX, y0 + labelsXHeight);
+            // x-axis
+            if (this.xAxis.visible) {
+                this._drawLine(this.xAxis, x0, y0, x1, y0);
             }
-        }
-        // y0Line
-        if (hasY0Line && chart.y0LineColor) {
-            ctx.beginPath();
-            ctx.strokeStyle = chart.y0LineColor;
-            ctx.moveTo(x0, axis0Y);
-            ctx.lineTo(x1, axis0Y);
-            ctx.stroke();
-        }
-        // x-axis
-        if (chart.xAxisColor) {
-            ctx.beginPath();
-            ctx.strokeStyle = chart.xAxisColor;
-            ctx.moveTo(x0, y0);
-            ctx.lineTo(x1, y0);
-            ctx.stroke();
-        }
-        // y-axis
-        if (chart.yAxisColor) {
-            ctx.beginPath();
-            ctx.strokeStyle = chart.yAxisColor;
-            ctx.moveTo(x0, y0);
-            ctx.lineTo(x0, y0 - yd);
-            ctx.stroke();
-        }
-    }
+            // y-axis
+            if (this.yAxis.visible) {
+                this._drawLine(this.yAxis, x0, y0, x0, y0 - yLength);
+            }
+        };
+        return _WkAxisChart;
+    }(_WkChart));
     // ------------------------------------------------------------------------
     //                               Chart Task
     // ------------------------------------------------------------------------
@@ -297,65 +566,40 @@ var ABeamer;
                 if (typeof cType_1 === 'string') {
                     cType_1 = ChartTypes[cType_1];
                 }
-                var chartFunc_1;
-                switch (cType_1) {
-                    case ChartTypes.bar:
-                    case ChartTypes.line:
-                    case ChartTypes.area:
-                    case ChartTypes.mixed:
-                        chartFunc_1 = _axisChart;
-                        break;
-                    default:
-                        ABeamer.throwI8n(ABeamer.Msgs.UnknownType, { p: params.chartType });
-                }
-                var dataFrame_1 = params.dataFrame;
-                if (!dataFrame_1.length) {
+                var data_1 = params.data;
+                if (!data_1.length) {
                     ABeamer.throwErr("Series have empty data");
                 }
-                if (!params.animeSelector) {
-                    ABeamer.throwI8n(ABeamer.Msgs.NoEmptySelector, { p: "animeSelector" });
+                var animator_1;
+                if (params.animeSelector) {
+                    animator_1 = new _ChartVirtualAnimator();
+                    animator_1.selector = params.animeSelector;
+                    animator_1.params = params;
+                    args.story.virtualAnimators.push(animator_1);
                 }
-                var animator_1 = new _ChartVirtualAnimator();
-                animator_1.selector = params.animeSelector;
-                animator_1.chartFunc = chartFunc_1;
-                animator_1.params = params;
-                args.story.virtualAnimators.push(animator_1);
                 var elAdapters = args.scene.getElementAdapters(anime.selector);
                 args.vars.elCount = elAdapters.length;
                 elAdapters.forEach(function (elAdapter, elIndex) {
                     args.vars.elIndex = elIndex;
-                    var max = -Number.MIN_VALUE;
-                    var min = Number.MAX_VALUE;
-                    var firstSeriesLen = dataFrame_1[0].length;
-                    dataFrame_1.forEach(function (series) {
-                        if (series.length !== firstSeriesLen) {
-                            ABeamer.throwErr("Every Series must have the same length");
-                        }
-                        series.forEach(function (point) {
-                            max = Math.max(max, point);
-                            min = Math.min(min, point);
-                        });
-                    });
-                    var canvas = elAdapter.getProp('element', args);
-                    var w = canvas.width;
-                    var h = canvas.height;
-                    if (!canvas) {
-                        ABeamer.throwErr("Didn't find the " + elAdapter.getId());
+                    var chart;
+                    switch (cType_1) {
+                        case ChartTypes.marker:
+                        case ChartTypes.bar:
+                        case ChartTypes.line:
+                        case ChartTypes.area:
+                        case ChartTypes.mixed:
+                            chart = new _WkAxisChart(args);
+                            break;
+                        default:
+                            ABeamer.throwI8n(ABeamer.Msgs.UnknownType, { p: params.chartType });
                     }
-                    var chart = {
-                        canvas: canvas,
-                        context: canvas.getContext('2d'),
-                        w: w,
-                        h: h,
-                        chartType: cType_1,
-                        min: min,
-                        max: max,
-                        seriesLen: firstSeriesLen,
-                        dataFrame: dataFrame_1,
-                        animator: animator_1,
-                    };
-                    chartFunc_1(params, chart, stage, args);
-                    animator_1.charts.push(chart);
+                    chart._init(elAdapter, cType_1, animator_1);
+                    chart._initData(data_1);
+                    chart._initChart(params);
+                    chart._drawChart(params);
+                    if (animator_1) {
+                        animator_1.charts.push(chart);
+                    }
                 });
                 break;
         }
