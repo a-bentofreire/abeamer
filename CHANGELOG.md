@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] -
+
+## [0.2.13] -
+- A version bump was required due using npm publish with npm@5.6.0. See [0.2.10].
+
+
 ## [0.2.12] -
 ### Fixed
 - Fixed `abeamer create .` and `abeamer create`.

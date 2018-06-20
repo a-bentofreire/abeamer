@@ -1,5 +1,5 @@
 ## Description
-![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/developer-badge.gif)![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/v-0.2.12.gif)  
+![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/developer-badge.gif)![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/v-0.3.0.gif)  
   
 ![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-abeamer/story-frames/story.gif)  
   
@@ -25,8 +25,8 @@ In the next versions, this plugin will be improved to reach beta version.
 In this version 0.2.12, the command line and teleporter were both improved 
 and fixed small bugs.
   
-For more details see the [CHANGELOG](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/blob/master/CHANGELOG.md).
-
+For more details see the [CHANGELOG](https://github.com/a-bentofreire/abeamer/blob/master/CHANGELOG.md).  
+  
 ## Components
 
 ABeamer includes a web browser library, a render server agent and a command line utility.  
