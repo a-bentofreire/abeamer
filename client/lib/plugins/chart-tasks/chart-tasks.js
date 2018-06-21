@@ -27,10 +27,11 @@ var __extends = (this && this.__extends) || (function () {
  *
  * This plugin has the following built-in charts:
  *
- * - `marker`.
+ * - `pie`.
  * - `bar`.
- * - `line`.
  * - `area`.
+ * - `line`.
+ * - `marker`.
  * - `mixed`- Draws different types of chars in the same chart, uses
  *   `chartTypes` parameter to determine the type of each chart per series.
  *
@@ -48,11 +49,12 @@ var ABeamer;
     // #export-section-start: release
     var ChartTypes;
     (function (ChartTypes) {
-        ChartTypes[ChartTypes["bar"] = 0] = "bar";
-        ChartTypes[ChartTypes["area"] = 1] = "area";
-        ChartTypes[ChartTypes["line"] = 2] = "line";
-        ChartTypes[ChartTypes["marker"] = 3] = "marker";
-        ChartTypes[ChartTypes["mixed"] = 4] = "mixed";
+        ChartTypes[ChartTypes["pie"] = 0] = "pie";
+        ChartTypes[ChartTypes["bar"] = 1] = "bar";
+        ChartTypes[ChartTypes["area"] = 2] = "area";
+        ChartTypes[ChartTypes["line"] = 3] = "line";
+        ChartTypes[ChartTypes["marker"] = 4] = "marker";
+        ChartTypes[ChartTypes["mixed"] = 5] = "mixed";
     })(ChartTypes = ABeamer.ChartTypes || (ABeamer.ChartTypes = {}));
     var ChartCaptionOrientation;
     (function (ChartCaptionOrientation) {
@@ -85,67 +87,14 @@ var ABeamer;
         jsUrls: ['plugins/chart-tasks/chart-tasks.js'],
         teleportable: true,
     });
-    function _parseSeriesList(numSeries, list, defaultValue, args) {
-        var res = [];
-        for (var i = 0; i < numSeries; i++) {
-            if (list) {
-                if (Array.isArray(list)) {
-                    if (i < list.length) {
-                        res.push(list[i]);
-                    }
-                    else {
-                        res.push(defaultValue);
-                    }
-                }
-                else {
-                    res.push(list);
-                }
-            }
-            else {
-                res.push(defaultValue);
-            }
-        }
-        return res;
-    }
-    // ------------------------------------------------------------------------
-    //                               _WkChart
-    // ------------------------------------------------------------------------
-    var _WkChart = /** @class */ (function () {
-        function _WkChart(args) {
-            this.args = args;
-        }
-        _WkChart.prototype._init = function (elAdapter, chartType, animator) {
-            this.canvas = elAdapter.getProp('element', this.args);
-            if (!this.canvas) {
-                ABeamer.throwErr("Didn't find the " + elAdapter.getId());
-            }
-            this.context = this.canvas.getContext('2d');
-            this.chartWidth = this.canvas.width;
-            this.chartHeight = this.canvas.height;
-            this.chartType = chartType;
-            this.animator = animator;
-        };
-        _WkChart.prototype._initData = function (data) {
-            var max = -Number.MIN_VALUE;
-            var min = Number.MAX_VALUE;
-            var firstSeriesLen = data[0].length;
-            data.forEach(function (series) {
-                if (series.length !== firstSeriesLen) {
-                    ABeamer.throwErr("Every Series must have the same length");
-                }
-                series.forEach(function (point) {
-                    max = Math.max(max, point);
-                    min = Math.min(min, point);
-                });
+    function _maxOfArrayArray(data, startValue) {
+        data.forEach(function (series) {
+            series.forEach(function (point) {
+                startValue = Math.max(startValue, point);
             });
-            this.min = min;
-            this.max = max;
-            this.avg = (max - min) / 2;
-            this.seriesLen = firstSeriesLen;
-            this.data = data;
-        };
-        return _WkChart;
-    }());
+        });
+        return startValue;
+    }
     // ------------------------------------------------------------------------
     //                               _ChartVirtualAnimator
     // ------------------------------------------------------------------------
@@ -171,96 +120,46 @@ var ABeamer;
     function _setUpCaptionsFont(l, ctx) {
         ctx.font = l.fontSize + "px " + l.fontFamily;
         ctx.fillStyle = l.fontColor;
+        ctx.textBaseline = 'bottom';
     }
     function _alignCaptions(l, ctx, text, width) {
+        // let style: CSSStyleDeclaration;
+        // if (!testDiv) {
+        //   testDiv = document.createElement('div');
+        //   style = testDiv.style;
+        //   style.position = 'absolute';
+        //   style.top = '0px';
+        //   style.left = '0px';
+        //   style.width = '1px';
+        //   style.height = '0px';
+        //   document.body.appendChild(testDiv);
+        // }
+        // style = testDiv.style;
+        // style.display = 'inline-block';
+        // style.fontFamily = l.fontFamily;
+        // style.fontSize = l.fontSize + 'px';
+        // testDiv.textContent = text;
+        // style.display = 'none';
+        // @TODO: Implement a better way to compute the height
         var sz = ctx.measureText(text);
         return (width - sz.width) / 2;
     }
     // ------------------------------------------------------------------------
-    //                               Bar Chart
+    //                               _WkChart
     // ------------------------------------------------------------------------
-    var _WkAxisChart = /** @class */ (function (_super) {
-        __extends(_WkAxisChart, _super);
-        function _WkAxisChart() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+    var _WkChart = /** @class */ (function () {
+        function _WkChart(args) {
+            this.args = args;
             // title
-            _this.title = {};
+            this.title = {};
             // overflow
-            _this.overflow = 0;
+            this.overflow = 0;
             // graph  (x0, y0) = (left, bottom)
-            _this.graphX0 = 0;
-            _this.graphY1 = 0;
-            return _this;
+            this.graphX0 = 0;
+            this.graphY1 = 0;
         }
-        _WkAxisChart.prototype._initCaptions = function (defPosition, captions, labThis, labOther) {
-            var res = {
-                fontColor: ABeamer.ExprOrStrToStr(labThis.fontColor || labOther.fontColor, 'black', this.args),
-                fontFamily: ABeamer.ExprOrStrToStr(labThis.fontFamily || labOther.fontFamily, 'sans-serif', this.args),
-                fontSize: ABeamer.ExprOrNumToNum(labThis.fontSize || labOther.fontSize, 12, this.args),
-                marginTop: ABeamer.ExprOrNumToNum(labThis.marginTop, 0, this.args),
-                marginBottom: ABeamer.ExprOrNumToNum(labThis.marginBottom, 0, this.args),
-                position: defPosition,
-                orientation: ChartCaptionOrientation.horizontal,
-            };
-            _setUpCaptionsFont(res, this.context);
-            var joinChar = res.position === ChartCaptionPosition.top ||
-                res.position === ChartCaptionPosition.bottom ? ' ' : '\n';
-            var joinedText = captions.join(joinChar);
-            var sz = this.context.measureText(joinedText);
-            res.width = sz.width;
-            res.height = res.fontSize;
-            var d;
-            switch (res.position) {
-                case ChartCaptionPosition.top:
-                    res.y = this.graphY1 + res.height + res.marginTop;
-                    d = res.height + res.marginTop + res.marginBottom;
-                    this.graphY1 += d;
-                    break;
-                case ChartCaptionPosition.bottom:
-                    res.y = this.graphY0 - res.marginBottom;
-                    d = res.height + res.marginTop + res.marginBottom;
-                    this.graphY0 -= d;
-                    break;
-            }
-            return res;
-        };
-        _WkAxisChart.prototype._initLabels = function (params) {
-            var labelsX = params.labelsX || {};
-            var labelsY = params.labelsY || {};
-            var labels;
-            // labels X
-            labels = labelsX.labels;
-            if (labels) {
-                this.labelsX = this._initCaptions(ChartCaptionPosition.bottom, labels, labelsX, labelsY);
-                this.labelsX.captions = labels;
-            }
-            // labels Y
-            labels = labelsX.labels;
-            if (labels) {
-                this.labelsY = this._initCaptions(ChartCaptionPosition.left, labels, labelsY, labelsX);
-                this.labelsY.captions = labels;
-            }
-        };
-        _WkAxisChart.prototype._initTitle = function (params) {
-            var title = params.title || {};
-            if (typeof title === 'string') {
-                title = {
-                    caption: title,
-                };
-            }
-            if (title.caption) {
-                this.title = this._initCaptions(ChartCaptionPosition.top, [title.caption], title, title);
-                this.title.caption = ABeamer.ExprOrStrToStr(title.caption, '', this.args);
-            }
-        };
-        _WkAxisChart.prototype._initLine = function (line) {
-            return {
-                visible: line.visible !== undefined ? line.visible : true,
-                color: ABeamer.ExprOrStrToStr(line.color, '#7c7c7c', this.args),
-                width: ABeamer.ExprOrNumToNum(line.width, 1, this.args),
-            };
-        };
-        _WkAxisChart.prototype._fillArrayArrayParam = function (param, defValue, strMapper) {
+        _WkChart.prototype._drawChart = function (params) { };
+        _WkChart.prototype._fillArrayArrayParam = function (param, defValue, strMapper) {
             var res = [];
             if (param === undefined) {
                 param = defValue;
@@ -297,6 +196,183 @@ var ABeamer;
             });
             return res;
         };
+        _WkChart.prototype._initChart = function (params) {
+            // colors
+            this.fillColors = this._fillArrayArrayParam(params.fillColors, 'white');
+            this.strokeColors = this._fillArrayArrayParam(params.strokeColors, 'black');
+            this.strokeWidth = this._fillArrayArrayParam(params.strokeWidth, 1);
+            this.overflow = _maxOfArrayArray(this.strokeWidth, this.overflow);
+            this.graphX1 = this.chartWidth;
+            this.graphY0 = this.chartHeight;
+            this._initTitle(params);
+        };
+        _WkChart.prototype._init = function (elAdapter, chartType, animator) {
+            this.canvas = elAdapter.getProp('element', this.args);
+            if (!this.canvas) {
+                ABeamer.throwErr("Didn't find the " + elAdapter.getId());
+            }
+            this.context = this.canvas.getContext('2d');
+            this.chartWidth = this.canvas.width;
+            this.chartHeight = this.canvas.height;
+            this.chartType = chartType;
+            this.animator = animator;
+            this.props = animator ? animator.props : {};
+        };
+        _WkChart.prototype._initData = function (data) {
+            var max = -Number.MIN_VALUE;
+            var min = Number.MAX_VALUE;
+            var sum = 0;
+            var firstSeriesLen = data[0].length;
+            data.forEach(function (series) {
+                if (series.length !== firstSeriesLen) {
+                    ABeamer.throwErr("Every Series must have the same length");
+                }
+                series.forEach(function (point) {
+                    max = Math.max(max, point);
+                    min = Math.min(min, point);
+                    sum += point;
+                });
+            });
+            this.min = min;
+            this.max = max;
+            this.sum = sum;
+            this.avg = (max - min) / 2;
+            this.seriesLen = firstSeriesLen;
+            this.data = data;
+        };
+        _WkChart.prototype._initCaptions = function (defPosition, captions, labThis, labOther) {
+            var _this = this;
+            var res = {
+                fontColor: ABeamer.ExprOrStrToStr(labThis.fontColor || labOther.fontColor, 'black', this.args),
+                fontFamily: ABeamer.ExprOrStrToStr(labThis.fontFamily || labOther.fontFamily, 'sans-serif', this.args),
+                fontSize: ABeamer.ExprOrNumToNum(labThis.fontSize || labOther.fontSize, 12, this.args),
+                marginTop: ABeamer.ExprOrNumToNum(labThis.marginTop, 0, this.args),
+                marginBottom: ABeamer.ExprOrNumToNum(labThis.marginBottom, 0, this.args),
+                position: defPosition,
+                orientation: ChartCaptionOrientation.horizontal,
+            };
+            _setUpCaptionsFont(res, this.context);
+            var isHorizontal = res.position === ChartCaptionPosition.top ||
+                res.position === ChartCaptionPosition.bottom;
+            if (isHorizontal) {
+                var joinedText = captions.join(' ');
+                var sz = this.context.measureText(joinedText);
+                res.width = sz.width;
+            }
+            else {
+                res.width = 0;
+                captions.forEach(function (caption) {
+                    res.width = Math.max(res.width, _this.context.measureText(caption).width);
+                });
+            }
+            res.height = res.fontSize * 1.2;
+            var d;
+            switch (res.position) {
+                case ChartCaptionPosition.top:
+                    res.y = this.graphY1 + res.height + res.marginTop;
+                    d = res.height + res.marginTop + res.marginBottom;
+                    this.graphY1 += d;
+                    break;
+                case ChartCaptionPosition.left:
+                    res.x = this.graphX0 + res.marginTop;
+                    d = res.width + res.marginTop + res.marginBottom;
+                    this.graphX0 += d;
+                    break;
+                case ChartCaptionPosition.bottom:
+                    res.y = this.graphY0 - res.marginBottom;
+                    d = res.height + res.marginTop + res.marginBottom;
+                    this.graphY0 -= d;
+                    break;
+            }
+            return res;
+        };
+        _WkChart.prototype._initTitle = function (params) {
+            var title = params.title || {};
+            if (typeof title === 'string') {
+                title = {
+                    caption: title,
+                };
+            }
+            if (title.caption) {
+                this.title = this._initCaptions(ChartCaptionPosition.top, [title.caption], title, title);
+                this.title.caption = ABeamer.ExprOrStrToStr(title.caption, '', this.args);
+            }
+        };
+        return _WkChart;
+    }());
+    // ------------------------------------------------------------------------
+    //                               calcBestMax
+    // ------------------------------------------------------------------------
+    function _calcBestMax(v) {
+        var vAbs = Math.abs(v);
+        var isNegative = v < 0;
+        var l10v = Math.log10(vAbs);
+        var l10vf = Math.floor(l10v);
+        var vBase = Math.pow(10, l10vf);
+        var vSubDigits = vAbs % vBase;
+        if (Math.abs(vSubDigits) > 0.00001) {
+            var vLow = vAbs - vSubDigits;
+            var vHigh = (isNegative ? -vLow + vBase : vLow + vBase);
+            return vHigh;
+            // console.log(v, l10v, l10vf, vSubDigits, vLow, vHigh);
+        }
+        else {
+            return v;
+            // console.log(v);
+        }
+    }
+    // ------------------------------------------------------------------------
+    //                               Axis Chart
+    // ------------------------------------------------------------------------
+    var _WkAxisChart = /** @class */ (function (_super) {
+        __extends(_WkAxisChart, _super);
+        function _WkAxisChart() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        _WkAxisChart.prototype._initLabels = function (params) {
+            var labelsX = params.labelsX || {};
+            var labelsY = params.labelsY || {};
+            var captions;
+            // labels X
+            captions = labelsX.captions;
+            if (captions) {
+                this.labelsX = this._initCaptions(ChartCaptionPosition.bottom, captions, labelsX, labelsY);
+                this.labelsX.captions = captions;
+            }
+            // labels Y
+            captions = labelsY.captions;
+            if (labelsY.tickCount !== 0 || labelsY.captions) {
+                var strCaption = labelsY.captions;
+                if (!strCaption || !Array.isArray(strCaption)) {
+                    var isCaptionsExpr = ABeamer.isExpr(strCaption);
+                    var tickCount = labelsY.tickCount || 6;
+                    var newCaptions = [];
+                    var min = this.minValue;
+                    var delta = (this.maxValue - min) / (tickCount - 1);
+                    for (var i = 0; i < tickCount; i++) {
+                        var v = min + i * delta;
+                        if (isCaptionsExpr) {
+                            this.args.vars['v'] = v;
+                            var v1 = ABeamer.calcExpr(strCaption, this.args);
+                            newCaptions.push(v1.toString());
+                        }
+                        else {
+                            newCaptions.push(v.toString());
+                        }
+                    }
+                    captions = newCaptions;
+                }
+                this.labelsY = this._initCaptions(ChartCaptionPosition.left, captions, labelsY, labelsX);
+                this.labelsY.captions = captions;
+            }
+        };
+        _WkAxisChart.prototype._initLine = function (line) {
+            return {
+                visible: line.visible !== undefined ? line.visible : true,
+                color: ABeamer.ExprOrStrToStr(line.color, '#7c7c7c', this.args),
+                width: ABeamer.ExprOrNumToNum(line.width, 1, this.args),
+            };
+        };
         _WkAxisChart.prototype._initMarkers = function (params) {
             var markers = {};
             this.hasMarkers = params.markers !== undefined || this.chartTypes
@@ -307,6 +383,7 @@ var ABeamer;
                 markers.shape = this._fillArrayArrayParam(pMarkers.shape, ChartPointShape.square, ChartPointShape);
                 markers.size = this._fillArrayArrayParam(pMarkers.size, 5);
                 markers.color = this._fillArrayArrayParam(pMarkers.color, 'black');
+                this.overflow = _maxOfArrayArray(markers.size, this.overflow);
             }
             this.markers = markers;
         };
@@ -351,6 +428,9 @@ var ABeamer;
             ctx.lineTo(x1, y1);
             ctx.stroke();
         };
+        _WkAxisChart.prototype._computeBestValues = function () {
+            this.bestMaxValue = _calcBestMax(this.max);
+        };
         /** Initializes all the Axis Chart parameters. */
         _WkAxisChart.prototype._initChart = function (params) {
             var _this = this;
@@ -374,41 +454,36 @@ var ABeamer;
             this.barSpacing = ABeamer.ExprOrNumToNum(params.colSpacing, 5, this.args);
             this.barSeriesSpacing = ABeamer.ExprOrNumToNum(params.colInterSpacing, 0, this.args);
             // limits
-            this.maxValue = ABeamer.ExprOrNumToNum(params.maxValue, this.max, this.args);
+            this._computeBestValues();
+            this.maxValue = ABeamer.ExprOrNumToNum(params.maxValue, this.bestMaxValue, this.args);
             this.minValue = ABeamer.ExprOrNumToNum(params.minValue, Math.min(this.min, 0), this.args);
             this.avgValue = this.avg;
+            _super.prototype._initChart.call(this, params);
             // colors
-            this.fillColors = _parseSeriesList(this.data.length, params.fillColors, 'white', this.args);
             this.negativeFillColors = !params.negativeFillColors ? this.fillColors :
-                _parseSeriesList(this.data.length, params.negativeFillColors, 'white', this.args);
-            this.stokeColors = _parseSeriesList(this.data.length, params.strokeColors, 'black', this.args);
-            this.stokeWidth = _parseSeriesList(this.data.length, params.strokeWidth, 1, this.args);
-            this.graphX1 = this.chartWidth;
-            this.graphY0 = this.chartHeight;
+                this._fillArrayArrayParam(params.negativeFillColors, 'white');
             this._initMarkers(params);
-            this._initTitle(params);
             this._initLabels(params);
             // animation
-            if (this.animator) {
-                this.animator.props['col-height'] = ABeamer.ExprOrNumToNum(params.colHeightStart, 1, this.args);
-                this.animator.props['deviation'] = ABeamer.ExprOrNumToNum(params.deviationStart, 1, this.args);
-                this.animator.props['sweep'] = ABeamer.ExprOrNumToNum(params.sweepStart, 1, this.args);
-            }
+            this.props['col-height'] = ABeamer.ExprOrNumToNum(params.colHeightStart, 1, this.args);
+            this.props['deviation'] = ABeamer.ExprOrNumToNum(params.deviationStart, 1, this.args);
+            this.props['sweep'] = ABeamer.ExprOrNumToNum(params.sweepStart, 1, this.args);
         };
         /** Implements Axis Chart animation. */
         _WkAxisChart.prototype._drawChart = function (params) {
             var _this = this;
-            var animator = this.animator;
-            var barHeightV = animator ? animator.props['col-height'] : 1;
-            var deviationV = animator ? animator.props['deviation'] : 1;
-            var sweepV = animator ? animator.props['sweep'] : 1;
+            var barHeightV = this.props['col-height'];
+            var deviationV = this.props['deviation'];
+            var sweepV = this.props['sweep'];
             var chartWidth = this.chartWidth;
             var chartHeight = this.chartHeight;
             var ctx = this.context;
+            var overflow = this.overflow;
             var x0 = this.graphX0;
             var y0 = this.graphY0;
+            var y1 = this.graphY1;
             var topMargin = 1;
-            var yLength = y0 - this.graphY1 - topMargin;
+            var yLength = y0 - y1 - topMargin;
             // bar
             var barWidth = this.barWidth;
             var barSpacing = this.barSpacing;
@@ -460,15 +535,15 @@ var ABeamer;
                 var seriesPixels = [];
                 var seriesMidPixels = [];
                 var chartType = _this.chartTypes[seriesI];
-                ctx.lineWidth = _this.stokeWidth[seriesI];
-                ctx.strokeStyle = _this.stokeColors[seriesI];
                 for (var i = 0; i < maxSeriesLen; i++) {
+                    ctx.lineWidth = _this.strokeWidth[seriesI][i];
+                    ctx.strokeStyle = _this.strokeColors[seriesI][i];
                     var v = series[i];
                     if (Math.abs(deviationV - 1) > 1e-6) {
                         v = _this.avgValue - ((_this.avgValue - v) * deviationV);
                     }
-                    ctx.fillStyle = v >= 0 ? _this.fillColors[seriesI] :
-                        _this.negativeFillColors[seriesI];
+                    ctx.fillStyle = v >= 0 ? _this.fillColors[seriesI][i] :
+                        _this.negativeFillColors[seriesI][i];
                     var x = x0 + dataWidths * i + xShiftPerSeries[seriesI];
                     var vClip = (v - vy0Line) / valueRange;
                     var vT = vClip * barHeightV;
@@ -526,17 +601,32 @@ var ABeamer;
             var titleCaption = this.title.caption;
             if (this.title.caption) {
                 _setUpCaptionsFont(this.title, ctx);
-                var titleXPos = _alignCaptions(this.title, ctx, titleCaption, x1 - x0);
-                ctx.fillText(titleCaption, x0 + titleXPos, this.title.y);
+                var titleXPos = _alignCaptions(this.title, ctx, titleCaption, x1 - this.graphX0);
+                ctx.fillText(titleCaption, this.graphX0 + titleXPos, this.title.y);
             }
-            // labels
+            var captions;
+            // labelsX
             if (this.labelsX) {
                 _setUpCaptionsFont(this.labelsX, ctx);
-                for (var i = 0; i < seriesLen; i++) {
+                captions = this.labelsX.captions;
+                for (var i = 0; i < captions.length; i++) {
                     var x = x0 + dataWidths * i;
-                    var text = this.labelsX.captions[i];
+                    var text = captions[i];
                     var deltaX = _alignCaptions(this.labelsX, ctx, text, xShift);
                     ctx.fillText(text, x + deltaX, this.labelsX.y);
+                }
+            }
+            // labelsY
+            if (this.labelsY) {
+                _setUpCaptionsFont(this.labelsY, ctx);
+                captions = this.labelsY.captions;
+                var fs2 = this.labelsY.height / 2;
+                var scale = yLength / (captions.length - 1);
+                for (var i = 0; i < captions.length; i++) {
+                    var yi = y0 - scale * i;
+                    var text = this.labelsY.captions[i];
+                    // const deltaY = _alignCaptions(this.labelsY, ctx, text, xShift);
+                    ctx.fillText(text, this.labelsY.x, yi + fs2);
                 }
             }
             // y0Line
@@ -553,6 +643,63 @@ var ABeamer;
             }
         };
         return _WkAxisChart;
+    }(_WkChart));
+    // ------------------------------------------------------------------------
+    //                               Pie Chart
+    // ------------------------------------------------------------------------
+    var _WkPieChart = /** @class */ (function (_super) {
+        __extends(_WkPieChart, _super);
+        function _WkPieChart() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        _WkPieChart.prototype._initChart = function (params) {
+            _super.prototype._initChart.call(this, params);
+            // animation
+            this.props['angle'] = ABeamer.ExprOrNumToNum(params.angleStart, 0, this.args);
+            this.props['dispersion'] = ABeamer.ExprOrNumToNum(params.dispersionStart, 1, this.args);
+        };
+        _WkPieChart.prototype._drawChart = function (params) {
+            var _this = this;
+            var angle = this.props['angle'];
+            var dispersion = this.props['dispersion'];
+            var isClockwise = params.isClockwise !== false;
+            _super.prototype._drawChart.call(this, params);
+            var overflow = this.overflow;
+            var x0 = this.graphX0 + overflow;
+            var y1 = this.graphY1 + overflow;
+            var diameter = Math.min(this.graphX1 - x0 - overflow, this.graphY0 - y1 - overflow);
+            var radius = diameter / 2;
+            var ctx = this.context;
+            this.data.forEach(function (series, seriesI) {
+                for (var stage = 0; stage < 2; stage++) {
+                    var startAngle = angle;
+                    for (var i = 0; i < series.length; i++) {
+                        ctx.lineWidth = _this.strokeWidth[seriesI][i];
+                        ctx.strokeStyle = _this.strokeColors[seriesI][i];
+                        ctx.fillStyle = _this.fillColors[seriesI][i];
+                        var point = series[i];
+                        var percentage = point / _this.sum;
+                        var endAngle = (percentage * Math.PI * 2 * dispersion);
+                        if (!isClockwise) {
+                            endAngle = -endAngle;
+                        }
+                        endAngle += startAngle;
+                        ctx.beginPath();
+                        ctx.moveTo(x0 + radius, y1 + radius);
+                        ctx.arc(x0 + radius, y1 + radius, radius, startAngle, endAngle);
+                        ctx.closePath();
+                        if (stage === 0) {
+                            ctx.fill();
+                        }
+                        else {
+                            ctx.stroke();
+                        }
+                        startAngle = endAngle;
+                    }
+                }
+            });
+        };
+        return _WkPieChart;
     }(_WkChart));
     // ------------------------------------------------------------------------
     //                               Chart Task
@@ -583,6 +730,9 @@ var ABeamer;
                     args.vars.elIndex = elIndex;
                     var chart;
                     switch (cType_1) {
+                        case ChartTypes.pie:
+                            chart = new _WkPieChart(args);
+                            break;
                         case ChartTypes.marker:
                         case ChartTypes.bar:
                         case ChartTypes.line:
@@ -605,5 +755,13 @@ var ABeamer;
         }
         return ABeamer.TR_EXIT;
     }
+    // ------------------------------------------------------------------------
+    //                               Testing
+    // ------------------------------------------------------------------------
+    var testValues = [3.33, 8.4, 10, 12, 45, 0.12, 100, 1000, 12400, 95000,
+        -10, -12, -89.3, -3.4, -400];
+    testValues.forEach(function (v) {
+        _calcBestMax(v);
+    });
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=chart-tasks.js.map

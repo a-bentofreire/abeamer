@@ -17,24 +17,40 @@ $(window).on("load", function () {
         [20000, 45000, 51000, 18000, 49400, 45000],
     ];
     var defLabelsX = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        captions: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     };
     var defAnimeProps = [{
             prop: 'col-height',
             value: 1,
         }];
+    // 'Social Protection','General Public Services','Health','Education','Economic affairs',
+    // 'Public order and safety','Defence','Recreation, culture and religion',
+    // 'Housing and community amenities','Environmental protection',
     var firstOnly = false;
     var viewOnly = undefined;
     var charts = [{
+            chartType: ABeamer.ChartTypes.pie,
+            // labelsX: defLabelsX,
+            title: 'Government expenditure',
+            data: [[36.7, 17.1, 13.8, 12.9, 8.2, 4.0, 2.7]],
+            fillColors: [['#E82C0C', '#2204FF', '#FFB80D', '#0DFFB6', '#CE0EE8', '#E8E70E', '#E86378']],
+            strokeColors: '#525252',
+            angleStart: Math.PI,
+            dispersionStart: 0.1,
+            props: [{
+                    prop: 'dispersion',
+                    value: 1,
+                }],
+        }, {
             chartType: ABeamer.ChartTypes.bar,
             labelsX: defLabelsX,
             title: '2017 Sales',
-            data: [[23000, 32000, 45000, 15000, 50400, 60000]],
+            data: [[23000, 32000, 45000, 15000, 50400, 58000]],
             colInterSpacing: 1,
+            strokeWidth: 1,
             fillColors: '#ffecad',
             negativeFillColors: '#ffb0b0',
             strokeColors: '#9c9c9c',
-            strokeWidth: 1,
             colHeightStart: 0.1,
             props: [{
                     prop: 'col-height',
@@ -50,7 +66,7 @@ $(window).on("load", function () {
             colSpacing: 20,
             title: 'Customer Satisfaction',
             labelsX: {
-                labels: ['Q1', 'Q2', 'Q3', 'Q4', '18-Q1', 'Q2', 'Q3'],
+                captions: ['Q1', 'Q2', 'Q3', 'Q4', '18-Q1', 'Q2', 'Q3'],
             },
             fillColors: ['#35a9c070', '#adffb970'],
             strokeColors: ['#9c9c9c', '#9c9c9c'],
@@ -176,13 +192,11 @@ $(window).on("load", function () {
             }]);
     });
     scene1
-        .addAnimations(charts.map(function (chart, i) {
-        return {
-            selector: "%chart-" + i + "-anime",
-            duration: '3s',
-            props: chart.props,
-        };
-    }));
+        .addAnimations(charts.map(function (chart, i) { return chart.props ? {
+        selector: "%chart-" + i + "-anime",
+        duration: '3s',
+        props: chart.props,
+    } : undefined; }).filter(function (anime) { return anime !== undefined; }));
     story.render(story.bestPlaySpeed());
 });
 //# sourceMappingURL=main.js.map

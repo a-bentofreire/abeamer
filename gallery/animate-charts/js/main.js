@@ -24,7 +24,7 @@ $(window).on("load", function () {
                         ],
                         charTypes: [ABeamer.ChartTypes.bar, ABeamer.ChartTypes.bar, ABeamer.ChartTypes.line],
                         labelsX: {
-                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                            captions: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
                         },
                         animeSelector: 'bar-chart-anime',
                         colHeightStart: 0.2,

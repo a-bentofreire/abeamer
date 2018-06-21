@@ -21,10 +21,11 @@
  *
  * This plugin has the following built-in charts:
  *
- * - `marker`.
+ * - `pie`.
  * - `bar`.
- * - `line`.
  * - `area`.
+ * - `line`.
+ * - `marker`.
  * - `mixed`- Draws different types of chars in the same chart, uses
  *   `chartTypes` parameter to determine the type of each chart per series.
  *
@@ -43,6 +44,7 @@ namespace ABeamer {
   // #export-section-start: release
 
   export enum ChartTypes {
+    pie,
     bar,
     area,
     line,
@@ -59,6 +61,14 @@ namespace ABeamer {
     chartType?: ChartTypes | string;
     data: SeriesData[];
     animeSelector?: string;
+
+    // title
+    title?: string | ExprString | ChartTitle;
+
+    // colors
+    fillColors?: string | string[] | string[][];
+    strokeColors?: string | string[] | string[][];
+    strokeWidth?: uint | uint[] | uint[][];
   }
 
 
@@ -67,12 +77,14 @@ namespace ABeamer {
     vertical,
   }
 
+
   export enum ChartCaptionPosition {
     top,
     bottom,
     left,
     right,
   }
+
 
   export interface ChartCaptions {
     fontColor?: string | ExprString;
@@ -84,13 +96,16 @@ namespace ABeamer {
 
 
   export interface ChartLabels extends ChartCaptions {
-    labels?: string[];
+    captions?: string[] | ExprString;
   }
 
 
   export type ChartLabelsX = ChartLabels;
 
-  export type ChartLabelsY = ChartLabels;
+
+  export interface ChartLabelsY extends ChartLabels {
+    tickCount?: uint;
+  }
 
 
   export enum ChartPointShape {
@@ -121,13 +136,17 @@ namespace ABeamer {
   }
 
 
+  export interface PieChartTaskParams extends BaseChartTaskParams {
+    angleStart?: number | ExprString;
+    dispersionStart?: number | ExprString;
+    isClockwise?: boolean;
+  }
+
+
   export interface AxisChartTaskParams extends BaseChartTaskParams {
 
     /** Chart Type per series. Use only if charType is `mixed`. */
     charTypes?: (ChartTypes | string)[];
-
-    // title
-    title?: string | ExprString | ChartTitle;
 
     // labels X
     labelsX?: ChartLabelsX;
@@ -145,10 +164,7 @@ namespace ABeamer {
     colInterSpacing?: uint | ExprString;
 
     // colors
-    fillColors?: string[] | string;
-    negativeFillColors?: string[] | string;
-    strokeColors?: string[] | string;
-    stokeWidth?: uint[] | uint;
+    negativeFillColors?: string | string[] | string[][];
     xAxis?: ChartLine;
     yAxis?: ChartLine;
     y0Line?: ChartLine;
@@ -180,93 +196,13 @@ namespace ABeamer {
   });
 
 
-  function _parseSeriesList<T>(numSeries: int, list: T[] | T,
-    defaultValue: T, args: ABeamerArgs): T[] {
-
-    const res = [];
-    for (let i = 0; i < numSeries; i++) {
-
-      if (list) {
-        if (Array.isArray(list)) {
-          if (i < list.length) {
-            res.push(list[i]);
-          } else {
-            res.push(defaultValue);
-          }
-        } else {
-          res.push(list);
-        }
-      } else {
-        res.push(defaultValue);
-      }
-    }
-    return res;
-  }
-
-  // ------------------------------------------------------------------------
-  //                               _WkChart
-  // ------------------------------------------------------------------------
-
-  abstract class _WkChart {
-
-    protected canvas: HTMLCanvasElement;
-    protected context: CanvasRenderingContext2D;
-    protected chartWidth: uint;
-    protected chartHeight: uint;
-
-    protected chartType: ChartTypes;
-    protected min: number;
-    protected max: number;
-    protected avg: number;
-    protected seriesLen: uint;
-    protected data: SeriesData[];
-
-    protected animator: _ChartVirtualAnimator;
-
-
-    constructor(protected args: ABeamerArgs) { }
-
-    abstract _initChart(params: BaseChartTaskParams): void;
-
-    abstract _drawChart(params: BaseChartTaskParams): void;
-
-
-    _init(elAdapter: ElementAdapter, chartType: ChartTypes,
-      animator: _ChartVirtualAnimator | undefined): void {
-
-      this.canvas = elAdapter.getProp('element', this.args) as any;
-      if (!this.canvas) {
-        throwErr(`Didn't find the ${elAdapter.getId()}`);
-      }
-
-      this.context = this.canvas.getContext('2d');
-      this.chartWidth = this.canvas.width;
-      this.chartHeight = this.canvas.height;
-      this.chartType = chartType;
-      this.animator = animator;
-    }
-
-
-    _initData(data: SeriesData[]): void {
-      let max = -Number.MIN_VALUE;
-      let min = Number.MAX_VALUE;
-      const firstSeriesLen = data[0].length;
-      data.forEach(series => {
-        if (series.length !== firstSeriesLen) {
-          throwErr(`Every Series must have the same length`);
-        }
-        series.forEach(point => {
-          max = Math.max(max, point);
-          min = Math.min(min, point);
-        });
+  function _maxOfArrayArray(data: number[][], startValue: number): number {
+    data.forEach(series => {
+      series.forEach(point => {
+        startValue = Math.max(startValue, point);
       });
-
-      this.min = min;
-      this.max = max;
-      this.avg = (max - min) / 2;
-      this.seriesLen = firstSeriesLen;
-      this.data = data;
-    }
+    });
+    return startValue;
   }
 
   // ------------------------------------------------------------------------
@@ -315,9 +251,12 @@ namespace ABeamer {
   }
 
 
-  function _setUpCaptionsFont(l: _WkChartCaptions, ctx: CanvasRenderingContext2D): void {
+  function _setUpCaptionsFont(l: _WkChartCaptions,
+    ctx: CanvasRenderingContext2D): void {
+
     ctx.font = `${l.fontSize}px ${l.fontFamily}`;
     ctx.fillStyle = l.fontColor;
+    ctx.textBaseline = 'bottom';
   }
 
   // ------------------------------------------------------------------------
@@ -329,9 +268,32 @@ namespace ABeamer {
   }
 
 
+  export let testDiv: HTMLDivElement;
+
   function _alignCaptions(l: _WkChartCaptions, ctx: CanvasRenderingContext2D,
     text: string, width: uint): uint {
 
+    // let style: CSSStyleDeclaration;
+    // if (!testDiv) {
+    //   testDiv = document.createElement('div');
+    //   style = testDiv.style;
+    //   style.position = 'absolute';
+    //   style.top = '0px';
+    //   style.left = '0px';
+    //   style.width = '1px';
+    //   style.height = '0px';
+    //   document.body.appendChild(testDiv);
+    // }
+
+    // style = testDiv.style;
+    // style.display = 'inline-block';
+    // style.fontFamily = l.fontFamily;
+    // style.fontSize = l.fontSize + 'px';
+    // testDiv.textContent = text;
+
+    // style.display = 'none';
+
+    // @TODO: Implement a better way to compute the height
     const sz = ctx.measureText(text);
     return (width - sz.width) / 2;
   }
@@ -366,48 +328,34 @@ namespace ABeamer {
   }
 
   // ------------------------------------------------------------------------
-  //                               Bar Chart
+  //                               _WkChart
   // ------------------------------------------------------------------------
 
-  class _WkAxisChart extends _WkChart {
+  abstract class _WkChart {
 
-    /** Chart Type per series. Use only if charType is `mixed`. */
-    chartTypes: ChartTypes[];
+    protected props: AnyParams;
+    protected canvas: HTMLCanvasElement;
+    protected context: CanvasRenderingContext2D;
+    protected chartWidth: uint;
+    protected chartHeight: uint;
 
-    // axis
-    xAxis: _WkChartLine;
-    yAxis: _WkChartLine;
-    y0Line: _WkChartLine;
+    protected chartType: ChartTypes;
+    protected min: number;
+    protected max: number;
+    protected sum: number;
+    protected avg: number;
+    protected seriesLen: uint;
+    protected data: SeriesData[];
+
+    protected animator: _ChartVirtualAnimator;
 
     // title
-    title: _WkChartTitle = {};
-
-    // labels X
-    labelsX: _WkChartLabels;
-
-    // labels Y
-    labelsY: _WkChartLabels;
-
-    // points
-    markers: _WkChartMarkers;
-    hasMarkers: boolean;
-
-    // bar chart
-    barWidth: uint;
-    barMaxHeight: uint;
-    barSpacing: uint;
-    barSeriesSpacing: uint;
+    protected title: _WkChartTitle = {};
 
     // colors
-    fillColors: string[];
-    negativeFillColors: string[];
-    stokeColors: string[];
-    stokeWidth: uint[];
-
-    // limits
-    maxValue: number;
-    minValue: number;
-    avgValue: number;
+    fillColors: string[][];
+    strokeColors: string[][];
+    strokeWidth: uint[][];
 
     // overflow
     overflow: uint = 0;
@@ -418,96 +366,9 @@ namespace ABeamer {
     graphX1: uint;
     graphY1: uint = 0;
 
-    protected _initCaptions(defPosition: ChartCaptionPosition, captions: string[],
-      labThis: ChartLabels, labOther: ChartLabels): _WkChartCaptions {
+    constructor(protected args: ABeamerArgs) { }
 
-      const res: _WkChartCaptions = {
-        fontColor: ExprOrStrToStr(labThis.fontColor || labOther.fontColor,
-          'black', this.args),
-        fontFamily: ExprOrStrToStr(labThis.fontFamily || labOther.fontFamily,
-          'sans-serif', this.args),
-        fontSize: ExprOrNumToNum(labThis.fontSize || labOther.fontSize,
-          12, this.args),
-        marginTop: ExprOrNumToNum(labThis.marginTop, 0, this.args),
-        marginBottom: ExprOrNumToNum(labThis.marginBottom, 0, this.args),
-        position: defPosition,
-        orientation: ChartCaptionOrientation.horizontal,
-      };
-
-      _setUpCaptionsFont(res, this.context);
-      const joinChar = res.position === ChartCaptionPosition.top ||
-        res.position === ChartCaptionPosition.bottom ? ' ' : '\n';
-
-      const joinedText = captions.join(joinChar);
-      const sz = this.context.measureText(joinedText);
-      res.width = sz.width;
-      res.height = res.fontSize;
-
-      let d: uint;
-      switch (res.position) {
-        case ChartCaptionPosition.top:
-          res.y = this.graphY1 + res.height + res.marginTop;
-          d = res.height + res.marginTop + res.marginBottom;
-          this.graphY1 += d;
-          break;
-
-        case ChartCaptionPosition.bottom:
-          res.y = this.graphY0 - res.marginBottom;
-          d = res.height + res.marginTop + res.marginBottom;
-          this.graphY0 -= d;
-          break;
-      }
-      return res;
-    }
-
-
-    protected _initLabels(params: AxisChartTaskParams): void {
-      const labelsX: ChartLabelsX = params.labelsX || {};
-      const labelsY: ChartLabelsY = params.labelsY || {};
-      let labels;
-
-      // labels X
-      labels = labelsX.labels;
-      if (labels) {
-        this.labelsX = this._initCaptions(ChartCaptionPosition.bottom,
-          labels, labelsX, labelsY);
-        this.labelsX.captions = labels;
-      }
-
-      // labels Y
-      labels = labelsX.labels;
-      if (labels) {
-        this.labelsY = this._initCaptions(ChartCaptionPosition.left,
-          labels, labelsY, labelsX);
-        this.labelsY.captions = labels;
-      }
-    }
-
-
-    protected _initTitle(params: AxisChartTaskParams) {
-      let title = params.title || {} as ChartTitle;
-      if (typeof title === 'string') {
-        title = {
-          caption: title as string,
-        };
-      }
-
-      if (title.caption) {
-        this.title = this._initCaptions(ChartCaptionPosition.top,
-          [title.caption], title, title);
-        this.title.caption = ExprOrStrToStr(title.caption, '', this.args);
-      }
-    }
-
-
-    protected _initLine(line: ChartLine): _WkChartLine {
-
-      return {
-        visible: line.visible !== undefined ? line.visible : true,
-        color: ExprOrStrToStr(line.color, '#7c7c7c', this.args),
-        width: ExprOrNumToNum(line.width, 1, this.args),
-      };
-    }
+    _drawChart(params: BaseChartTaskParams): void { }
 
 
     protected _fillArrayArrayParam<TI, TO>(param: TI | TI[] | TI[][],
@@ -554,6 +415,253 @@ namespace ABeamer {
     }
 
 
+    _initChart(params: BaseChartTaskParams): void {
+      // colors
+
+      this.fillColors = this._fillArrayArrayParam<string, string>(params.fillColors,
+        'white');
+      this.strokeColors = this._fillArrayArrayParam<string, string>(params.strokeColors,
+        'black');
+      this.strokeWidth = this._fillArrayArrayParam<uint, uint>(params.strokeWidth,
+        1);
+
+      this.overflow = _maxOfArrayArray(this.strokeWidth, this.overflow);
+
+      this.graphX1 = this.chartWidth;
+      this.graphY0 = this.chartHeight;
+      this._initTitle(params);
+    }
+
+
+    _init(elAdapter: ElementAdapter, chartType: ChartTypes,
+      animator: _ChartVirtualAnimator | undefined): void {
+
+      this.canvas = elAdapter.getProp('element', this.args) as any;
+      if (!this.canvas) {
+        throwErr(`Didn't find the ${elAdapter.getId()}`);
+      }
+
+      this.context = this.canvas.getContext('2d');
+      this.chartWidth = this.canvas.width;
+      this.chartHeight = this.canvas.height;
+      this.chartType = chartType;
+      this.animator = animator;
+      this.props = animator ? animator.props : {};
+    }
+
+
+    _initData(data: SeriesData[]): void {
+      let max = -Number.MIN_VALUE;
+      let min = Number.MAX_VALUE;
+      let sum = 0;
+      const firstSeriesLen = data[0].length;
+      data.forEach(series => {
+        if (series.length !== firstSeriesLen) {
+          throwErr(`Every Series must have the same length`);
+        }
+        series.forEach(point => {
+          max = Math.max(max, point);
+          min = Math.min(min, point);
+          sum += point;
+        });
+      });
+
+      this.min = min;
+      this.max = max;
+      this.sum = sum;
+      this.avg = (max - min) / 2;
+      this.seriesLen = firstSeriesLen;
+      this.data = data;
+    }
+
+
+    protected _initCaptions(defPosition: ChartCaptionPosition, captions: string[],
+      labThis: ChartLabels, labOther: ChartLabels): _WkChartCaptions {
+
+      const res: _WkChartCaptions = {
+        fontColor: ExprOrStrToStr(labThis.fontColor || labOther.fontColor,
+          'black', this.args),
+        fontFamily: ExprOrStrToStr(labThis.fontFamily || labOther.fontFamily,
+          'sans-serif', this.args),
+        fontSize: ExprOrNumToNum(labThis.fontSize || labOther.fontSize,
+          12, this.args),
+        marginTop: ExprOrNumToNum(labThis.marginTop, 0, this.args),
+        marginBottom: ExprOrNumToNum(labThis.marginBottom, 0, this.args),
+        position: defPosition,
+        orientation: ChartCaptionOrientation.horizontal,
+      };
+
+      _setUpCaptionsFont(res, this.context);
+      const isHorizontal = res.position === ChartCaptionPosition.top ||
+        res.position === ChartCaptionPosition.bottom;
+
+      if (isHorizontal) {
+        const joinedText = captions.join(' ');
+        const sz = this.context.measureText(joinedText);
+        res.width = sz.width;
+      } else {
+        res.width = 0;
+        captions.forEach(caption => {
+          res.width = Math.max(res.width, this.context.measureText(caption).width);
+        });
+      }
+      res.height = res.fontSize * 1.2;
+
+      let d: uint;
+      switch (res.position) {
+        case ChartCaptionPosition.top:
+          res.y = this.graphY1 + res.height + res.marginTop;
+          d = res.height + res.marginTop + res.marginBottom;
+          this.graphY1 += d;
+          break;
+
+        case ChartCaptionPosition.left:
+          res.x = this.graphX0 + res.marginTop;
+          d = res.width + res.marginTop + res.marginBottom;
+          this.graphX0 += d;
+          break;
+
+        case ChartCaptionPosition.bottom:
+          res.y = this.graphY0 - res.marginBottom;
+          d = res.height + res.marginTop + res.marginBottom;
+          this.graphY0 -= d;
+          break;
+      }
+      return res;
+    }
+
+
+    protected _initTitle(params: AxisChartTaskParams) {
+      let title = params.title || {} as ChartTitle;
+      if (typeof title === 'string') {
+        title = {
+          caption: title as string,
+        };
+      }
+
+      if (title.caption) {
+        this.title = this._initCaptions(ChartCaptionPosition.top,
+          [title.caption], title, title);
+        this.title.caption = ExprOrStrToStr(title.caption, '', this.args);
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------
+  //                               calcBestMax
+  // ------------------------------------------------------------------------
+
+  function _calcBestMax(v) {
+    const vAbs = Math.abs(v);
+    const isNegative = v < 0;
+    const l10v = Math.log10(vAbs);
+    const l10vf = Math.floor(l10v);
+    const vBase = 10 ** l10vf;
+    const vSubDigits = vAbs % vBase;
+    if (Math.abs(vSubDigits) > 0.00001) {
+      const vLow = vAbs - vSubDigits;
+      const vHigh = (isNegative ? -vLow + vBase : vLow + vBase);
+      return vHigh;
+      // console.log(v, l10v, l10vf, vSubDigits, vLow, vHigh);
+    } else {
+      return v;
+      // console.log(v);
+    }
+  }
+
+  // ------------------------------------------------------------------------
+  //                               Axis Chart
+  // ------------------------------------------------------------------------
+
+  class _WkAxisChart extends _WkChart {
+
+    /** Chart Type per series. Use only if charType is `mixed`. */
+    chartTypes: ChartTypes[];
+
+    // axis
+    xAxis: _WkChartLine;
+    yAxis: _WkChartLine;
+    y0Line: _WkChartLine;
+
+    // labels X
+    labelsX: _WkChartLabels;
+
+    // labels Y
+    labelsY: _WkChartLabels;
+
+    // points
+    markers: _WkChartMarkers;
+    hasMarkers: boolean;
+
+    // bar chart
+    barWidth: uint;
+    barMaxHeight: uint;
+    barSpacing: uint;
+    barSeriesSpacing: uint;
+
+    // colors
+    negativeFillColors: string[][];
+
+    // limits
+    maxValue: number;
+    bestMaxValue: number;
+    minValue: number;
+    avgValue: number;
+
+
+    protected _initLabels(params: AxisChartTaskParams): void {
+      const labelsX: ChartLabelsX = params.labelsX || {};
+      const labelsY: ChartLabelsY = params.labelsY || {};
+      let captions;
+
+      // labels X
+      captions = labelsX.captions;
+      if (captions) {
+        this.labelsX = this._initCaptions(ChartCaptionPosition.bottom,
+          captions, labelsX, labelsY);
+        this.labelsX.captions = captions;
+      }
+
+      // labels Y
+      captions = labelsY.captions;
+      if (labelsY.tickCount !== 0 || labelsY.captions) {
+        const strCaption = labelsY.captions;
+        if (!strCaption || !Array.isArray(strCaption)) {
+          const isCaptionsExpr = isExpr(strCaption as string);
+          const tickCount = labelsY.tickCount || 6;
+          const newCaptions = [];
+          const min = this.minValue;
+          const delta = (this.maxValue - min) / (tickCount - 1);
+          for (let i = 0; i < tickCount; i++) {
+            const v = min + i * delta;
+            if (isCaptionsExpr) {
+              this.args.vars['v'] = v;
+              const v1 = calcExpr(strCaption as string, this.args);
+              newCaptions.push(v1.toString());
+            } else {
+              newCaptions.push(v.toString());
+            }
+          }
+          captions = newCaptions;
+        }
+
+        this.labelsY = this._initCaptions(ChartCaptionPosition.left,
+          captions, labelsY, labelsX);
+        this.labelsY.captions = captions;
+      }
+    }
+
+
+    protected _initLine(line: ChartLine): _WkChartLine {
+
+      return {
+        visible: line.visible !== undefined ? line.visible : true,
+        color: ExprOrStrToStr(line.color, '#7c7c7c', this.args),
+        width: ExprOrNumToNum(line.width, 1, this.args),
+      };
+    }
+
+
     protected _initMarkers(params: AxisChartTaskParams): void {
       const markers: _WkChartMarkers = {};
       this.hasMarkers = params.markers !== undefined || this.chartTypes
@@ -570,6 +678,8 @@ namespace ABeamer {
           pMarkers.size, 5);
         markers.color = this._fillArrayArrayParam<string, string>(
           pMarkers.color, 'black');
+
+        this.overflow = _maxOfArrayArray(markers.size, this.overflow);
       }
       this.markers = markers;
     }
@@ -586,6 +696,7 @@ namespace ABeamer {
             const size = points.size[seriesI][i];
             const sizeDiv2 = size / 2;
             const [x, y] = dataPixels[seriesI][i];
+
             switch (points.shape[seriesI][i]) {
               case ChartPointShape.circle:
                 ctx.beginPath();
@@ -625,6 +736,11 @@ namespace ABeamer {
     }
 
 
+    protected _computeBestValues(): void {
+      this.bestMaxValue = _calcBestMax(this.max);
+    }
+
+
     /** Initializes all the Axis Chart parameters. */
     _initChart(params: AxisChartTaskParams): void {
 
@@ -653,51 +769,43 @@ namespace ABeamer {
       this.barSeriesSpacing = ExprOrNumToNum(params.colInterSpacing, 0, this.args);
 
       // limits
-      this.maxValue = ExprOrNumToNum(params.maxValue, this.max, this.args);
+      this._computeBestValues();
+      this.maxValue = ExprOrNumToNum(params.maxValue, this.bestMaxValue, this.args);
       this.minValue = ExprOrNumToNum(params.minValue, Math.min(this.min, 0), this.args);
       this.avgValue = this.avg;
 
-      // colors
-      this.fillColors = _parseSeriesList<string>(this.data.length, params.fillColors,
-        'white', this.args);
-      this.negativeFillColors = !params.negativeFillColors ? this.fillColors :
-        _parseSeriesList<string>(this.data.length, params.negativeFillColors,
-          'white', this.args);
-      this.stokeColors = _parseSeriesList<string>(this.data.length, params.strokeColors,
-        'black', this.args);
-      this.stokeWidth = _parseSeriesList<uint>(this.data.length, params.strokeWidth,
-        1, this.args);
+      super._initChart(params);
 
-      this.graphX1 = this.chartWidth;
-      this.graphY0 = this.chartHeight;
+      // colors
+      this.negativeFillColors = !params.negativeFillColors ? this.fillColors :
+        this._fillArrayArrayParam<string, string>(params.negativeFillColors, 'white');
+
       this._initMarkers(params);
-      this._initTitle(params);
       this._initLabels(params);
 
       // animation
-      if (this.animator) {
-        this.animator.props['col-height'] = ExprOrNumToNum(params.colHeightStart, 1, this.args);
-        this.animator.props['deviation'] = ExprOrNumToNum(params.deviationStart, 1, this.args);
-        this.animator.props['sweep'] = ExprOrNumToNum(params.sweepStart, 1, this.args);
-      }
+      this.props['col-height'] = ExprOrNumToNum(params.colHeightStart, 1, this.args);
+      this.props['deviation'] = ExprOrNumToNum(params.deviationStart, 1, this.args);
+      this.props['sweep'] = ExprOrNumToNum(params.sweepStart, 1, this.args);
     }
 
 
     /** Implements Axis Chart animation. */
     _drawChart(params: AxisChartTaskParams): void {
 
-      const animator = this.animator;
-      const barHeightV = animator ? animator.props['col-height'] : 1;
-      const deviationV = animator ? animator.props['deviation'] : 1;
-      const sweepV = animator ? animator.props['sweep'] : 1;
+      const barHeightV = this.props['col-height'];
+      const deviationV = this.props['deviation'];
+      const sweepV = this.props['sweep'];
 
       const chartWidth = this.chartWidth;
       const chartHeight = this.chartHeight;
       const ctx = this.context;
+      const overflow = this.overflow;
       const x0 = this.graphX0;
       const y0 = this.graphY0;
+      const y1 = this.graphY1;
       const topMargin = 1;
-      const yLength = y0 - this.graphY1 - topMargin;
+      const yLength = y0 - y1 - topMargin;
 
       // bar
       const barWidth = this.barWidth;
@@ -759,18 +867,19 @@ namespace ABeamer {
         const seriesMidPixels: int[][] = [];
 
         const chartType = this.chartTypes[seriesI];
-        ctx.lineWidth = this.stokeWidth[seriesI];
-        ctx.strokeStyle = this.stokeColors[seriesI];
 
         for (let i = 0; i < maxSeriesLen; i++) {
+
+          ctx.lineWidth = this.strokeWidth[seriesI][i];
+          ctx.strokeStyle = this.strokeColors[seriesI][i];
 
           let v = series[i];
           if (Math.abs(deviationV - 1) > 1e-6) {
             v = this.avgValue - ((this.avgValue - v) * deviationV);
           }
 
-          ctx.fillStyle = v >= 0 ? this.fillColors[seriesI] :
-            this.negativeFillColors[seriesI];
+          ctx.fillStyle = v >= 0 ? this.fillColors[seriesI][i] :
+            this.negativeFillColors[seriesI][i];
 
           const x = x0 + dataWidths * i + xShiftPerSeries[seriesI];
           const vClip = (v - vy0Line) / valueRange;
@@ -841,18 +950,34 @@ namespace ABeamer {
       if (this.title.caption) {
         _setUpCaptionsFont(this.title, ctx);
         const titleXPos = _alignCaptions(this.title, ctx,
-          titleCaption, x1 - x0);
-        ctx.fillText(titleCaption, x0 + titleXPos, this.title.y);
+          titleCaption, x1 - this.graphX0);
+        ctx.fillText(titleCaption, this.graphX0 + titleXPos, this.title.y);
       }
 
-      // labels
+      let captions: string[];
+      // labelsX
       if (this.labelsX) {
         _setUpCaptionsFont(this.labelsX, ctx);
-        for (let i = 0; i < seriesLen; i++) {
+        captions = this.labelsX.captions;
+        for (let i = 0; i < captions.length; i++) {
           const x = x0 + dataWidths * i;
-          const text = this.labelsX.captions[i];
+          const text = captions[i];
           const deltaX = _alignCaptions(this.labelsX, ctx, text, xShift);
           ctx.fillText(text, x + deltaX, this.labelsX.y);
+        }
+      }
+
+      // labelsY
+      if (this.labelsY) {
+        _setUpCaptionsFont(this.labelsY, ctx);
+        captions = this.labelsY.captions;
+        const fs2 = this.labelsY.height / 2;
+        const scale = yLength / (captions.length - 1);
+        for (let i = 0; i < captions.length; i++) {
+          const yi = y0 - scale * i;
+          const text = this.labelsY.captions[i];
+          // const deltaY = _alignCaptions(this.labelsY, ctx, text, xShift);
+          ctx.fillText(text, this.labelsY.x, yi + fs2);
         }
       }
 
@@ -874,6 +999,65 @@ namespace ABeamer {
   }
 
   // ------------------------------------------------------------------------
+  //                               Pie Chart
+  // ------------------------------------------------------------------------
+
+  class _WkPieChart extends _WkChart {
+
+    _initChart(params: PieChartTaskParams): void {
+      super._initChart(params);
+      // animation
+      this.props['angle'] = ExprOrNumToNum(params.angleStart, 0, this.args);
+      this.props['dispersion'] = ExprOrNumToNum(params.dispersionStart, 1, this.args);
+    }
+
+
+    _drawChart(params: PieChartTaskParams): void {
+
+      const angle = this.props['angle'];
+      const dispersion = this.props['dispersion'];
+      const isClockwise = params.isClockwise !== false;
+
+      super._drawChart(params);
+      const overflow = this.overflow;
+      const x0 = this.graphX0 + overflow;
+      const y1 = this.graphY1 + overflow;
+      const diameter = Math.min(this.graphX1 - x0 - overflow, this.graphY0 - y1 - overflow);
+      const radius = diameter / 2;
+      const ctx = this.context;
+
+      this.data.forEach((series, seriesI) => {
+
+        for (let stage = 0; stage < 2; stage++) {
+          let startAngle = angle;
+          for (let i = 0; i < series.length; i++) {
+            ctx.lineWidth = this.strokeWidth[seriesI][i];
+            ctx.strokeStyle = this.strokeColors[seriesI][i];
+            ctx.fillStyle = this.fillColors[seriesI][i];
+
+            const point = series[i];
+            const percentage = point / this.sum;
+            let endAngle = (percentage * Math.PI * 2 * dispersion);
+            if (!isClockwise) { endAngle = -endAngle; }
+            endAngle += startAngle;
+
+            ctx.beginPath();
+            ctx.moveTo(x0 + radius, y1 + radius);
+            ctx.arc(x0 + radius, y1 + radius, radius, startAngle, endAngle);
+            ctx.closePath();
+            if (stage === 0) {
+              ctx.fill();
+            } else {
+              ctx.stroke();
+            }
+            startAngle = endAngle;
+          }
+        }
+      });
+    }
+  }
+
+  // ------------------------------------------------------------------------
   //                               Chart Task
   // ------------------------------------------------------------------------
 
@@ -890,7 +1074,6 @@ namespace ABeamer {
         if (typeof cType === 'string') {
           cType = ChartTypes[cType] as ChartTypes;
         }
-
 
         const data = params.data;
         if (!data.length) {
@@ -915,6 +1098,10 @@ namespace ABeamer {
           let chart: _WkChart;
 
           switch (cType) {
+            case ChartTypes.pie:
+              chart = new _WkPieChart(args);
+              break;
+
             case ChartTypes.marker:
             case ChartTypes.bar:
             case ChartTypes.line:
@@ -937,4 +1124,16 @@ namespace ABeamer {
     }
     return TR_EXIT;
   }
+
+  // ------------------------------------------------------------------------
+  //                               Testing
+  // ------------------------------------------------------------------------
+
+  const
+    testValues = [3.33, 8.4, 10, 12, 45, 0.12, 100, 1000, 12400, 95000,
+      -10, -12, -89.3, -3.4, -400];
+
+  testValues.forEach(v => {
+    _calcBestMax(v);
+  });
 }
