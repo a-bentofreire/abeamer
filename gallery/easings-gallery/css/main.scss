@@ -1,0 +1,57 @@
+// uuid: bc5cde59-a016-4262-a2e2-4ff048b063a3
+// ------------------------------------------------------------------------
+// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License+uuid License. See License.txt for details
+// ------------------------------------------------------------------------
+//
+@import "./../abeamer.ini";
+body,
+html,
+.abeamer-story,
+.abeamer-scene {
+  width: $abeamer-width + px;
+  height: $abeamer-height + px;
+}
+
+#scene1 {
+  background: white;
+}
+
+$graph-width: 200;
+$graph-height: 100;
+$margin: 10;
+$size:4;
+#gallery>div {
+  position: relative;
+  display: inline-block;
+  width: $graph-width + px;
+  height: $graph-height + px;
+  margin: 5px;
+  background: rgb(212, 212, 212);
+  color: black;
+}
+
+.line {
+  position: absolute;
+  left: $margin + px;
+  top: ($graph-height / 2) + px;
+  width: ($graph-width - 2 *$margin) + px;
+  height: $size + px;
+  background: rgb(173, 134, 132);
+}
+
+.dot {
+  position: absolute;
+  left: $margin + px;
+  top: ($graph-height / 2) + px;
+  width: $size + px;
+  height: $size + px;
+  background: #2600fd;
+  border-radius: 32px;
+}
+
+.label {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
