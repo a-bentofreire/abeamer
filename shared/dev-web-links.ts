@@ -21,6 +21,7 @@ export namespace DevWebLinks {
 
     release: '',
     releaseRaw: '',
+    releaseStatic: '',
 
     galleryRelease: '',
     galleryReleaseRaw: '',
@@ -51,6 +52,11 @@ export namespace DevWebLinks {
       : `http://localhost:${LOCAL_PORT}/docs/build`;
 
 
+    const releaseStatic = !isLocal
+      ? 'https://cdn.rawgit.com/a-bentofreire/abeamer-release/master/'
+      : `http://localhost:${LOCAL_PORT}/release/`;
+
+
     const main = !isLocal ? 'abeamer' : '';
     const mainPrefix = !isLocal ? 'abeamer-' : '';
 
@@ -59,6 +65,7 @@ export namespace DevWebLinks {
 
     repos.release = server.replace(/__REPO__/, `${mainPrefix}release`);
     repos.releaseRaw = rawServer.replace(/__REPO__/, `${mainPrefix}release`);
+    repos.releaseStatic = releaseStatic;
 
     repos.galleryRelease = galleryReleaseServer + '/';
     repos.galleryReleaseRaw = repos.galleryRelease;

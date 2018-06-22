@@ -599,7 +599,20 @@ namespace Gulp {
   });
 
 
-  (gulp as any).task('gal-rel:create-zip', ['gal-rel:update-html-files'], () => {
+  (gulp as any).task('gal-rel:online-html-files', ['gal-rel:update-html-files'], () => {
+    const onlineLink = `${webLinks.repos.releaseStatic}client/lib`;
+    return mergeStream(BuildGalRel.releaseExamples.map(ex => {
+      return gulp.src([`${ex.dstFullPath}/index.html`])
+        .pipe(gulpReplace(/(<head>)/g, '<!-- This file was created only testing. -->\n$1'))
+        .pipe(gulpReplace(/"abeamer\//g, `"${onlineLink}/`))
+        .pipe(gulpRename('index-online.html'))
+        .pipe(gulp.dest(ex.dstFullPath))
+        .pipe(gulpPreserveTime());
+    }));
+  });
+
+
+  (gulp as any).task('gal-rel:create-zip', ['gal-rel:online-html-files'], () => {
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       return gulp.src([
         `${ex.dstFullPath}/**`,

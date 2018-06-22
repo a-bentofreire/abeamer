@@ -18,6 +18,7 @@ var DevWebLinks;
         mainRaw: '',
         release: '',
         releaseRaw: '',
+        releaseStatic: '',
         galleryRelease: '',
         galleryReleaseRaw: '',
         docs: '',
@@ -39,12 +40,16 @@ var DevWebLinks;
         var docsServer = !isLocal
             ? 'https://a-bentofreire.github.io/abeamer-docs'
             : "http://localhost:" + LOCAL_PORT + "/docs/build";
+        var releaseStatic = !isLocal
+            ? 'https://cdn.rawgit.com/a-bentofreire/abeamer-release/master/'
+            : "http://localhost:" + LOCAL_PORT + "/release/";
         var main = !isLocal ? 'abeamer' : '';
         var mainPrefix = !isLocal ? 'abeamer-' : '';
         DevWebLinks.repos.main = server.replace(/__REPO__/, main).replace(/\/\/$/, '/');
         DevWebLinks.repos.mainRaw = rawServer.replace(/__REPO__/, main).replace(/\/\/$/, '/');
         DevWebLinks.repos.release = server.replace(/__REPO__/, mainPrefix + "release");
         DevWebLinks.repos.releaseRaw = rawServer.replace(/__REPO__/, mainPrefix + "release");
+        DevWebLinks.repos.releaseStatic = releaseStatic;
         DevWebLinks.repos.galleryRelease = galleryReleaseServer + '/';
         DevWebLinks.repos.galleryReleaseRaw = DevWebLinks.repos.galleryRelease;
         DevWebLinks.repos.docs = docsServer;

@@ -425,7 +425,18 @@ var Gulp;
             return updateHtmlPages(ex.srcFullPath + "/*.html", ex.dstFullPath, ["../../" + dev_paths_js_1.DevPaths.JS_PATH + "/abeamer.min"], true);
         }));
     });
-    gulp.task('gal-rel:create-zip', ['gal-rel:update-html-files'], function () {
+    gulp.task('gal-rel:online-html-files', ['gal-rel:update-html-files'], function () {
+        var onlineLink = dev_web_links_js_1.DevWebLinks.repos.releaseStatic + "client/lib";
+        return mergeStream(build_gallery_release_js_1.BuildGalleryRelease.releaseExamples.map(function (ex) {
+            return gulp.src([ex.dstFullPath + "/index.html"])
+                .pipe(gulpReplace(/(<head>)/g, '<!-- This file was created only testing. -->\n$1'))
+                .pipe(gulpReplace(/"abeamer\//g, "\"" + onlineLink + "/"))
+                .pipe(gulpRename('index-online.html'))
+                .pipe(gulp.dest(ex.dstFullPath))
+                .pipe(gulpPreserveTime());
+        }));
+    });
+    gulp.task('gal-rel:create-zip', ['gal-rel:online-html-files'], function () {
         return mergeStream(build_gallery_release_js_1.BuildGalleryRelease.releaseExamples.map(function (ex) {
             return gulp.src([
                 ex.dstFullPath + "/**",

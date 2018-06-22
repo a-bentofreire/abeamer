@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - expressions support object variables.
 - expressions support variable array one-dimension indices.
 - `chart` support default values.
+- each gallery example has a `index-online.html` using links for online ABeamer.
 
 ## [0.2.13] -
 - A version bump was required due using npm publish with npm@5.6.0. See [0.2.10].
