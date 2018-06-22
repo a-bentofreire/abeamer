@@ -172,7 +172,7 @@ $(window).on("load", function () {
                         attrs: [
                             {
                                 name: 'width',
-                                value: '280',
+                                value: "=case(i, " + widths.join(',') + ")",
                             },
                             {
                                 name: 'height',

@@ -166,9 +166,10 @@ var ABeamer;
         if (typeof value === 'object') {
             value = value[index % value.length];
         }
-        if (!isFormatted) {
+        if (isFormatted === false) {
             return value;
         }
+        args.vars.i = index;
         var exprValue = ABeamer.ifExprCalc(value, args);
         return exprValue !== undefined ? exprValue.toString() :
             ABeamer.sprintf(value, index);
@@ -182,7 +183,9 @@ var ABeamer;
                 var count_1 = ABeamer.ifExprCalcNum(params.count, params.count, args);
                 var needsClosing_1 = ['img'].indexOf(tag_1) === -1;
                 var elAdapters = args.scene.getElementAdapters(anime.selector);
-                elAdapters.forEach(function (elAdapter) {
+                args.vars.elCount = elAdapters.length;
+                elAdapters.forEach(function (elAdapter, elIndex) {
+                    args.vars.elIndex = elIndex;
                     var inTextHtml = [];
                     var _loop_1 = function (i) {
                         var parts = ['<' + tag_1];

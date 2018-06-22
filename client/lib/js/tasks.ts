@@ -280,9 +280,10 @@ namespace ABeamer {
     if (typeof value === 'object') {
       value = value[index % value.length];
     }
-    if (!isFormatted) {
+    if (isFormatted === false) {
       return value as string;
     }
+    args.vars.i = index;
     const exprValue = ifExprCalc(value as string, args);
     return exprValue !== undefined ? exprValue.toString() :
       sprintf(value as string, index);
@@ -293,7 +294,7 @@ namespace ABeamer {
 
   /** Implements the Factory Task */
   function _factory(anime: Animation, wkTask: WorkTask,
-    params: FactoryTaskParams, stage?: uint, args?: ABeamerArgs): TaskResult {
+    params: FactoryTaskParams, stage: uint, args: ABeamerArgs): TaskResult {
 
     switch (stage) {
       case TS_INIT:
@@ -303,8 +304,10 @@ namespace ABeamer {
         const needsClosing = ['img'].indexOf(tag) === -1;
         const elAdapters = args.scene.getElementAdapters(anime.selector);
 
-        elAdapters.forEach(elAdapter => {
+        args.vars.elCount = elAdapters.length;
+        elAdapters.forEach((elAdapter, elIndex) => {
 
+          args.vars.elIndex = elIndex;
           const inTextHtml: string[] = [];
           for (let i = 0; i < count; i++) {
             const parts = ['<' + tag];

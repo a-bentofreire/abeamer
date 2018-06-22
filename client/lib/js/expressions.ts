@@ -116,6 +116,10 @@ namespace ABeamer {
     vpt?: number;
     /** `t` used to interpolate an easing, oscillator or path via expression. */
     t?: number;
+    /** Generic value. Used in Charts. */
+    v?: number;
+    /** Generic iterator. Used in Factories. */
+    i?: int;
 
     [name: string]: number | string | boolean | number[];
   }
