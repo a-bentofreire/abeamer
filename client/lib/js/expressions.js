@@ -30,7 +30,7 @@
  *       - `\n' - defines new line
  * - numerical values.
  * - numerical arrays: [x,y,z]
- * - variables.
+ * - variables: numerical, textual, numerical arrays, objects.
  *
  * ## Built-in Variables
  *
@@ -61,6 +61,7 @@
  * `= cos(60*deg2rad) * random()`.
  * `= iff(fps < 20, 'too few frames', 'lots of frames')`.
  * `=[2, 3] + [4, 5]`.
+ * `=chart.labelsY.marginAfter`.
  */
 var ABeamer;
 (function (ABeamer) {
@@ -97,8 +98,12 @@ var ABeamer;
      * Used by developers and plugin creators.
      *
      */
-    function isCharacter(ch) {
-        var codePoint = ch.codePointAt(0);
+    function isCharacter(ch, pos) {
+        if (pos === void 0) { pos = 0; }
+        if (ch === undefined || ch[pos] === undefined) {
+            return false;
+        }
+        var codePoint = ch.codePointAt(pos);
         return ABeamer.CharRanges.findIndex(function (rg) { return codePoint >= rg[0] && codePoint <= rg[1]; }) !== -1;
     }
     ABeamer.isCharacter = isCharacter;
@@ -200,7 +205,56 @@ var ABeamer;
         9 /* Binary */,
         8 /* LogicalUnary */,
     ];
-    function parser(p, checkSign) {
+    function _isId(ch, isFirst) {
+        return ch === undefined ? false :
+            (ch === '_' ? true : isFirst ? isCharacter(ch) : isCharacterOrNum(ch));
+    }
+    function _parseVars(p, varValue, varName, expr, pos) {
+        var varTypeOf = typeof varValue;
+        if (varValue === undefined) {
+            err(p, "Unknown variable " + varName);
+        }
+        if (varTypeOf === 'string') {
+            p.token.paType = 2 /* String */;
+            p.token.sValue = varValue;
+        }
+        else if (varTypeOf === 'number') {
+            p.token.paType = 1 /* Number */;
+            p.token.numValue = varValue;
+            p.token.sValue = undefined;
+            p.token.arrayValue = undefined;
+        }
+        else if (varTypeOf === 'object') {
+            if (Array.isArray(varValue)) {
+                p.token.paType = 3 /* Array */;
+                p.token.arrayValue = varValue;
+                p.token.sValue = undefined;
+                p.token.numValue = undefined;
+            }
+            else if (expr[pos] === '.') {
+                var varPropStart = ++pos;
+                while (_isId(expr[pos], varPropStart === pos)) {
+                    pos++;
+                }
+                var varProp = expr.substring(varPropStart, pos);
+                if (!varProp) {
+                    err(p, "Invalid object variable " + varName);
+                }
+                pos = _parseVars(p, varValue[varProp], varName + '.' + varProp, expr, pos);
+            }
+        }
+        else if (varTypeOf === 'boolean') {
+            p.token.paType = 1 /* Number */;
+            p.token.numValue = varValue ? 1 : 0;
+            p.token.sValue = undefined;
+            p.token.arrayValue = undefined;
+        }
+        else {
+            err(p, "Unsupported type of " + varName);
+        }
+        return pos;
+    }
+    function _parser(p, checkSign) {
         var startPos;
         function setToken(aType) {
             p.token.sValue = expr.substring(startPos, pos);
@@ -220,13 +274,8 @@ var ABeamer;
                 break;
             }
             // vars, functions, named operators
-            if (isCharacter(ch)) {
-                do {
-                    var nextCh = expr[++pos];
-                    if (!nextCh || !isCharacterOrNum(nextCh)) {
-                        break;
-                    }
-                } while (true);
+            if (ch === '_' || isCharacter(ch)) {
+                while (_isId(expr[++pos], false)) { }
                 if (expr[pos] === '(') {
                     setToken(1 /* Function */);
                     var funcName = p.token.sValue;
@@ -250,36 +299,7 @@ var ABeamer;
                     }
                     else {
                         // variables
-                        var varValue = p.args.vars[varName];
-                        var varTypeOf = typeof varValue;
-                        if (varValue === undefined) {
-                            err(p, "Unknown variable " + varName);
-                        }
-                        if (varTypeOf === 'string') {
-                            p.token.paType = 2 /* String */;
-                            p.token.sValue = varValue;
-                        }
-                        else if (varTypeOf === 'number') {
-                            p.token.paType = 1 /* Number */;
-                            p.token.numValue = varValue;
-                            p.token.sValue = undefined;
-                            p.token.arrayValue = undefined;
-                        }
-                        else if (varTypeOf === 'object' && Array.isArray(varValue)) {
-                            p.token.paType = 3 /* Array */;
-                            p.token.arrayValue = varValue;
-                            p.token.sValue = undefined;
-                            p.token.numValue = undefined;
-                        }
-                        else if (varTypeOf === 'boolean') {
-                            p.token.paType = 1 /* Number */;
-                            p.token.numValue = varValue ? 1 : 0;
-                            p.token.sValue = undefined;
-                            p.token.arrayValue = undefined;
-                        }
-                        else {
-                            err(p, "Unsupported type of " + varName);
-                        }
+                        pos = _parseVars(p, p.args.vars[varName], varName, expr, pos);
                     }
                 }
                 break;
@@ -443,7 +463,7 @@ var ABeamer;
         }
         do {
             p.token = {};
-            var thisTkClass = parser(p, state !== 2 /* Binary */);
+            var thisTkClass = _parser(p, state !== 2 /* Binary */);
             token = p.token;
             if (thisTkClass === 0 /* None */) {
                 break;
