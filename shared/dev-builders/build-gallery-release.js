@@ -128,7 +128,7 @@ var BuildGalleryRelease;
                     + ("\n[![Image](" + storyFramesFolder + "/../" + ex.movieSnapshot + ")]")
                     + ("(" + storyFramesFolder + "/../" + ex.movieViewPage + ")" + '  ' + "\n  "));
             }
-            galleryLinks.push("\nDownload code: [zip](" + dev_web_links_js_1.DevWebLinks.repos.galleryReleaseRaw + ex.folder + "/" + BuildGalleryRelease.EXAMPLE_ZIP_FILE + ")" + '  ' + "\n" + (ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n') + "\n" + (!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n') + "\n    ");
+            galleryLinks.push("\nDownload code: [zip](" + dev_web_links_js_1.DevWebLinks.repos.galleryReleaseRaw + ex.folder + "/" + BuildGalleryRelease.EXAMPLE_ZIP_FILE + ")" + '  ' + "\nTry it <a href=\"" + dev_web_links_js_1.DevWebLinks.repos.galleryReleaseRaw + ex.folder + "/index-online.html\">online</a>." + '  ' + "\n" + (ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n') + "\n" + (!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n') + "\n    ");
         });
         var outREADME = fsix_js_1.fsix.readUtf8Sync(BuildGalleryRelease.SRC_GALLERY_PATH + "/README-rel.md")
             + galleryLinks.join('');

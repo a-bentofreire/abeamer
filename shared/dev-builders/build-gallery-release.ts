@@ -177,6 +177,7 @@ export namespace BuildGalleryRelease {
 
       galleryLinks.push(`
 Download code: [zip](${webLinks.repos.galleryReleaseRaw}${ex.folder}/${EXAMPLE_ZIP_FILE})${'  '}
+Try it <a href="${webLinks.repos.galleryReleaseRaw}${ex.folder}/index-online.html">online</a>.${'  '}
 ${ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n'}
 ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n'}
     `);
