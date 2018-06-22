@@ -76,6 +76,10 @@ var ABeamer;
     }
     ABeamer.parseHandler = parseHandler;
     function parseEnum(value, mapper, defValue) {
+        // checks for undefined twice, since this way allows also to remap defValue
+        if (value === undefined) {
+            value = defValue;
+        }
         return value === undefined ? defValue :
             (typeof value === 'string' ? mapper[value] : value);
     }

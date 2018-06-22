@@ -91,7 +91,10 @@ namespace ABeamer {
 
 
   export function parseEnum<T>(value: T | string, mapper: any,
-    defValue?: T): T {
+    defValue?: T | string | undefined): T {
+
+    // checks for undefined twice, since this way allows also to remap defValue
+    if (value === undefined) { value = defValue; }
 
     return value === undefined ? defValue :
       (typeof value === 'string' ? mapper[value] : value);

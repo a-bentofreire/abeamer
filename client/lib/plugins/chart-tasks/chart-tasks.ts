@@ -98,6 +98,8 @@ namespace ABeamer {
     fontFamily?: string | ExprString;
     fontSize?: uint | ExprString;
     alignment?: ChartCaptionAlignment | string;
+    position?: ChartCaptionPosition | string;
+    orientation?: ChartCaptionOrientation | string;
     marginBefore?: uint | ExprString;
     marginAfter?: uint | ExprString;
   }
@@ -187,6 +189,17 @@ namespace ABeamer {
     sweepStart?: number | ExprString;
   }
 
+
+  export interface ChartDefaults {
+    labelsX: ChartLabelsX;
+    labelsY: ChartLabelsY;
+    title: ChartTitle;
+    fillColors: string;
+    strokeColors: string;
+    strokeWidth: uint;
+    markers: ChartMarkers;
+  }
+
   // #export-section-end: release
   // -------------------------------
 
@@ -202,6 +215,52 @@ namespace ABeamer {
     jsUrls: ['plugins/chart-tasks/chart-tasks.js'],
     teleportable: true,
   });
+
+
+  const _defValues = _vars['chart'] = {
+    labelsX: {
+      fontFamily: 'sans-serif',
+      fontColor: 'black',
+      fontSize: 12,
+      alignment: ChartCaptionAlignment.left,
+      position: ChartCaptionPosition.bottom,
+      orientation: ChartCaptionOrientation.horizontal,
+      marginBefore: 0,
+      marginAfter: 0,
+    },
+
+    labelsY: {
+      fontFamily: 'sans-serif',
+      fontColor: 'black',
+      fontSize: 12,
+      alignment: ChartCaptionAlignment.right,
+      position: ChartCaptionPosition.left,
+      orientation: ChartCaptionOrientation.horizontal,
+      marginBefore: 0,
+      marginAfter: 5,
+      tickCount: 6,
+    },
+
+    title: {
+      fontFamily: 'sans-serif',
+      fontColor: 'black',
+      fontSize: 14,
+      alignment: ChartCaptionAlignment.center,
+      position: ChartCaptionPosition.top,
+      orientation: ChartCaptionOrientation.horizontal,
+      marginBefore: 0,
+      marginAfter: 0,
+    },
+
+    fillColors: '#ffecad',
+    strokeColors: '#101010',
+    strokeWidth: 1,
+    markers: {
+      shape: ChartPointShape.square,
+      size: 5,
+      color: 'black',
+    },
+  } as ChartDefaults;
 
 
   function _maxOfArrayArray(data: number[][], startValue: number): number {
@@ -436,12 +495,12 @@ namespace ABeamer {
     _initChart(params: BaseChartTaskParams): void {
       // colors
 
-      this.fillColors = this._fillArrayArrayParam<string, string>(params.fillColors,
-        'white');
-      this.strokeColors = this._fillArrayArrayParam<string, string>(params.strokeColors,
-        'black');
-      this.strokeWidth = this._fillArrayArrayParam<uint, uint>(params.strokeWidth,
-        1);
+      this.fillColors = this._fillArrayArrayParam(params.fillColors,
+        _defValues.fillColors);
+      this.strokeColors = this._fillArrayArrayParam(params.strokeColors,
+        _defValues.strokeColors);
+      this.strokeWidth = this._fillArrayArrayParam(params.strokeWidth,
+        _defValues.strokeWidth);
 
       this.overflow = _maxOfArrayArray(this.strokeWidth, this.overflow);
 
@@ -493,22 +552,21 @@ namespace ABeamer {
     }
 
 
-    protected _initCaptions(defPosition: ChartCaptionPosition,
-      defAlignment: ChartCaptionAlignment, captions: string[],
+    protected _initCaptions(defaults: ChartCaptions, captions: string[],
       labThis: ChartLabels, labOther: ChartLabels): _WkChartCaptions {
 
       const res: _WkChartCaptions = {
         fontColor: ExprOrStrToStr(labThis.fontColor || labOther.fontColor,
-          'black', this.args),
+          defaults.fontColor, this.args),
         fontFamily: ExprOrStrToStr(labThis.fontFamily || labOther.fontFamily,
-          'sans-serif', this.args),
+          defaults.fontFamily, this.args),
         fontSize: ExprOrNumToNum(labThis.fontSize || labOther.fontSize,
-          12, this.args),
-        alignment: parseEnum(labThis.alignment, ChartCaptionAlignment, defAlignment),
-        marginBefore: ExprOrNumToNum(labThis.marginBefore, 0, this.args),
-        marginAfter: ExprOrNumToNum(labThis.marginAfter, 0, this.args),
-        position: defPosition,
-        orientation: ChartCaptionOrientation.horizontal,
+          defaults.fontSize as number, this.args),
+        alignment: parseEnum(labThis.alignment, ChartCaptionAlignment, defaults.alignment),
+        position: parseEnum(labThis.position, ChartCaptionPosition, defaults.position),
+        orientation: parseEnum(labThis.orientation, ChartCaptionOrientation, defaults.orientation),
+        marginBefore: ExprOrNumToNum(labThis.marginBefore, defaults.marginBefore as number, this.args),
+        marginAfter: ExprOrNumToNum(labThis.marginAfter, defaults.marginAfter as number, this.args),
       };
 
       _setUpCaptionsFont(res, this.context);
@@ -560,8 +618,7 @@ namespace ABeamer {
       }
 
       if (title.caption) {
-        this.title = this._initCaptions(ChartCaptionPosition.top,
-          ChartCaptionAlignment.center, [title.caption], title, title);
+        this.title = this._initCaptions(_defValues.title, [title.caption], title, title);
         this.title.caption = ExprOrStrToStr(title.caption, '', this.args);
       }
     }
@@ -647,8 +704,7 @@ namespace ABeamer {
       // labels X
       captions = labelsX.captions;
       if (captions) {
-        this.labelsX = this._initCaptions(ChartCaptionPosition.bottom,
-          ChartCaptionAlignment.center, captions, labelsX, labelsY);
+        this.labelsX = this._initCaptions(_defValues.labelsX, captions, labelsX, labelsY);
         this.labelsX.captions = captions;
       }
 
@@ -675,8 +731,7 @@ namespace ABeamer {
           captions = newCaptions;
         }
 
-        this.labelsY = this._initCaptions(ChartCaptionPosition.left,
-          ChartCaptionAlignment.right, captions, labelsY, labelsX);
+        this.labelsY = this._initCaptions(_defValues.labelsY, captions, labelsY, labelsX);
         this.labelsY.captions = captions;
       }
     }
@@ -703,11 +758,11 @@ namespace ABeamer {
         markers.visible = this._fillArrayArrayParam<boolean, boolean>(
           pMarkers.visible, this.chartType === ChartTypes.marker);
         markers.shape = this._fillArrayArrayParam<ChartPointShape | string, ChartPointShape>(
-          pMarkers.shape, ChartPointShape.square, ChartPointShape);
+          pMarkers.shape, _defValues.markers.shape as ChartPointShape, ChartPointShape);
         markers.size = this._fillArrayArrayParam<uint, uint>(
-          pMarkers.size, 5);
+          pMarkers.size, _defValues.markers.size as uint);
         markers.color = this._fillArrayArrayParam<string, string>(
-          pMarkers.color, 'black');
+          pMarkers.color, _defValues.markers.color as string);
 
         this.overflow = _maxOfArrayArray(markers.size, this.overflow);
       }
@@ -1158,11 +1213,11 @@ namespace ABeamer {
   //                               Testing
   // ------------------------------------------------------------------------
 
-  const
+  /* const
     testValues = [3.33, 8.4, 10, 12, 45, 0.12, 100, 1000, 12400, 95000,
       -10, -12, -89.3, -3.4, -400];
 
   testValues.forEach(v => {
     _calcBestMax(v);
-  });
+  }); */
 }

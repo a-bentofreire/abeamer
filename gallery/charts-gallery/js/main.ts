@@ -89,8 +89,8 @@ $(window).on("load", () => {
   }, {
     chartType: ABeamer.ChartTypes.area,
     data: [
-      [30, 42, 50, 30, 45, 40, 30],
-      [13, 32, 35, 55, 35, 50, 25],
+      [30, 42, 50, 50, 45, 60, 40],
+      [13, 32, 35, 85, 35, 70, 65],
     ],
     colInterSpacing: 1,
     colSpacing: 20,
