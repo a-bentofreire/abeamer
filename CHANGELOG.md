@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `parseEnum` utility function.
 - Added `elIndex` and `i` to `factory` task attribute expressions.
 - expressions support object variables.
+- expressions support variable array one-dimension indices.
 
 ## [0.2.13] -
 - A version bump was required due using npm publish with npm@5.6.0. See [0.2.10].

@@ -29,8 +29,9 @@
  *       - `\'` - defines a single quote
  *       - `\n' - defines new line
  * - numerical values.
- * - numerical arrays: [x,y,z]
+ * - numerical arrays: [x,y,z].
  * - variables: numerical, textual, numerical arrays, objects.
+ * - variable array one-dimension indices.
  *
  * ## Built-in Variables
  *
@@ -62,6 +63,7 @@
  * `= iff(fps < 20, 'too few frames', 'lots of frames')`.
  * `=[2, 3] + [4, 5]`.
  * `=chart.labelsY.marginAfter`.
+ * `=foo[x-y+z]`.
  */
 var ABeamer;
 (function (ABeamer) {
@@ -241,6 +243,28 @@ var ABeamer;
                     err(p, "Invalid object variable " + varName);
                 }
                 pos = _parseVars(p, varValue[varProp], varName + '.' + varProp, expr, pos);
+            }
+            if (expr[pos] === '[') {
+                var varPropStart = ++pos;
+                var bracketCount = 1;
+                while (bracketCount > 0) {
+                    switch (expr[pos]) {
+                        case '[':
+                            bracketCount++;
+                            break;
+                        case ']':
+                            bracketCount--;
+                            break;
+                        case undefined:
+                            err(p, "Invalid  variable indexing " + varName);
+                    }
+                    pos++;
+                }
+                var indexExpr = '=' + expr.substring(varPropStart, pos - 1);
+                var indexValue = calcExpr(indexExpr, p.args);
+                var arrayItem = varValue[parseInt(indexValue)];
+                _parseVars(p, arrayItem, varName, indexExpr, 1);
+                pos++;
             }
         }
         else if (varTypeOf === 'boolean') {
