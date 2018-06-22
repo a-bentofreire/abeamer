@@ -86,12 +86,20 @@ namespace ABeamer {
   }
 
 
+  export enum ChartCaptionAlignment {
+    left,
+    center,
+    right,
+  }
+
+
   export interface ChartCaptions {
     fontColor?: string | ExprString;
     fontFamily?: string | ExprString;
     fontSize?: uint | ExprString;
-    marginTop?: uint | ExprString;
-    marginBottom?: uint | ExprString;
+    alignment?: ChartCaptionAlignment | string;
+    marginBefore?: uint | ExprString;
+    marginAfter?: uint | ExprString;
   }
 
 
@@ -149,10 +157,10 @@ namespace ABeamer {
     charTypes?: (ChartTypes | string)[];
 
     // labels X
-    labelsX?: ChartLabelsX;
+    labelsX?: ChartLabelsX | ExprString;
 
     // labels Y
-    labelsY?: ChartLabelsY;
+    labelsY?: ChartLabelsY | ExprString;
 
     // markers
     markers?: ChartMarkers;
@@ -240,8 +248,9 @@ namespace ABeamer {
     fontColor?: string;
     fontFamily?: string;
     fontSize?: uint;
-    marginTop?: uint;
-    marginBottom?: uint;
+    marginBefore?: uint;
+    marginAfter?: uint;
+    alignment?: ChartCaptionAlignment;
     orientation?: uint;
     position?: uint;
     width?: uint;
@@ -273,6 +282,9 @@ namespace ABeamer {
   function _alignCaptions(l: _WkChartCaptions, ctx: CanvasRenderingContext2D,
     text: string, width: uint): uint {
 
+    if (l.alignment === ChartCaptionAlignment.left) {
+      return 0;
+    }
     // let style: CSSStyleDeclaration;
     // if (!testDiv) {
     //   testDiv = document.createElement('div');
@@ -295,7 +307,13 @@ namespace ABeamer {
 
     // @TODO: Implement a better way to compute the height
     const sz = ctx.measureText(text);
-    return (width - sz.width) / 2;
+    switch (l.alignment) {
+      case ChartCaptionAlignment.center:
+        return (width - sz.width) / 2;
+      case ChartCaptionAlignment.right:
+        return (width - sz.width);
+    }
+    return 0;
   }
 
   // ------------------------------------------------------------------------
@@ -475,7 +493,8 @@ namespace ABeamer {
     }
 
 
-    protected _initCaptions(defPosition: ChartCaptionPosition, captions: string[],
+    protected _initCaptions(defPosition: ChartCaptionPosition,
+      defAlignment: ChartCaptionAlignment, captions: string[],
       labThis: ChartLabels, labOther: ChartLabels): _WkChartCaptions {
 
       const res: _WkChartCaptions = {
@@ -485,8 +504,9 @@ namespace ABeamer {
           'sans-serif', this.args),
         fontSize: ExprOrNumToNum(labThis.fontSize || labOther.fontSize,
           12, this.args),
-        marginTop: ExprOrNumToNum(labThis.marginTop, 0, this.args),
-        marginBottom: ExprOrNumToNum(labThis.marginBottom, 0, this.args),
+        alignment: parseEnum(labThis.alignment, ChartCaptionAlignment, defAlignment),
+        marginBefore: ExprOrNumToNum(labThis.marginBefore, 0, this.args),
+        marginAfter: ExprOrNumToNum(labThis.marginAfter, 0, this.args),
         position: defPosition,
         orientation: ChartCaptionOrientation.horizontal,
       };
@@ -510,20 +530,20 @@ namespace ABeamer {
       let d: uint;
       switch (res.position) {
         case ChartCaptionPosition.top:
-          res.y = this.graphY1 + res.height + res.marginTop;
-          d = res.height + res.marginTop + res.marginBottom;
+          res.y = this.graphY1 + res.height + res.marginBefore;
+          d = res.height + res.marginBefore + res.marginAfter;
           this.graphY1 += d;
           break;
 
         case ChartCaptionPosition.left:
-          res.x = this.graphX0 + res.marginTop;
-          d = res.width + res.marginTop + res.marginBottom;
+          res.x = this.graphX0 + res.marginBefore;
+          d = res.width + res.marginBefore + res.marginAfter;
           this.graphX0 += d;
           break;
 
         case ChartCaptionPosition.bottom:
-          res.y = this.graphY0 - res.marginBottom;
-          d = res.height + res.marginTop + res.marginBottom;
+          res.y = this.graphY0 - res.marginAfter;
+          d = res.height + res.marginBefore + res.marginAfter;
           this.graphY0 -= d;
           break;
       }
@@ -541,7 +561,7 @@ namespace ABeamer {
 
       if (title.caption) {
         this.title = this._initCaptions(ChartCaptionPosition.top,
-          [title.caption], title, title);
+          ChartCaptionAlignment.center, [title.caption], title, title);
         this.title.caption = ExprOrStrToStr(title.caption, '', this.args);
       }
     }
@@ -610,15 +630,25 @@ namespace ABeamer {
 
 
     protected _initLabels(params: AxisChartTaskParams): void {
-      const labelsX: ChartLabelsX = params.labelsX || {};
-      const labelsY: ChartLabelsY = params.labelsY || {};
+
+      function ExprStrToLabels(l: ChartLabels | ExprString): ChartLabels {
+        switch (typeof l) {
+          case 'undefined': return {};
+          case 'string': return { captions: l as string };
+          default:
+            return l as ChartLabels;
+        }
+      }
+
+      const labelsX: ChartLabelsX = ExprStrToLabels(params.labelsX);
+      const labelsY: ChartLabelsY = ExprStrToLabels(params.labelsY);
       let captions;
 
       // labels X
       captions = labelsX.captions;
       if (captions) {
         this.labelsX = this._initCaptions(ChartCaptionPosition.bottom,
-          captions, labelsX, labelsY);
+          ChartCaptionAlignment.center, captions, labelsX, labelsY);
         this.labelsX.captions = captions;
       }
 
@@ -646,7 +676,7 @@ namespace ABeamer {
         }
 
         this.labelsY = this._initCaptions(ChartCaptionPosition.left,
-          captions, labelsY, labelsX);
+          ChartCaptionAlignment.right, captions, labelsY, labelsX);
         this.labelsY.captions = captions;
       }
     }
@@ -753,8 +783,7 @@ namespace ABeamer {
           return ChartTypes.bar;
         }
 
-        const chartType = params.charTypes[seriesIndex];
-        return typeof chartType === 'string' ? ChartTypes[chartType] : chartType;
+        return parseEnum(params.charTypes[seriesIndex], ChartTypes, ChartTypes.bar);
       });
 
       // axis
@@ -976,8 +1005,8 @@ namespace ABeamer {
         for (let i = 0; i < captions.length; i++) {
           const yi = y0 - scale * i;
           const text = this.labelsY.captions[i];
-          // const deltaY = _alignCaptions(this.labelsY, ctx, text, xShift);
-          ctx.fillText(text, this.labelsY.x, yi + fs2);
+          const deltaX = _alignCaptions(this.labelsY, ctx, text, this.labelsY.width);
+          ctx.fillText(text, this.labelsY.x + deltaX, yi + fs2);
         }
       }
 

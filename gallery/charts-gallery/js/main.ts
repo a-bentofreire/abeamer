@@ -27,6 +27,7 @@ $(window).on("load", () => {
     captions: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
   };
 
+
   const defAnimeProps = [{
     prop: 'col-height',
     value: 1,
@@ -35,12 +36,15 @@ $(window).on("load", () => {
 
   interface AxisChartTaskParamsEx extends ABeamer.AxisChartTaskParams {
     props?: ABeamer.AnimationProp[];
+    chartWidth?: uint;
   }
 
 
   interface PieChartTaskParamsEx extends ABeamer.PieChartTaskParams {
     props?: ABeamer.AnimationProp[];
+    chartWidth?: uint;
   }
+
 
   // 'Social Protection','General Public Services','Health','Education','Economic affairs',
   // 'Public order and safety','Defence','Recreation, culture and religion',
@@ -74,6 +78,9 @@ $(window).on("load", () => {
     fillColors: '#ffecad',
     negativeFillColors: '#ffb0b0',
     strokeColors: '#9c9c9c',
+    labelsY: {
+      captions: "=v/1000 + 'k'",
+    },
     colHeightStart: 0.1,
     props: [{
       prop: 'col-height',
@@ -82,8 +89,8 @@ $(window).on("load", () => {
   }, {
     chartType: ABeamer.ChartTypes.area,
     data: [
-      [30000, 42000, 50000, 30000, 45000, 40000, 30000],
-      [13000, 32000, 35000, 55000, 35000, 50000, 25000],
+      [30, 42, 50, 30, 45, 40, 30],
+      [13, 32, 35, 55, 35, 50, 25],
     ],
     colInterSpacing: 1,
     colSpacing: 20,
@@ -91,6 +98,7 @@ $(window).on("load", () => {
     labelsX: {
       captions: ['Q1', 'Q2', 'Q3', 'Q4', '18-Q1', 'Q2', 'Q3'],
     },
+    labelsY: "=v + '%'",
     fillColors: ['#35a9c070', '#adffb970'],
     strokeColors: ['#9c9c9c', '#9c9c9c'],
     strokeWidth: [2, 2],
@@ -130,6 +138,7 @@ $(window).on("load", () => {
       prop: 'col-height',
       value: 1,
     }],
+    chartWidth: 320,
   }, {
     chartType: ABeamer.ChartTypes.bar,
     labelsX: defLabelsX,
@@ -175,6 +184,11 @@ $(window).on("load", () => {
   // ------------------------------------------------------------------------
 
   const chartCount = !firstOnly ? charts.length : 1;
+
+  const widths = [];
+  charts.forEach((chart, i) => {
+    widths.push(chart.chartWidth || 280);
+  });
 
   scene1
     .addAnimations([{

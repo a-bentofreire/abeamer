@@ -154,10 +154,7 @@ var ABeamer;
                 var lowerCharRanges = params.lowerCharRanges || [[cc_a, cc_z]];
                 var digitRanges = [[cc_0, cc_9]];
                 var revealCharIterations = params.revealCharIterations || 1;
-                var revealDir = params.revealDirection || RevealDir.disabled;
-                if (typeof revealDir === 'string') {
-                    revealDir = RevealDir[revealDir];
-                }
+                var revealDir = ABeamer.parseEnum(params.revealDirection, RevealDir, RevealDir.disabled);
                 ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(iterations), ABeamer.Msgs.MustNatPositive, { p: 'iterations' });
                 ABeamer.throwIfI8n(!textLen, ABeamer.Msgs.NoEmptyField, { p: 'text' });
                 // let usableCharsCount = 0;

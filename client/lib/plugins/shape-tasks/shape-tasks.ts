@@ -236,12 +236,8 @@ namespace ABeamer {
     switch (stage) {
       case TS_INIT:
         const sw = ExprOrNumToNum(params.strokeWidth, 0, args);
-        let shape = params.shape;
+        const shape = parseEnum(params.shape, Shapes, Shapes.rectangle);
         const inTextHtml = [`<svg`];
-
-        if (typeof shape === 'string') {
-          shape = Shapes[shape] as Shapes;
-        }
 
         switch (shape) {
 

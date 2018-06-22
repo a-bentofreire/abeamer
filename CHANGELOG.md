@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed several `chart` bugs.
 ### Added
 - Added many features to the `charts`.
+- Added `parseEnum` utility function.
 
 ## [0.2.13] -
 - A version bump was required due using npm publish with npm@5.6.0. See [0.2.10].

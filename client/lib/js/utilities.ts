@@ -88,4 +88,12 @@ namespace ABeamer {
       return handler as any;
     }
   }
+
+
+  export function parseEnum<T>(value: T | string, mapper: any,
+    defValue?: T): T {
+
+    return value === undefined ? defValue :
+      (typeof value === 'string' ? mapper[value] : value);
+  }
 }

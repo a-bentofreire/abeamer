@@ -155,11 +155,8 @@ var ABeamer;
         switch (stage) {
             case ABeamer.TS_INIT:
                 var sw = ABeamer.ExprOrNumToNum(params.strokeWidth, 0, args);
-                var shape = params.shape;
+                var shape = ABeamer.parseEnum(params.shape, Shapes, Shapes.rectangle);
                 var inTextHtml_1 = ["<svg"];
-                if (typeof shape === 'string') {
-                    shape = Shapes[shape];
-                }
                 switch (shape) {
                     case Shapes.rectangle:
                         buildRectangle(inTextHtml_1, sw, params);

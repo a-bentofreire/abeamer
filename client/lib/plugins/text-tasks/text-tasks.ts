@@ -251,8 +251,7 @@ namespace ABeamer {
         const lowerCharRanges = params.lowerCharRanges || [[cc_a, cc_z]];
         const digitRanges: [number, number][] = [[cc_0, cc_9]];
         const revealCharIterations = params.revealCharIterations || 1;
-        let revealDir = params.revealDirection || RevealDir.disabled;
-        if (typeof revealDir === 'string') { revealDir = RevealDir[revealDir]; }
+        const revealDir = parseEnum(params.revealDirection, RevealDir, RevealDir.disabled);
 
         throwIfI8n(!isPositiveNatural(iterations), Msgs.MustNatPositive, { p: 'iterations' });
         throwIfI8n(!textLen, Msgs.NoEmptyField, { p: 'text' });

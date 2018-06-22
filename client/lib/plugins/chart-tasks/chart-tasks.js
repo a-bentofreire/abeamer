@@ -68,6 +68,12 @@ var ABeamer;
         ChartCaptionPosition[ChartCaptionPosition["left"] = 2] = "left";
         ChartCaptionPosition[ChartCaptionPosition["right"] = 3] = "right";
     })(ChartCaptionPosition = ABeamer.ChartCaptionPosition || (ABeamer.ChartCaptionPosition = {}));
+    var ChartCaptionAlignment;
+    (function (ChartCaptionAlignment) {
+        ChartCaptionAlignment[ChartCaptionAlignment["left"] = 0] = "left";
+        ChartCaptionAlignment[ChartCaptionAlignment["center"] = 1] = "center";
+        ChartCaptionAlignment[ChartCaptionAlignment["right"] = 2] = "right";
+    })(ChartCaptionAlignment = ABeamer.ChartCaptionAlignment || (ABeamer.ChartCaptionAlignment = {}));
     var ChartPointShape;
     (function (ChartPointShape) {
         ChartPointShape[ChartPointShape["circle"] = 0] = "circle";
@@ -123,6 +129,9 @@ var ABeamer;
         ctx.textBaseline = 'bottom';
     }
     function _alignCaptions(l, ctx, text, width) {
+        if (l.alignment === ChartCaptionAlignment.left) {
+            return 0;
+        }
         // let style: CSSStyleDeclaration;
         // if (!testDiv) {
         //   testDiv = document.createElement('div');
@@ -142,7 +151,13 @@ var ABeamer;
         // style.display = 'none';
         // @TODO: Implement a better way to compute the height
         var sz = ctx.measureText(text);
-        return (width - sz.width) / 2;
+        switch (l.alignment) {
+            case ChartCaptionAlignment.center:
+                return (width - sz.width) / 2;
+            case ChartCaptionAlignment.right:
+                return (width - sz.width);
+        }
+        return 0;
     }
     // ------------------------------------------------------------------------
     //                               _WkChart
@@ -240,14 +255,15 @@ var ABeamer;
             this.seriesLen = firstSeriesLen;
             this.data = data;
         };
-        _WkChart.prototype._initCaptions = function (defPosition, captions, labThis, labOther) {
+        _WkChart.prototype._initCaptions = function (defPosition, defAlignment, captions, labThis, labOther) {
             var _this = this;
             var res = {
                 fontColor: ABeamer.ExprOrStrToStr(labThis.fontColor || labOther.fontColor, 'black', this.args),
                 fontFamily: ABeamer.ExprOrStrToStr(labThis.fontFamily || labOther.fontFamily, 'sans-serif', this.args),
                 fontSize: ABeamer.ExprOrNumToNum(labThis.fontSize || labOther.fontSize, 12, this.args),
-                marginTop: ABeamer.ExprOrNumToNum(labThis.marginTop, 0, this.args),
-                marginBottom: ABeamer.ExprOrNumToNum(labThis.marginBottom, 0, this.args),
+                alignment: ABeamer.parseEnum(labThis.alignment, ChartCaptionAlignment, defAlignment),
+                marginBefore: ABeamer.ExprOrNumToNum(labThis.marginBefore, 0, this.args),
+                marginAfter: ABeamer.ExprOrNumToNum(labThis.marginAfter, 0, this.args),
                 position: defPosition,
                 orientation: ChartCaptionOrientation.horizontal,
             };
@@ -269,18 +285,18 @@ var ABeamer;
             var d;
             switch (res.position) {
                 case ChartCaptionPosition.top:
-                    res.y = this.graphY1 + res.height + res.marginTop;
-                    d = res.height + res.marginTop + res.marginBottom;
+                    res.y = this.graphY1 + res.height + res.marginBefore;
+                    d = res.height + res.marginBefore + res.marginAfter;
                     this.graphY1 += d;
                     break;
                 case ChartCaptionPosition.left:
-                    res.x = this.graphX0 + res.marginTop;
-                    d = res.width + res.marginTop + res.marginBottom;
+                    res.x = this.graphX0 + res.marginBefore;
+                    d = res.width + res.marginBefore + res.marginAfter;
                     this.graphX0 += d;
                     break;
                 case ChartCaptionPosition.bottom:
-                    res.y = this.graphY0 - res.marginBottom;
-                    d = res.height + res.marginTop + res.marginBottom;
+                    res.y = this.graphY0 - res.marginAfter;
+                    d = res.height + res.marginBefore + res.marginAfter;
                     this.graphY0 -= d;
                     break;
             }
@@ -294,7 +310,7 @@ var ABeamer;
                 };
             }
             if (title.caption) {
-                this.title = this._initCaptions(ChartCaptionPosition.top, [title.caption], title, title);
+                this.title = this._initCaptions(ChartCaptionPosition.top, ChartCaptionAlignment.center, [title.caption], title, title);
                 this.title.caption = ABeamer.ExprOrStrToStr(title.caption, '', this.args);
             }
         };
@@ -330,13 +346,21 @@ var ABeamer;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         _WkAxisChart.prototype._initLabels = function (params) {
-            var labelsX = params.labelsX || {};
-            var labelsY = params.labelsY || {};
+            function ExprStrToLabels(l) {
+                switch (typeof l) {
+                    case 'undefined': return {};
+                    case 'string': return { captions: l };
+                    default:
+                        return l;
+                }
+            }
+            var labelsX = ExprStrToLabels(params.labelsX);
+            var labelsY = ExprStrToLabels(params.labelsY);
             var captions;
             // labels X
             captions = labelsX.captions;
             if (captions) {
-                this.labelsX = this._initCaptions(ChartCaptionPosition.bottom, captions, labelsX, labelsY);
+                this.labelsX = this._initCaptions(ChartCaptionPosition.bottom, ChartCaptionAlignment.center, captions, labelsX, labelsY);
                 this.labelsX.captions = captions;
             }
             // labels Y
@@ -362,7 +386,7 @@ var ABeamer;
                     }
                     captions = newCaptions;
                 }
-                this.labelsY = this._initCaptions(ChartCaptionPosition.left, captions, labelsY, labelsX);
+                this.labelsY = this._initCaptions(ChartCaptionPosition.left, ChartCaptionAlignment.right, captions, labelsY, labelsX);
                 this.labelsY.captions = captions;
             }
         };
@@ -441,8 +465,7 @@ var ABeamer;
                 if (!params.charTypes || params.charTypes.length <= seriesIndex) {
                     return ChartTypes.bar;
                 }
-                var chartType = params.charTypes[seriesIndex];
-                return typeof chartType === 'string' ? ChartTypes[chartType] : chartType;
+                return ABeamer.parseEnum(params.charTypes[seriesIndex], ChartTypes, ChartTypes.bar);
             });
             // axis
             this.xAxis = this._initLine(params.xAxis || {});
@@ -625,8 +648,8 @@ var ABeamer;
                 for (var i = 0; i < captions.length; i++) {
                     var yi = y0 - scale * i;
                     var text = this.labelsY.captions[i];
-                    // const deltaY = _alignCaptions(this.labelsY, ctx, text, xShift);
-                    ctx.fillText(text, this.labelsY.x, yi + fs2);
+                    var deltaX = _alignCaptions(this.labelsY, ctx, text, this.labelsY.width);
+                    ctx.fillText(text, this.labelsY.x + deltaX, yi + fs2);
                 }
             }
             // y0Line

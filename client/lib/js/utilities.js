@@ -75,5 +75,10 @@ var ABeamer;
         }
     }
     ABeamer.parseHandler = parseHandler;
+    function parseEnum(value, mapper, defValue) {
+        return value === undefined ? defValue :
+            (typeof value === 'string' ? mapper[value] : value);
+    }
+    ABeamer.parseEnum = parseEnum;
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=utilities.js.map
