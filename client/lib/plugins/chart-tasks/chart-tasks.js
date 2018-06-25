@@ -468,6 +468,27 @@ var ABeamer;
             _this.xDrawPoints = [];
             return _this;
         }
+        _WkAxisChart.prototype._calcCaptions = function (captions, count, min, max) {
+            var strCaption = captions;
+            if (!strCaption || !Array.isArray(strCaption)) {
+                var isCaptionsExpr = ABeamer.isExpr(strCaption);
+                var newCaptions = [];
+                var delta = (max - min) / (count - 1);
+                for (var i = 0; i < count; i++) {
+                    var v = min + i * delta;
+                    if (isCaptionsExpr) {
+                        this.args.vars['v'] = v;
+                        var v1 = ABeamer.calcExpr(strCaption, this.args);
+                        newCaptions.push(v1.toString());
+                    }
+                    else {
+                        newCaptions.push(v.toString());
+                    }
+                }
+                captions = newCaptions;
+            }
+            return captions;
+        };
         _WkAxisChart.prototype._initLabels = function (params) {
             var labelsX = _ExprStrToLabels(params.labelsX);
             var labelsY = _ExprStrToLabels(params.labelsY);
@@ -475,32 +496,14 @@ var ABeamer;
             // labels X
             captions = labelsX.captions;
             if (captions) {
+                captions = this._calcCaptions(captions, this.nrPoints, 0, this.nrPoints - 1);
                 this.labelsX = this._initCaptions(_defValues.labelsX, captions, labelsX, labelsY);
                 this.labelsX.captions = captions;
             }
             // labels Y
             captions = labelsY.captions;
-            if (labelsY.tickCount !== 0 || labelsY.captions) {
-                var strCaption = labelsY.captions;
-                if (!strCaption || !Array.isArray(strCaption)) {
-                    var isCaptionsExpr = ABeamer.isExpr(strCaption);
-                    var tickCount = labelsY.tickCount || _defValues.labelsY.tickCount;
-                    var newCaptions = [];
-                    var min = this.minValue;
-                    var delta = (this.maxValue - min) / (tickCount - 1);
-                    for (var i = 0; i < tickCount; i++) {
-                        var v = min + i * delta;
-                        if (isCaptionsExpr) {
-                            this.args.vars['v'] = v;
-                            var v1 = ABeamer.calcExpr(strCaption, this.args);
-                            newCaptions.push(v1.toString());
-                        }
-                        else {
-                            newCaptions.push(v.toString());
-                        }
-                    }
-                    captions = newCaptions;
-                }
+            if (labelsY.tickCount !== 0 || captions) {
+                captions = this._calcCaptions(captions, labelsY.tickCount || _defValues.labelsY.tickCount, this.minValue, this.maxValue);
                 this.labelsY = this._initCaptions(_defValues.labelsY, captions, labelsY, labelsX);
                 this.labelsY.captions = captions;
                 // in case there is no title make sure there is enough space for the labelsY

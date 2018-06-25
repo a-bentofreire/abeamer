@@ -827,6 +827,29 @@ namespace ABeamer {
     avgValue: number;
 
 
+    protected _calcCaptions(captions: string | string[],
+      count: uint, min: number, max: number): string[] {
+      const strCaption = captions as string;
+      if (!strCaption || !Array.isArray(strCaption)) {
+        const isCaptionsExpr = isExpr(strCaption as string);
+        const newCaptions = [];
+        const delta = (max - min) / (count - 1);
+        for (let i = 0; i < count; i++) {
+          const v = min + i * delta;
+          if (isCaptionsExpr) {
+            this.args.vars['v'] = v;
+            const v1 = calcExpr(strCaption as string, this.args);
+            newCaptions.push(v1.toString());
+          } else {
+            newCaptions.push(v.toString());
+          }
+        }
+        captions = newCaptions;
+      }
+      return captions as string[];
+    }
+
+
     protected _initLabels(params: AxisChartTaskParams): void {
 
       const labelsX: ChartLabelsX = _ExprStrToLabels(params.labelsX);
@@ -836,32 +859,17 @@ namespace ABeamer {
       // labels X
       captions = labelsX.captions;
       if (captions) {
+        captions = this._calcCaptions(captions, this.nrPoints, 0, this.nrPoints - 1);
         this.labelsX = this._initCaptions(_defValues.labelsX, captions, labelsX, labelsY);
         this.labelsX.captions = captions;
       }
 
       // labels Y
       captions = labelsY.captions;
-      if (labelsY.tickCount !== 0 || labelsY.captions) {
-        const strCaption = labelsY.captions;
-        if (!strCaption || !Array.isArray(strCaption)) {
-          const isCaptionsExpr = isExpr(strCaption as string);
-          const tickCount = labelsY.tickCount || _defValues.labelsY.tickCount;
-          const newCaptions = [];
-          const min = this.minValue;
-          const delta = (this.maxValue - min) / (tickCount - 1);
-          for (let i = 0; i < tickCount; i++) {
-            const v = min + i * delta;
-            if (isCaptionsExpr) {
-              this.args.vars['v'] = v;
-              const v1 = calcExpr(strCaption as string, this.args);
-              newCaptions.push(v1.toString());
-            } else {
-              newCaptions.push(v.toString());
-            }
-          }
-          captions = newCaptions;
-        }
+      if (labelsY.tickCount !== 0 || captions) {
+        captions = this._calcCaptions(captions,
+          labelsY.tickCount || _defValues.labelsY.tickCount,
+          this.minValue, this.maxValue);
 
         this.labelsY = this._initCaptions(_defValues.labelsY, captions, labelsY, labelsX);
         this.labelsY.captions = captions;

@@ -65,7 +65,7 @@ $(window).on("load", function () {
             ],
             title: 'Customer Satisfaction',
             labelsX: {
-                captions: ['Q1', 'Q2', 'Q3', 'Q4', '18-Q1', 'Q2', 'Q3'],
+                captions: ['17Q1', '17Q2', '17Q3', '17Q4', '18Q1', '18Q2', '18Q3'],
             },
             labelsY: "=v + '%'",
             fillColors: ['#35a9c070', '#adffb970'],
@@ -78,10 +78,10 @@ $(window).on("load", function () {
                 }],
         }, {
             chartType: ABeamer.ChartTypes.line,
-            labelsX: defLabelsX,
+            labelsX: "=2012 + v",
             data: [
-                [23000, 32000, 45000, 15000, 50400, 60000],
-                [18000, 40000, 40000, 18000, 40400, 50000]
+                [230, 320, 450, 150, 504, 600],
+                [180, 400, 400, 180, 404, 500]
             ],
             strokeColors: ['#dd5252', '#5252dd'],
             strokeWidth: 2,
@@ -142,7 +142,7 @@ $(window).on("load", function () {
                 color: 'red',
             },
             seriesSpacing: 1,
-            title: 'Line Chart',
+            title: 'Marker Chart',
             fillColors: '#ffecad',
             pointHeightStart: 0.1,
             props: [{
