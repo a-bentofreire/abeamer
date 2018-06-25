@@ -35,7 +35,7 @@ namespace ABeamer {
 
   // #generate-group-section
   // ------------------------------------------------------------------------
-  //                               Shape Tasks
+  //                               Chart Tasks
   // ------------------------------------------------------------------------
 
   // The following section contains data for the end-user
@@ -55,21 +55,6 @@ namespace ABeamer {
   export type ChartTaskName = 'chart';
 
   export type SeriesData = number[];
-
-
-  export interface BaseChartTaskParams extends AnyParams {
-    chartType?: ChartTypes | string;
-    data: SeriesData[];
-    animeSelector?: string;
-
-    // title
-    title?: string | ExprString | ChartTitle;
-
-    // colors
-    fillColors?: string | string[] | string[][];
-    strokeColors?: string | string[] | string[][];
-    strokeWidth?: uint | uint[] | uint[][];
-  }
 
 
   export enum ChartCaptionOrientation {
@@ -113,6 +98,18 @@ namespace ABeamer {
   export type ChartLabelsX = ChartLabels;
 
 
+  export interface ChartLegendMark {
+    width?: uint | ExprString;
+    height?: uint | ExprString;
+    spacing?: uint | ExprString;
+  }
+
+
+  export interface ChartLegend extends ChartLabels {
+    mark: ChartLegendMark;
+  }
+
+
   export interface ChartLabelsY extends ChartLabels {
     tickCount?: uint;
   }
@@ -143,6 +140,40 @@ namespace ABeamer {
 
   export interface ChartTitle extends ChartCaptions {
     caption: string | ExprString;
+  }
+
+
+  export interface ChartDefaults {
+    labelsX: ChartLabelsX;
+    labelsY: ChartLabelsY;
+    legend: ChartLegend;
+    title: ChartTitle;
+    fillColors: string;
+    strokeColors: string;
+    strokeWidth: uint;
+    markers: ChartMarkers;
+    barWidth: uint;
+    pointMaxHeight: uint;
+    pointSpacing: uint;
+    seriesSpacing: uint;
+  }
+
+
+  export interface BaseChartTaskParams extends AnyParams {
+    chartType?: ChartTypes | string;
+    data: SeriesData[];
+    animeSelector?: string;
+
+    // title
+    title?: string | ExprString | ChartTitle;
+
+    // legends
+    legend?: ChartLegend;
+
+    // colors
+    fillColors?: string | string[] | string[][];
+    strokeColors?: string | string[] | string[][];
+    strokeWidth?: uint | uint[] | uint[][];
   }
 
 
@@ -192,20 +223,6 @@ namespace ABeamer {
   }
 
 
-  export interface ChartDefaults {
-    labelsX: ChartLabelsX;
-    labelsY: ChartLabelsY;
-    title: ChartTitle;
-    fillColors: string;
-    strokeColors: string;
-    strokeWidth: uint;
-    markers: ChartMarkers;
-    barWidth: uint;
-    pointMaxHeight: uint;
-    pointSpacing: uint;
-    seriesSpacing: uint;
-  }
-
   // #export-section-end: release
   // -------------------------------
 
@@ -245,6 +262,22 @@ namespace ABeamer {
       marginBefore: 0,
       marginAfter: 5,
       tickCount: 6,
+    },
+
+    legend: {
+      fontFamily: 'sans-serif',
+      fontColor: 'black',
+      fontSize: 12,
+      alignment: ChartCaptionAlignment.left,
+      position: ChartCaptionPosition.right,
+      orientation: ChartCaptionOrientation.horizontal,
+      marginBefore: 0,
+      marginAfter: 5,
+      mark: {
+        width: 10,
+        height: 3,
+        spacing: 4,
+      },
     },
 
     title: {
@@ -299,7 +332,7 @@ namespace ABeamer {
     }
 
 
-    setProp(name: PropName, value: PropValue, args?: ABeamerArgs): void {
+    setProp(name: PropName, value: PropValue): void {
       this.props[name] = value;
       if (name !== 'uid') {
         this.charts.forEach(chart => {
@@ -345,6 +378,15 @@ namespace ABeamer {
     captions?: string[];
   }
 
+
+  function _ExprStrToLabels<T extends ChartLabels>(l: T | ExprString): T {
+    switch (typeof l) {
+      case 'undefined': return {} as T;
+      case 'string': return { captions: l as string } as T;
+      default:
+        return l as T;
+    }
+  }
 
   export let testDiv: HTMLDivElement;
 
@@ -404,7 +446,7 @@ namespace ABeamer {
   }
 
   // ------------------------------------------------------------------------
-  //                               Points
+  //                               Markers
   // ------------------------------------------------------------------------
 
   interface _WkChartMarkers {
@@ -412,6 +454,22 @@ namespace ABeamer {
     shape?: ChartPointShape[][];
     size?: uint[][];
     color?: string[][];
+  }
+
+  // ------------------------------------------------------------------------
+  //                               Legend
+  // ------------------------------------------------------------------------
+
+  interface _WkChartLegendMark {
+    width: uint;
+    height: uint;
+    spacing: uint;
+  }
+
+
+  interface _WkChartLegend extends _WkChartCaptions {
+    captions?: string[];
+    mark?: _WkChartLegendMark;
   }
 
   // ------------------------------------------------------------------------
@@ -439,6 +497,9 @@ namespace ABeamer {
     // title
     protected title: _WkChartTitle = {};
 
+    // legends
+    protected legend: _WkChartLegend = {};
+
     // colors
     fillColors: string[][];
     strokeColors: string[][];
@@ -455,7 +516,9 @@ namespace ABeamer {
 
     constructor(protected args: ABeamerArgs) { }
 
-    _drawChart(params: BaseChartTaskParams): void { }
+    _drawChart(params: BaseChartTaskParams): void {
+      this._drawLegend();
+    }
 
 
     protected _fillArrayArrayParam<TI, TO>(param: TI | TI[] | TI[][],
@@ -517,6 +580,7 @@ namespace ABeamer {
       this.graphX1 = this.chartWidth;
       this.graphY0 = this.chartHeight;
       this._initTitle(params);
+      this._initLegend(params);
     }
 
 
@@ -614,12 +678,18 @@ namespace ABeamer {
           d = res.height + res.marginBefore + res.marginAfter;
           this.graphY0 -= d;
           break;
+
+        case ChartCaptionPosition.right:
+          d = res.width + res.marginBefore + res.marginAfter;
+          res.x = this.graphX1 + res.marginBefore - d;
+          this.graphX1 -= d;
+          break;
       }
       return res;
     }
 
 
-    protected _initTitle(params: AxisChartTaskParams) {
+    protected _initTitle(params: AxisChartTaskParams): void {
       let title = params.title || {} as ChartTitle;
       if (typeof title === 'string') {
         title = {
@@ -632,13 +702,65 @@ namespace ABeamer {
         this.title.caption = ExprOrStrToStr(title.caption, '', this.args);
       }
     }
+
+    protected _initLegend(params: AxisChartTaskParams): void {
+
+      const pLegend = _ExprStrToLabels(params.legend);
+      const captions: any = pLegend.captions;
+      if (captions) {
+        this.legend = this._initCaptions(_defValues.legend, captions, pLegend, pLegend);
+        this.legend.captions = captions;
+        const defMark = _defValues.legend.mark;
+        const pMark = pLegend.mark || {} as ChartLegendMark;
+        this.legend.mark = {
+          width: ExprOrNumToNum(pMark.width, defMark.width as number, this.args),
+          height: ExprOrNumToNum(pMark.height, defMark.height as number, this.args),
+          spacing: ExprOrNumToNum(pMark.spacing, defMark.spacing as number, this.args),
+        };
+        const markWidAndSpace = this.legend.mark.width + this.legend.mark.spacing;
+
+        switch (this.legend.position) {
+          case ChartCaptionPosition.left:
+            this.legend.x += markWidAndSpace;
+            this.graphX0 += markWidAndSpace;
+            break;
+
+          case ChartCaptionPosition.right:
+            this.graphX1 -= markWidAndSpace;
+            break;
+        }
+      }
+    }
+
+
+    protected _drawLegend(): void {
+      const legend = this.legend;
+      if (legend.captions) {
+        const ctx = this.context;
+        const mark = legend.mark;
+        const x = legend.x;
+        const y0 = legend.height;
+        const h = legend.height;
+        const isPointLegend = this.data.length === 1;
+
+        legend.captions.forEach((caption, i) => {
+          const y = y0 + i * h;
+          _setUpCaptionsFont(legend, ctx);
+          const deltaX = _alignCaptions(legend, ctx, caption, legend.width);
+          ctx.fillText(caption, x + deltaX, y);
+          ctx.fillStyle = isPointLegend ? this.fillColors[0][i] : this.fillColors[i][0] || this.strokeColors[i][0];
+          ctx.fillRect(x + deltaX - mark.width - mark.spacing, y - (h + mark.height) / 2,
+            mark.width, mark.height);
+        });
+      }
+    }
   }
 
   // ------------------------------------------------------------------------
   //                               calcBestMax
   // ------------------------------------------------------------------------
 
-  function _calcBestMax(v) {
+  function _calcBestMax(v): number {
     const vAbs = Math.abs(v);
     const isNegative = v < 0;
     const l10v = Math.log10(vAbs);
@@ -707,17 +829,8 @@ namespace ABeamer {
 
     protected _initLabels(params: AxisChartTaskParams): void {
 
-      function ExprStrToLabels(l: ChartLabels | ExprString): ChartLabels {
-        switch (typeof l) {
-          case 'undefined': return {};
-          case 'string': return { captions: l as string };
-          default:
-            return l as ChartLabels;
-        }
-      }
-
-      const labelsX: ChartLabelsX = ExprStrToLabels(params.labelsX);
-      const labelsY: ChartLabelsY = ExprStrToLabels(params.labelsY);
+      const labelsX: ChartLabelsX = _ExprStrToLabels(params.labelsX);
+      const labelsY: ChartLabelsY = _ExprStrToLabels(params.labelsY);
       let captions;
 
       // labels X
@@ -733,7 +846,7 @@ namespace ABeamer {
         const strCaption = labelsY.captions;
         if (!strCaption || !Array.isArray(strCaption)) {
           const isCaptionsExpr = isExpr(strCaption as string);
-          const tickCount = labelsY.tickCount || 6;
+          const tickCount = labelsY.tickCount || _defValues.labelsY.tickCount;
           const newCaptions = [];
           const min = this.minValue;
           const delta = (this.maxValue - min) / (tickCount - 1);
@@ -987,6 +1100,7 @@ namespace ABeamer {
         Math.max(Math.min(Math.floor(nrPoints * sweepV) + 1, nrPoints), 0);
 
       ctx.clearRect(0, 0, chartWidth, chartHeight);
+      super._drawChart(params);
 
       const y = axis0Y;
       const dataMidPixels: int[][][] = [];
@@ -1165,14 +1279,15 @@ namespace ABeamer {
       const angle = this.props['angle'];
       const dispersion = this.props['dispersion'];
       const isClockwise = params.isClockwise !== false;
-
-      super._drawChart(params);
       const overflow = this.overflow;
       const x0 = this.graphX0 + overflow;
       const y1 = this.graphY1 + overflow;
       const diameter = Math.min(this.graphX1 - x0 - overflow, this.graphY0 - y1 - overflow);
       const radius = diameter / 2;
       const ctx = this.context;
+
+      ctx.clearRect(0, 0, this.chartWidth, this.chartHeight);
+      super._drawChart(params);
 
       this.data.forEach((series, seriesI) => {
 

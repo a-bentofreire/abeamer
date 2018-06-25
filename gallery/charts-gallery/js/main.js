@@ -20,9 +20,6 @@ $(window).on("load", function () {
     var defLabelsX = {
         captions: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     };
-    // 'Social Protection','General Public Services','Health','Education','Economic affairs',
-    // 'Public order and safety','Defence','Recreation, culture and religion',
-    // 'Housing and community amenities','Environmental protection',
     var firstOnly = false;
     var viewOnly = undefined;
     var charts = [{
@@ -34,6 +31,10 @@ $(window).on("load", function () {
             strokeColors: '#525252',
             angleStart: Math.PI,
             dispersionStart: 0.1,
+            legend: {
+                captions: ['Social Protection', 'General Services', 'Health', 'Education', 'Economic affairs',
+                    'Public order', 'Defence'],
+            },
             props: [{
                     prop: 'dispersion',
                     value: 1,
@@ -99,6 +100,9 @@ $(window).on("load", function () {
             fillColors: ['#11ecad', '#adffb9', ''],
             strokeColors: ['#9c9c9c', '#9c9c9c', '#d05858'],
             strokeWidth: [1, 1, 2],
+            legend: {
+                captions: ['2016', '2017', 'Profit'],
+            },
             // sweepStart: 0.2,
             pointHeightStart: 0.2,
             props: [{
