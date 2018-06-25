@@ -874,6 +874,7 @@ namespace ABeamer {
           x += pointSpacing;
         }
       } else {
+        // charts with bars required a special calculation
         let barWidth = ExprOrNumToNum(params.barWidth, _defValues.barWidth, this.args);
         const seriesSpacing = ExprOrNumToNum(params.seriesSpacing, _defValues.seriesSpacing, this.args);
         if (!barWidth) {
@@ -1021,7 +1022,8 @@ namespace ABeamer {
           const x = xDrawPoint.x;
           let xNew = x;
 
-          if ((i === drawNrPoints - 1) && (sweepV < 1)) {
+          const isSweeping = (i === drawNrPoints - 1) && (sweepV < 1);
+          if (isSweeping) {
             const leftSweep = (sweepV - i / nrPoints);
             const reSweep = leftSweep / (1 / nrPoints);
             xNew = ((xNew - xPrev) * reSweep) + xPrev;
@@ -1033,9 +1035,20 @@ namespace ABeamer {
 
           switch (chartType) {
             case ChartTypes.bar:
-              const barWidth = xDrawPoint.w;
-              ctx.fillRect(x, y, barWidth, yLen);
-              ctx.strokeRect(x, y, barWidth, yLen);
+              let barWidth = xDrawPoint.w;
+              if (isSweeping) {
+                const xSeriesDrawPt = this.xDrawPoints[i];
+                const xMaxSweepPos = xSeriesDrawPt.xLabel + xSeriesDrawPt.xLabelWidth * sweepV;
+                if (xMaxSweepPos < x) {
+                  barWidth = 0;
+                } else {
+                  barWidth = Math.min(x + barWidth, xMaxSweepPos) - x;
+                }
+              }
+              if (barWidth > 0) {
+                ctx.fillRect(x, y, barWidth, yLen);
+                ctx.strokeRect(x, y, barWidth, yLen);
+              }
               xMidNew = x + barWidth / 2;
               break;
 

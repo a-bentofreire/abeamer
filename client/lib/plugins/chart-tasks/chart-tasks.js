@@ -533,6 +533,7 @@ var ABeamer;
                 }
             }
             else {
+                // charts with bars required a special calculation
                 var barWidth_1 = ABeamer.ExprOrNumToNum(params.barWidth, _defValues.barWidth, this.args);
                 var seriesSpacing_1 = ABeamer.ExprOrNumToNum(params.seriesSpacing, _defValues.seriesSpacing, this.args);
                 if (!barWidth_1) {
@@ -655,7 +656,8 @@ var ABeamer;
                     // x
                     var x = xDrawPoint.x;
                     var xNew = x;
-                    if ((i === drawNrPoints - 1) && (sweepV < 1)) {
+                    var isSweeping = (i === drawNrPoints - 1) && (sweepV < 1);
+                    if (isSweeping) {
                         var leftSweep = (sweepV - i / nrPoints);
                         var reSweep = leftSweep / (1 / nrPoints);
                         xNew = ((xNew - xPrev) * reSweep) + xPrev;
@@ -666,8 +668,20 @@ var ABeamer;
                     switch (chartType) {
                         case ChartTypes.bar:
                             var barWidth = xDrawPoint.w;
-                            ctx.fillRect(x, y, barWidth, yLen);
-                            ctx.strokeRect(x, y, barWidth, yLen);
+                            if (isSweeping) {
+                                var xSeriesDrawPt = _this.xDrawPoints[i];
+                                var xMaxSweepPos = xSeriesDrawPt.xLabel + xSeriesDrawPt.xLabelWidth * sweepV;
+                                if (xMaxSweepPos < x) {
+                                    barWidth = 0;
+                                }
+                                else {
+                                    barWidth = Math.min(x + barWidth, xMaxSweepPos) - x;
+                                }
+                            }
+                            if (barWidth > 0) {
+                                ctx.fillRect(x, y, barWidth, yLen);
+                                ctx.strokeRect(x, y, barWidth, yLen);
+                            }
                             xMidNew = x + barWidth / 2;
                             break;
                         case ChartTypes.line:

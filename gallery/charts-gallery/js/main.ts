@@ -16,6 +16,8 @@ $(window).on("load", () => {
 
   const scene1 = story.scenes[0];
 
+  const duration = 3;
+
   const defData0 = [23000, 32000, 45000, 15000, 50400, 60000];
   const defData = [
     defData0,
@@ -27,11 +29,6 @@ $(window).on("load", () => {
     captions: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
   };
 
-
-  const defAnimeProps = [{
-    prop: 'point-height',
-    value: 1,
-  }];
 
 
   interface AxisChartTaskParamsEx extends ABeamer.AxisChartTaskParams {
@@ -125,13 +122,14 @@ $(window).on("load", () => {
     data: defData,
     charTypes: [ABeamer.ChartTypes.bar, ABeamer.ChartTypes.bar, ABeamer.ChartTypes.line],
     labelsX: defLabelsX,
-    seriesSpacing: 1,
     fillColors: ['#11ecad', '#adffb9', ''],
     strokeColors: ['#9c9c9c', '#9c9c9c', '#d05858'],
     strokeWidth: [1, 1, 2],
+    // sweepStart: 0.2,
     pointHeightStart: 0.2,
     props: [{
       prop: 'point-height',
+      // prop: 'sweep',
       value: 1,
     }],
     chartWidth: 320,
@@ -235,7 +233,7 @@ $(window).on("load", () => {
   scene1
     .addAnimations(charts.map((chart, i) => chart.props ? {
       selector: `%chart-${i}-anime`,
-      duration: '3s',
+      duration: `${duration}s`,
       props: chart.props,
     } : undefined).filter(anime => anime !== undefined));
 
