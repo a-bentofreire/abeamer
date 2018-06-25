@@ -21,7 +21,7 @@ var __extends = (this && this.__extends) || (function () {
  *
  * A **chart task** task creates an animated chart.
  *
- * **WARN** This plugin is still in alpha stage, parts of API can change in the future.
+ * **WARN** This plugin is still in development stage, parts of API can change in the future.
  * It's still missing labelsX and legends and many internal parts.
  * It will be improved soon.
  *

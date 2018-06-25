@@ -7,7 +7,7 @@
 $(window).on("load", function () {
     var story = ABeamer.createStory(/*FPS:*/ 20);
     // ------------------------------------------------------------------------
-    //                               Scene1
+    //                               Charts
     // ------------------------------------------------------------------------
     var scene1 = story.scenes[0];
     var duration = 3;
