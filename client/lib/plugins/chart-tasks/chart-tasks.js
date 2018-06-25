@@ -22,20 +22,80 @@ var __extends = (this && this.__extends) || (function () {
  * A **chart task** task creates an animated chart.
  *
  * **WARN** This plugin is still in development stage, parts of API can change in the future.
- * It's still missing labelsX and legends and many internal parts.
- * It will be improved soon.
+ * However is already in a stage that can be used.
  *
  * This plugin has the following built-in charts:
  *
- * - `pie`.
- * - `bar`.
- * - `area`.
- * - `line`.
- * - `marker`.
- * - `mixed`- Draws different types of chars in the same chart, uses
- *   `chartTypes` parameter to determine the type of each chart per series.
+ * - [pie](#PieChartTaskParams)
+ * - [bar](#AxisChartTaskParams)
+ * - [area](#AxisChartTaskParams)
+ * - [line](#AxisChartTaskParams)
+ * - [marker](#AxisChartTaskParams)
+ * - [mixed](#AxisChartTaskParams) Draws different types of chars in the same chart, uses
+ *   [](#chartTypes) parameter to determine the type of each chart per series.
  *
- * read the details on `AxisChartTaskParams`.
+ * read the details on [](#AxisChartTaskParams).
+ *
+ * ## Getting started
+ * How to create a simple bar chart:
+ *
+ * The bare-bones of a `abeamer.ini` file:
+ * ```scss
+ * $abeamer-width: 300;
+ * $abeamer-height: 150;
+ * ```
+ *
+ *  The bare-bones of a `html` file:
+ * ```html
+ *   <div class="abeamer-story" id=story>
+ *       <div class=abeamer-scene id=scene1>
+ *         <canvas id=chart width=300 height=150></canvas>
+ *       </div>
+ *   </div>
+ * ```
+ *
+ * On the `hello-world` example, replace the `scene.addAnimations` with:
+ * ```typescript
+ *  scene.addAnimations([{
+ *     selector: '#chart', // JQuery selector pointing to the HtmlElement
+ *     tasks: [{
+ *       handler: 'chart', // is always 'chart' for charts.
+ *       params: {
+ *         chartType: ABeamer.ChartTypes.bar, // or 'bar' if you are using javascript
+ *         labelsX: { captions: ['A', 'B', 'C', 'D', 'E'] },
+ *         title: 'My first Chart',
+ *         data: [[100, 200, 50, 140, 300]],
+ *       } as ABeamer.AxisChartTaskParams, // comment as ... if you are using javascript
+ *     }],
+ *   }]);
+ * ```
+ * The previous example, will create a static chart.
+ * To animate it, change it the to following:
+ * ```typescript
+ *    scene.addAnimations([{
+ *     selector: 'canvas',
+ *     tasks: [{
+ *       handler: 'chart',
+ *       params: {
+ *         chartType: ABeamer.ChartTypes.bar,
+ *         labelsX: { captions: ['A', 'B', 'C', 'D', 'E'] },
+ *         title: 'My first Chart',
+ *         data: [[100, 200, 50, 140, 300]],
+ *         // animation parameters
+ *         pointHeightStart: 0.1,    // defined the initial value for the animation point-height property
+ *         animeSelector: 'chart-anime-01', // unique animation selector to be used by the animator
+ *       } as ABeamer.AxisChartTaskParams,
+ *     }],
+ *   }])
+ *     .addAnimations([{
+ *       selector: `%chart-anime-01`, // animation selector defined previously, prefixed with '%'
+ *       duration: `1s`,
+ *       props: [{
+ *         prop: 'point-height', // property which initial value is 0.1
+ *         value: 1,             // value at the end of animation
+ *       }],
+ *     }]);
+ * ```
  */
 var ABeamer;
 (function (ABeamer) {
@@ -150,9 +210,12 @@ var ABeamer;
         },
         barWidth: 0,
         pointMaxHeight: 100,
-        pointSpacing: 0,
+        pointDistance: 0,
         seriesSpacing: 3,
     };
+    /**
+     * Returns the maximum value of array of array of numbers.
+     */
     function _maxOfArrayArray(data, startValue) {
         data.forEach(function (series) {
             series.forEach(function (point) {
@@ -217,7 +280,7 @@ var ABeamer;
         // style.fontSize = l.fontSize + 'px';
         // testDiv.textContent = text;
         // style.display = 'none';
-        // @TODO: Implement a better way to compute the height
+        // @TODO: Implement a better way to compute the text height
         var sz = ctx.measureText(text);
         switch (l.alignment) {
             case ChartCaptionAlignment.center:
@@ -584,24 +647,24 @@ var ABeamer;
             var xWidth = x1 - x0;
             var nrPoints = this.nrPoints;
             var pointArea = xWidth / nrPoints;
-            var pointSpacing = ABeamer.ExprOrNumToNum(params.pointSpacing, _defValues.pointSpacing, this.args);
-            pointSpacing = pointSpacing || pointArea;
+            var pointDistance = ABeamer.ExprOrNumToNum(params.pointDistance, _defValues.pointDistance, this.args);
+            pointDistance = pointDistance || pointArea;
             var x = x0;
             var barChartCount = this.chartTypes.reduce(function (acc, v) {
                 return acc + (v === ChartTypes.bar ? 1 : 0);
             });
             if (barChartCount === 0) {
                 var _loop_1 = function (i) {
-                    var xMidPoint = x + pointSpacing / 2;
+                    var xMidPoint = x + pointDistance / 2;
                     this_1.xDrawPoints.push({
                         x: x,
                         xLabel: x,
-                        xLabelWidth: pointSpacing,
+                        xLabelWidth: pointDistance,
                         series: this_1.data.map(function () {
-                            return { x: xMidPoint, w: pointSpacing };
+                            return { x: xMidPoint, w: pointDistance };
                         }),
                     });
-                    x += pointSpacing;
+                    x += pointDistance;
                 };
                 var this_1 = this;
                 for (var i = 0; i < nrPoints; i++) {
@@ -613,13 +676,13 @@ var ABeamer;
                 var barWidth_1 = ABeamer.ExprOrNumToNum(params.barWidth, _defValues.barWidth, this.args);
                 var seriesSpacing_1 = ABeamer.ExprOrNumToNum(params.seriesSpacing, _defValues.seriesSpacing, this.args);
                 if (!barWidth_1) {
-                    barWidth_1 = (pointSpacing / barChartCount) - seriesSpacing_1;
+                    barWidth_1 = (pointDistance / barChartCount) - seriesSpacing_1;
                 }
                 var usedPointWidth = barWidth_1 * barChartCount +
                     seriesSpacing_1 * (barChartCount - 1);
                 var _loop_2 = function (i) {
                     var xBar = x;
-                    var xMidPoint = x + pointSpacing / 2;
+                    var xMidPoint = x + pointDistance / 2;
                     this_2.xDrawPoints.push({
                         x: x,
                         xLabel: x,
@@ -630,10 +693,10 @@ var ABeamer;
                                 xBar += barWidth_1 + seriesSpacing_1;
                                 return { x: xBarThis, w: barWidth_1 };
                             }
-                            return { x: xMidPoint, w: pointSpacing };
+                            return { x: xMidPoint, w: pointDistance };
                         }),
                     });
-                    x += pointSpacing;
+                    x += pointDistance;
                 };
                 var this_2 = this;
                 for (var i = 0; i < nrPoints; i++) {
@@ -649,10 +712,10 @@ var ABeamer;
                 if (_this.chartType !== ChartTypes.mixed) {
                     return _this.chartType;
                 }
-                if (!params.charTypes || params.charTypes.length <= seriesIndex) {
+                if (!params.chartTypes || params.chartTypes.length <= seriesIndex) {
                     return ChartTypes.bar;
                 }
-                return ABeamer.parseEnum(params.charTypes[seriesIndex], ChartTypes, ChartTypes.bar);
+                return ABeamer.parseEnum(params.chartTypes[seriesIndex], ChartTypes, ChartTypes.bar);
             });
             // axis
             this.xAxis = this._initLine(params.xAxis || {});

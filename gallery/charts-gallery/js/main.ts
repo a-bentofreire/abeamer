@@ -119,7 +119,7 @@ $(window).on("load", () => {
   }, {
     chartType: ABeamer.ChartTypes.mixed,
     data: defData,
-    charTypes: [ABeamer.ChartTypes.bar, ABeamer.ChartTypes.bar, ABeamer.ChartTypes.line],
+    chartTypes: [ABeamer.ChartTypes.bar, ABeamer.ChartTypes.bar, ABeamer.ChartTypes.line],
     labelsX: defLabelsX,
     fillColors: ['#11ecad', '#adffb9', ''],
     strokeColors: ['#9c9c9c', '#9c9c9c', '#d05858'],

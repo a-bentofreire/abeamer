@@ -110,6 +110,9 @@ declare namespace ABeamer {
   export function parseHandler<T, TO>(handler: T, defaultHandler: T,
     mapper: any, args: ABeamerArgs): TO;
 
+  export function parseEnum<T>(value: T | string, mapper: any,
+    defValue?: T | string | undefined): T;
+
   export function throwErr(msg: string): void;
 
   export function throwI8n(msg: string, params?: I8nParams): void;
@@ -200,6 +203,8 @@ declare namespace ABeamer {
   // ------------------------------------------------------------------------
 
 
+  export type VarType = number | string | boolean | number[] | object;
+
 
   export interface Vars {
     e: number;
@@ -239,8 +244,12 @@ declare namespace ABeamer {
     vpt?: number;
     /** `t` used to interpolate an easing, oscillator or path via expression. */
     t?: number;
+    /** Generic value. Used in Charts. */
+    v?: number;
+    /** Generic iterator. Used in Factories. */
+    i?: int;
 
-    [name: string]: number | string | boolean | number[];
+    [name: string]: VarType;
   }
 
 
@@ -256,7 +265,7 @@ declare namespace ABeamer {
   export type ExprString = string;
 
 
-  export function isCharacter(ch: string): boolean;
+  export function isCharacter(ch: string | undefined, pos: uint = 0): boolean;
 
   export function isDigit(ch: string): boolean;
 
@@ -1886,14 +1895,16 @@ declare namespace ABeamer {
 
 
   // ------------------------------------------------------------------------
-  //                               Shape Tasks
+  //                               Chart Tasks
   // ------------------------------------------------------------------------
 
 
   export enum ChartTypes {
+    pie,
     bar,
-    line,
     area,
+    line,
+    marker,
     mixed,
   }
 
@@ -1902,51 +1913,270 @@ declare namespace ABeamer {
   export type SeriesData = number[];
 
 
-  export interface BaseChartTaskParams extends AnyParams {
-    chartType?: ChartTypes | string;
-    dataFrame: SeriesData[];
-    animeSelector: string;
+  export enum ChartCaptionOrientation {
+    horizontal,
+    vertical,
   }
 
 
-  export interface AxisChartTaskParams extends BaseChartTaskParams {
+  export enum ChartCaptionPosition {
+    top,
+    bottom,
+    left,
+    right,
+  }
 
-    /** Chart Type per series. Use only if charType is `mixed`. */
-    charTypes?: (ChartTypes | string)[];
 
-    // labels X
-    labelsX?: string[];
-    labelsXHeight?: uint | ExprString;
-    labelsXFontColor?: string | ExprString;
-    labelsXFontFamily?: string | ExprString;
-    labelsXFontSize?: uint | ExprString;
+  export enum ChartCaptionAlignment {
+    left,
+    center,
+    right,
+  }
 
-    // labels Y
-    labelsY?: string[];
-    labelsYWidth?: uint | ExprString;
-    labelsYFontColor?: string | ExprString;
-    labelsYFontFamily?: string | ExprString;
-    labelsYFontSize?: uint | ExprString;
 
-    // bar chart
-    barWidth?: uint | ExprString;
-    barMaxHeight?: uint | ExprString;
-    barSpacing?: uint | ExprString;
-    barSeriesSpacing?: uint | ExprString;
-    barHeightStart?: number | ExprString;
+  export interface ChartCaptions {
+    fontColor?: string | ExprString;
+    fontFamily?: string | ExprString;
+    fontSize?: uint | ExprString;
+    alignment?: ChartCaptionAlignment | string;
+    position?: ChartCaptionPosition | string;
+    orientation?: ChartCaptionOrientation | string;
+    marginBefore?: uint | ExprString;
+    marginAfter?: uint | ExprString;
+  }
+
+
+  export interface ChartLabels extends ChartCaptions {
+    captions?: string[] | ExprString;
+  }
+
+
+  export type ChartLabelsX = ChartLabels;
+
+
+  export interface ChartLegendMark {
+    width?: uint | ExprString;
+    height?: uint | ExprString;
+    spacing?: uint | ExprString;
+  }
+
+
+  export interface ChartLegend extends ChartLabels {
+    mark: ChartLegendMark;
+  }
+
+
+  export interface ChartLabelsY extends ChartLabels {
+    tickCount?: uint;
+  }
+
+
+  export enum ChartPointShape {
+    circle,
+    square,
+    diamond,
+  }
+
+
+  export interface ChartMarkers {
+    visible?: boolean | boolean[] | boolean[][];
+    shape?: (ChartPointShape | string) | (ChartPointShape | string)[]
+    | (ChartPointShape | string)[][];
+    size?: uint | uint[] | uint[][];
+    color?: string | string[] | string[][];
+  }
+
+
+  export interface ChartLine {
+    visible?: boolean;
+    color?: string | ExprString;
+    width?: number | ExprString;
+  }
+
+
+  export interface ChartTitle extends ChartCaptions {
+    caption: string | ExprString;
+  }
+
+
+  export interface ChartDefaults {
+    labelsX: ChartLabelsX;
+    labelsY: ChartLabelsY;
+    legend: ChartLegend;
+    title: ChartTitle;
+    fillColors: string;
+    strokeColors: string;
+    strokeWidth: uint;
+    markers: ChartMarkers;
+    barWidth: uint;
+    pointMaxHeight: uint;
+    pointDistance: uint;
+    seriesSpacing: uint;
+  }
+
+
+  /**
+   * Parameters for both [Axis Charts](#AxisChartTaskParams) and [Pie Charts](#PieChartTaskParams).
+   */
+  export interface BaseChartTaskParams extends AnyParams {
+    /**
+     * Defines the type of chart.
+     * If it's `mixed` it uses [](#chartTypes)
+     */
+    chartType?: ChartTypes | string;
+
+
+    /**
+     * List of series of data points.
+     * Each series much have the same number of data points.
+     */
+    data: SeriesData[];
+
+    /**
+     * Set with a unique virtual selector, to be used another `addAnimations` to animate the chart.
+     * ### Example
+     * ```typescript
+     *    scene.addAnimations([{
+     *     selector: 'canvas',
+     *     tasks: [{
+     *       handler: 'chart',
+     *       params: {
+     *         data: [[100, 200, 50, 140, 300]],
+     *         pointHeightStart: 0.1,    // defined the initial value for the animation point-height property
+     *         animeSelector: 'chart-anime-02', // unique animation selector to be used by the animator
+     *       } as ABeamer.AxisChartTaskParams,
+     *     }],
+     *   }])
+     *     .addAnimations([{
+     *       selector: `%chart-anime-02`, // animation selector defined previously, prefixed with '%'
+     *       duration: `1s`,
+     *       props: [{
+     *         prop: 'point-height', // property which initial value is 0.1
+     *         value: 1,             // value at the end of animation
+     *       }],
+     *     }]);
+     * ```
+     */
+    animeSelector?: string;
+
+
+    /**
+     * Defines the chart title.
+     * At the moment is only supported horizontal top or bottom titles.
+     */
+    title?: string | ExprString | ChartTitle;
+
+
+    /**
+     * Defines the chart legend.
+     * At the moment is only supported stacked left or right top legend.
+     */
+    legend?: ChartLegend;
+
 
     // colors
-    fillColors?: string[];
-    strokeColors?: string[];
-    stokeWidth?: uint[];
-    xAxisColor?: string | ExprString;
-    yAxisColor?: string | ExprString;
-    y0LineColor?: string | ExprString;
+    /** Interior Colors used by `area`, `bar` and `pie` charts. */
+    fillColors?: string | string[] | string[][];
+    strokeColors?: string | string[] | string[][];
+    strokeWidth?: uint | uint[] | uint[][];
+  }
+
+
+  export interface PieChartTaskParams extends BaseChartTaskParams {
+    angleStart?: number | ExprString;
+    dispersionStart?: number | ExprString;
+    isClockwise?: boolean;
+  }
+
+
+  /**
+   * Parameters used by AxisCharts, which are all except [Pie Charts](#PieChartTaskParams).
+   *
+   */
+  export interface AxisChartTaskParams extends BaseChartTaskParams {
+
+    /**
+     * Chart Type per series. Use only if [](#chartType) is `mixed`.
+     * @example: [ABeamer.ChartTypes.bar, ABeamer.ChartTypes.bar, ABeamer.ChartTypes.line]
+     */
+    chartTypes?: (ChartTypes | string)[];
+
+
+    /**
+     * Defines the X labels with complete information or just as an [](#ExprString).
+     * If it's a ExprString, it will create one label for each point.
+     * The iterator variable is `v`.
+     * If it's an array, it must match the number of points in a series.
+     * @example =2012 + v
+     * @example { captions: ['A', 'B', 'C', 'D'] }
+     */
+    labelsX?: ChartLabelsX | ExprString | string[];
+
+
+    /**
+     * Defines the Y labels with complete information or just as an [](#ExprString).
+     * If it's a ExprString, it will create one label for each point.
+     * The iterator variable is `v`.
+     * If it's an array, it must match the tickCount.
+     * @example =v/1000 + 'k'
+     * @example { captions: ['10', '20', '30', '40'] }
+     */
+    labelsY?: ChartLabelsY | ExprString | string[];
+
+
+    // markers
+    markers?: ChartMarkers;
+
+
+    /**
+     * x bar length for `bar` charts.
+     * If it's zero, it's calculated automatically in order to fill the complete x-space.
+     */
+    barWidth?: uint | ExprString;
+
+
+    // points
+    pointMaxHeight?: uint | ExprString;
+
+
+    /**
+     * x distance between two data points.
+     * If it's zero, it's calculated automatically in order to fill the complete x-space.
+     * If the chart includes bars charts it must be big enough to include all the bars.
+     */
+    pointDistance?: uint | ExprString;
+
+
+    /**
+     * x space between two bars. Used only in `bar` charts.
+     */
+    seriesSpacing?: uint | ExprString;
+
+
+    // colors
+    /**
+     * Colors to be used in case of the data point is negative.
+     * At the moment, it only supports `bar` charts.
+     */
+    negativeFillColors?: string | string[] | string[][];
+
+
+    xAxis?: ChartLine;
+    yAxis?: ChartLine;
+    y0Line?: ChartLine;
+
 
     // limits
     maxValue?: number | ExprString;
     minValue?: number | ExprString;
+
+
+    // animation
+    pointHeightStart?: number | ExprString;
+    deviationStart?: number | ExprString;
+    sweepStart?: number | ExprString;
   }
+
 
 
 }

@@ -16,20 +16,80 @@
  * A **chart task** task creates an animated chart.
  *
  * **WARN** This plugin is still in development stage, parts of API can change in the future.
- * It's still missing labelsX and legends and many internal parts.
- * It will be improved soon.
+ * However is already in a stage that can be used.
  *
  * This plugin has the following built-in charts:
  *
- * - `pie`.
- * - `bar`.
- * - `area`.
- * - `line`.
- * - `marker`.
- * - `mixed`- Draws different types of chars in the same chart, uses
- *   `chartTypes` parameter to determine the type of each chart per series.
+ * - [pie](#PieChartTaskParams)
+ * - [bar](#AxisChartTaskParams)
+ * - [area](#AxisChartTaskParams)
+ * - [line](#AxisChartTaskParams)
+ * - [marker](#AxisChartTaskParams)
+ * - [mixed](#AxisChartTaskParams) Draws different types of chars in the same chart, uses
+ *   [](#chartTypes) parameter to determine the type of each chart per series.
  *
- * read the details on `AxisChartTaskParams`.
+ * read the details on [](#AxisChartTaskParams).
+ *
+ * ## Getting started
+ * How to create a simple bar chart:
+ *
+ * The bare-bones of a `abeamer.ini` file:
+ * ```scss
+ * $abeamer-width: 300;
+ * $abeamer-height: 150;
+ * ```
+ *
+ *  The bare-bones of a `html` file:
+ * ```html
+ *   <div class="abeamer-story" id=story>
+ *       <div class=abeamer-scene id=scene1>
+ *         <canvas id=chart width=300 height=150></canvas>
+ *       </div>
+ *   </div>
+ * ```
+ *
+ * On the `hello-world` example, replace the `scene.addAnimations` with:
+ * ```typescript
+ *  scene.addAnimations([{
+ *     selector: '#chart', // JQuery selector pointing to the HtmlElement
+ *     tasks: [{
+ *       handler: 'chart', // is always 'chart' for charts.
+ *       params: {
+ *         chartType: ABeamer.ChartTypes.bar, // or 'bar' if you are using javascript
+ *         labelsX: { captions: ['A', 'B', 'C', 'D', 'E'] },
+ *         title: 'My first Chart',
+ *         data: [[100, 200, 50, 140, 300]],
+ *       } as ABeamer.AxisChartTaskParams, // comment as ... if you are using javascript
+ *     }],
+ *   }]);
+ * ```
+ * The previous example, will create a static chart.
+ * To animate it, change it the to following:
+ * ```typescript
+ *    scene.addAnimations([{
+ *     selector: 'canvas',
+ *     tasks: [{
+ *       handler: 'chart',
+ *       params: {
+ *         chartType: ABeamer.ChartTypes.bar,
+ *         labelsX: { captions: ['A', 'B', 'C', 'D', 'E'] },
+ *         title: 'My first Chart',
+ *         data: [[100, 200, 50, 140, 300]],
+ *         // animation parameters
+ *         pointHeightStart: 0.1,    // defined the initial value for the animation point-height property
+ *         animeSelector: 'chart-anime-01', // unique animation selector to be used by the animator
+ *       } as ABeamer.AxisChartTaskParams,
+ *     }],
+ *   }])
+ *     .addAnimations([{
+ *       selector: `%chart-anime-01`, // animation selector defined previously, prefixed with '%'
+ *       duration: `1s`,
+ *       props: [{
+ *         prop: 'point-height', // property which initial value is 0.1
+ *         value: 1,             // value at the end of animation
+ *       }],
+ *     }]);
+ * ```
  */
 namespace ABeamer {
 
@@ -154,23 +214,72 @@ namespace ABeamer {
     markers: ChartMarkers;
     barWidth: uint;
     pointMaxHeight: uint;
-    pointSpacing: uint;
+    pointDistance: uint;
     seriesSpacing: uint;
   }
 
 
+  /**
+   * Parameters for both [Axis Charts](#AxisChartTaskParams) and [Pie Charts](#PieChartTaskParams).
+   */
   export interface BaseChartTaskParams extends AnyParams {
+    /**
+     * Defines the type of chart.
+     * If it's `mixed` it uses [](#chartTypes)
+     */
     chartType?: ChartTypes | string;
+
+
+    /**
+     * List of series of data points.
+     * Each series much have the same number of data points.
+     */
     data: SeriesData[];
+
+    /**
+     * Set with a unique virtual selector, to be used another `addAnimations` to animate the chart.
+     * ### Example
+     * ```typescript
+     *    scene.addAnimations([{
+     *     selector: 'canvas',
+     *     tasks: [{
+     *       handler: 'chart',
+     *       params: {
+     *         data: [[100, 200, 50, 140, 300]],
+     *         pointHeightStart: 0.1,    // defined the initial value for the animation point-height property
+     *         animeSelector: 'chart-anime-02', // unique animation selector to be used by the animator
+     *       } as ABeamer.AxisChartTaskParams,
+     *     }],
+     *   }])
+     *     .addAnimations([{
+     *       selector: `%chart-anime-02`, // animation selector defined previously, prefixed with '%'
+     *       duration: `1s`,
+     *       props: [{
+     *         prop: 'point-height', // property which initial value is 0.1
+     *         value: 1,             // value at the end of animation
+     *       }],
+     *     }]);
+     * ```
+     */
     animeSelector?: string;
 
-    // title
+
+    /**
+     * Defines the chart title.
+     * At the moment is only supported horizontal top or bottom titles.
+     */
     title?: string | ExprString | ChartTitle;
 
-    // legends
+
+    /**
+     * Defines the chart legend.
+     * At the moment is only supported stacked left or right top legend.
+     */
     legend?: ChartLegend;
 
+
     // colors
+    /** Interior Colors used by `area`, `bar` and `pie` charts. */
     fillColors?: string | string[] | string[][];
     strokeColors?: string | string[] | string[][];
     strokeWidth?: uint | uint[] | uint[][];
@@ -184,37 +293,87 @@ namespace ABeamer {
   }
 
 
+  /**
+   * Parameters used by AxisCharts, which are all except [Pie Charts](#PieChartTaskParams).
+   *
+   */
   export interface AxisChartTaskParams extends BaseChartTaskParams {
 
-    /** Chart Type per series. Use only if charType is `mixed`. */
-    charTypes?: (ChartTypes | string)[];
+    /**
+     * Chart Type per series. Use only if [](#chartType) is `mixed`.
+     * @example: [ABeamer.ChartTypes.bar, ABeamer.ChartTypes.bar, ABeamer.ChartTypes.line]
+     */
+    chartTypes?: (ChartTypes | string)[];
 
-    // labels X
-    labelsX?: ChartLabelsX | ExprString;
 
-    // labels Y
-    labelsY?: ChartLabelsY | ExprString;
+    /**
+     * Defines the X labels with complete information or just as an [](#ExprString).
+     * If it's a ExprString, it will create one label for each point.
+     * The iterator variable is `v`.
+     * If it's an array, it must match the number of points in a series.
+     * @example =2012 + v
+     * @example { captions: ['A', 'B', 'C', 'D'] }
+     */
+    labelsX?: ChartLabelsX | ExprString | string[];
+
+
+    /**
+     * Defines the Y labels with complete information or just as an [](#ExprString).
+     * If it's a ExprString, it will create one label for each point.
+     * The iterator variable is `v`.
+     * If it's an array, it must match the tickCount.
+     * @example =v/1000 + 'k'
+     * @example { captions: ['10', '20', '30', '40'] }
+     */
+    labelsY?: ChartLabelsY | ExprString | string[];
+
 
     // markers
     markers?: ChartMarkers;
 
-    // bars
+
+    /**
+     * x bar length for `bar` charts.
+     * If it's zero, it's calculated automatically in order to fill the complete x-space.
+     */
     barWidth?: uint | ExprString;
+
 
     // points
     pointMaxHeight?: uint | ExprString;
-    pointSpacing?: uint | ExprString;
+
+
+    /**
+     * x distance between two data points.
+     * If it's zero, it's calculated automatically in order to fill the complete x-space.
+     * If the chart includes bars charts it must be big enough to include all the bars.
+     */
+    pointDistance?: uint | ExprString;
+
+
+    /**
+     * x space between two bars. Used only in `bar` charts.
+     */
     seriesSpacing?: uint | ExprString;
 
+
     // colors
+    /**
+     * Colors to be used in case of the data point is negative.
+     * At the moment, it only supports `bar` charts.
+     */
     negativeFillColors?: string | string[] | string[][];
+
+
     xAxis?: ChartLine;
     yAxis?: ChartLine;
     y0Line?: ChartLine;
 
+
     // limits
     maxValue?: number | ExprString;
     minValue?: number | ExprString;
+
 
     // animation
     pointHeightStart?: number | ExprString;
@@ -301,11 +460,14 @@ namespace ABeamer {
     },
     barWidth: 0,
     pointMaxHeight: 100,
-    pointSpacing: 0,
+    pointDistance: 0,
     seriesSpacing: 3,
   } as ChartDefaults;
 
 
+  /**
+   * Returns the maximum value of array of array of numbers.
+   */
   function _maxOfArrayArray(data: number[][], startValue: number): number {
     data.forEach(series => {
       series.forEach(point => {
@@ -379,7 +541,7 @@ namespace ABeamer {
   }
 
 
-  function _ExprStrToLabels<T extends ChartLabels>(l: T | ExprString): T {
+  function _ExprStrToLabels<T extends ChartLabels>(l: T | ExprString | string[]): T {
     switch (typeof l) {
       case 'undefined': return {} as T;
       case 'string': return { captions: l as string } as T;
@@ -416,7 +578,7 @@ namespace ABeamer {
 
     // style.display = 'none';
 
-    // @TODO: Implement a better way to compute the height
+    // @TODO: Implement a better way to compute the text height
     const sz = ctx.measureText(text);
     switch (l.alignment) {
       case ChartCaptionAlignment.center:
@@ -792,7 +954,7 @@ namespace ABeamer {
 
   class _WkAxisChart extends _WkChart {
 
-    /** Chart Type per series. Use only if charType is `mixed`. */
+    /** Chart Type per series. Use only if chartType is `mixed`. */
     chartTypes: ChartTypes[];
 
     // axis
@@ -977,8 +1139,8 @@ namespace ABeamer {
       const xWidth = x1 - x0;
       const nrPoints = this.nrPoints;
       const pointArea = xWidth / nrPoints;
-      let pointSpacing = ExprOrNumToNum(params.pointSpacing, _defValues.pointSpacing, this.args);
-      pointSpacing = pointSpacing || pointArea;
+      let pointDistance = ExprOrNumToNum(params.pointDistance, _defValues.pointDistance, this.args);
+      pointDistance = pointDistance || pointArea;
       let x = x0;
 
       const barChartCount = this.chartTypes.reduce((acc, v) =>
@@ -986,29 +1148,29 @@ namespace ABeamer {
 
       if (barChartCount === 0) {
         for (let i = 0; i < nrPoints; i++) {
-          const xMidPoint = x + pointSpacing / 2;
+          const xMidPoint = x + pointDistance / 2;
           this.xDrawPoints.push({
             x,
             xLabel: x,
-            xLabelWidth: pointSpacing,
+            xLabelWidth: pointDistance,
             series: this.data.map(() => {
-              return { x: xMidPoint, w: pointSpacing };
+              return { x: xMidPoint, w: pointDistance };
             }),
           });
-          x += pointSpacing;
+          x += pointDistance;
         }
       } else {
         // charts with bars required a special calculation
         let barWidth = ExprOrNumToNum(params.barWidth, _defValues.barWidth, this.args);
         const seriesSpacing = ExprOrNumToNum(params.seriesSpacing, _defValues.seriesSpacing, this.args);
         if (!barWidth) {
-          barWidth = (pointSpacing / barChartCount) - seriesSpacing;
+          barWidth = (pointDistance / barChartCount) - seriesSpacing;
         }
         const usedPointWidth = barWidth * barChartCount +
           seriesSpacing * (barChartCount - 1);
         for (let i = 0; i < nrPoints; i++) {
           let xBar = x;
-          const xMidPoint = x + pointSpacing / 2;
+          const xMidPoint = x + pointDistance / 2;
           this.xDrawPoints.push({
             x,
             xLabel: x,
@@ -1019,10 +1181,10 @@ namespace ABeamer {
                 xBar += barWidth + seriesSpacing;
                 return { x: xBarThis, w: barWidth };
               }
-              return { x: xMidPoint, w: pointSpacing };
+              return { x: xMidPoint, w: pointDistance };
             }),
           });
-          x += pointSpacing;
+          x += pointDistance;
         }
       }
       this.x1 = x;
@@ -1037,11 +1199,11 @@ namespace ABeamer {
           return this.chartType;
         }
 
-        if (!params.charTypes || params.charTypes.length <= seriesIndex) {
+        if (!params.chartTypes || params.chartTypes.length <= seriesIndex) {
           return ChartTypes.bar;
         }
 
-        return parseEnum(params.charTypes[seriesIndex], ChartTypes, ChartTypes.bar);
+        return parseEnum(params.chartTypes[seriesIndex], ChartTypes, ChartTypes.bar);
       });
 
       // axis

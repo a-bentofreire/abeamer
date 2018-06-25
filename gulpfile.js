@@ -332,7 +332,7 @@ var Gulp;
             pkg.scripts = scripts;
             // sets only the repo for the release version.
             // homepage and issue will remain intact
-            pkg.repository.url = pkg.repository.url + '-release';
+            // pkg.repository.url = pkg.repository.url + '-release';
             return JSON.stringify(pkg, undefined, 2);
         }))
             .pipe(gulp.dest("" + RELEASE_PATH))
