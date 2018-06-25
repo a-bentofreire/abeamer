@@ -752,6 +752,9 @@ namespace ABeamer {
 
         this.labelsY = this._initCaptions(_defValues.labelsY, captions, labelsY, labelsX);
         this.labelsY.captions = captions;
+        // in case there is no title make sure there is enough space for the labelsY
+        const heightDiv2 = this.labelsY.height / 2;
+        this.graphY1 = Math.max(this.graphY1, heightDiv2);
       }
     }
 
