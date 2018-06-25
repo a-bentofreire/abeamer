@@ -20,7 +20,7 @@ $(window).on("load", function () {
         captions: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     };
     var defAnimeProps = [{
-            prop: 'col-height',
+            prop: 'point-height',
             value: 1,
         }];
     // 'Social Protection','General Public Services','Health','Education','Economic affairs',
@@ -46,17 +46,17 @@ $(window).on("load", function () {
             labelsX: defLabelsX,
             title: '2017 Sales',
             data: [[23000, 32000, 45000, 15000, 50400, 58000]],
-            colInterSpacing: 1,
             strokeWidth: 1,
+            seriesSpacing: 8,
             fillColors: '#ffecad',
             negativeFillColors: '#ffb0b0',
             strokeColors: '#9c9c9c',
             labelsY: {
                 captions: "=v/1000 + 'k'",
             },
-            colHeightStart: 0.1,
+            pointHeightStart: 0.1,
             props: [{
-                    prop: 'col-height',
+                    prop: 'point-height',
                     value: 1,
                 }],
         }, {
@@ -65,8 +65,6 @@ $(window).on("load", function () {
                 [30, 42, 50, 50, 45, 60, 40],
                 [13, 32, 35, 85, 35, 70, 65],
             ],
-            colInterSpacing: 1,
-            colSpacing: 20,
             title: 'Customer Satisfaction',
             labelsX: {
                 captions: ['Q1', 'Q2', 'Q3', 'Q4', '18-Q1', 'Q2', 'Q3'],
@@ -87,8 +85,6 @@ $(window).on("load", function () {
                 [23000, 32000, 45000, 15000, 50400, 60000],
                 [18000, 40000, 40000, 18000, 40400, 50000]
             ],
-            colInterSpacing: 1,
-            colSpacing: 10,
             strokeColors: ['#dd5252', '#5252dd'],
             strokeWidth: 2,
             // sweepStart: 0.2,
@@ -103,13 +99,13 @@ $(window).on("load", function () {
             data: defData,
             charTypes: [ABeamer.ChartTypes.bar, ABeamer.ChartTypes.bar, ABeamer.ChartTypes.line],
             labelsX: defLabelsX,
-            colInterSpacing: 1,
+            seriesSpacing: 1,
             fillColors: ['#11ecad', '#adffb9', ''],
             strokeColors: ['#9c9c9c', '#9c9c9c', '#d05858'],
             strokeWidth: [1, 1, 2],
-            colHeightStart: 0.2,
+            pointHeightStart: 0.2,
             props: [{
-                    prop: 'col-height',
+                    prop: 'point-height',
                     value: 1,
                 }],
             chartWidth: 320,
@@ -118,7 +114,7 @@ $(window).on("load", function () {
             labelsX: defLabelsX,
             title: '2017 Revenue',
             data: [[23000, 32000, 45000, -15000, 10000, 60000]],
-            colInterSpacing: 1,
+            seriesSpacing: 1,
             fillColors: '#ffecad',
             negativeFillColors: '#ffb0b0',
             strokeColors: '#9c9c9c',
@@ -129,9 +125,9 @@ $(window).on("load", function () {
                 color: 'blue',
                 size: 10,
             },
-            colHeightStart: 0.1,
+            pointHeightStart: 0.1,
             props: [{
-                    prop: 'col-height',
+                    prop: 'point-height',
                     value: 1,
                 }],
         }, {
@@ -143,12 +139,12 @@ $(window).on("load", function () {
                 size: 10,
                 color: 'red',
             },
-            colInterSpacing: 1,
+            seriesSpacing: 1,
             title: 'Line Chart',
             fillColors: '#ffecad',
-            colHeightStart: 0.1,
+            pointHeightStart: 0.1,
             props: [{
-                    prop: 'col-height',
+                    prop: 'point-height',
                     value: 1,
                 }],
         }];

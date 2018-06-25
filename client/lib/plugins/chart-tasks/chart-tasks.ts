@@ -167,11 +167,13 @@ namespace ABeamer {
     // markers
     markers?: ChartMarkers;
 
-    // columns
-    colWidth?: uint | ExprString;
-    colMaxHeight?: uint | ExprString;
-    colSpacing?: uint | ExprString;
-    colInterSpacing?: uint | ExprString;
+    // bars
+    barWidth?: uint | ExprString;
+
+    // points
+    pointMaxHeight?: uint | ExprString;
+    pointSpacing?: uint | ExprString;
+    seriesSpacing?: uint | ExprString;
 
     // colors
     negativeFillColors?: string | string[] | string[][];
@@ -184,7 +186,7 @@ namespace ABeamer {
     minValue?: number | ExprString;
 
     // animation
-    colHeightStart?: number | ExprString;
+    pointHeightStart?: number | ExprString;
     deviationStart?: number | ExprString;
     sweepStart?: number | ExprString;
   }
@@ -198,6 +200,10 @@ namespace ABeamer {
     strokeColors: string;
     strokeWidth: uint;
     markers: ChartMarkers;
+    barWidth: uint;
+    pointMaxHeight: uint;
+    pointSpacing: uint;
+    seriesSpacing: uint;
   }
 
   // #export-section-end: release
@@ -222,7 +228,7 @@ namespace ABeamer {
       fontFamily: 'sans-serif',
       fontColor: 'black',
       fontSize: 12,
-      alignment: ChartCaptionAlignment.left,
+      alignment: ChartCaptionAlignment.center,
       position: ChartCaptionPosition.bottom,
       orientation: ChartCaptionOrientation.horizontal,
       marginBefore: 0,
@@ -260,6 +266,10 @@ namespace ABeamer {
       size: 5,
       color: 'black',
     },
+    barWidth: 0,
+    pointMaxHeight: 100,
+    pointSpacing: 0,
+    seriesSpacing: 3,
   } as ChartDefaults;
 
 
@@ -421,7 +431,7 @@ namespace ABeamer {
     protected max: number;
     protected sum: number;
     protected avg: number;
-    protected seriesLen: uint;
+    protected nrPoints: uint;
     protected data: SeriesData[];
 
     protected animator: _ChartVirtualAnimator;
@@ -531,9 +541,9 @@ namespace ABeamer {
       let max = -Number.MIN_VALUE;
       let min = Number.MAX_VALUE;
       let sum = 0;
-      const firstSeriesLen = data[0].length;
+      const nrPoints = data[0].length;
       data.forEach(series => {
-        if (series.length !== firstSeriesLen) {
+        if (series.length !== nrPoints) {
           throwErr(`Every Series must have the same length`);
         }
         series.forEach(point => {
@@ -547,7 +557,7 @@ namespace ABeamer {
       this.max = max;
       this.sum = sum;
       this.avg = (max - min) / 2;
-      this.seriesLen = firstSeriesLen;
+      this.nrPoints = nrPoints;
       this.data = data;
     }
 
@@ -650,6 +660,14 @@ namespace ABeamer {
   //                               Axis Chart
   // ------------------------------------------------------------------------
 
+  interface XDrawPoint {
+    x: uint;
+    xLabel: uint;
+    xLabelWidth: uint;
+    series: { x: uint, w: uint }[];
+  }
+
+
   class _WkAxisChart extends _WkChart {
 
     /** Chart Type per series. Use only if charType is `mixed`. */
@@ -660,21 +678,22 @@ namespace ABeamer {
     yAxis: _WkChartLine;
     y0Line: _WkChartLine;
 
+    // draw points
+    xDrawPoints: XDrawPoint[] = [];
+    x1: uint;
+
     // labels X
     labelsX: _WkChartLabels;
 
     // labels Y
     labelsY: _WkChartLabels;
 
-    // points
+    // markers
     markers: _WkChartMarkers;
     hasMarkers: boolean;
 
-    // bar chart
-    barWidth: uint;
-    barMaxHeight: uint;
-    barSpacing: uint;
-    barSeriesSpacing: uint;
+    // points
+    pointMaxHeight: uint;
 
     // colors
     negativeFillColors: string[][];
@@ -826,6 +845,65 @@ namespace ABeamer {
     }
 
 
+    protected _computeDrawPoints(params: AxisChartTaskParams): void {
+
+      this.pointMaxHeight = ExprOrNumToNum(params.pointMaxHeight, _defValues.pointMaxHeight, this.args);
+      const x0 = this.graphX0 + this.overflow;
+      const x1 = this.graphX1 - this.overflow;
+      const xWidth = x1 - x0;
+      const nrPoints = this.nrPoints;
+      const pointArea = xWidth / nrPoints;
+      let pointSpacing = ExprOrNumToNum(params.pointSpacing, _defValues.pointSpacing, this.args);
+      pointSpacing = pointSpacing || pointArea;
+      let x = x0;
+
+      const barChartCount = this.chartTypes.reduce((acc, v) =>
+        acc + (v === ChartTypes.bar ? 1 : 0));
+
+      if (barChartCount === 0) {
+        for (let i = 0; i < nrPoints; i++) {
+          const xMidPoint = x + pointSpacing / 2;
+          this.xDrawPoints.push({
+            x,
+            xLabel: x,
+            xLabelWidth: pointSpacing,
+            series: this.data.map(() => {
+              return { x: xMidPoint, w: pointSpacing };
+            }),
+          });
+          x += pointSpacing;
+        }
+      } else {
+        let barWidth = ExprOrNumToNum(params.barWidth, _defValues.barWidth, this.args);
+        const seriesSpacing = ExprOrNumToNum(params.seriesSpacing, _defValues.seriesSpacing, this.args);
+        if (!barWidth) {
+          barWidth = (pointSpacing / barChartCount) - seriesSpacing;
+        }
+        const usedPointWidth = barWidth * barChartCount +
+          seriesSpacing * (barChartCount - 1);
+        for (let i = 0; i < nrPoints; i++) {
+          let xBar = x;
+          const xMidPoint = x + pointSpacing / 2;
+          this.xDrawPoints.push({
+            x,
+            xLabel: x,
+            xLabelWidth: usedPointWidth,
+            series: this.data.map((series, seriesI) => {
+              if (this.chartTypes[seriesI] === ChartTypes.bar) {
+                const xBarThis = xBar;
+                xBar += barWidth + seriesSpacing;
+                return { x: xBarThis, w: barWidth };
+              }
+              return { x: xMidPoint, w: pointSpacing };
+            }),
+          });
+          x += pointSpacing;
+        }
+      }
+      this.x1 = x;
+    }
+
+
     /** Initializes all the Axis Chart parameters. */
     _initChart(params: AxisChartTaskParams): void {
 
@@ -846,11 +924,6 @@ namespace ABeamer {
       this.yAxis = this._initLine(params.yAxis || {});
       this.y0Line = this._initLine(params.y0Line || {});
 
-      // bar chart
-      this.barWidth = ExprOrNumToNum(params.colWidth, 20, this.args);
-      this.barMaxHeight = ExprOrNumToNum(params.colMaxHeight, 100, this.args);
-      this.barSpacing = ExprOrNumToNum(params.colSpacing, 5, this.args);
-      this.barSeriesSpacing = ExprOrNumToNum(params.colInterSpacing, 0, this.args);
 
       // limits
       this._computeBestValues();
@@ -866,9 +939,10 @@ namespace ABeamer {
 
       this._initMarkers(params);
       this._initLabels(params);
+      this._computeDrawPoints(params);
 
       // animation
-      this.props['col-height'] = ExprOrNumToNum(params.colHeightStart, 1, this.args);
+      this.props['point-height'] = ExprOrNumToNum(params.pointHeightStart, 1, this.args);
       this.props['deviation'] = ExprOrNumToNum(params.deviationStart, 1, this.args);
       this.props['sweep'] = ExprOrNumToNum(params.sweepStart, 1, this.args);
     }
@@ -877,24 +951,18 @@ namespace ABeamer {
     /** Implements Axis Chart animation. */
     _drawChart(params: AxisChartTaskParams): void {
 
-      const barHeightV = this.props['col-height'];
+      const pointHeight = this.props['point-height'];
       const deviationV = this.props['deviation'];
       const sweepV = this.props['sweep'];
 
       const chartWidth = this.chartWidth;
       const chartHeight = this.chartHeight;
       const ctx = this.context;
-      const overflow = this.overflow;
       const x0 = this.graphX0;
       const y0 = this.graphY0;
       const y1 = this.graphY1;
       const topMargin = 1;
       const yLength = y0 - y1 - topMargin;
-
-      // bar
-      const barWidth = this.barWidth;
-      const barSpacing = this.barSpacing;
-      const barSeriesSpacing = this.barSeriesSpacing;
 
       // values
       const maxValue = this.maxValue;
@@ -909,34 +977,10 @@ namespace ABeamer {
 
       // data
       const data = this.data;
-      const seriesLen = this.seriesLen;
+      const nrPoints = this.nrPoints;
 
-      const maxSeriesLen = sweepV >= 1 ? seriesLen :
-        Math.max(Math.min(Math.floor(seriesLen * sweepV) + 1, seriesLen), 0);
-
-      // computes x-shift created by side-by-side bars.
-      // only bar charts cause a x-shift.
-      const xShiftPerSeries = [];
-      let xShift = 0;
-
-      data.forEach((series, seriesI) => {
-        if (this.chartTypes[seriesI] === ChartTypes.bar) {
-          if (xShift) {
-            xShift += barSeriesSpacing;
-          }
-          xShiftPerSeries.push(xShift);
-          xShift += barWidth;
-        } else {
-          xShiftPerSeries.push(0);
-        }
-      });
-      if (!xShift) {
-        xShift += barWidth;
-      }
-      const dataWidths = xShift + barSpacing;
-      // the last bar doesn't needs barSpacing
-      const totalWidth = dataWidths * seriesLen - barSpacing;
-      const x1 = x0 + totalWidth;
+      const drawNrPoints = sweepV >= 1 ? nrPoints :
+        Math.max(Math.min(Math.floor(nrPoints * sweepV) + 1, nrPoints), 0);
 
       ctx.clearRect(0, 0, chartWidth, chartHeight);
 
@@ -952,7 +996,7 @@ namespace ABeamer {
 
         const chartType = this.chartTypes[seriesI];
 
-        for (let i = 0; i < maxSeriesLen; i++) {
+        for (let i = 0; i < drawNrPoints; i++) {
 
           ctx.lineWidth = this.strokeWidth[seriesI][i];
           ctx.strokeStyle = this.strokeColors[seriesI][i];
@@ -965,18 +1009,21 @@ namespace ABeamer {
           ctx.fillStyle = v >= 0 ? this.fillColors[seriesI][i] :
             this.negativeFillColors[seriesI][i];
 
-          const x = x0 + dataWidths * i + xShiftPerSeries[seriesI];
+          const xDrawPoint = this.xDrawPoints[i].series[seriesI];
+
+          // values
           const vClip = (v - vy0Line) / valueRange;
-          const vT = vClip * barHeightV;
+          const vT = vClip * pointHeight;
+          // y
           const yLen = -yLength * vT;
-          const xLen = dataWidths / 2;
-
-          let xNew = xLen + x;
           let yNew = yLen + y;
+          // x
+          const x = xDrawPoint.x;
+          let xNew = x;
 
-          if ((i === maxSeriesLen - 1) && (sweepV < 1)) {
-            const leftSweep = (sweepV - i / seriesLen);
-            const reSweep = leftSweep / (1 / seriesLen);
+          if ((i === drawNrPoints - 1) && (sweepV < 1)) {
+            const leftSweep = (sweepV - i / nrPoints);
+            const reSweep = leftSweep / (1 / nrPoints);
             xNew = ((xNew - xPrev) * reSweep) + xPrev;
             yNew = ((yNew - yPrev) * reSweep) + yPrev;
           }
@@ -986,6 +1033,7 @@ namespace ABeamer {
 
           switch (chartType) {
             case ChartTypes.bar:
+              const barWidth = xDrawPoint.w;
               ctx.fillRect(x, y, barWidth, yLen);
               ctx.strokeRect(x, y, barWidth, yLen);
               xMidNew = x + barWidth / 2;
@@ -1034,7 +1082,7 @@ namespace ABeamer {
       if (this.title.caption) {
         _setUpCaptionsFont(this.title, ctx);
         const titleXPos = _alignCaptions(this.title, ctx,
-          titleCaption, x1 - this.graphX0);
+          titleCaption, this.x1 - this.graphX0);
         ctx.fillText(titleCaption, this.graphX0 + titleXPos, this.title.y);
       }
 
@@ -1044,9 +1092,9 @@ namespace ABeamer {
         _setUpCaptionsFont(this.labelsX, ctx);
         captions = this.labelsX.captions;
         for (let i = 0; i < captions.length; i++) {
-          const x = x0 + dataWidths * i;
+          const x = this.xDrawPoints[i].xLabel;
           const text = captions[i];
-          const deltaX = _alignCaptions(this.labelsX, ctx, text, xShift);
+          const deltaX = _alignCaptions(this.labelsX, ctx, text, this.xDrawPoints[i].xLabelWidth);
           ctx.fillText(text, x + deltaX, this.labelsX.y);
         }
       }
@@ -1067,12 +1115,12 @@ namespace ABeamer {
 
       // y0Line
       if (hasY0Line && this.y0Line.visible) {
-        this._drawLine(this.y0Line, x0, axis0Y, x1, axis0Y);
+        this._drawLine(this.y0Line, x0, axis0Y, this.x1, axis0Y);
       }
 
       // x-axis
       if (this.xAxis.visible) {
-        this._drawLine(this.xAxis, x0, y0, x1, y0);
+        this._drawLine(this.xAxis, x0, y0, this.x1, y0);
       }
 
       // y-axis

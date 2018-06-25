@@ -27,8 +27,8 @@ $(window).on("load", function () {
                             captions: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
                         },
                         animeSelector: 'bar-chart-anime',
-                        colHeightStart: 0.2,
-                        colInterSpacing: 1,
+                        pointHeightStart: 0.2,
+                        seriesSpacing: 1,
                         fillColors: ['#ffecad', '#adffb9', ''],
                         strokeColors: ['#9c9c9c', '#9c9c9c', '#dd5252'],
                         strokeWidth: [1, 1, 2],
@@ -47,8 +47,8 @@ $(window).on("load", function () {
                             [13000, 12000, 35000],
                         ],
                         animeSelector: 'area-chart-anime',
-                        colHeightStart: 0.2,
-                        colInterSpacing: 1,
+                        pointHeightStart: 0.2,
+                        seriesSpacing: 1,
                         fillColors: ['#ffecad', '#adffb9'],
                         strokeColors: ['#9c9c9c', '#9c9c9c'],
                         strokeWidth: [2, 2],
@@ -60,14 +60,14 @@ $(window).on("load", function () {
             selector: '%bar-chart-anime',
             duration: '1s',
             props: [{
-                    prop: 'col-height',
+                    prop: 'point-height',
                     value: 1,
                 }],
         }, {
             selector: '%area-chart-anime',
             duration: '1s',
             props: [{
-                    prop: 'col-height',
+                    prop: 'point-height',
                     value: 1,
                 }],
         }])

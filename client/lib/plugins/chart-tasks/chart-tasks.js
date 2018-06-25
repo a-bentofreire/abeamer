@@ -98,7 +98,7 @@ var ABeamer;
             fontFamily: 'sans-serif',
             fontColor: 'black',
             fontSize: 12,
-            alignment: ChartCaptionAlignment.left,
+            alignment: ChartCaptionAlignment.center,
             position: ChartCaptionPosition.bottom,
             orientation: ChartCaptionOrientation.horizontal,
             marginBefore: 0,
@@ -133,6 +133,10 @@ var ABeamer;
             size: 5,
             color: 'black',
         },
+        barWidth: 0,
+        pointMaxHeight: 100,
+        pointSpacing: 0,
+        seriesSpacing: 3,
     };
     function _maxOfArrayArray(data, startValue) {
         data.forEach(function (series) {
@@ -278,9 +282,9 @@ var ABeamer;
             var max = -Number.MIN_VALUE;
             var min = Number.MAX_VALUE;
             var sum = 0;
-            var firstSeriesLen = data[0].length;
+            var nrPoints = data[0].length;
             data.forEach(function (series) {
-                if (series.length !== firstSeriesLen) {
+                if (series.length !== nrPoints) {
                     ABeamer.throwErr("Every Series must have the same length");
                 }
                 series.forEach(function (point) {
@@ -293,7 +297,7 @@ var ABeamer;
             this.max = max;
             this.sum = sum;
             this.avg = (max - min) / 2;
-            this.seriesLen = firstSeriesLen;
+            this.nrPoints = nrPoints;
             this.data = data;
         };
         _WkChart.prototype._initCaptions = function (defaults, captions, labThis, labOther) {
@@ -378,13 +382,13 @@ var ABeamer;
             // console.log(v);
         }
     }
-    // ------------------------------------------------------------------------
-    //                               Axis Chart
-    // ------------------------------------------------------------------------
     var _WkAxisChart = /** @class */ (function (_super) {
         __extends(_WkAxisChart, _super);
         function _WkAxisChart() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            // draw points
+            _this.xDrawPoints = [];
+            return _this;
         }
         _WkAxisChart.prototype._initLabels = function (params) {
             function ExprStrToLabels(l) {
@@ -496,6 +500,71 @@ var ABeamer;
         _WkAxisChart.prototype._computeBestValues = function () {
             this.bestMaxValue = _calcBestMax(this.max);
         };
+        _WkAxisChart.prototype._computeDrawPoints = function (params) {
+            var _this = this;
+            this.pointMaxHeight = ABeamer.ExprOrNumToNum(params.pointMaxHeight, _defValues.pointMaxHeight, this.args);
+            var x0 = this.graphX0 + this.overflow;
+            var x1 = this.graphX1 - this.overflow;
+            var xWidth = x1 - x0;
+            var nrPoints = this.nrPoints;
+            var pointArea = xWidth / nrPoints;
+            var pointSpacing = ABeamer.ExprOrNumToNum(params.pointSpacing, _defValues.pointSpacing, this.args);
+            pointSpacing = pointSpacing || pointArea;
+            var x = x0;
+            var barChartCount = this.chartTypes.reduce(function (acc, v) {
+                return acc + (v === ChartTypes.bar ? 1 : 0);
+            });
+            if (barChartCount === 0) {
+                var _loop_1 = function (i) {
+                    var xMidPoint = x + pointSpacing / 2;
+                    this_1.xDrawPoints.push({
+                        x: x,
+                        xLabel: x,
+                        xLabelWidth: pointSpacing,
+                        series: this_1.data.map(function () {
+                            return { x: xMidPoint, w: pointSpacing };
+                        }),
+                    });
+                    x += pointSpacing;
+                };
+                var this_1 = this;
+                for (var i = 0; i < nrPoints; i++) {
+                    _loop_1(i);
+                }
+            }
+            else {
+                var barWidth_1 = ABeamer.ExprOrNumToNum(params.barWidth, _defValues.barWidth, this.args);
+                var seriesSpacing_1 = ABeamer.ExprOrNumToNum(params.seriesSpacing, _defValues.seriesSpacing, this.args);
+                if (!barWidth_1) {
+                    barWidth_1 = (pointSpacing / barChartCount) - seriesSpacing_1;
+                }
+                var usedPointWidth = barWidth_1 * barChartCount +
+                    seriesSpacing_1 * (barChartCount - 1);
+                var _loop_2 = function (i) {
+                    var xBar = x;
+                    var xMidPoint = x + pointSpacing / 2;
+                    this_2.xDrawPoints.push({
+                        x: x,
+                        xLabel: x,
+                        xLabelWidth: usedPointWidth,
+                        series: this_2.data.map(function (series, seriesI) {
+                            if (_this.chartTypes[seriesI] === ChartTypes.bar) {
+                                var xBarThis = xBar;
+                                xBar += barWidth_1 + seriesSpacing_1;
+                                return { x: xBarThis, w: barWidth_1 };
+                            }
+                            return { x: xMidPoint, w: pointSpacing };
+                        }),
+                    });
+                    x += pointSpacing;
+                };
+                var this_2 = this;
+                for (var i = 0; i < nrPoints; i++) {
+                    _loop_2(i);
+                }
+            }
+            this.x1 = x;
+        };
         /** Initializes all the Axis Chart parameters. */
         _WkAxisChart.prototype._initChart = function (params) {
             var _this = this;
@@ -512,11 +581,6 @@ var ABeamer;
             this.xAxis = this._initLine(params.xAxis || {});
             this.yAxis = this._initLine(params.yAxis || {});
             this.y0Line = this._initLine(params.y0Line || {});
-            // bar chart
-            this.barWidth = ABeamer.ExprOrNumToNum(params.colWidth, 20, this.args);
-            this.barMaxHeight = ABeamer.ExprOrNumToNum(params.colMaxHeight, 100, this.args);
-            this.barSpacing = ABeamer.ExprOrNumToNum(params.colSpacing, 5, this.args);
-            this.barSeriesSpacing = ABeamer.ExprOrNumToNum(params.colInterSpacing, 0, this.args);
             // limits
             this._computeBestValues();
             this.maxValue = ABeamer.ExprOrNumToNum(params.maxValue, this.bestMaxValue, this.args);
@@ -528,30 +592,26 @@ var ABeamer;
                 this._fillArrayArrayParam(params.negativeFillColors, 'white');
             this._initMarkers(params);
             this._initLabels(params);
+            this._computeDrawPoints(params);
             // animation
-            this.props['col-height'] = ABeamer.ExprOrNumToNum(params.colHeightStart, 1, this.args);
+            this.props['point-height'] = ABeamer.ExprOrNumToNum(params.pointHeightStart, 1, this.args);
             this.props['deviation'] = ABeamer.ExprOrNumToNum(params.deviationStart, 1, this.args);
             this.props['sweep'] = ABeamer.ExprOrNumToNum(params.sweepStart, 1, this.args);
         };
         /** Implements Axis Chart animation. */
         _WkAxisChart.prototype._drawChart = function (params) {
             var _this = this;
-            var barHeightV = this.props['col-height'];
+            var pointHeight = this.props['point-height'];
             var deviationV = this.props['deviation'];
             var sweepV = this.props['sweep'];
             var chartWidth = this.chartWidth;
             var chartHeight = this.chartHeight;
             var ctx = this.context;
-            var overflow = this.overflow;
             var x0 = this.graphX0;
             var y0 = this.graphY0;
             var y1 = this.graphY1;
             var topMargin = 1;
             var yLength = y0 - y1 - topMargin;
-            // bar
-            var barWidth = this.barWidth;
-            var barSpacing = this.barSpacing;
-            var barSeriesSpacing = this.barSeriesSpacing;
             // values
             var maxValue = this.maxValue;
             var minValue = this.minValue;
@@ -563,32 +623,9 @@ var ABeamer;
             var axis0Y = y0 - yLength * vy0LineClip;
             // data
             var data = this.data;
-            var seriesLen = this.seriesLen;
-            var maxSeriesLen = sweepV >= 1 ? seriesLen :
-                Math.max(Math.min(Math.floor(seriesLen * sweepV) + 1, seriesLen), 0);
-            // computes x-shift created by side-by-side bars.
-            // only bar charts cause a x-shift.
-            var xShiftPerSeries = [];
-            var xShift = 0;
-            data.forEach(function (series, seriesI) {
-                if (_this.chartTypes[seriesI] === ChartTypes.bar) {
-                    if (xShift) {
-                        xShift += barSeriesSpacing;
-                    }
-                    xShiftPerSeries.push(xShift);
-                    xShift += barWidth;
-                }
-                else {
-                    xShiftPerSeries.push(0);
-                }
-            });
-            if (!xShift) {
-                xShift += barWidth;
-            }
-            var dataWidths = xShift + barSpacing;
-            // the last bar doesn't needs barSpacing
-            var totalWidth = dataWidths * seriesLen - barSpacing;
-            var x1 = x0 + totalWidth;
+            var nrPoints = this.nrPoints;
+            var drawNrPoints = sweepV >= 1 ? nrPoints :
+                Math.max(Math.min(Math.floor(nrPoints * sweepV) + 1, nrPoints), 0);
             ctx.clearRect(0, 0, chartWidth, chartHeight);
             var y = axis0Y;
             var dataMidPixels = [];
@@ -599,7 +636,7 @@ var ABeamer;
                 var seriesPixels = [];
                 var seriesMidPixels = [];
                 var chartType = _this.chartTypes[seriesI];
-                for (var i = 0; i < maxSeriesLen; i++) {
+                for (var i = 0; i < drawNrPoints; i++) {
                     ctx.lineWidth = _this.strokeWidth[seriesI][i];
                     ctx.strokeStyle = _this.strokeColors[seriesI][i];
                     var v = series[i];
@@ -608,16 +645,19 @@ var ABeamer;
                     }
                     ctx.fillStyle = v >= 0 ? _this.fillColors[seriesI][i] :
                         _this.negativeFillColors[seriesI][i];
-                    var x = x0 + dataWidths * i + xShiftPerSeries[seriesI];
+                    var xDrawPoint = _this.xDrawPoints[i].series[seriesI];
+                    // values
                     var vClip = (v - vy0Line) / valueRange;
-                    var vT = vClip * barHeightV;
+                    var vT = vClip * pointHeight;
+                    // y
                     var yLen = -yLength * vT;
-                    var xLen = dataWidths / 2;
-                    var xNew = xLen + x;
                     var yNew = yLen + y;
-                    if ((i === maxSeriesLen - 1) && (sweepV < 1)) {
-                        var leftSweep = (sweepV - i / seriesLen);
-                        var reSweep = leftSweep / (1 / seriesLen);
+                    // x
+                    var x = xDrawPoint.x;
+                    var xNew = x;
+                    if ((i === drawNrPoints - 1) && (sweepV < 1)) {
+                        var leftSweep = (sweepV - i / nrPoints);
+                        var reSweep = leftSweep / (1 / nrPoints);
                         xNew = ((xNew - xPrev) * reSweep) + xPrev;
                         yNew = ((yNew - yPrev) * reSweep) + yPrev;
                     }
@@ -625,6 +665,7 @@ var ABeamer;
                     var yMidNew = yNew;
                     switch (chartType) {
                         case ChartTypes.bar:
+                            var barWidth = xDrawPoint.w;
                             ctx.fillRect(x, y, barWidth, yLen);
                             ctx.strokeRect(x, y, barWidth, yLen);
                             xMidNew = x + barWidth / 2;
@@ -665,7 +706,7 @@ var ABeamer;
             var titleCaption = this.title.caption;
             if (this.title.caption) {
                 _setUpCaptionsFont(this.title, ctx);
-                var titleXPos = _alignCaptions(this.title, ctx, titleCaption, x1 - this.graphX0);
+                var titleXPos = _alignCaptions(this.title, ctx, titleCaption, this.x1 - this.graphX0);
                 ctx.fillText(titleCaption, this.graphX0 + titleXPos, this.title.y);
             }
             var captions;
@@ -674,9 +715,9 @@ var ABeamer;
                 _setUpCaptionsFont(this.labelsX, ctx);
                 captions = this.labelsX.captions;
                 for (var i = 0; i < captions.length; i++) {
-                    var x = x0 + dataWidths * i;
+                    var x = this.xDrawPoints[i].xLabel;
                     var text = captions[i];
-                    var deltaX = _alignCaptions(this.labelsX, ctx, text, xShift);
+                    var deltaX = _alignCaptions(this.labelsX, ctx, text, this.xDrawPoints[i].xLabelWidth);
                     ctx.fillText(text, x + deltaX, this.labelsX.y);
                 }
             }
@@ -695,11 +736,11 @@ var ABeamer;
             }
             // y0Line
             if (hasY0Line && this.y0Line.visible) {
-                this._drawLine(this.y0Line, x0, axis0Y, x1, axis0Y);
+                this._drawLine(this.y0Line, x0, axis0Y, this.x1, axis0Y);
             }
             // x-axis
             if (this.xAxis.visible) {
-                this._drawLine(this.xAxis, x0, y0, x1, y0);
+                this._drawLine(this.xAxis, x0, y0, this.x1, y0);
             }
             // y-axis
             if (this.yAxis.visible) {
