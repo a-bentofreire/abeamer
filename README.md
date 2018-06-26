@@ -1,7 +1,7 @@
 ## Description
 ![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/developer-badge.gif)![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/v-0.3.0.gif)  
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-abeamer/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-abeamer/story-frames/story.gif)  
   
 **ABeamer** is a powerful animation EcoSystem, designed to create an animated story 
 in the web browser and generate the file images of each frame in either a local machine or in the cloud.  
@@ -20,7 +20,7 @@ the story to the company's machine to render the frame images and generate anima
 
 ## What's new
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-charts/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-charts/story-frames/story.gif)  
   
 The ABeamer 0.3.0 includes the first implementation of the charts plugin.  
 Although there is still a lot of work for reach production stage, and the API can still change,
@@ -55,14 +55,14 @@ to install if you need to render, create gifs or movies in the local machine.
 
 ## Donate
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-support/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-support/story-frames/story.gif)  
   
 To build this project, and take it to the next level with the creation of the [Animation Editor](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/animation-editor/), it requires a full-time developer, 
 please, consider donating to keep this project
 alive and help to tell your story or to grow your business:  
 
-* ![Image](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/paypal.png) [paypal](https://www.paypal.me/abentofreire) 
-* ![Image](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/bitcoin.png) Bitcoin: `1mH89kWbvffActY7FAke26t2fbJE9U6jv`
+* ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/sources/paypal.png) [paypal](https://www.paypal.me/abentofreire) 
+* ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/sources/bitcoin.png) Bitcoin: `1mH89kWbvffActY7FAke26t2fbJE9U6jv`
 * Add a star to the [github repo](https://github.com/a-bentofreire/abeamer).
 
 ## Features
@@ -76,7 +76,7 @@ alive and help to tell your story or to grow your business:
 * Highly Extensible via [plugins](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/plugin-manager/) including [interpolators](#interpolators), functions, flyovers and tasks.
 * [Tasks](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/tasks/) to build complex animations 
 and [F/X](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/tasks/#fx).
-* Large gallery of [example projects](https://github.com/a-bentofreire/abeamer-gallery-release/).
+* Large gallery of [example projects](https://a-bentofreire.github.io/abeamer-gallery-release/).
 * Multiple scenes (only default scenes are teleportable).
 * Scene transitions.
 * [Expressions](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/expressions/), functions and variables.
@@ -84,19 +84,19 @@ and [F/X](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/
 * Teleportable [JQuery-like containers](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/pels/).
 * Teleportable [flyovers](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/flyovers/).
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-rec-high-res/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-rec-high-res/story-frames/story.gif)  
   
 * Saves frame-by-frame into a file sequence with transparency and at high resolution.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-with-less/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-with-less/story-frames/story.gif)  
   
 * Optional support for SCSS, LESS and TypeScript.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-virtual/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-virtual/story-frames/story.gif)  
   
 * DOM and Virtual Elements, Animators and Scenes.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-localization/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-localization/story-frames/story.gif)  
   
 * Localization of messages and plugin functionalities, including functions and variables.
 
@@ -109,30 +109,30 @@ or if that information is given via `valueStart`.
 * General CSS properties:   
 e.g  `prop: 'border-style'; valueText: ['dotted', 'dashed']`.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-pixels/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-pixels/story-frames/story.gif)  
   
 * Pixel properties.  
  e.g. `valueStart: 10px; value: 100;`
 * Dual-pixel properties via [paths](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/paths/).
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-colors/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-colors/story-frames/story.gif)  
   
 * Color properties.  
 e.g. `valueText: ['red', '#FF00AA'];`
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-counter/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-counter/story-frames/story.gif)  
   
 * Formatted numerical properties.  
 e.g. `valueFormat: '%d%'; value: 100;`
 * Unformatted numerical properties.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-images/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-images/story-frames/story.gif)  
   
 * Image properties.  
 e.g. `prop: 'src'; valueText: ['a.png', 'b.png'];`
 * Text properties.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-class-prop/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-class-prop/story-frames/story.gif)  
   
 * `class` property.  
 e.g. `prop: 'class'; valueText: ['+class1 -class2'];`
@@ -147,11 +147,11 @@ its animations are similar to CSS animations, therefore it's easy to convert CSS
 to ABeamer animations.  
 Besides the property interpolation described above, ABeamer also supports:
    
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-item-delay/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-item-delay/story-frames/story.gif)  
   
 * Item-delay with `disturbance` to produce random effects.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-loop/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-loop/story-frames/story.gif)  
   
 * CSS animation-iteration-count.
 
@@ -167,19 +167,19 @@ ABeamer provides several interpolators, which can be defined by:
 ABeamer has following interpolators:
 
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-easings/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-easings/story-frames/story.gif)  
   
 - Easings - The speed of motion.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-oscillator/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-oscillator/story-frames/story.gif)  
   
 * `harmonic` and `damped` oscillators - Rotation and Balancing motion.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-pulsar/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-pulsar/story-frames/story.gif)  
   
 * `pulsar` oscillator.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-paths/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-paths/story-frames/story.gif)  
   
 * Paths - n-dimension motion.
 
@@ -193,49 +193,49 @@ Just like in the case of interpolators, [Code Handlers](https://a-bentofreire.gi
 
 ABeamer has the following tools:
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-transitions/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-transitions/story-frames/story.gif)  
   
 * Scene transitions.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-flyovers/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-flyovers/story-frames/story.gif)  
   
 * `info` flyover.
   
-[![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-video-sync/story-frames/../assets/a-bentofreire/snapshot.jpg)](https://a-bentofreire.github.io/abeamer-gallery-release/animate-video-sync/story-frames/../assets/a-bentofreire/view-video.html)  
+[![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-video-sync/story-frames/../assets/a-bentofreire/snapshot.jpg)](https://a-bentofreire.github.io/abeamer-gallery-release/animate-video-sync/story-frames/../assets/a-bentofreire/view-video.html)  
   
 * `video-sync` flyover [[1]](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/flyovers/#video-sync-flyover).
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-wrappers/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-wrappers/story-frames/story.gif)  
   
 * Wrappers.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-text-tasks/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-text-tasks/story-frames/story.gif)  
   
 * Text tasks:
    * `text-split` task.
    * `typewriter` task.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-factory/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-factory/story-frames/story.gif)  
   
 * `factory` task.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-decipher-text/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-decipher-text/story-frames/story.gif)  
   
 * `decipher` task.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-attack-task/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-attack-task/story-frames/story.gif)  
   
 * `color-attack` task.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-shapes/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-shapes/story-frames/story.gif)  
   
 * `shape` task.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-speech/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-speech/story-frames/story.gif)  
   
 * `speech` shape task.
   
-![Image](https://a-bentofreire.github.io/abeamer-gallery-release/animate-charts/story-frames/story.gif)  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-charts/story-frames/story.gif)  
   
 * `charts` task.
 
@@ -246,9 +246,13 @@ and much more [coming soon](https://a-bentofreire.github.io/abeamer-docs/end-use
 To create animations, It's only required to have the `web browser library` without the need of any software installed in the computer.  
 
 If you have nodejs already installed, install using npm:  
+  
 `[sudo] npm install -g abeamer`  
+  
 Otherwise if you don't want to install nodejs, download from [here](https://github.com/a-bentofreire/abeamer-release/archive/master.zip),
 but it won't execute the command-line utility.
+
+## Requirements
 
 However, in order to render frames, generate gifs and movies, it requires:
 1. [nodejs](https://nodejs.org/en/).
@@ -357,7 +361,7 @@ You can add multiple properties in parallel or off-sync with the `position` or `
 4. create gifs: `abeamer gif`.
 5. create movies: `abeamer movie`.
 
-For detailed examples, read: [Command Line Utility](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/abeamer-cli/).  
+For detailed examples, read: [Command Line Utility](https://a-bentofreire.github.io/abeamer/).  
 Read [Requirements](#requirements) for details about the necessary software 
 to install if you need to render, create gifs or movies on the local machine.
 
@@ -380,20 +384,20 @@ to install if you need to render, create gifs or movies on the local machine.
 
 ## Contribute
 
-![Image](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/warning.png) ABeamer is still in **beta** stage,
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/sources/warning.png) ABeamer is still in **beta** stage,
 and before the first GitHub commit it went through multiple redesigns both the 
 code and the documentation as well, although it has now reach a mature phase, 
 now is in a process of harmonize the code and documentation created during the multiple designs.   
 It still has bugs and inconsistences to tackle.
 
-![Image](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/warning.png) ABeamer 
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/sources/warning.png) ABeamer 
 was built on Linux/Chrome/Puppeteer and tested on Windows, Firefox, Opera and MS Edge.  
 There is still a lot of work to support all the most common web browsers, OSes and render servers.
 
 To keep an healthy cooperation environment, before posting an issue, please read 
-[Code Of Conduct](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/code-of-conduct.md)
+[Code Of Conduct](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/code-of-conduct/).
 
-To report issues, use the main repo [issues](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/issues).
+To report issues, use the main repo [issues](https://github.com/a-bentofreire/abeamer/issues/).
 
 ## License
 

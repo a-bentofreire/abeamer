@@ -13,6 +13,62 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 var DevWebLinks;
 (function (DevWebLinks) {
+    var repoSuffixes = ['*', 'release', 'gallery-release', 'docs'];
+    var LOCAL_PORT = 9000;
+    var localUrl = "http://localhost:" + LOCAL_PORT;
+    var repoUrl = "https://github.com/a-bentofreire/";
+    var pagesUrl = "https://a-bentofreire.github.io/";
+    var rawUrl = "https://raw.githubusercontent.com/a-bentofreire/";
+    var urlMapper = {
+        'docs/build/end-user': 'abeamer-docs/end-user',
+        'docs/build/developer': 'abeamer-docs/developer',
+        'gallery-release': 'abeamer-gallery-release',
+        'release': 'abeamer-gallery-release',
+    };
+    var urlMapperKeys = Object.keys(urlMapper);
+    var exceptionsUrls = [/blob\/master/, /archive\/master\.zip/, /\/issues\/$/];
+    function convertLink(link, isTargetLocal) {
+        if (isTargetLocal) {
+            if (exceptionsUrls.findIndex(function (regEx) { return link.search(regEx) !== -1; }) !== -1) {
+                return link;
+            }
+            var _a = link
+                .match(/^.*\/(abeamer[\w\-]*(?:\/(?:end-user|developer))?)(?:\/master)?(.*)$/)
+                || ['', '', ''], all = _a[0], findKey_1 = _a[1], subUrl = _a[2];
+            if (all && subUrl !== '') {
+                var matchKey = urlMapperKeys.find(function (key) { return findKey_1 === urlMapper[key]; });
+                if (matchKey) {
+                    subUrl = matchKey + subUrl;
+                }
+                else {
+                    subUrl = subUrl.substr(1);
+                }
+                var resUrl = localUrl + '/' + subUrl;
+                return resUrl;
+            }
+        }
+        else {
+            if (link.startsWith(localUrl)) {
+                var isMedia = link.search(/\.(?:gif|png|mp4|jpg|zip)$/) !== -1;
+                var _b = link.match(/^http:\/\/[^\/]+\/(.*)$/) || ['', ''], all = _b[0], subUrl_1 = _b[1];
+                if (all) {
+                    var matchKey = urlMapperKeys.find(function (key) { return subUrl_1.startsWith(key); });
+                    if (matchKey) {
+                        subUrl_1 = urlMapper[matchKey] + subUrl_1.substr(matchKey.length);
+                    }
+                    else {
+                        subUrl_1 = 'abeamer/' + subUrl_1;
+                    }
+                    var resUrl = (isMedia
+                        ? rawUrl + subUrl_1.replace(/([\w\-]+)/, '$1/master')
+                        : pagesUrl + subUrl_1);
+                    return resUrl;
+                }
+            }
+        }
+        return link;
+    }
+    DevWebLinks.convertLink = convertLink;
     DevWebLinks.repos = {
         main: '',
         mainRaw: '',
@@ -27,7 +83,7 @@ var DevWebLinks;
      * Initializes the web links based if isLocal or not.
      */
     function setup(isLocal) {
-        var LOCAL_PORT = 9000;
+        // @TODO: Port this code to RepoType
         var server = !isLocal
             ? 'https://github.com/a-bentofreire/__REPO__/' // blog/master/
             : "http://localhost:" + LOCAL_PORT + "/__REPO__/";

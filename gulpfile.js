@@ -538,19 +538,10 @@ var Gulp;
     function changeReadmeLinks(isTargetLocal) {
         var IN_FILE = './README.md';
         var BAK_FILE = IN_FILE + '.bak.md';
-        dev_web_links_js_1.DevWebLinks.setup(!isTargetLocal);
-        var srcs = Object.keys(dev_web_links_js_1.DevWebLinks.repos).map(function (key) { return dev_web_links_js_1.DevWebLinks.repos[key]; });
-        srcs.reverse(); // makes long urls came at the bottom.
-        dev_web_links_js_1.DevWebLinks.setup(isTargetLocal);
-        var dsts = Object.keys(dev_web_links_js_1.DevWebLinks.repos).map(function (key) { return dev_web_links_js_1.DevWebLinks.repos[key]; });
-        dsts.reverse();
         var content = fsix_js_1.fsix.readUtf8Sync(IN_FILE);
         sysFs.writeFileSync(BAK_FILE, content);
         content = content.replace(/http([^ \)]+)/g, function (all, p) {
-            srcs.forEach(function (src, index) {
-                all = all.replace(src, dsts[index]);
-            });
-            return all;
+            return dev_web_links_js_1.DevWebLinks.convertLink(all, isTargetLocal);
         });
         sysFs.writeFileSync(IN_FILE, content);
     }
