@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.3.1] -
 ### Fixed
 - (DEV) Fixes the `gulp README-to-local` and `gulp README-to-online`.
+- (DEV) Fixes code examples on JSDocs for `gulp build-docs`.
+### Added
+- `gulp build-docs` adds links for property and method classes.
+
 
 ## [0.3.0] -
 ### Breaking changes

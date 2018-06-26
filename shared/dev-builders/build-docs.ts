@@ -252,6 +252,7 @@ export namespace BuildDocs {
     private classOrInterfaceName = '';
     private disabledClassOrInterface = false;
     private isInterface = false;
+    private links: string[] = [];
 
     private lastJsDocsLineNr = 0;
     private lastPeekLineNr = 0;
@@ -273,14 +274,13 @@ export namespace BuildDocs {
 
     private isFinished = () => this.inpLineNr >= this.inpLineCount;
 
-    private _processDefContent(line: string,
-      scanForComma: boolean): string {
+    private _processDefContent(line: string, scanForComma: boolean): string {
 
       line = line.trim();
       const line1 = line;
-      let securityCount = 0;
+      let securityLineCount = 0;
       do {
-        if (securityCount > 80) {
+        if (securityLineCount > 150) {
           console.log(`too many lines ${scanForComma ? 'YES' : 'NO'}:\n${line1}\n${line}`);
           return 'ERROR';
         }
@@ -291,7 +291,7 @@ export namespace BuildDocs {
           return matches[1] + ';';
         }
         line = line + '\n' + this.getLine();
-        securityCount++;
+        securityLineCount++;
       } while (true);
     }
 
@@ -342,9 +342,17 @@ export namespace BuildDocs {
         + `${this.classOrInterfaceName ? this.classOrInterfaceName + '.' : ''}`
         + `${id}${IdTypeAreFunctions.indexOf(idType) !== -1 ? '()' : ''}\n`);
 
+      if (this.classOrInterfaceName) {
+        this.links.push(this.classOrInterfaceName);
+      }
+
       this.outLines.push(badges
         .map(badge => `<span class="code-badge badge-${badge}">${badge}</span>`)
-        .join(' ') + '  ');
+        .join(' ')
+        + '  ' + this.links.map(link => `[[${link}](${link})]`).join(' ')
+        + '  ');
+
+      this.links = [];
 
       this.outLines.push('```TypeScript\n' + line + '\n```\n');
 
@@ -371,12 +379,14 @@ export namespace BuildDocs {
             return '';
           });
 
+          // removes the @readonly line
           line = line.replace(/\s*\*\s*#end-user\s+@readonly\s*/, () => {
             // this.isReadOnly = true;
             return '';
           });
 
-          line = line.replace(/^\s*\/?\*{1,2}\s*/, '');
+          // removes the start comment marker
+          line = line.replace(/^\s*\/?\*{1,2}\s?/, '');
           this.jsDocs.push(line);
         } while (!done);
         this.lastJsDocsLineNr = this.inpLineNr;

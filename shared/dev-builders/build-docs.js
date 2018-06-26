@@ -200,6 +200,7 @@ var BuildDocs;
             this.classOrInterfaceName = '';
             this.disabledClassOrInterface = false;
             this.isInterface = false;
+            this.links = [];
             this.lastJsDocsLineNr = 0;
             this.lastPeekLineNr = 0;
             this.isFinished = function () { return _this.inpLineNr >= _this.inpLineCount; };
@@ -218,9 +219,9 @@ var BuildDocs;
         DocParser.prototype._processDefContent = function (line, scanForComma) {
             line = line.trim();
             var line1 = line;
-            var securityCount = 0;
+            var securityLineCount = 0;
             do {
-                if (securityCount > 80) {
+                if (securityLineCount > 150) {
                     console.log("too many lines " + (scanForComma ? 'YES' : 'NO') + ":\n" + line1 + "\n" + line);
                     return 'ERROR';
                 }
@@ -231,7 +232,7 @@ var BuildDocs;
                     return matches[1] + ';';
                 }
                 line = line + '\n' + this.getLine();
-                securityCount++;
+                securityLineCount++;
             } while (true);
         };
         DocParser.prototype._allowId = function (id, idType, accessTag, exportTag) {
@@ -268,9 +269,15 @@ var BuildDocs;
             this.outLines.push("##" + (IdTypeAreSections.indexOf(idType) !== -1 ? '' : '#') + " "
                 + ("" + (this.classOrInterfaceName ? this.classOrInterfaceName + '.' : ''))
                 + ("" + id + (IdTypeAreFunctions.indexOf(idType) !== -1 ? '()' : '') + "\n"));
+            if (this.classOrInterfaceName) {
+                this.links.push(this.classOrInterfaceName);
+            }
             this.outLines.push(badges
                 .map(function (badge) { return "<span class=\"code-badge badge-" + badge + "\">" + badge + "</span>"; })
-                .join(' ') + '  ');
+                .join(' ')
+                + '  ' + this.links.map(function (link) { return "[[" + link + "](" + link + ")]"; }).join(' ')
+                + '  ');
+            this.links = [];
             this.outLines.push('```TypeScript\n' + line + '\n```\n');
             if (svJsDocs.length && this.lastJsDocsLineNr === this.lastPeekLineNr) {
                 var formattedJsDocs = formatJsDocsMarkdown(svJsDocs.join('\n'), this.localWebLinks);
@@ -292,11 +299,13 @@ var BuildDocs;
                         done_1 = true;
                         return '';
                     });
+                    // removes the @readonly line
                     line = line.replace(/\s*\*\s*#end-user\s+@readonly\s*/, function () {
                         // this.isReadOnly = true;
                         return '';
                     });
-                    line = line.replace(/^\s*\/?\*{1,2}\s*/, '');
+                    // removes the start comment marker
+                    line = line.replace(/^\s*\/?\*{1,2}\s?/, '');
                     this.jsDocs.push(line);
                 } while (!done_1);
                 this.lastJsDocsLineNr = this.inpLineNr;
