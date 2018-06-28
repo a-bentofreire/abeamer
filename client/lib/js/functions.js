@@ -23,6 +23,10 @@
  * - `cos` - 'cosine' trigonometric function.
  * - `tan` - 'tangent' trigonometric function.
  *
+ * - `exp` - 2^x
+ * - `log` - ln
+ * - `log10` - base 10 logarithm.
+ *
  * - `round`.
  * - `ceil`- always rounds up.
  * - `floor`- always rounds down.
@@ -109,6 +113,15 @@ var ABeamer;
     };
     ABeamer._exFunctions['sqrt'] = function (params, req) {
         _math1ParamFunc(params, req, Math.sqrt);
+    };
+    ABeamer._exFunctions['exp'] = function (params, req) {
+        _math1ParamFunc(params, req, Math.exp);
+    };
+    ABeamer._exFunctions['log'] = function (params, req) {
+        _math1ParamFunc(params, req, Math.log);
+    };
+    ABeamer._exFunctions['log10'] = function (params, req) {
+        _math1ParamFunc(params, req, Math.log10);
     };
     ABeamer._exFunctions['random'] = function (params, req) {
         req.checkParams(req, 0);

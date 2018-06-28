@@ -27,6 +27,10 @@
  * - `cos` - 'cosine' trigonometric function.
  * - `tan` - 'tangent' trigonometric function.
  *
+ * - `exp` - 2^x
+ * - `log` - ln
+ * - `log10` - base 10 logarithm.
+ *
  * - `round`.
  * - `ceil`- always rounds up.
  * - `floor`- always rounds down.
@@ -177,6 +181,21 @@ namespace ABeamer {
 
   _exFunctions['sqrt'] = (params: ExprFuncParams, req?: ExFuncReq) => {
     _math1ParamFunc(params, req, Math.sqrt);
+  };
+
+
+  _exFunctions['exp'] = (params: ExprFuncParams, req?: ExFuncReq) => {
+    _math1ParamFunc(params, req, Math.exp);
+  };
+
+
+  _exFunctions['log'] = (params: ExprFuncParams, req?: ExFuncReq) => {
+    _math1ParamFunc(params, req, Math.log);
+  };
+
+
+  _exFunctions['log10'] = (params: ExprFuncParams, req?: ExFuncReq) => {
+    _math1ParamFunc(params, req, Math.log10);
   };
 
 
