@@ -272,10 +272,12 @@ However, in order to render frames, generate gifs and movies, it requires:
 Try these examples online without any installation:
 
 - [Hello world](https://jsfiddle.net/abentofreire/peax4f9n/4/)
-- [Image Overlays](https://jsfiddle.net/abentofreire/dj9m7ztf/17/)
-- [E-Commerce](https://jsfiddle.net/abentofreire/dkztn53o/2/)
+- [Image Overlays](https://codepen.io/a-bentofreire/pen/QxMPYR)
+- [Ad Example](https://codepen.io/a-bentofreire/pen/qKPdVo)
+- [E-Commerce](https://codepen.io/a-bentofreire/pen/aKyxyd)
+- [Charts](https://codepen.io/a-bentofreire/pen/mKjQXR)
 
-## Getting started
+## Get started
 
 Start by creating a new project using the ABeamer command line utility:  
   
@@ -355,9 +357,9 @@ You can add multiple properties in parallel or off-sync with the `position` or `
 
 **ABeamer** command line utility is used to:
 
-* create projects: `abeamer create`.
+1. create projects: `abeamer create`.
 2. launch a live server: `abeamer serve`.
-3. render the project to disk: `abeamer render`.
+3. create a png file sequence: `abeamer render`.
 4. create gifs: `abeamer gif`.
 5. create movies: `abeamer movie`.
 

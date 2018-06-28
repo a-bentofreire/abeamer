@@ -9,6 +9,7 @@ gallery/remote-server/assets/**
 gallery/remote-server/story.json
 gallery/**/story-frames/
 test/tests.run/
+test/log/
 docs/build
 shared/dev-builders/output
 release{/**,}

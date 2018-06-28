@@ -30,7 +30,7 @@
  *
  * read the details on [](#AxisChartTaskParams).
  *
- * ## Getting started
+ * ## Get started
  * How to create a simple bar chart:
  *
  * The bare-bones of a `abeamer.ini` file:
@@ -279,23 +279,45 @@ namespace ABeamer {
 
 
     // colors
-    /** Interior Colors used by `area`, `bar` and `pie` charts. */
+    /** Interior Color used by `area`, `bar` and `pie` charts. */
     fillColors?: string | string[] | string[][];
+    /** Outline Color used by `area`, `bar` and `pie` charts, and line color for `line` chart. */
     strokeColors?: string | string[] | string[][];
     strokeWidth?: uint | uint[] | uint[][];
   }
 
 
+  /**
+   * Parameters used by Pie Charts.
+   * Pie Charts provide the following animators:
+   * - [angle](#PieChartTaskParams.angleStart) with initial value in angleStart.
+   * - [dispersion](#PieChartTaskParams.dispersionStart) with initial value in dispersionStart.
+   */
   export interface PieChartTaskParams extends BaseChartTaskParams {
+    /**
+     * Initial angle in radians defining the zero radial line of the chart.
+     * This parameter is animated with property `angle`.
+     */
     angleStart?: number | ExprString;
+
+
+    /**
+     * Initial dispersion factor defined between 0 and 1.
+     * A dispersion defines the percentage of how much the pie circle will be used.
+     * A value of 1 represents a full circle, and a value of 0.5, represents half circle.
+     * This parameter is animated with property `dispersion`.
+     */
     dispersionStart?: number | ExprString;
     isClockwise?: boolean;
   }
 
 
   /**
-   * Parameters used by AxisCharts, which are all except [Pie Charts](#PieChartTaskParams).
-   *
+   * Parameters used by Axis Charts, which are all except [Pie Charts](#PieChartTaskParams).
+   * Axis Charts provide the following animators:
+   * - [point-height](#AxisChartTaskParams.pointHeightStart) with initial value in pointHeightStart.
+   * - [deviation](#AxisChartTaskParams.deviationStart) with initial value in deviationStart.
+   * - [sweep](#AxisChartTaskParams.sweepStart) with initial value in sweepStart.
    */
   export interface AxisChartTaskParams extends BaseChartTaskParams {
 

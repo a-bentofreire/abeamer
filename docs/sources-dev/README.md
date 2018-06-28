@@ -14,7 +14,7 @@ It still has bugs and inconsistences to tackle.
 <i class="fa fa-exclamation-triangle fa-lg"></i> ABeamer was built on Linux/Chrome/Puppeteer and tested on Windows.  
 There is still a lot of work to support other web browsers, OSes and render servers.
 
-## Getting Started
+## Get started
 
 Before delve into the code, read:
 

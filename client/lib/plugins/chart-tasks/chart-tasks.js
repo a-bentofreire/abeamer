@@ -36,7 +36,7 @@ var __extends = (this && this.__extends) || (function () {
  *
  * read the details on [](#AxisChartTaskParams).
  *
- * ## Getting started
+ * ## Get started
  * How to create a simple bar chart:
  *
  * The bare-bones of a `abeamer.ini` file:
