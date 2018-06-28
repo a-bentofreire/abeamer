@@ -475,12 +475,21 @@ export namespace Exact {
     const listLen = list.length;
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < cycle.length; i++) {
-      const listIndex = Math.min(Math.max(0, Math.round(cycle[i] * listLen)), listLen - 1);
+      const v = Math.round(cycle[i] * listLen);
+      const listIndex = Math.floor(listLen * Math.min(Math.max(0, cycle[i]), 0.999));
       res.push(list[listIndex]);
     }
     return res;
   }
 
+
+
+  export function roundToTestDigits(values: number[]): void {
+    values.forEach((v, i) => {
+    values[i] = Math.round(v * _TEST_DIGIT_LIMIT) /
+      _TEST_DIGIT_LIMIT;
+    });
+  }
 
   export let simulatePixelAction = (values: number[]): string[] =>
     values.map(value => Math.round(value) + 'px');

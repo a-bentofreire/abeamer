@@ -621,7 +621,7 @@ var ABeamer;
                 elMedia.addEventListener('seeked', function () {
                     // #debug-start
                     if (_args.isVerbose) {
-                        args.story.logFrmt("video-sync: ", [
+                        args.story.logFrmt('video-sync', [
                             ['expected', pos],
                             ['actual', elMedia.currentTime],
                         ], ABeamer.LT_MSG);

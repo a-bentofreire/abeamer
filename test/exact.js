@@ -214,12 +214,20 @@ var Exact;
         var listLen = list.length;
         // tslint:disable-next-line:prefer-for-of
         for (var i = 0; i < cycle.length; i++) {
-            var listIndex = Math.min(Math.max(0, Math.round(cycle[i] * listLen)), listLen - 1);
+            var v = Math.round(cycle[i] * listLen);
+            var listIndex = Math.floor(listLen * Math.min(Math.max(0, cycle[i]), 0.999));
             res.push(list[listIndex]);
         }
         return res;
     }
     Exact.interpolateList = interpolateList;
+    function roundToTestDigits(values) {
+        values.forEach(function (v, i) {
+            values[i] = Math.round(v * Exact._TEST_DIGIT_LIMIT) /
+                Exact._TEST_DIGIT_LIMIT;
+        });
+    }
+    Exact.roundToTestDigits = roundToTestDigits;
     Exact.simulatePixelAction = function (values) {
         return values.map(function (value) { return Math.round(value) + 'px'; });
     };

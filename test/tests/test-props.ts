@@ -28,6 +28,7 @@ namespace Tests {
     // @HINT: Required due the fact chrome returns rgb values instead of #hhhhhh
   ].map(color => Exact.hexToRgb(color));
 
+
   const namedColors = ['red', 'green', 'blue', 'yellow', 'black'];
 
   const func1Name = '__Func_colorList';
@@ -35,7 +36,7 @@ namespace Tests {
     [`"${func1Name}"`,
     `function (t) {
         var c = ${JSON.stringify(namedColors)};
-      return c[Math.min(Math.round(c.length * t), c.length - 1)];
+      return c[Math.floor(c.length * Math.min(Math.max(0, t), 0.999))];
     }`,
     ],
   ] as [string, string][];
@@ -82,6 +83,7 @@ namespace Tests {
           position: absolute;
         `,
         value: transfMax,
+        valueStart: transfMin,
         valueFormat: transformStr.replace(transfMacroName, '%f'),
         expected: transfCycle,
       },

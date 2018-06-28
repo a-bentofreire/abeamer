@@ -24,7 +24,7 @@ var Tests;
     var func1Name = '__Func_colorList';
     var jsMacros = [
         ["\"" + func1Name + "\"",
-            "function (t) {\n        var c = " + JSON.stringify(namedColors) + ";\n      return c[Math.min(Math.round(c.length * t), c.length - 1)];\n    }",
+            "function (t) {\n        var c = " + JSON.stringify(namedColors) + ";\n      return c[Math.floor(c.length * Math.min(Math.max(0, t), 0.999))];\n    }",
         ],
     ];
     var transfMin = 2.2;
@@ -54,6 +54,7 @@ var Tests;
             prop: 'transform',
             css: "\n          transform-origin: bottom;\n          perspective: 20px;\n          position: absolute;\n        ",
             value: transfMax,
+            valueStart: transfMin,
             valueFormat: transformStr.replace(transfMacroName, '%f'),
             expected: transfCycle,
         },

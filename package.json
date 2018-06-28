@@ -114,7 +114,7 @@
     "print-version": "npm run abeamer -- --version",
     "---- start: test commands ----": "----",
     "test-all-serial": "node test/tests.js  --serial",
-    "test-all": "node test/tests.js",
+    "test-all": "mocha test/tests.js",
     "test-sanity": "mocha test/tests/test-sanity.js",
     "test-missing-selector": "mocha test/tests/test-missing-selector.js",
     "test-move-pixels": "mocha test/tests/test-move-pixels.js",

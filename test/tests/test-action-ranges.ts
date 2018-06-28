@@ -67,6 +67,7 @@ namespace Tests {
     const test = tests[index];
 
     const expected = Exact.interpolateMinMax(test.min, test.max, 2 * rd.fps);
+    Exact.roundToTestDigits(expected);
     const expectedPA: string[] = Exact.simulateAction(expected, test.propType);
 
     rd.actions.isIdPropActions(`t${test.elIndex}`, test.propName,

@@ -326,6 +326,13 @@ namespace ABeamer {
             value = (this.animProp.valueText as ValueTextFunc)(v, args);
             break;
         }
+
+        // #debug-start
+        if (isVerbose && typeof value === 'number') {
+          value = Math.round(value as number * _TEST_DIGIT_LIMIT) / _TEST_DIGIT_LIMIT;
+        }
+        // #debug-end
+
         value = valueFormat ? sprintf(valueFormat, value) : value;
 
       } else {
@@ -403,7 +410,7 @@ namespace ABeamer {
         }
 
         if (isDifferent) {
-          args.story.logFrmt(`action-update-warn: `, [
+          args.story.logFrmt('action-update-warn', [
             ['id', elAdapter.getId(args)],
             ['prop', propName],
             ['expected', newValue + ''],

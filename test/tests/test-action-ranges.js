@@ -48,6 +48,7 @@ var Tests;
     var func = function (rd, done, index) {
         var test = tests[index];
         var expected = exact_js_1.Exact.interpolateMinMax(test.min, test.max, 2 * rd.fps);
+        exact_js_1.Exact.roundToTestDigits(expected);
         var expectedPA = exact_js_1.Exact.simulateAction(expected, test.propType);
         rd.actions.isIdPropActions("t" + test.elIndex, test.propName, expectedPA, true, true, test.startFrame, test.frameCount);
         done();
