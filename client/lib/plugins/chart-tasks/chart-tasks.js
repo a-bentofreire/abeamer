@@ -451,6 +451,7 @@ var ABeamer;
                 case ChartCaptionPosition.left:
                     res.x = this.graphX0 + res.marginBefore;
                     d = res.width + res.marginBefore + res.marginAfter;
+                    this.graphY0 = Math.min(this.graphY0, this.chartHeight - res.height / 2);
                     this.graphX0 += d;
                     break;
                 case ChartCaptionPosition.bottom:
@@ -461,6 +462,7 @@ var ABeamer;
                 case ChartCaptionPosition.right:
                     d = res.width + res.marginBefore + res.marginAfter;
                     res.x = this.graphX1 + res.marginBefore - d;
+                    this.graphY0 = Math.min(this.graphY0, this.chartHeight - res.height / 2);
                     this.graphX1 -= d;
                     break;
             }

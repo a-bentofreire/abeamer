@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - (DEV) Fixed code examples on JSDocs for `gulp build-docs`.
 - (DEV) Fixed the tests that had errors.
 - Fixes the chart legend color for `line` charts.
+- Fixes the chart y-labels when there is not enough y-space created by labelsX.
 ### Changed
 - (DEV) `npm run test-all-serial` runs all the tests in serial.
 ### Added
