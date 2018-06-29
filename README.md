@@ -1,5 +1,5 @@
 ## Description
-![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/developer-badge.gif)![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/v-0.3.0.gif)  
+![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/developer-badge.gif)![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/v-0.3.1.gif)  
   
 ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-abeamer/story-frames/story.gif)  
   
@@ -20,9 +20,12 @@ the story to the company's machine to render the frame images and generate anima
 
 ## What's new
   
-![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-charts/story-frames/story.gif)  
-  
-The ABeamer 0.3.0 includes the first implementation of the charts plugin.  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-charts/story-frames/story.gif) ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-plot/story-frames/story.gif)   
+
+ABeamer 0.3.1 includes chart series as expressions, allowing to plot mathematical functions.
+The standard library now also includes `log`, `log10` and `exp`.
+
+ABeamer 0.3.0 includes the first implementation of the charts plugin.  
 Although there is still a lot of work for reach production stage, and the API can still change,
 is already usable in projects.  
 This plugin, will now enter a phase of research to ensure all parameters are consistent and their names 
