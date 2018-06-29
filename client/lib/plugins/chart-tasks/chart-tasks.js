@@ -503,6 +503,9 @@ var ABeamer;
                 }
             }
         };
+        _WkChart.prototype._getLegendColor = function (seriesI, i) {
+            return this.fillColors[seriesI][i];
+        };
         _WkChart.prototype._drawLegend = function () {
             var _this = this;
             var legend = this.legend;
@@ -518,7 +521,7 @@ var ABeamer;
                     _setUpCaptionsFont(legend, ctx_1);
                     var deltaX = _alignCaptions(legend, ctx_1, caption, legend.width);
                     ctx_1.fillText(caption, x_1 + deltaX, y);
-                    ctx_1.fillStyle = isPointLegend_1 ? _this.fillColors[0][i] : _this.fillColors[i][0] || _this.strokeColors[i][0];
+                    ctx_1.fillStyle = isPointLegend_1 ? _this._getLegendColor(0, i) : _this._getLegendColor(i, 0);
                     ctx_1.fillRect(x_1 + deltaX - mark_1.width - mark_1.spacing, y - (h_1 + mark_1.height) / 2, mark_1.width, mark_1.height);
                 });
             }
@@ -596,6 +599,11 @@ var ABeamer;
                 var heightDiv2 = this.labelsY.height / 2;
                 this.graphY1 = Math.max(this.graphY1, heightDiv2);
             }
+        };
+        _WkAxisChart.prototype._getLegendColor = function (seriesI, i) {
+            return this.chartTypes[seriesI] !== ChartTypes.line
+                ? this.fillColors[seriesI][i]
+                : this.strokeColors[seriesI][i];
         };
         _WkAxisChart.prototype._initLine = function (line) {
             return {

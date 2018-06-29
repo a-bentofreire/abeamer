@@ -965,6 +965,11 @@ namespace ABeamer {
     }
 
 
+    protected _getLegendColor(seriesI: uint, i: uint): string {
+      return this.fillColors[seriesI][i];
+    }
+
+
     protected _drawLegend(): void {
       const legend = this.legend;
       if (legend.captions) {
@@ -980,7 +985,7 @@ namespace ABeamer {
           _setUpCaptionsFont(legend, ctx);
           const deltaX = _alignCaptions(legend, ctx, caption, legend.width);
           ctx.fillText(caption, x + deltaX, y);
-          ctx.fillStyle = isPointLegend ? this.fillColors[0][i] : this.fillColors[i][0] || this.strokeColors[i][0];
+          ctx.fillStyle = isPointLegend ? this._getLegendColor(0, i) : this._getLegendColor(i, 0);
           ctx.fillRect(x + deltaX - mark.width - mark.spacing, y - (h + mark.height) / 2,
             mark.width, mark.height);
         });
@@ -1111,6 +1116,12 @@ namespace ABeamer {
       }
     }
 
+
+    protected _getLegendColor(seriesI: uint, i: uint): string {
+      return this.chartTypes[seriesI] !== ChartTypes.line
+        ? this.fillColors[seriesI][i]
+        : this.strokeColors[seriesI][i];
+    }
 
     protected _initLine(line: ChartLine): _WkChartLine {
 
