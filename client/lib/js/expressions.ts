@@ -125,6 +125,8 @@ namespace ABeamer {
     v?: number;
     /** Generic iterator. Used in Factories. */
     i?: int;
+    /** Generic number of items/points/elements. Used in Charts. */
+    n?: int;
 
     [name: string]: VarType;
   }

@@ -212,6 +212,7 @@ var ABeamer;
         pointMaxHeight: 100,
         pointDistance: 0,
         seriesSpacing: 3,
+        nrPoints: 10,
     };
     /**
      * Returns the maximum value of array of array of numbers.
@@ -290,9 +291,6 @@ var ABeamer;
         }
         return 0;
     }
-    // ------------------------------------------------------------------------
-    //                               _WkChart
-    // ------------------------------------------------------------------------
     var _WkChart = /** @class */ (function () {
         function _WkChart(args) {
             this.args = args;
@@ -370,14 +368,40 @@ var ABeamer;
             this.props = animator ? animator.props : {};
         };
         _WkChart.prototype._initData = function (data) {
+            var _this = this;
             var max = -Number.MIN_VALUE;
             var min = Number.MAX_VALUE;
             var sum = 0;
-            var nrPoints = data[0].length;
-            data.forEach(function (series) {
-                if (series.length !== nrPoints) {
-                    ABeamer.throwErr("Every Series must have the same length");
+            var nrPoints;
+            this.data = data.map(function (series, seriesI) {
+                var res;
+                if (Array.isArray(series)) {
+                    res = series;
                 }
+                else {
+                    res = [];
+                    var exprSeries = series;
+                    var v0 = exprSeries.startValue || 0;
+                    var step = exprSeries.step || 1;
+                    var nrPts = exprSeries.nrPoints || nrPoints || _defValues.nrPoints;
+                    _this.args.vars.n = nrPts;
+                    for (var i = 0; i < nrPts; i++) {
+                        _this.args.vars.v = i * step + v0;
+                        var v1 = ABeamer.calcExpr(exprSeries.expr, _this.args);
+                        res.push(typeof v1 === 'number' ? v1 : parseFloat(v1));
+                    }
+                }
+                if (!seriesI) {
+                    nrPoints = res.length;
+                }
+                else {
+                    if (res.length !== nrPoints) {
+                        ABeamer.throwErr("Every Series must have the same number of points");
+                    }
+                }
+                return res;
+            });
+            this.data.forEach(function (series) {
                 series.forEach(function (point) {
                     max = Math.max(max, point);
                     min = Math.min(min, point);
@@ -389,7 +413,6 @@ var ABeamer;
             this.sum = sum;
             this.avg = (max - min) / 2;
             this.nrPoints = nrPoints;
-            this.data = data;
         };
         _WkChart.prototype._initCaptions = function (defaults, captions, labThis, labOther) {
             var _this = this;

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - `gulp build-docs` adds links for property and method classes.
 - Added functions: `log`, `log10` and `exp`.
+- Added expression series in `charts`.
 
 
 ## [0.3.0] -
