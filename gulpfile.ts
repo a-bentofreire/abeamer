@@ -260,7 +260,7 @@ namespace Gulp {
       fsix.runExternal(renderCmdLine, (error, stdout, stderr) => {
         if (stderr) {
           console.error(stderr);
-          console.error('Badge Animated Gif Creation Failed');
+          console.error('Animated Gif Badge Creation Failed');
           console.log('Check out if the live server is running');
         } else {
           const gifCmdLine = `node ./cli/abeamer-cli.js gif ./${path}/ --loop 1 --gif ${outBadgeFileName}`;
@@ -268,10 +268,10 @@ namespace Gulp {
           fsix.runExternal(gifCmdLine, (_error, _stdout, _stderr) => {
             if (stderr) {
               console.error(stderr);
-              console.error('Badge Animated Gif Creation Failed');
+              console.error('Animated Gif Badge Creation Failed');
             } else {
               console.log(stdout);
-              console.error('Badge Animated Gif Created!');
+              console.error('Animated Gif Badge Created!');
             }
           });
         }

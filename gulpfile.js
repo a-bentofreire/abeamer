@@ -172,7 +172,7 @@ var Gulp;
             fsix_js_1.fsix.runExternal(renderCmdLine, function (error, stdout, stderr) {
                 if (stderr) {
                     console.error(stderr);
-                    console.error('Badge Animated Gif Creation Failed');
+                    console.error('Animated Gif Badge Creation Failed');
                     console.log('Check out if the live server is running');
                 }
                 else {
@@ -181,11 +181,11 @@ var Gulp;
                     fsix_js_1.fsix.runExternal(gifCmdLine, function (_error, _stdout, _stderr) {
                         if (stderr) {
                             console.error(stderr);
-                            console.error('Badge Animated Gif Creation Failed');
+                            console.error('Animated Gif Badge Creation Failed');
                         }
                         else {
                             console.log(stdout);
-                            console.error('Badge Animated Gif Created!');
+                            console.error('Animated Gif Badge Created!');
                         }
                     });
                 }

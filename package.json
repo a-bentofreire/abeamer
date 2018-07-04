@@ -3,7 +3,7 @@
   "uuid": "f709f52e-de91-4010-bca1-4cfb921fd995",
   "displayName": "abeamer",
   "description": "Animation for the cloud",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "publisher": "a-bentofreire",
   "keywords": [
     "animation",
@@ -26,7 +26,7 @@
   "bin": {
     "abeamer": "cli/abeamer-cli.js"
   },
-  "homepage": "https://github.com/a-bentofreire/abeamer",
+  "homepage": "https://www.abeamer.com",
   "bugs": "https://github.com/a-bentofreire/abeamer/issues",
   "repository": {
     "type": "git",
@@ -78,6 +78,7 @@
     "gif": "node ./cli/abeamer-cli.js gif",
     "serve": "node ./cli/abeamer-cli.js serve",
     "serve-with-dirs": "node ./cli/abeamer-cli.js serve --list-dir",
+    "serve-website-www": "cd website && npm run serve-www",
     "clean": "gulp clean",
     "---- start: before commands ----": "----",
     "before-commit-dev": "gulp README-to-online && gulp build-definition-files && gulp build-shared-lib && gulp bump-version",

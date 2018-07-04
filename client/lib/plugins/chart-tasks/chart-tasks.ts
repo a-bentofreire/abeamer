@@ -13,7 +13,7 @@
 /**
  * ## Description
  *
- * A **chart task** task creates an animated chart.
+ * A **chart** task creates an animated chart.
  *
  * **WARN** This plugin is still in development stage, parts of API can change in the future.
  * However is already in a stage that can be used.

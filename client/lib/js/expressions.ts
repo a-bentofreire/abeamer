@@ -12,7 +12,7 @@
  * ## Description
  *
  * An **expression** is a textual value that starts with `=`.
- * Expressions unlike Code Handlers can be defined on the `.json`
+ * Expressions unlike [Code Handlers](glossary/#code-handler) can be defined on the `.json`
  * config file and support teleporting.
  *
  * ABeamer supports:
@@ -26,11 +26,11 @@
  *      These operators transform the 2 numerical values into 0 (false) or 1 (true).
  *
  * - parenthesis: `(`, `)`.
- * - functions: @see functions
+ * - [](functions).
  * - textual values: delimited by single quotes.
  *     the following character strings have a special meaning:
  *       - `\'` - defines a single quote
- *       - `\n' - defines new line
+ *       - `\n` - defines new line
  * - numerical values.
  * - numerical arrays: [x,y,z].
  * - variables: numerical, textual, numerical arrays, objects.
