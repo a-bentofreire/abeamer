@@ -78,9 +78,17 @@ namespace Gulp {
 
   const joinedArgs = sysProcess.argv.join(' ');
   const isLocal = joinedArgs.indexOf('--local') !== -1;
-  console.log(`Options:\n  local: ${isLocal}`);
+  const isProduction = joinedArgs.indexOf('--production') !== -1;
   webLinks.setup(isLocal);
 
+
+  function printOptions(): void {
+    console.log(`Options:
+    local: ${isLocal}
+    production: ${isProduction}
+`);
+
+  }
   // ------------------------------------------------------------------------
   //                               Print Usage
   // ------------------------------------------------------------------------
@@ -104,6 +112,8 @@ namespace Gulp {
       when: before publishing a new **stable** version and after testing
 
     build-docs --local - same as build-docs but uses local links
+
+    build-docs --production - same as build-docs but adds production fields from .mkdocs-template.yml
 
     build-definition-files - builds definition files for end-user and developer
       when: after any public or shared member of a class is modified
@@ -546,7 +556,8 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   gulp.task('build-docs', () => {
-    BuildDocs.build(libModules, pluginModules);
+    printOptions();
+    BuildDocs.build(libModules, pluginModules, isProduction);
   });
 
   // ------------------------------------------------------------------------
@@ -617,6 +628,7 @@ namespace Gulp {
 
   (gulp as any).task('gal-rel:process-readme', ['gal-rel:create-zip'],
     (cb) => {
+      printOptions();
       BuildGalRel.buildReadMe();
       cb();
     });

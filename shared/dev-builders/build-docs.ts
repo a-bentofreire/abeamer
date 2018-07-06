@@ -570,11 +570,12 @@ export namespace BuildDocs {
     yamlDoc: {
       site_name: string;
       pages: (string | any)[];
+      production: any;
     };
 
     folderMap: { [name: string]: (string | any)[] } = {};
 
-    constructor(templateFileName: string, targetName) {
+    constructor(templateFileName: string, targetName: string) {
       this.yamlDoc = yaml.safeLoad(fsix.readUtf8Sync(
         templateFileName));
       this.yamlDoc.site_name = this.yamlDoc.site_name
@@ -585,6 +586,13 @@ export namespace BuildDocs {
 
     save(dstFileName: string): void {
       sysFs.writeFileSync(dstFileName, yaml.safeDump(this.yamlDoc));
+    }
+
+
+    addProduction(): void {
+      Object.keys(this.yamlDoc.production).forEach(key => {
+        this.yamlDoc[key] = this.yamlDoc.production[key];
+      });
     }
 
 
@@ -707,7 +715,7 @@ export namespace BuildDocs {
     // if (isEndUser || inpFileName.indexOf('story') === -1) { return; }
 
 
-    let inpText = fsix.readUtf8Sync(inpFileName);
+    const inpText = fsix.readUtf8Sync(inpFileName);
     const matches = inpText.match(
       /\/\*\*\s*@module ([\w+\-]+)(?:\s*\|.*)\n(?:(?:.|\n)*?)\/\*\*((?:.|\n)*?)\*\//) || EMPTY;
     const moduleType = matches[1] || '';
@@ -762,7 +770,9 @@ export namespace BuildDocs {
    * This is the main entry point.
    * Read the module information for details.
    */
-  export function build(libModules: string[], pluginModules: string[]): void {
+  export function build(libModules: string[], pluginModules: string[],
+    isProduction: boolean): void {
+
     const localWebLinks = buildWebLinks();
 
     // in case of documentation, it's better to visualize the more specific at the top.
@@ -782,6 +792,11 @@ export namespace BuildDocs {
         generated: [],
         refs: {},
       };
+
+      // production mode
+      if (isProduction) {
+        mkDocsYml.addProduction();
+      }
 
       // index.html
       copyMarkdownFile(target.indexFile,

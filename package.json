@@ -93,6 +93,7 @@
     "mkdocs-build-developer": "cd docs/build/developer/versions/latest/en && mkdocs build",
     "mkdocs-build-end-user": "cd docs/build/end-user/versions/latest/en && mkdocs build",
     "build-docs-and-mkdocs": "gulp build-docs && npm run mkdocs-build-developer && npm run mkdocs-build-end-user",
+    "build-docs-and-mkdocs-production": "gulp build-docs --production && npm run mkdocs-build-developer && npm run mkdocs-build-end-user",
     "build-docs-local-and-mkdocs": "gulp build-docs --local && npm run mkdocs-build-developer && npm run mkdocs-build-end-user",
     "bump-version": "gulp bump-version",
     "build-release": "npm run before-commit-dev && gulp build-release",

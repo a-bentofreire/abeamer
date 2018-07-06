@@ -451,6 +451,12 @@ var BuildDocs;
         MkDocsYml.prototype.save = function (dstFileName) {
             sysFs.writeFileSync(dstFileName, yaml.safeDump(this.yamlDoc));
         };
+        MkDocsYml.prototype.addProduction = function () {
+            var _this = this;
+            Object.keys(this.yamlDoc.production).forEach(function (key) {
+                _this.yamlDoc[key] = _this.yamlDoc.production[key];
+            });
+        };
         MkDocsYml.prototype.addSourceFile = function (opts, fileName, content) {
             var pageName = sysPath.posix.basename(fileName);
             // gets document name from the source/markdown file
@@ -584,7 +590,7 @@ var BuildDocs;
      * This is the main entry point.
      * Read the module information for details.
      */
-    function build(libModules, pluginModules) {
+    function build(libModules, pluginModules, isProduction) {
         var localWebLinks = buildWebLinks();
         // in case of documentation, it's better to visualize the more specific at the top.
         libModules.reverse();
@@ -599,6 +605,10 @@ var BuildDocs;
                 generated: [],
                 refs: {},
             };
+            // production mode
+            if (isProduction) {
+                mkDocsYml.addProduction();
+            }
             // index.html
             copyMarkdownFile(target.indexFile, markdownDstPath + "/index.md", mkDocsYml, {}, target.processIndexPage);
             // copy sources
