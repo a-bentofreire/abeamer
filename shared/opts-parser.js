@@ -83,7 +83,13 @@ var OptsParser;
         dp: { desc: "deletes previous frames" },
         config: {
             param: 'string', desc: "loads the config from a ini or json file\n           see https://github.com/a-bentofreire/abeamer/docs/config-file.md",
-        },
+        } /* ,
+    
+        setup: {
+          param: 'object', desc:
+            `allows to pass multiple parameters to client web library
+    e.g --setup name=end-user --setup value=1.2.3`,
+        } */,
     };
     // ------------------------------------------------------------------------
     //                               Iterate Arg Options
@@ -128,6 +134,18 @@ var OptsParser;
                             case 'boolean':
                                 opt.value = opt.value === 'true'
                                     || opt.value === '1';
+                                break;
+                            case 'object':
+                                opt.multipleValue = opt.multipleValue || {};
+                                var _a = opt.value.match(/^([^=]+)=(.*)$/) || ['', '', ''], key = _a[1], value = _a[2];
+                                if (!key) {
+                                    throw name_1 + " requires the key field";
+                                }
+                                opt.multipleValue[key] = value;
+                                break;
+                            case 'array':
+                                opt.multipleValue = opt.multipleValue || [];
+                                opt.multipleValue.push(opt.value);
                                 break;
                         }
                     }

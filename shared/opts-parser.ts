@@ -136,11 +136,18 @@ export namespace OptsParser {
       param: 'string', desc:
         `loads the config from a ini or json file
            see https://github.com/a-bentofreire/abeamer/docs/config-file.md`,
-    },
+    }/* ,
+
+    setup: {
+      param: 'object', desc:
+        `allows to pass multiple parameters to client web library
+e.g --setup name=end-user --setup value=1.2.3`,
+    } */,
   } as {
       [name: string]: {
         param?: string,
         value?: string | number | boolean,
+        multipleValue?: { [index: string]: string } | string[],
         hasOption?: boolean,
         desc: string,
       },
@@ -195,9 +202,24 @@ export namespace OptsParser {
                 }
                 opt.value = parseInt(opt.value);
                 break;
+
               case 'boolean':
                 opt.value = opt.value === 'true'
                   || opt.value === '1';
+                break;
+
+              case 'object':
+                opt.multipleValue = opt.multipleValue || {};
+                const [, key, value] = opt.value.match(/^([^=]+)=(.*)$/) || ['', '', ''];
+                if (!key) {
+                  throw `${name} requires the key field`;
+                }
+                opt.multipleValue[key] = value;
+                break;
+
+              case 'array':
+                opt.multipleValue = opt.multipleValue || [];
+                (opt.multipleValue as string[]).push(opt.value);
                 break;
             }
           }

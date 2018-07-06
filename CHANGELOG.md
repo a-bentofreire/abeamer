@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] -
+### Changed
+- Documentation breadcrumbs points to new links.
+- Documentation uses a custom theme based on mkdocs.
+- Updated Documentation favicon.
+### Added
+- Added Google Analytics to Documentation.
+### Added
+- (DEV) Added array and object type to command line parameters.
+
 ## [0.3.2] -
 ### Changed
 - Improved documentation.
