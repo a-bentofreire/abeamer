@@ -1,5 +1,7 @@
 site_name: ABeamer %version% - %target% - English
-repo_url: 'https://github.com/a-bentofreire/abeamer'
+repo_url: https://github.com/a-bentofreire/abeamer
+npm_url: https://www.npmjs.com/package/abeamer
+website_url: https://www.abeamer.com
 site_favicon: favicon
 site_author: Alexandre Bento Freire
 copyright: ⓒ 2018 Alexandre Bento Freire

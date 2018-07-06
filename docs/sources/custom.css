@@ -1,3 +1,9 @@
+.npm-svg {
+  width: 25px;
+}
+.website-icon {
+  max-width: 20px !important;
+}
 .code-badge {
     background: black;
     color: white;
