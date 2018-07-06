@@ -11,21 +11,12 @@ $(window).on("load", () => {
   const story = ABeamer.createStory(/*FPS:*/20);
 
   // ------------------------------------------------------------------------
-  //                               Scene1
+  //                               Scene
   // ------------------------------------------------------------------------
 
-  let nameText = 'target';
-  let valueText = 'developer';
-  const qs = window.location.search || '';
-  qs.replace(/name=([\w\-\.]+)/, (all, p1) => {
-    nameText = p1;
-    return '';
-  });
-
-  qs.replace(/value=([\w\-\.]+)/, (all, p1) => {
-    valueText = p1;
-    return '';
-  });
+  const args = story.args;
+  const nameText = args.renderVars['name'] || 'target';
+  const valueText = args.renderVars['value'] || 'developer';
 
   $("#label").text(nameText);
   $("#text-value").text(valueText);

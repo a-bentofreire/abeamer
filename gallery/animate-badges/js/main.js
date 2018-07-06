@@ -7,19 +7,11 @@
 $(window).on("load", function () {
     var story = ABeamer.createStory(/*FPS:*/ 20);
     // ------------------------------------------------------------------------
-    //                               Scene1
+    //                               Scene
     // ------------------------------------------------------------------------
-    var nameText = 'target';
-    var valueText = 'developer';
-    var qs = window.location.search || '';
-    qs.replace(/name=([\w\-\.]+)/, function (all, p1) {
-        nameText = p1;
-        return '';
-    });
-    qs.replace(/value=([\w\-\.]+)/, function (all, p1) {
-        valueText = p1;
-        return '';
-    });
+    var args = story.args;
+    var nameText = args.renderVars['name'] || 'target';
+    var valueText = args.renderVars['value'] || 'developer';
     $("#label").text(nameText);
     $("#text-value").text(valueText);
     var scene1 = story.scenes[0];

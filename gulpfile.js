@@ -159,7 +159,7 @@ var Gulp;
         var outBadgeFileName = "" + BADGES_FOLDER + outBadgeFileBase;
         if (!sysFs.existsSync(outBadgeFileName)) {
             var path_1 = "gallery/animate-badges";
-            var url = "http://localhost:9000/" + path_1 + "/?name=version&value=" + version;
+            var url = "http://localhost:9000/" + path_1 + "/?render-var=name%3Dversion&render-var=value%3D" + version;
             var config = "./" + path_1 + "/abeamer.ini";
             // build animated badges
             var renderCmdLine = "node ./cli/abeamer-cli.js render --dp --url '" + url + "' --config " + config;
