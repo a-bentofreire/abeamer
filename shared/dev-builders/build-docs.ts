@@ -810,7 +810,7 @@ export namespace BuildDocs {
               `${markdownDstPath}/${file}`, mkDocsYml, {});
           }
 
-          if (file.endsWith('.css') || file.endsWith('.png')) {
+          if (file.endsWith('.css') || file.endsWith('.png') || file.endsWith('.ico')) {
             sysFs.writeFileSync(`${markdownDstPath}/${file}`,
               sysFs.readFileSync(`${sourcesPathName}/${file}`));
           }

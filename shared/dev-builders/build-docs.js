@@ -617,7 +617,7 @@ var BuildDocs;
                     if (file.endsWith('.md') && !file.match(/-dev|README/)) {
                         copyMarkdownFile(sourcesPathName + "/" + file, markdownDstPath + "/" + file, mkDocsYml, {});
                     }
-                    if (file.endsWith('.css') || file.endsWith('.png')) {
+                    if (file.endsWith('.css') || file.endsWith('.png') || file.endsWith('.ico')) {
                         sysFs.writeFileSync(markdownDstPath + "/" + file, sysFs.readFileSync(sourcesPathName + "/" + file));
                     }
                 });
