@@ -10,3 +10,4 @@ theme:
 pages: []
 production:
   is_production: true
+  google_analytics_str: UA-121864319-1
