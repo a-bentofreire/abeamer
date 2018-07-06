@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Documentation uses a custom theme based on mkdocs.
 - Updated Documentation favicon.
 - `gallery/animate-badges` reads parameters via `--render-vars`.
+- (DEV) The README gif loops more times and waits longer between loops.
 ### Added
 - Added Google Analytics to Documentation.
 - (DEV) Added array and object type to command line parameters.

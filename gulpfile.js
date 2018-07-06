@@ -159,7 +159,8 @@ var Gulp;
         var outBadgeFileName = "" + BADGES_FOLDER + outBadgeFileBase;
         if (!sysFs.existsSync(outBadgeFileName)) {
             var path_1 = "gallery/animate-badges";
-            var url = "http://localhost:9000/" + path_1 + "/?render-var=name%3Dversion&render-var=value%3D" + version;
+            var url = "http://localhost:9000/" + path_1 + "/?render-var=name%3Dversion&"
+                + ("render-var=value%3D" + version + "&render-var=wait%3D2s");
             var config = "./" + path_1 + "/abeamer.ini";
             // build animated badges
             var renderCmdLine = "node ./cli/abeamer-cli.js render --dp --url '" + url + "' --config " + config;
@@ -171,7 +172,7 @@ var Gulp;
                     console.log('Check out if the live server is running');
                 }
                 else {
-                    var gifCmdLine = "node ./cli/abeamer-cli.js gif ./" + path_1 + "/ --loop 1 --gif " + outBadgeFileName;
+                    var gifCmdLine = "node ./cli/abeamer-cli.js gif ./" + path_1 + "/ --loop 8 --gif " + outBadgeFileName;
                     console.log(gifCmdLine);
                     fsix_js_1.fsix.runExternal(gifCmdLine, function (_error, _stdout, _stderr) {
                         if (stderr) {

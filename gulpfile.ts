@@ -252,7 +252,8 @@ namespace Gulp {
     const outBadgeFileName = `${BADGES_FOLDER}${outBadgeFileBase}`;
     if (!sysFs.existsSync(outBadgeFileName)) {
       const path = `gallery/animate-badges`;
-      const url = `http://localhost:9000/${path}/?render-var=name%3Dversion&render-var=value%3D${version}`;
+      const url = `http://localhost:9000/${path}/?render-var=name%3Dversion&`
+        + `render-var=value%3D${version}&render-var=wait%3D2s`;
       const config = `./${path}/abeamer.ini`;
 
       // build animated badges
@@ -264,7 +265,7 @@ namespace Gulp {
           console.error('Animated Gif Badge Creation Failed');
           console.log('Check out if the live server is running');
         } else {
-          const gifCmdLine = `node ./cli/abeamer-cli.js gif ./${path}/ --loop 1 --gif ${outBadgeFileName}`;
+          const gifCmdLine = `node ./cli/abeamer-cli.js gif ./${path}/ --loop 8 --gif ${outBadgeFileName}`;
           console.log(gifCmdLine);
           fsix.runExternal(gifCmdLine, (_error, _stdout, _stderr) => {
             if (stderr) {
