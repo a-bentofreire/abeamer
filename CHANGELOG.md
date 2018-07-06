@@ -9,13 +9,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Documentation breadcrumbs points to new links.
 - Documentation uses a custom theme based on mkdocs.
 - Updated Documentation favicon.
+- `gallery/animate-badges` reads parameters via `--render-vars`.
 ### Added
 - Added Google Analytics to Documentation.
-### Added
 - (DEV) Added array and object type to command line parameters.
 - `abeamer render` can pass `--render-var` parameters to client lib as `args.renderVars`.
 - `story.args` is exposed as readonly property to allow to access `renderVars`.
-- `gallery/animate-badges` reads parameters via `--render-vars`.
+- `gallery/animate-badges` has new parameters: duration, wait, name-background-color, value-background-color.
+
 
 ## [0.3.2] -
 ### Changed

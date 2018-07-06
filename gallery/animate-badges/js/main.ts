@@ -17,6 +17,11 @@ $(window).on("load", () => {
   const args = story.args;
   const nameText = args.renderVars['name'] || 'target';
   const valueText = args.renderVars['value'] || 'developer';
+  const duration = args.renderVars['duration'] || '2s';
+  const waitTime = args.renderVars['wait'] || '0.5s';
+  const nameBackgroundColor = args.renderVars['name-background-color'] || '#5a5a5a';
+  const valueBackgroundColor = args.renderVars['value-background-color'] || '#49c31b';
+  const easing = args.renderVars['easing'] || ABeamer.EasingName.easeOutElastic;
 
   $("#label").text(nameText);
   $("#text-value").text(valueText);
@@ -24,14 +29,26 @@ $(window).on("load", () => {
   const scene1 = story.scenes[0];
   scene1
     .addAnimations([{
+      selector: '#label',
+      props: [{
+        prop: 'background-color',
+        valueText: [nameBackgroundColor],
+      }],
+    }, {
+      selector: '#text',
+      props: [{
+        prop: 'background-color',
+        valueText: [valueBackgroundColor],
+      }],
+    }, {
       selector: '#text-value',
-      duration: '2s',
+      duration,
       props: [{
         prop: 'top',
-        easing: ABeamer.EasingName.easeOutElastic,
+        easing,
       }],
     }])
-    .addStills('0.5s');
+    .addStills(waitTime);
 
   story.render(story.bestPlaySpeed());
 });

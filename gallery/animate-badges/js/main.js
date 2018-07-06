@@ -12,19 +12,36 @@ $(window).on("load", function () {
     var args = story.args;
     var nameText = args.renderVars['name'] || 'target';
     var valueText = args.renderVars['value'] || 'developer';
+    var duration = args.renderVars['duration'] || '2s';
+    var waitTime = args.renderVars['wait'] || '0.5s';
+    var nameBackgroundColor = args.renderVars['name-background-color'] || '#5a5a5a';
+    var valueBackgroundColor = args.renderVars['value-background-color'] || '#49c31b';
+    var easing = args.renderVars['easing'] || ABeamer.EasingName.easeOutElastic;
     $("#label").text(nameText);
     $("#text-value").text(valueText);
     var scene1 = story.scenes[0];
     scene1
         .addAnimations([{
+            selector: '#label',
+            props: [{
+                    prop: 'background-color',
+                    valueText: [nameBackgroundColor],
+                }],
+        }, {
+            selector: '#text',
+            props: [{
+                    prop: 'background-color',
+                    valueText: [valueBackgroundColor],
+                }],
+        }, {
             selector: '#text-value',
-            duration: '2s',
+            duration: duration,
             props: [{
                     prop: 'top',
-                    easing: ABeamer.EasingName.easeOutElastic,
+                    easing: easing,
                 }],
         }])
-        .addStills('0.5s');
+        .addStills(waitTime);
     story.render(story.bestPlaySpeed());
 });
 //# sourceMappingURL=main.js.map
