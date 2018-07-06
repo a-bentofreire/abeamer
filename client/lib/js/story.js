@@ -309,10 +309,20 @@ var ABeamer;
              * True if it's teleporting.
              *
              * #end-user @readonly
-             * @type {boolean}
-             * @memberof _Story
              */
             get: function () { return this._isTeleporting; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(_Story.prototype, "args", {
+            /**
+             * Returns ABeamerArgs.
+             * This should be used only in specific cases such the access to renderVars.
+             * In most cases, this property is passed as an argument to plugins and callbacks.
+             *
+             * #end-user @readonly
+             */
+            get: function () { return this._args; },
             enumerable: true,
             configurable: true
         });

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - (DEV) Added array and object type to command line parameters.
 - `abeamer render` can pass `--render-var` parameters to client lib as `args.renderVars`.
+- `story.args` is exposed as readonly property to allow to access `renderVars`.
 
 ## [0.3.2] -
 ### Changed

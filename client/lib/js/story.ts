@@ -366,10 +366,18 @@ namespace ABeamer {
      * True if it's teleporting.
      *
      * #end-user @readonly
-     * @type {boolean}
-     * @memberof _Story
      */
     get isTeleporting(): boolean { return this._isTeleporting; }
+
+
+    /**
+     * Returns ABeamerArgs.
+     * This should be used only in specific cases such the access to renderVars.
+     * In most cases, this property is passed as an argument to plugins and callbacks.
+     *
+     * #end-user @readonly
+     */
+    get args(): ABeamerArgs { return this._args; }
 
 
     /**

@@ -409,10 +409,18 @@ declare namespace ABeamer {
      * True if it's teleporting.
      *
      * @readonly
-     * @type {boolean}
-     * @memberof Story
      */
     readonly isTeleporting: boolean;
+
+
+    /**
+     * Returns ABeamerArgs.
+     * This should be used only in specific cases such the access to renderVars.
+     * In most cases, this property is passed as an argument to plugins and callbacks.
+     *
+     * @readonly
+     */
+    readonly args: ABeamerArgs;
 
 
     strictMode: boolean;
