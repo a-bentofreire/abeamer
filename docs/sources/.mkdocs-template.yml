@@ -4,5 +4,7 @@ site_author: Alexandre Bento Freire
 copyright: ⓒ 2018 Alexandre Bento Freire
 extra_css: 
   - './custom.css'
-theme: readthedocs
+theme:
+  name: null
+  custom_dir: ../../../../../theme/custom-readthedocs
 pages: []
