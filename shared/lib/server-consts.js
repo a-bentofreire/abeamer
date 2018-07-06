@@ -28,6 +28,7 @@ var ServerConsts;
         SERVER_SUFFIX: 'abeamer-server=',
         LOG_LEVEL_SUFFIX: 'loglevel=',
         TELEPORT_SUFFIX: 'teleport=',
+        RENDER_VAR_SUFFIX: 'render-var=',
         // client messages
         MSG_READY: 'ready',
         MSG_RENDER: 'render',

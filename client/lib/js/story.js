@@ -79,6 +79,7 @@ var ABeamer;
                 renderNr: 0,
                 stage: ABeamer.AS_UNKNOWN,
                 vars: ABeamer._vars,
+                renderVars: {},
             };
             /**
              * Default unit used when input time values are used in numeric forms.
@@ -146,21 +147,32 @@ var ABeamer;
             args.story = this;
             this.fps = cfg.fps;
             this._isTeleporting = createParams.toTeleport || false;
-            urlParams.replace(new RegExp(ABeamer._SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), function (m, p1) {
-                _this.logLevel = parseInt(p1); // don't use _logLevel
-                return '';
-            });
-            urlParams.replace(new RegExp(ABeamer._SRV_CNT.TELEPORT_SUFFIX + '(\\w+)'), function (m, p1) {
-                _this._isTeleporting = p1 === 'true';
-                return '';
-            });
-            urlParams.replace(new RegExp(ABeamer._SRV_CNT.SERVER_SUFFIX + '(\\w+)'), function (m, p1) {
-                _this.hasServer = true;
-                _this.storyAdapter.setProp('class', 'has-server', args);
-                _this.serverName = p1;
-                _this.serverFeatures = ABeamer._setServer(_this.serverName);
-                return '';
-            });
+            if (urlParams) {
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), function (m, p1) {
+                    _this.logLevel = parseInt(p1); // don't use _logLevel
+                    return '';
+                });
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.TELEPORT_SUFFIX + '(\\w+)'), function (m, p1) {
+                    _this._isTeleporting = p1 === 'true';
+                    return '';
+                });
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.SERVER_SUFFIX + '(\\w+)'), function (m, p1) {
+                    _this.hasServer = true;
+                    _this.storyAdapter.setProp('class', 'has-server', args);
+                    _this.serverName = p1;
+                    _this.serverFeatures = ABeamer._setServer(_this.serverName);
+                    return '';
+                });
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.RENDER_VAR_SUFFIX + '([^&]+)', 'g'), function (m, p1) {
+                    p1 = decodeURIComponent(p1);
+                    var _a = p1.match(/^([^=]+)=(.*)$/) || ['', '', ''], key = _a[1], value = _a[2];
+                    if (!key) {
+                        throw "render-var " + p1 + " requires the key field";
+                    }
+                    args.renderVars[key] = value;
+                    return '';
+                });
+            }
             args.hasServer = this.hasServer;
             args.isTeleporting = this._isTeleporting;
             args.vars.isTeleporting = args.isTeleporting;

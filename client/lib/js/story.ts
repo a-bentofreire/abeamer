@@ -224,6 +224,7 @@ namespace ABeamer {
       renderNr: 0,
       stage: AS_UNKNOWN,
       vars: _vars,
+      renderVars: {},
     };
 
 
@@ -534,23 +535,36 @@ namespace ABeamer {
       this.fps = cfg.fps;
       this._isTeleporting = createParams.toTeleport || false;
 
-      urlParams.replace(new RegExp(_SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), (m, p1) => {
-        this.logLevel = parseInt(p1); // don't use _logLevel
-        return '';
-      });
+      if (urlParams) {
 
-      urlParams.replace(new RegExp(_SRV_CNT.TELEPORT_SUFFIX + '(\\w+)'), (m, p1) => {
-        this._isTeleporting = p1 === 'true';
-        return '';
-      });
+        urlParams.replace(new RegExp(_SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), (m, p1) => {
+          this.logLevel = parseInt(p1); // don't use _logLevel
+          return '';
+        });
 
-      urlParams.replace(new RegExp(_SRV_CNT.SERVER_SUFFIX + '(\\w+)'), (m, p1) => {
-        this.hasServer = true;
-        this.storyAdapter.setProp('class', 'has-server', args);
-        this.serverName = p1;
-        this.serverFeatures = _setServer(this.serverName);
-        return '';
-      });
+        urlParams.replace(new RegExp(_SRV_CNT.TELEPORT_SUFFIX + '(\\w+)'), (m, p1) => {
+          this._isTeleporting = p1 === 'true';
+          return '';
+        });
+
+        urlParams.replace(new RegExp(_SRV_CNT.SERVER_SUFFIX + '(\\w+)'), (m, p1) => {
+          this.hasServer = true;
+          this.storyAdapter.setProp('class', 'has-server', args);
+          this.serverName = p1;
+          this.serverFeatures = _setServer(this.serverName);
+          return '';
+        });
+
+        urlParams.replace(new RegExp(_SRV_CNT.RENDER_VAR_SUFFIX + '([^&]+)', 'g'), (m, p1) => {
+          p1 = decodeURIComponent(p1);
+          const [, key, value] = p1.match(/^([^=]+)=(.*)$/) || ['', '', ''];
+          if (!key) {
+            throw `render-var ${p1} requires the key field`;
+          }
+          args.renderVars[key] = value;
+          return '';
+        });
+      }
 
       args.hasServer = this.hasServer;
       args.isTeleporting = this._isTeleporting;

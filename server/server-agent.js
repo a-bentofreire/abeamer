@@ -111,11 +111,19 @@ var ServerAgent;
                 console.log("Terminating Server");
             }
         };
+        BaseServer.prototype.getSetupVars = function () {
+            var _this = this;
+            return this.renderVars ?
+                (Object.keys(this.renderVars).map(function (key) {
+                    return sc.RENDER_VAR_SUFFIX + encodeURIComponent(key + "=" + _this.renderVars[key]);
+                }).join('&') + '&') : '';
+        };
         BaseServer.prototype.getPageUrl = function () {
             var pageUrl = this.url
                 + (this.url.indexOf('?') === -1 ? '?' : '&')
                 + sc.SERVER_SUFFIX + this.serverName + '&'
                 + sc.LOG_LEVEL_SUFFIX + this.logLevel + '&'
+                + this.getSetupVars()
                 + sc.TELEPORT_SUFFIX + this.toTeleport.toString();
             // since this is an fundamental information it should always display
             // even not on verbose mode.
@@ -200,7 +208,7 @@ var ServerAgent;
                 }
                 return configFileName;
             }
-            function parseOption(option, value) {
+            function parseOption(option, value, multipleValue) {
                 switch (option) {
                     case '@param':
                         parseOption('config', getConfigFileName(toPosixSlash(value)));
@@ -219,6 +227,12 @@ var ServerAgent;
                         self.url = value;
                         if (self.isVerbose) {
                             console.log("url: " + self.url);
+                        }
+                        break;
+                    case 'renderVar':
+                        self.renderVars = multipleValue;
+                        if (self.isVerbose) {
+                            console.log("renderVar: " + multipleValue);
                         }
                         break;
                     case 'file':

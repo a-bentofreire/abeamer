@@ -100,6 +100,7 @@ export namespace ServerAgent {
     configPath: string = '';
     frameNr = 0;
     frameCount = 0;
+    renderVars;
 
 
     constructor(public serverName: string,
@@ -123,11 +124,20 @@ export namespace ServerAgent {
     abstract runServer();
 
 
+    getSetupVars(): string {
+      return this.renderVars ?
+        (Object.keys(this.renderVars).map(key =>
+          sc.RENDER_VAR_SUFFIX + encodeURIComponent(`${key}=${this.renderVars[key]}`),
+        ).join('&') + '&') : '';
+    }
+
+
     getPageUrl() {
       const pageUrl = this.url
         + (this.url.indexOf('?') === -1 ? '?' : '&')
         + sc.SERVER_SUFFIX + this.serverName + '&'
         + sc.LOG_LEVEL_SUFFIX + this.logLevel + '&'
+        + this.getSetupVars()
         + sc.TELEPORT_SUFFIX + this.toTeleport.toString();
 
       // since this is an fundamental information it should always display
@@ -239,7 +249,7 @@ export namespace ServerAgent {
         return configFileName;
       }
 
-      function parseOption(option, value): uint {
+      function parseOption(option: string, value, multipleValue?): uint {
 
         switch (option) {
 
@@ -260,6 +270,11 @@ export namespace ServerAgent {
           case 'url':
             self.url = value;
             if (self.isVerbose) { console.log(`url: ${self.url}`); }
+            break;
+
+          case 'renderVar':
+            self.renderVars = multipleValue;
+            if (self.isVerbose) { console.log(`renderVar: ${multipleValue}`); }
             break;
 
           case 'file':

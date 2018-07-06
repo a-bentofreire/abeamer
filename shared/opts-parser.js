@@ -83,13 +83,10 @@ var OptsParser;
         dp: { desc: "deletes previous frames" },
         config: {
             param: 'string', desc: "loads the config from a ini or json file\n           see https://github.com/a-bentofreire/abeamer/docs/config-file.md",
-        } /* ,
-    
-        setup: {
-          param: 'object', desc:
-            `allows to pass multiple parameters to client web library
-    e.g --setup name=end-user --setup value=1.2.3`,
-        } */,
+        },
+        renderVar: {
+            param: 'object', desc: "allows to pass multiple variables to client web library.\n         accessible as args.renderVars\ne.g --render-var name=end-user --render-var value=1.2.3",
+        },
     };
     // ------------------------------------------------------------------------
     //                               Iterate Arg Options
@@ -150,7 +147,7 @@ var OptsParser;
                         }
                     }
                 }
-                var res = callback(optName, opt.value);
+                var res = callback(optName, opt.value, opt.multipleValue);
                 if (res !== undefined) {
                     return res;
                 }

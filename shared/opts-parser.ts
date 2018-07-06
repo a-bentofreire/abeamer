@@ -26,6 +26,7 @@ export namespace OptsParser {
 
   export const DEFAULT_PROGRESS = 25;
 
+  export type MultipleValue = { [index: string]: string } | string[];
 
   /**
    * Map of all the common options to both the cli and the render server agent.
@@ -136,18 +137,19 @@ export namespace OptsParser {
       param: 'string', desc:
         `loads the config from a ini or json file
            see https://github.com/a-bentofreire/abeamer/docs/config-file.md`,
-    }/* ,
+    },
 
-    setup: {
+    renderVar: {
       param: 'object', desc:
-        `allows to pass multiple parameters to client web library
-e.g --setup name=end-user --setup value=1.2.3`,
-    } */,
+        `allows to pass multiple variables to client web library.
+         accessible as args.renderVars
+e.g --render-var name=end-user --render-var value=1.2.3`,
+    },
   } as {
       [name: string]: {
         param?: string,
         value?: string | number | boolean,
-        multipleValue?: { [index: string]: string } | string[],
+        multipleValue?: MultipleValue,
         hasOption?: boolean,
         desc: string,
       },
@@ -171,7 +173,7 @@ e.g --setup name=end-user --setup value=1.2.3`,
   export function iterateArgOpts(toParseValue: boolean,
     getNext: () => string,
     callback: (option: string | 'param',
-      value: string | number | boolean) => int | undefined,
+      value: string | number | boolean, multipleValue?: MultipleValue) => int | undefined,
   ): int | undefined {
     do {
       const name = (getNext() || '').trim();
@@ -225,7 +227,7 @@ e.g --setup name=end-user --setup value=1.2.3`,
           }
         }
 
-        const res = callback(optName, opt.value);
+        const res = callback(optName, opt.value, opt.multipleValue);
         if (res !== undefined) {
           return res;
         }

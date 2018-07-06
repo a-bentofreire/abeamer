@@ -1072,6 +1072,11 @@ declare namespace ABeamer {
     isStrict?: boolean;
     /** Global variables used as variables in expressions. */
     vars: Vars;
+    /**
+     * Parameters passed by the server via command-line `abeamer render`.
+     * @example: --render-var name=end-user --render-var value=1.2.3
+     */
+    renderVars: AnyParams;
   }
 
 
