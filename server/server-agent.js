@@ -74,7 +74,9 @@ var ServerAgent;
             this.posixPathJoin = posixPathJoin;
             this.reportFileName = opts_parser_js_1.OptsParser.DEFAULT_OUT_REPORT;
             this.width = rel_consts_js_1.RelConsts.DEFAULT_WIDTH;
+            this.hasWidth = false;
             this.height = rel_consts_js_1.RelConsts.DEFAULT_HEIGHT;
+            this.hasHeight = false;
             this.timeout = 0;
             this.maxWidth = opts_parser_js_1.OptsParser.DEFAULT_MAX_WIDTH;
             this.maxHeight = opts_parser_js_1.OptsParser.DEFAULT_MAX_HEIGHT;
@@ -123,6 +125,8 @@ var ServerAgent;
                 + (this.url.indexOf('?') === -1 ? '?' : '&')
                 + sc.SERVER_SUFFIX + this.serverName + '&'
                 + sc.LOG_LEVEL_SUFFIX + this.logLevel + '&'
+                + (this.hasWidth ? "" + sc.WIDTH_SUFFIX + this.width + "&" : '')
+                + (this.hasHeight ? "" + sc.HEIGHT_SUFFIX + this.height + "&" : '')
                 + this.getSetupVars()
                 + sc.TELEPORT_SUFFIX + this.toTeleport.toString();
             // since this is an fundamental information it should always display
@@ -274,9 +278,12 @@ var ServerAgent;
                         }
                         break;
                     case 'width':
-                        self.width = value;
-                        if (self.isVerbose) {
-                            console.log("width: " + self.width);
+                        if (!self.hasWidth) {
+                            self.width = value;
+                            self.hasWidth = true;
+                            if (self.isVerbose) {
+                                console.log("width: " + self.width);
+                            }
                         }
                         break;
                     case 'maxWidth':
@@ -286,9 +293,12 @@ var ServerAgent;
                         }
                         break;
                     case 'height':
-                        self.height = value;
-                        if (self.isVerbose) {
-                            console.log("height: " + self.height);
+                        if (!self.hasHeight) {
+                            self.height = value;
+                            self.hasHeight = true;
+                            if (self.isVerbose) {
+                                console.log("height: " + self.height);
+                            }
                         }
                         break;
                     case 'maxHeight':

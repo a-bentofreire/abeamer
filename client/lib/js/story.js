@@ -127,15 +127,27 @@ var ABeamer;
             var args = this._args;
             this._waitMan = new _WaitMan();
             args.waitMan = this._waitMan;
+            var qsWidth;
+            var qsHeight;
             this.storyAdapter = createParams.storyAdapter || new ABeamer._DOMSceneAdapter('.abeamer-story');
+            if (urlParams) {
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.WIDTH_SUFFIX + '(\\d+)'), function (m, p1) {
+                    qsWidth = parseInt(p1);
+                    return '';
+                });
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.HEIGHT_SUFFIX + '(\\d+)'), function (m, p1) {
+                    qsHeight = parseInt(p1);
+                    return '';
+                });
+            }
             cfg.fps = cfg.fps || this.storyAdapter.getProp('fps', args);
             ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(cfg.fps), ABeamer.Msgs.MustNatPositive, { p: 'fps' });
             ABeamer._vars.fps = cfg.fps;
-            cfg.width = cfg.width || this.storyAdapter.getProp('frame-width', args);
+            cfg.width = qsWidth || cfg.width || this.storyAdapter.getProp('frame-width', args);
             ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(cfg.width), ABeamer.Msgs.MustNatPositive, { p: 'frame-width' });
             this.storyAdapter.setProp('frame-width', cfg.width, args);
             ABeamer._vars.frameWidth = cfg.width;
-            cfg.height = cfg.height || this.storyAdapter.getProp('frame-height', args);
+            cfg.height = qsHeight || cfg.height || this.storyAdapter.getProp('frame-height', args);
             ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(cfg.height), ABeamer.Msgs.MustNatPositive, { p: 'frame-height' });
             this.storyAdapter.setProp('frame-height', cfg.height, args);
             ABeamer._vars.frameHeight = cfg.height;

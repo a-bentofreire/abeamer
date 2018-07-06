@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [0.4.0] -
+### Breaking changes
+- `abeamer render` `--width` and `--height` parameter override abeamer.ini/story.json definition.
 ### Changed
 - Documentation breadcrumbs points to new links.
 - Documentation uses a custom theme based on mkdocs.

@@ -514,20 +514,33 @@ namespace ABeamer {
       const args = this._args;
       this._waitMan = new _WaitMan();
       args.waitMan = this._waitMan;
+      let qsWidth: uint;
+      let qsHeight: uint;
 
       this.storyAdapter = createParams.storyAdapter || new _DOMSceneAdapter('.abeamer-story');
+
+      if (urlParams) {
+        urlParams.replace(new RegExp(_SRV_CNT.WIDTH_SUFFIX + '(\\d+)'), (m, p1) => {
+          qsWidth = parseInt(p1);
+          return '';
+        });
+
+        urlParams.replace(new RegExp(_SRV_CNT.HEIGHT_SUFFIX + '(\\d+)'), (m, p1) => {
+          qsHeight = parseInt(p1);
+          return '';
+        });
+      }
 
       cfg.fps = cfg.fps || this.storyAdapter.getProp('fps', args) as uint;
       throwIfI8n(!isPositiveNatural(cfg.fps), Msgs.MustNatPositive, { p: 'fps' });
       _vars.fps = cfg.fps;
 
-
-      cfg.width = cfg.width || this.storyAdapter.getProp('frame-width', args) as uint;
+      cfg.width = qsWidth || cfg.width || this.storyAdapter.getProp('frame-width', args) as uint;
       throwIfI8n(!isPositiveNatural(cfg.width), Msgs.MustNatPositive, { p: 'frame-width' });
       this.storyAdapter.setProp('frame-width', cfg.width, args);
       _vars.frameWidth = cfg.width;
 
-      cfg.height = cfg.height || this.storyAdapter.getProp('frame-height', args) as uint;
+      cfg.height = qsHeight || cfg.height || this.storyAdapter.getProp('frame-height', args) as uint;
       throwIfI8n(!isPositiveNatural(cfg.height), Msgs.MustNatPositive, { p: 'frame-height' });
       this.storyAdapter.setProp('frame-height', cfg.height, args);
       _vars.frameHeight = cfg.height;

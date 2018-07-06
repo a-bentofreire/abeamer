@@ -78,7 +78,9 @@ export namespace ServerAgent {
 
     reportFileName: string = OptsParser.DEFAULT_OUT_REPORT;
     width: uint = RelConsts.DEFAULT_WIDTH;
+    hasWidth: boolean = false;
     height: uint = RelConsts.DEFAULT_HEIGHT;
+    hasHeight: boolean = false;
     timeout: uint = 0;
 
     maxWidth: uint = OptsParser.DEFAULT_MAX_WIDTH;
@@ -137,6 +139,8 @@ export namespace ServerAgent {
         + (this.url.indexOf('?') === -1 ? '?' : '&')
         + sc.SERVER_SUFFIX + this.serverName + '&'
         + sc.LOG_LEVEL_SUFFIX + this.logLevel + '&'
+        + (this.hasWidth ? `${sc.WIDTH_SUFFIX}${this.width}&` : '')
+        + (this.hasHeight ? `${sc.HEIGHT_SUFFIX}${this.height}&` : '')
         + this.getSetupVars()
         + sc.TELEPORT_SUFFIX + this.toTeleport.toString();
 
@@ -320,8 +324,11 @@ export namespace ServerAgent {
             break;
 
           case 'width':
-            self.width = value as int;
-            if (self.isVerbose) { console.log(`width: ${self.width}`); }
+            if (!self.hasWidth) {
+              self.width = value as int;
+              self.hasWidth = true;
+              if (self.isVerbose) { console.log(`width: ${self.width}`); }
+            }
             break;
 
           case 'maxWidth':
@@ -330,8 +337,11 @@ export namespace ServerAgent {
             break;
 
           case 'height':
-            self.height = value as int;
-            if (self.isVerbose) { console.log(`height: ${self.height}`); }
+            if (!self.hasHeight) {
+              self.height = value as int;
+              self.hasHeight = true;
+              if (self.isVerbose) { console.log(`height: ${self.height}`); }
+            }
             break;
 
           case 'maxHeight':

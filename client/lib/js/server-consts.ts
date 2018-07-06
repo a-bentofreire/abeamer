@@ -29,6 +29,8 @@ namespace ABeamer {
     LOG_LEVEL_SUFFIX: 'loglevel=',
     TELEPORT_SUFFIX: 'teleport=',
     RENDER_VAR_SUFFIX: 'render-var=',
+    WIDTH_SUFFIX: 'width=',
+    HEIGHT_SUFFIX: 'height=',
 
     // client messages
     MSG_READY: 'ready',
