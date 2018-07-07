@@ -22,6 +22,8 @@ $(window).on("load", () => {
   const nameBackgroundColor = args.renderVars['name-background-color'] || '#5a5a5a';
   const valueBackgroundColor = args.renderVars['value-background-color'] || '#49c31b';
   const easing = args.renderVars['easing'] || ABeamer.EasingName.easeOutElastic;
+  const nameWidth = parseInt(args.renderVars['name-width'] || 55);
+  const valueWidth = story.width - nameWidth;
 
   $("#label").text(nameText);
   $("#text-value").text(valueText);
@@ -33,12 +35,18 @@ $(window).on("load", () => {
       props: [{
         prop: 'background-color',
         valueText: [nameBackgroundColor],
+      }, {
+        prop: 'width',
+        value: nameWidth,
       }],
     }, {
       selector: '#text',
       props: [{
         prop: 'background-color',
         valueText: [valueBackgroundColor],
+      }, {
+        prop: 'width',
+        value: valueWidth,
       }],
     }, {
       selector: '#text-value',

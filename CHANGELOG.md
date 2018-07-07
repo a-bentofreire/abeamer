@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `abeamer render` can pass `--render-var` parameters to client lib as `args.renderVars`.
 - `story.args` is exposed as readonly property to allow to access `renderVars`.
 - `gallery/animate-badges` has new parameters: duration, wait, name-background-color, value-background-color.
+- `gallery/animate-badges` has a new parameter: `name-width`.
 
 
 ## [0.3.2] -
