@@ -7,57 +7,64 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.4.0] -
 ### Breaking changes
 - `abeamer render` `--width` and `--height` parameter override abeamer.ini/story.json definition.
+
 ### Changed
 - Documentation breadcrumbs points to new links.
 - Documentation uses a custom theme based on mkdocs.
-- Updated Documentation favicon.
-- `gallery/animate-badges` reads parameters via `--render-vars`.
-- (DEV) The README gif loops more times and waits longer between loops.
+- Update Documentation favicon.
+- `gallery/animate-badges` read parameters via `--render-vars`.
+- (DEV) Set The `README` gif loops more times and waits longer between loops.
+
 ### Added
-- Added Google Analytics to Documentation.
-- (DEV) Added array and object type to command line parameters.
+- Add Google Analytics to Documentation.
+- (DEV) Add array and object type to command line parameters.
 - `abeamer render` can pass `--render-var` parameters to client lib as `args.renderVars`.
 - `story.args` is exposed as readonly property to allow to access `renderVars`.
-- `gallery/animate-badges` has new parameters: duration, wait, name-background-color, value-background-color.
-- `gallery/animate-badges` has a new parameter: `name-width`.
+- Add `duration`, `wait`, `name-background-color`, `value-background-color` to `gallery/animate-badges`.
+- Add `name-width` to `gallery/animate-badges`.
 
 
 ## [0.3.2] -
 ### Changed
-- Improved documentation.
-- Added website information.
+- Improve documentation.
+- Add website information.
 
 
 ## [0.3.1] -
 ### Fixed
-- (DEV) Fixed the `gulp README-to-local` and `gulp README-to-online`.
-- (DEV) Fixed code examples on JSDocs for `gulp build-docs`.
-- (DEV) Fixed the tests that had errors.
-- Fixes the chart legend color for `line` charts.
-- Fixes the chart y-labels when there is not enough y-space created by labelsX.
+- (DEV) Fix the `gulp README-to-local` and `gulp README-to-online`.
+- (DEV) Fix code examples on JSDocs for `gulp build-docs`.
+- (DEV) Fix the tests that had errors.
+- Fix the chart legend color for `line` charts.
+- Fix the chart y-labels when there is not enough y-space created by labelsX to `chart-tasks`.
+
 ### Changed
-- (DEV) `npm run test-all-serial` runs all the tests in serial.
+- (DEV) Set `npm run test-all-serial` to runs all the tests in serial.
+
 ### Added
-- `gulp build-docs` adds links for property and method classes.
-- Added functions: `log`, `log10` and `exp`.
-- Added expression series in `charts`.
+- Add links for property and method classes to `gulp build-docs`.
+- Add functions: `log`, `log10` and `exp`.
+- Add expression series in `chart-tasks`.
 
 
 ## [0.3.0] -
 ### Breaking changes
-- `chart` parameters are incompatible.
+- `chart-tasks` parameters are incompatible.
+
 ### Fixed
-- Fixed several `chart` bugs.
+- Fix several `chart-tasks` bugs.
+
 ### Added
-- Added many features to the `charts`.
-- Added `parseEnum` utility function.
-- Added `elIndex` and `i` to `factory` task attribute expressions.
-- expressions support object variables.
-- expressions support one-dimension indices access to array variable.
-- `chart` support default values.
+- Add many features to the `chart-tasks`.
+- Add `parseEnum` utility function.
+- Add `elIndex` and `i` to `factory` task attribute expressions.
+- Add object variables to `expressions`.
+- Add one-dimension indices access to array variable to `expressions`.
+- Add default values to `chart-tasks`.
 - each gallery example has a `index-online.html` using links for online ABeamer.
-- Added `easings-gallery`.
-- `gulp build-gallery-release` adds "try it online" link.
+- Add `easings-gallery`.
+- Add to `gulp build-gallery-release` "try it online" link.
+
 ### Changed
 - npm package.json points to main repo.
 
@@ -67,31 +74,34 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.2.12] -
 ### Fixed
-- Fixed `abeamer create .` and `abeamer create`.
-- Fixed command line error messages.
-- Fixes `gallery-release` links in order to allow to override a created project.
-- (DEV) Fixes `gulp update-gallery-scripts`.
-- Fixes `abeamer render --inject` plugins.
-- Fixes the creation of `gallery-release/remote-server/code.zip`.
-- Fixes adding `assets` folder to `gallery-release/remote-server`.
+- Fix `abeamer create .` and `abeamer create`.
+- Fix command line error messages.
+- Fix `gallery-release` links in order to allow to override a created project.
+- (DEV) Fix `gulp update-gallery-scripts`.
+- Fix `abeamer render --inject` plugins.
+- Fix the creation of `gallery-release/remote-server/code.zip`.
+- Fix adding `assets` folder to `gallery-release/remote-server`.
+
 ### Added
-- Added extra file and directory exists tests to server-agent.
-- Added more examples to the command line documentation.
+- Add extra file and directory exists tests to `server-agent`.
+- Add more examples to the command line documentation.
+
 ### Changed
 - (DEV)`gulp build-release` makes `chmod u+x` for `cli/abeamer-cli.js`.
-- Sets gallery html files spacing to 2 spaces.
-- Updated teleporter documentation.
-- Improved the `README` files.
+- Set gallery html files spacing to 2 spaces.
+- Update `teleporter` documentation.
+- Improve the `README.md` files.
 
 
 ## [0.2.11] -
 ### Changed
-- Improved `README.md`.
-- Improved documentation.
+- Improve `README.md`.
+- Improve documentation.
+
 ### Added
-- Added more utility functions in `expressions`.
-- Added `virtualAnimators`.
-- First version of `chart` tasks.
+- Add more utility functions to `expressions`.
+- Add `virtualAnimators`.
+- First version of `chart-tasks`.
 
 
 ## [0.2.10] -
@@ -104,180 +114,199 @@ Until npm team finds an acceptable solution it will be used npm@5.6.0 for all ex
 
 ## [0.2.9] -
 ### Added
-- `Adapters` support `width-height` as dual-property.
-- Expressions support numerical arrays and binary ops on those arrays.
+- Add `width-height` as dual-property to `Adapters`.
+- Add numerical arrays to `expressions`.
+- Add array binary operators to `expressions`.
+
 ### Fixed
 - Paths support expression paths.
 
 
 ## [0.2.8] -
 ### Fixed
-- `_initBrowser();` is only executed during `story.constructor` in order to work with JSFiddle
-- `hello-world` example now has included the normalize.css
+- Fix running in JSFiddle by executing `_initBrowser();` during `story.constructor`.
+
 ### Added
-- Added the `playground` to `README.md`.
+- Add the `playground` to `README.md`.
+- Add `normalize.css` to `hello-world` example.
 
 
 ## [0.2.7] -
 ### Changed
-- Relaxes the `abeamer create` to support a project names with spaces and non-latin characters.
+- Relax the `abeamer create` to support a project names with spaces and non-latin characters.
 - If `server-agent-puppeteer` has `page.goto` it logs the error.
 - (DEV)`gulp bump-version` checks for error conditions of badge creation.
 - `abeamer create` checks if the project name already exists, and throws error if is true.
-- `abeamer movie` also supports `.webm` and `.avi` outputs.
 - `abeamer create` if project name has a path component it does `mkdirp`.
 - rebranding.
+
+### Added
+- Add `.webm` and `.avi` outputs to `abeamer movie`.
+
 ### Fixed
-- fixes web links.
+- Fix web links.
 
 
 ## [0.2.6] -
 ### Fixed
 - `abeamer-cli` converts exception into `console.error` messages.
+
 ### Added
-- `abeamer movie` also supports `.webm` and `.avi` outputs.
-- `abeamer gif` supports `--loop` parameter to define the number of loops.
-- `README` supports animated badges.
+- Add `.webm` and `.avi` outputs to `abeamer movie`.
+- Add `--loop` parameter to define the number of loops to `abeamer gif`.
+- Add animated badges to `README.md`.
 
 ## [0.2.5] -
 ### Fixed
-- Fixes the case where a pixel property has previous animation and has no `valueStart`.
-- Added `color-functions` to documentation.
-- Fixes documentation badges.
+- Fix the case where a pixel property has previous animation and has no `valueStart`.
+- Fix documentation badges.
+
 ### Changed
-- `pEls` no longer needs to use `laserMarker`.
-- (DEV)Removed several unused vars.
-- Improved `gulp bump-version`.
+- (DEV) `pEls` no longer needs to use `laserMarker`.
+- (DEV) Remove several unused vars.
+- Improve `gulp bump-version`.
+
 ### Added
-- Added `advance` parameter for both animations and property animations.
-- Added badges to the `README.md`.
+- Add `advance` parameter to animations and property animations.
+- Add badges to the `README.md`.
+- Add `color-functions` to documentation.
 
 
 ## [0.2.4] -
 ### Fixed
-- Created a workaround to overcome github/npm striping video tag.
+- Created a workaround to overcome 'github' and 'npm' striping video tag.
 
 
 ## [0.2.3] -
 ### Fixed
-- Fixes `README.md`.
-- Improved `_waitForMediaSync` to wait for video ready to play and finish seek, only when is ready.
-- `video-sync` Flyover supports `serverRender` param to disable if `hasServer`.
-- Fixes `/gallery/animate-video-sync/js/main.ts` duration.
-- `abeamer-cli movie` supports `--bkg-movie` option to blend a movie with a transparent image sequence.
+- Fix `README.md`.
+- Improve `_waitForMediaSync` to wait for video ready to play and finish seek, only when is ready.
+- `video-sync` Flyover support `serverRender` param to disable if `hasServer`.
+- Fix `/gallery/animate-video-sync/js/main.ts` duration.
+
 ### Added
-- (DEV) http-server-ex.ts: `npm serve-with-dirs` also lists 'index.html', 'README.md' files.
-- Added more info about the command line utility.
-- `gulp build-gallery-release` can add video to `README.md` instead of gifs.
-- Added `gulp clean-gallery-png`.
+- (DEV) `npm serve-with-dirs` also lists 'index.html', 'README.md' files.
+- Add more info about the command line utility to the documentation.
+- `gulp build-gallery-release` can add video to its `README.md` instead of gifs.
+- Add `gulp clean-gallery-png`.
+- Add `--bkg-movie` option to blend a movie with a transparent image sequence to `abeamer-cli movie`.
+
 ### Changed
-- Default movie name generated by `abeamer-cli movie` to `story.mp4`.
+- Set default movie name generated by `abeamer-cli movie` to `story.mp4`.
 
 
 ## [0.2.2] -
 ### Fixed
-- Fixes `gallery/animate-workbench` top value parameter.
-- Added extra info to gallery examples to improve browser compatibility.
-- `Adaptor` and `interpolator` improved browser compatibility.
-- fixes missing devDependencies.
+- Fix `gallery/animate-workbench` top value parameter.
+- Add extra info to gallery examples to improve browser compatibility.
+- Improve browser compatibility in `Adapter` and `interpolator`.
+- Fix missing devDependencies.
+
 ### Added
-- Added logical `and`, or `or` to expressions.
-- `abeamer-cli create` adds a comment before injecting the plugins.
-- (DEV)declared function return `void` if it didn't had a return value.
-- `abeamer serve --dirs` defines the body colors (fixes a problem on firefox with dark themes)
+- Add logical `and`, or `or` to `expressions`.
+- Add comment before injecting the plugins to `abeamer-cli create`.
+- (DEV) Declare function return `void` if it didn't had a return value.
+- `abeamer serve --dirs` define the body colors (fixes a problem on firefox with dark themes)
+
 ### Changed
-- `hello-world` uses `scene1` instead of `scene0`.
-- Improved documentation.
-- Improved `build-docs`: removes README.md, generates logs, improves generation of `api-header`.
-- Removed `TransitionFuncHandler`.
+- Set `scene1` instead of `scene0` to `hello-world` example.
+- Improve documentation.
+- Improve `build-docs`: remove README.md, generate logs, improve generation of `api-header`.
+- Remove `TransitionFuncHandler`.
 
 
 ## [0.2.1] -
 ### Added
-- Raises an exception if `value` parameter isn't number nor expression.
-- Added `gallery/animate-video-sync`.
+- Raise an exception if `value` parameter isn't number nor expression.
+- Add `gallery/animate-video-sync`.
+
 ### Changed
-- `hello-world` example uses `div` instead of `p`.
-- `gulp build-gallery-release` cleans `gallery-release` before copy all the examples.
-- Improved `hello-world` example.
+- Set `div` instead of `p` to `hello-world` example.
+- `gulp build-gallery-release` clean `gallery-release` before copy all the examples.
+- Improve `hello-world` example.
+
 ### Fixed
-- Fixes `ellipse` path `radiusY` parameter.
-- Fixes `gulp build-docs` link parser.
-- Fixes `server-agent-phantomjs`.
+- Fix `radiusY` parameter in `ellipse` path.
+- Fix `gulp build-docs` link parser.
+- Fix `server-agent-phantomjs`.
 - Minor cosmetic improvements on gallery examples.
 
 
 ## [0.2.0] -
 ### Breaking changes
-- `isExpression` becomes `isExpr`.
-- `vars.defaultDuration` removed.
-- `DEFAULT_DURATION` becomes immutable `1f`.
-- `rgb` function moves into color-functions plugin.
-- `typewriter` text task cursor is parameterized in similar way to CSS properties.
+- Change `isExpression` to `isExpr`.
+- Remove `vars.defaultDuration`.
+- Change `DEFAULT_DURATION` to immutable `1f`.
+- Move `rgb` function to `color-functions` plugin.
+- Change `typewriter` text task cursor parameterization to a similar way of CSS properties.
 
 ### Changed
-- (DEV)Harmonization of internal call parameters.
-- `parseTimeHandler` becomes public.
-- `calcExpr`, `ifExprCalc`, `ifExprCalcNum` becomes public.
-- Removed `defaultDuration` from the gallery.
-- (DEV)exact framework supports plugins.
-- Improved cross-browser CSS support.
+- (DEV) Harmonize of internal call parameters.
+- Set `parseTimeHandler` to public.
+- Set `calcExpr`, `ifExprCalc`, `ifExprCalcNum` to public.
+- Remove `defaultDuration` from the gallery.
+- Improve cross-browser CSS support.
 - Adapters have access to ABeamerArgs.
-- Redesigned the render loop to support wait functions.
-- Improved `README.md`.
-- Redesigned `gallery/animate-speech`.
+- Redesign the render loop to support wait functions.
+- Improve `README.md`.
+- Redesign `gallery/animate-speech`.
+
 ### Added
-- Added `DEFAULT_FADE_DURATION = '400ms'`.
-- Added `color-functions` plugin with `rgb` and `rgba` functions.
-- (DEV)Added `teleport.sh` test script.
+- (DEV) Add plugins to `exact` framework.
+- (DEV) Add `teleport.sh` test script.
+- Add `DEFAULT_FADE_DURATION = '400ms'`.
+- Add `color-functions` plugin with `rgb` and `rgba` functions.
 - `_DOMElementAdapter` can sync HTMLMediaElement `currentTime` property.
-- `_DOMElementAdapter` checks if `img` `src` is loaded, if not adds `waitFor` to wait until loaded.
-- First implementation of custom waitFor.
-- `_DOMElementAdapter` handles Animation property waitFor parameter.
+- `_DOMElementAdapter` check if `img` `src` is loaded, if not adds `waitFor` to wait until loaded.
+- Add First implementation of custom `waitFor`.
+- `_DOMElementAdapter` handle Animation property waitFor parameter.
+
 ### Fixed
-- Fixed `gulp build-gallery-gifs` links.
-- Improved CSS properties teleportation.
+- Fix `gulp build-gallery-gifs` links.
+- Improve CSS properties teleportation.
 
 
 ## [0.1.6] -
 ### Changed
-- Improved the bump-version gulp command.
+- Improve the `gulp bump-version`.
+
 ### Added
-- Added npm before-* commands to reduce the errors when abeamer is published.
+- Add `npm before-*` commands to reduce the errors when abeamer is published.
 
 
 ## [0.1.5] -
 ### Added
-- Easings, Oscillator and Path handlers by Id.
+- Add Easings, Oscillator and Path handlers by Id.
 - Lists command line utility options in the dash format.
-- abeamer serve --list-dir also prints the link with `http://localhost:${port}/?dir`
-- abeamer serve --list-dir sorts the listing, and places directory names first.
-- Class property animation.
-- gulp build-docs* and build-gallery-release with local and online links.
-- gulp README-* converts README.md links to local or online.
-- improved documentation.
+- Add print `http://localhost:${port}/?dir` to `abeamer serve --list-dir`.
+- `abeamer serve --list-dir` sorts the listing, and places directory names first.
+- Add `class` property animation.
+- `gulp build-docs*` and `build-gallery-release` with local and online links.
+- `gulp README-*` converts `README.md` links to local or online.
+- Improve documentation.
+
 ### Fixed
-- Fixes gallery/localization text label.
+- Fix `gallery/localization` text label.
 
 
 ## [0.1.4] -
 ### Fixed
-- Fixed typings.
+- Fix typings.
 
 
 ## [0.1.3] -
 ### Fixed
-- Fixed hello-world/main.scss clip-path.
+- Fix `hello-world/main.scss` clip-path.
 
 
 ## [0.1.2] -
 ### Fixed
-- Fixed npmignore.
+- Fix `.npmignore`.
 
 
 ## [0.1.1] -
 ### Fixed
-- Fixed links and fixed phrases in documentation.
+- Fix links and fixed phrases in documentation.
 
 
 ## [0.1.0] -
