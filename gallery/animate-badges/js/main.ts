@@ -38,7 +38,7 @@ $(window).on("load", () => {
             nameBackgroundColor: '#5a5a5a',
             valueBackgroundColor: '#49c31b',
             easing: 'easeOutElastic',
-            nameWidth: 55,
+            nameWidth: '55',
           },
         } as ABeamer.AddVarsTaskParams,
       }],
