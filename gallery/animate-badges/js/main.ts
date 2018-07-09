@@ -25,6 +25,7 @@ $(window).on("load", () => {
   scene1
     .addAnimations([{
       selector: '#label',
+
       tasks: [{
         handler: 'add-vars',
         params: {
@@ -36,59 +37,43 @@ $(window).on("load", () => {
             wait: '0.5s',
             nameBackgroundColor: '#5a5a5a',
             valueBackgroundColor: '#49c31b',
-            easing: 'easeOutElastic',
+            // easing: 'easeOutElastic',
             nameWidth: 55,
           },
         } as ABeamer.AddVarsTaskParams,
       }],
-    }]);
-
-  const args = story.args;
-  const nameText = args.vars['name'] as string;
-  const valueText = args.vars['value'] as string;
-  const duration = args.vars['duration'] as string;
-  const waitTime = args.vars['wait'] as string;
-  const nameBackgroundColor = args.vars['nameBackgroundColor'] as string;
-  const valueBackgroundColor = args.vars['valueBackgroundColor'] as string;
-  const easing = args.vars['easing'] as string;
-  const nameWidth = parseInt(args.vars['nameWidth'] as string);
-  const valueWidth = story.width - nameWidth;
-
-  scene1
-    .addAnimations([{
-      selector: '#label',
       props: [{
         prop: 'background-color',
         valueText: '=nameBackgroundColor',
       }, {
         prop: 'width',
-        value: nameWidth,
+        value: '=nameWidth',
       }, {
         prop: 'text',
-        valueText: [nameText],
+        valueText: '=name',
       }],
     }, {
       selector: '#text',
       props: [{
         prop: 'background-color',
-        valueText: [valueBackgroundColor],
+        valueText: '=valueBackgroundColor',
       }, {
         prop: 'width',
-        value: valueWidth,
+        value: '=frameWidth-toNumber(nameWidth)',
       }],
     }, {
       selector: '#text-value',
-      duration,
+      duration: '=duration',
       props: [{
         prop: 'text',
         duration: 1,
-        valueText: [valueText],
+        valueText: '=value',
       }, {
         prop: 'top',
-        easing,
+        easing: story.args.vars['easing'] as string || 'easeOutElastic',
       }],
     }])
-    .addStills(waitTime);
+    .addStills('=wait');
 
   story.render(story.bestPlaySpeed());
 });

@@ -29,57 +29,43 @@ $(window).on("load", function () {
                             wait: '0.5s',
                             nameBackgroundColor: '#5a5a5a',
                             valueBackgroundColor: '#49c31b',
-                            easing: 'easeOutElastic',
+                            // easing: 'easeOutElastic',
                             nameWidth: 55,
                         },
                     },
                 }],
-        }]);
-    var args = story.args;
-    var nameText = args.vars['name'];
-    var valueText = args.vars['value'];
-    var duration = args.vars['duration'];
-    var waitTime = args.vars['wait'];
-    var nameBackgroundColor = args.vars['nameBackgroundColor'];
-    var valueBackgroundColor = args.vars['valueBackgroundColor'];
-    var easing = args.vars['easing'];
-    var nameWidth = parseInt(args.vars['nameWidth']);
-    var valueWidth = story.width - nameWidth;
-    scene1
-        .addAnimations([{
-            selector: '#label',
             props: [{
                     prop: 'background-color',
                     valueText: '=nameBackgroundColor',
                 }, {
                     prop: 'width',
-                    value: nameWidth,
+                    value: '=nameWidth',
                 }, {
                     prop: 'text',
-                    valueText: [nameText],
+                    valueText: '=name',
                 }],
         }, {
             selector: '#text',
             props: [{
                     prop: 'background-color',
-                    valueText: [valueBackgroundColor],
+                    valueText: '=valueBackgroundColor',
                 }, {
                     prop: 'width',
-                    value: valueWidth,
+                    value: '=frameWidth-toNumber(nameWidth)',
                 }],
         }, {
             selector: '#text-value',
-            duration: duration,
+            duration: '=duration',
             props: [{
                     prop: 'text',
                     duration: 1,
-                    valueText: [valueText],
+                    valueText: '=value',
                 }, {
                     prop: 'top',
-                    easing: easing,
+                    easing: story.args.vars['easing'] || 'easeOutElastic',
                 }],
         }])
-        .addStills(waitTime);
+        .addStills('=wait');
     story.render(story.bestPlaySpeed());
 });
 //# sourceMappingURL=main.js.map
