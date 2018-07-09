@@ -27,7 +27,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `duration`, `wait`, `name-background-color`, `value-background-color` to `gallery/animate-badges`.
 - Add `name-width` to `gallery/animate-badges`.
 - Add all parameters to the serverless pageUrl output in `abeamer render`.
-- Add object variables in `add-vars` tasks. 
+- Add object variables in `add-vars` tasks.
+- Add `overwrite` parameter to `add-vars` tasks.
 
 ### Fixed
 - Fix `ChartLegend` in `chart-tasks` that had required typing `mark` parameter.

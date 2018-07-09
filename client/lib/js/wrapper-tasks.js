@@ -88,6 +88,7 @@ var ABeamer;
         switch (stage) {
             case ABeamer.TS_INIT:
                 var vars_1 = params.vars || {};
+                var overwrite_1 = params.overwrite !== false;
                 Object.keys(vars_1).forEach(function (varName) {
                     var varParts = varName.split('.');
                     var argsPointer = args.vars;
@@ -101,7 +102,9 @@ var ABeamer;
                         argsPointer = argsPointer[objPartName];
                         objPartName = varParts.shift();
                     }
-                    argsPointer[objPartName] = vars_1[varName];
+                    if (overwrite_1 || argsPointer[objPartName] === undefined) {
+                        argsPointer[objPartName] = vars_1[varName];
+                    }
                 });
                 return ABeamer.TR_EXIT;
         }

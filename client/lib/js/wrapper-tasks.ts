@@ -102,6 +102,12 @@ namespace ABeamer {
    * ```
    */
   export interface AddVarsTaskParams extends AnyParams {
+    /** If false, it won't overwrite the previous value */
+    overwrite?: boolean;
+    /**
+     * Object with name: value of all the variables to add to `args.vars` or
+     * `args.renderVars`.
+     */
     vars: { [varName: string]: string | number | number[] };
   }
 
@@ -189,6 +195,7 @@ namespace ABeamer {
     switch (stage) {
       case TS_INIT:
         const vars = params.vars || {};
+        const overwrite = params.overwrite !== false;
         Object.keys(vars).forEach(varName => {
           const varParts = varName.split('.');
           let argsPointer = args.vars as AnyParams;
@@ -202,7 +209,9 @@ namespace ABeamer {
             argsPointer = argsPointer[objPartName];
             objPartName = varParts.shift();
           }
-          argsPointer[objPartName] = vars[varName];
+          if (overwrite || argsPointer[objPartName] === undefined) {
+            argsPointer[objPartName] = vars[varName];
+          }
         });
         return TR_EXIT;
     }
