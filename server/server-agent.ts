@@ -135,9 +135,8 @@ export namespace ServerAgent {
 
 
     getPageUrl() {
-      const pageUrl = this.url
+      let pageUrl = this.url
         + (this.url.indexOf('?') === -1 ? '?' : '&')
-        + sc.SERVER_SUFFIX + this.serverName + '&'
         + sc.LOG_LEVEL_SUFFIX + this.logLevel + '&'
         + (this.hasWidth ? `${sc.WIDTH_SUFFIX}${this.width}&` : '')
         + (this.hasHeight ? `${sc.HEIGHT_SUFFIX}${this.height}&` : '')
@@ -147,8 +146,16 @@ export namespace ServerAgent {
       // since this is an fundamental information it should always display
       // even not on verbose mode.
       if (this.logLevel !== 0) {
+        console.log(`serverless pageUrl: [${pageUrl}]`);
+      }
+
+      // adds the server in separated so it can have a serverless link
+      pageUrl += '&' + sc.SERVER_SUFFIX + this.serverName;
+
+      // since this is an fundamental information it should always display
+      // even not on verbose mode.
+      if (this.logLevel !== 0) {
         console.log(`pageUrl: [${pageUrl}]`);
-        console.log(`serverless pageUrl: [${this.url}]`);
       }
       return pageUrl;
     }

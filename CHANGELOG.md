@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `story.args` is exposed as readonly property to allow to access `renderVars`.
 - Add `duration`, `wait`, `name-background-color`, `value-background-color` to `gallery/animate-badges`.
 - Add `name-width` to `gallery/animate-badges`.
+- Add all parameters to the serverless pageUrl output in `abeamer render`.
 
 ### Fixed
 - Fix `ChartLegend` in `chart-tasks` that had required typing `mark` parameter.
