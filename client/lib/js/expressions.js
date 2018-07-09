@@ -805,6 +805,18 @@ var ABeamer;
     }
     ABeamer.ifExprCalcNum = ifExprCalcNum;
     /**
+     * Computes the expression and returns the value.
+     * If isStrict, checks if the return value is textual, if not throws error.
+     */
+    function calcStr(expr, args) {
+        var exprValue = calcExpr(expr, args);
+        if (args.isStrict && (exprValue === undefined || typeof exprValue !== 'string')) {
+            ABeamer.throwI8n(ABeamer.Msgs.MustBeAString, { p: expr });
+        }
+        return exprValue;
+    }
+    ABeamer.calcStr = calcStr;
+    /**
      * If it's an expression, it computes its value and returns its numerical value.
      * Returns `defNumber` if it's not an expression.
      * Used mostly by plugin creators and developers.

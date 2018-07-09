@@ -1042,6 +1042,20 @@ namespace ABeamer {
 
 
   /**
+   * Computes the expression and returns the value.
+   * If isStrict, checks if the return value is textual, if not throws error.
+   */
+  export function calcStr(expr: string, args: ABeamerArgs): string {
+
+    const exprValue = calcExpr(expr, args);
+    if (args.isStrict && (exprValue === undefined || typeof exprValue !== 'string')) {
+      throwI8n(Msgs.MustBeAString, { p: expr });
+    }
+    return exprValue as string;
+  }
+
+
+  /**
    * If it's an expression, it computes its value and returns its numerical value.
    * Returns `defNumber` if it's not an expression.
    * Used mostly by plugin creators and developers.

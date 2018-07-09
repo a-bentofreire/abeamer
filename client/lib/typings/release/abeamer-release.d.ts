@@ -283,6 +283,8 @@ declare namespace ABeamer {
   export function ifExprCalcNum(expr: string, defNumber: number | undefined,
     args: ABeamerArgs): number | undefined;
 
+  export function calcStr(expr: string, args: ABeamerArgs): string;
+
   export function ifExprCalcStr(expr: string, defString: string | undefined,
     args: ABeamerArgs): string | undefined;
 
@@ -1072,9 +1074,21 @@ declare namespace ABeamer {
     isStrict?: boolean;
 
     /*
-     * Global variables used as variables in expressions.
-     * And parameters passed by the server via command-line `abeamer render`.
-     * @example: --var name=end-user --var value=1.2.3
+     * Global variables used as variables of expressions.
+     * `abeamer render` command-line can change these variables by passing them
+     * as multiple `--var` parameters,
+     * these parameters will be converted to queryString and added to url.
+     *
+     * ## Examples
+     *
+     * accessed by expressions in client library:
+     * `valueText: 'pi*2'`
+     *
+     * passed by command line:
+     * `abeamer render --var name=end-user --var value=1.2.3`.
+     *
+     * passed on the url:
+     * ?var=name%3Dend-user&var=value%3D1.2.3
      */
     vars: Vars;
   }

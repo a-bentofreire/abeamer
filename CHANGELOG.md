@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add all parameters to the serverless pageUrl output in `abeamer render`.
 - Add object variables in `add-vars` tasks.
 - Add `overwrite` parameter to `add-vars` tasks.
+- Add `calcStr` to compute textual expressions and check the output.
 
 ### Fixed
 - Fix `ChartLegend` in `chart-tasks` that had required typing `mark` parameter.
