@@ -1989,7 +1989,7 @@ declare namespace ABeamer {
 
 
   export interface ChartLegend extends ChartLabels {
-    mark: ChartLegendMark;
+    mark?: ChartLegendMark;
   }
 
 

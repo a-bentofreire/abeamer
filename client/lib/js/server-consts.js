@@ -24,8 +24,8 @@ var ABeamer;
         LOG_LEVEL_SUFFIX: 'loglevel=',
         TELEPORT_SUFFIX: 'teleport=',
         RENDER_VAR_SUFFIX: 'render-var=',
-        WIDTH_SUFFIX: 'width=',
-        HEIGHT_SUFFIX: 'height=',
+        WIDTH_SUFFIX: 'frame-width=',
+        HEIGHT_SUFFIX: 'frame-height=',
         // client messages
         MSG_READY: 'ready',
         MSG_RENDER: 'render',
