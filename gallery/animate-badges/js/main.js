@@ -29,7 +29,7 @@ $(window).on("load", function () {
                             wait: '0.5s',
                             nameBackgroundColor: '#5a5a5a',
                             valueBackgroundColor: '#49c31b',
-                            // easing: 'easeOutElastic',
+                            easing: 'easeOutElastic',
                             nameWidth: 55,
                         },
                     },
@@ -62,7 +62,7 @@ $(window).on("load", function () {
                     valueText: '=value',
                 }, {
                     prop: 'top',
-                    easing: story.args.vars['easing'] || 'easeOutElastic',
+                    easing: '==easing',
                 }],
         }])
         .addStills('=wait');

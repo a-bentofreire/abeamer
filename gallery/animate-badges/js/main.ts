@@ -37,7 +37,7 @@ $(window).on("load", () => {
             wait: '0.5s',
             nameBackgroundColor: '#5a5a5a',
             valueBackgroundColor: '#49c31b',
-            // easing: 'easeOutElastic',
+            easing: 'easeOutElastic',
             nameWidth: 55,
           },
         } as ABeamer.AddVarsTaskParams,
@@ -70,7 +70,7 @@ $(window).on("load", () => {
         valueText: '=value',
       }, {
         prop: 'top',
-        easing: story.args.vars['easing'] as string || 'easeOutElastic',
+        easing: '==easing',
       }],
     }])
     .addStills('=wait');
