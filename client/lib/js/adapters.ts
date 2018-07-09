@@ -747,18 +747,29 @@ namespace ABeamer {
 
 
     setProp(propName: PropName, value: PropValue, args?: ABeamerArgs): void {
+
+      const htmlElement = this.htmlElement;
+
+      function setDim(dimName: string, clientDim: uint): void {
+        const pxValue = value + 'px';
+        document.body.style[dimName] = pxValue;
+        if (clientDim !== value) {
+          htmlElement.style[dimName] = pxValue;
+        }
+      }
+
       switch (propName) {
         // story attributes
         case 'clip-path':
-          this.htmlElement.style.clipPath = value as string;
+          htmlElement.style.clipPath = value as string;
           break;
 
         case 'frame-width':
-          document.body.style.width = value + 'px';
+          setDim('width', htmlElement.clientWidth);
           break;
 
         case 'frame-height':
-          document.body.style.height = value + 'px';
+          setDim('height', htmlElement.clientHeight);
           break;
 
         // // scene attributes
