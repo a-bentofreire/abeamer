@@ -578,10 +578,12 @@ namespace ABeamer {
 
         urlParams.replace(new RegExp(_SRV_CNT.RENDER_VAR_SUFFIX + '([^&]+)', 'g'), (m, p1) => {
           p1 = decodeURIComponent(p1);
-          const [, key, value] = p1.match(/^([^=]+)=(.*)$/) || ['', '', ''];
+          // tslint:disable-next-line:prefer-const
+          let [, key, value] = p1.match(/^([^=]+)=(.*)$/) || ['', '', ''];
           if (!key) {
             throw `render-var ${p1} requires the key field`;
           }
+          key = key.replace(/-(\w)/g, (all, p: string) => p.toUpperCase());
           args.renderVars[key] = value;
           return '';
         });

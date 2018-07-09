@@ -175,10 +175,12 @@ var ABeamer;
                 });
                 urlParams.replace(new RegExp(ABeamer._SRV_CNT.RENDER_VAR_SUFFIX + '([^&]+)', 'g'), function (m, p1) {
                     p1 = decodeURIComponent(p1);
+                    // tslint:disable-next-line:prefer-const
                     var _a = p1.match(/^([^=]+)=(.*)$/) || ['', '', ''], key = _a[1], value = _a[2];
                     if (!key) {
                         throw "render-var " + p1 + " requires the key field";
                     }
+                    key = key.replace(/-(\w)/g, function (all, p) { return p.toUpperCase(); });
                     args.renderVars[key] = value;
                     return '';
                 });
