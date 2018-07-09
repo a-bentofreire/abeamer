@@ -25,9 +25,6 @@ $(window).on("load", () => {
   const nameWidth = parseInt(args.renderVars['name-width'] || 55);
   const valueWidth = story.width - nameWidth;
 
-  $("#label").text(nameText);
-  $("#text-value").text(valueText);
-
   const scene1 = story.scenes[0];
   scene1
     .addAnimations([{
@@ -38,6 +35,9 @@ $(window).on("load", () => {
       }, {
         prop: 'width',
         value: nameWidth,
+      }, {
+        prop: 'text',
+        valueText: [nameText],
       }],
     }, {
       selector: '#text',
@@ -51,10 +51,14 @@ $(window).on("load", () => {
     }, {
       selector: '#text-value',
       duration,
-      props: [{
-        prop: 'top',
-        easing,
-      }],
+      props: [ {
+        prop: 'text',
+        duration: 1,
+        valueText: [valueText],
+      }, {
+          prop: 'top',
+          easing,
+        }],
     }])
     .addStills(waitTime);
 
