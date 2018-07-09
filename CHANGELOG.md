@@ -23,6 +23,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `duration`, `wait`, `name-background-color`, `value-background-color` to `gallery/animate-badges`.
 - Add `name-width` to `gallery/animate-badges`.
 
+### Fixed
+- Fix `ChartLegend` in `chart-tasks` that had required typing `mark` parameter.
+
 
 ## [0.3.2] -
 ### Changed
