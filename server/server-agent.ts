@@ -78,9 +78,9 @@ export namespace ServerAgent {
 
     reportFileName: string = OptsParser.DEFAULT_OUT_REPORT;
     width: uint = RelConsts.DEFAULT_WIDTH;
-    hasWidth: boolean = false;
+    hasArgWidth: boolean = false;
     height: uint = RelConsts.DEFAULT_HEIGHT;
-    hasHeight: boolean = false;
+    hasArgHeight: boolean = false;
     timeout: uint = 0;
 
     maxWidth: uint = OptsParser.DEFAULT_MAX_WIDTH;
@@ -103,6 +103,7 @@ export namespace ServerAgent {
     frameNr = 0;
     frameCount = 0;
     renderVars;
+    configFileMode = false;
 
 
     constructor(public serverName: string,
@@ -138,8 +139,8 @@ export namespace ServerAgent {
       let pageUrl = this.url
         + (this.url.indexOf('?') === -1 ? '?' : '&')
         + sc.LOG_LEVEL_SUFFIX + this.logLevel + '&'
-        + (this.hasWidth ? `${sc.WIDTH_SUFFIX}${this.width}&` : '')
-        + (this.hasHeight ? `${sc.HEIGHT_SUFFIX}${this.height}&` : '')
+        + (this.hasArgWidth ? `${sc.WIDTH_SUFFIX}${this.width}&` : '')
+        + (this.hasArgHeight ? `${sc.HEIGHT_SUFFIX}${this.height}&` : '')
         + this.getSetupVars()
         + sc.TELEPORT_SUFFIX + this.toTeleport.toString();
 
@@ -331,9 +332,9 @@ export namespace ServerAgent {
             break;
 
           case 'width':
-            if (!self.hasWidth) {
+            if (!self.hasArgWidth) {
               self.width = value as int;
-              self.hasWidth = true;
+              self.hasArgWidth = !self.configFileMode;
               if (self.isVerbose) { console.log(`width: ${self.width}`); }
             }
             break;
@@ -344,9 +345,9 @@ export namespace ServerAgent {
             break;
 
           case 'height':
-            if (!self.hasHeight) {
+            if (!self.hasArgHeight) {
               self.height = value as int;
-              self.hasHeight = true;
+              self.hasArgHeight = !self.configFileMode;
               if (self.isVerbose) { console.log(`height: ${self.height}`); }
             }
             break;
@@ -429,9 +430,14 @@ export namespace ServerAgent {
             self.parseConfig(injectArgs, configFile, configFileName, argI);
 
             // injects the config as args to the main loop
-            OptsParser.iterateArgOpts(true, () => injectArgs[injectArgI++],
-              parseOption,
-            );
+            self.configFileMode = true;
+            try {
+              OptsParser.iterateArgOpts(true, () => injectArgs[injectArgI++],
+                parseOption,
+              );
+            } finally {
+              self.configFileMode = false;
+            }
             break;
         }
       }

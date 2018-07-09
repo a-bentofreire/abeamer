@@ -74,9 +74,9 @@ var ServerAgent;
             this.posixPathJoin = posixPathJoin;
             this.reportFileName = opts_parser_js_1.OptsParser.DEFAULT_OUT_REPORT;
             this.width = rel_consts_js_1.RelConsts.DEFAULT_WIDTH;
-            this.hasWidth = false;
+            this.hasArgWidth = false;
             this.height = rel_consts_js_1.RelConsts.DEFAULT_HEIGHT;
-            this.hasHeight = false;
+            this.hasArgHeight = false;
             this.timeout = 0;
             this.maxWidth = opts_parser_js_1.OptsParser.DEFAULT_MAX_WIDTH;
             this.maxHeight = opts_parser_js_1.OptsParser.DEFAULT_MAX_HEIGHT;
@@ -96,6 +96,7 @@ var ServerAgent;
             this.configPath = '';
             this.frameNr = 0;
             this.frameCount = 0;
+            this.configFileMode = false;
             this.getViewport = function () {
                 var viewport = {
                     width: _this.width,
@@ -124,8 +125,8 @@ var ServerAgent;
             var pageUrl = this.url
                 + (this.url.indexOf('?') === -1 ? '?' : '&')
                 + sc.LOG_LEVEL_SUFFIX + this.logLevel + '&'
-                + (this.hasWidth ? "" + sc.WIDTH_SUFFIX + this.width + "&" : '')
-                + (this.hasHeight ? "" + sc.HEIGHT_SUFFIX + this.height + "&" : '')
+                + (this.hasArgWidth ? "" + sc.WIDTH_SUFFIX + this.width + "&" : '')
+                + (this.hasArgHeight ? "" + sc.HEIGHT_SUFFIX + this.height + "&" : '')
                 + this.getSetupVars()
                 + sc.TELEPORT_SUFFIX + this.toTeleport.toString();
             // since this is an fundamental information it should always display
@@ -283,9 +284,9 @@ var ServerAgent;
                         }
                         break;
                     case 'width':
-                        if (!self.hasWidth) {
+                        if (!self.hasArgWidth) {
                             self.width = value;
-                            self.hasWidth = true;
+                            self.hasArgWidth = !self.configFileMode;
                             if (self.isVerbose) {
                                 console.log("width: " + self.width);
                             }
@@ -298,9 +299,9 @@ var ServerAgent;
                         }
                         break;
                     case 'height':
-                        if (!self.hasHeight) {
+                        if (!self.hasArgHeight) {
                             self.height = value;
-                            self.hasHeight = true;
+                            self.hasArgHeight = !self.configFileMode;
                             if (self.isVerbose) {
                                 console.log("height: " + self.height);
                             }
@@ -384,7 +385,13 @@ var ServerAgent;
                         var injectArgI_1 = 0;
                         self.parseConfig(injectArgs_1, configFile, configFileName, argI);
                         // injects the config as args to the main loop
-                        opts_parser_js_1.OptsParser.iterateArgOpts(true, function () { return injectArgs_1[injectArgI_1++]; }, parseOption);
+                        self.configFileMode = true;
+                        try {
+                            opts_parser_js_1.OptsParser.iterateArgOpts(true, function () { return injectArgs_1[injectArgI_1++]; }, parseOption);
+                        }
+                        finally {
+                            self.configFileMode = false;
+                        }
                         break;
                 }
             }
