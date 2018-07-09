@@ -91,13 +91,17 @@ var ABeamer;
                 Object.keys(vars_1).forEach(function (varName) {
                     var varParts = varName.split('.');
                     var argsPointer = args.vars;
-                    var part = varParts.shift();
-                    while (varParts.length) {
-                        argsPointer[part] = argsPointer[part] || {};
-                        argsPointer = argsPointer[part];
-                        part = varParts.shift();
+                    var objPartName = varParts.shift();
+                    if (objPartName === 'renderVars') {
+                        argsPointer = args.renderVars;
+                        objPartName = varParts.shift();
                     }
-                    argsPointer[part] = vars_1[varName];
+                    while (varParts.length) {
+                        argsPointer[objPartName] = argsPointer[objPartName] || {};
+                        argsPointer = argsPointer[objPartName];
+                        objPartName = varParts.shift();
+                    }
+                    argsPointer[objPartName] = vars_1[varName];
                 });
                 return ABeamer.TR_EXIT;
         }
