@@ -164,7 +164,15 @@ namespace ABeamer {
       case TS_INIT:
         const vars = params.vars || {};
         Object.keys(vars).forEach(varName => {
-          args.vars[varName] = vars[varName];
+          const varParts = varName.split('.');
+          let argsPointer = args.vars as AnyParams;
+          let part = varParts.shift();
+          while (varParts.length) {
+            argsPointer[part] = argsPointer[part] || {};
+            argsPointer = argsPointer[part];
+            part = varParts.shift();
+          }
+          argsPointer[part] = vars[varName];
         });
         return TR_EXIT;
     }

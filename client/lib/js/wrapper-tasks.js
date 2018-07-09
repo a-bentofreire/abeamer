@@ -89,7 +89,15 @@ var ABeamer;
             case ABeamer.TS_INIT:
                 var vars_1 = params.vars || {};
                 Object.keys(vars_1).forEach(function (varName) {
-                    args.vars[varName] = vars_1[varName];
+                    var varParts = varName.split('.');
+                    var argsPointer = args.vars;
+                    var part = varParts.shift();
+                    while (varParts.length) {
+                        argsPointer[part] = argsPointer[part] || {};
+                        argsPointer = argsPointer[part];
+                        part = varParts.shift();
+                    }
+                    argsPointer[part] = vars_1[varName];
                 });
                 return ABeamer.TR_EXIT;
         }
