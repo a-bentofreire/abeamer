@@ -86,7 +86,7 @@ namespace ABeamer {
    *
    * The easing function interpolates from [0, 1].
    */
-  export type EasingHandler = EasingName | string | ExprString | EasingFunc;
+  export type EasingHandler = EasingName | string | ExprString | EasingFunc | ExprName;
 
 
   /**

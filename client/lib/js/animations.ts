@@ -64,6 +64,17 @@ namespace ABeamer {
   /** Value used, if no duration is defined for a fade in/out. */
   export const DEFAULT_FADE_DURATION = '400ms';
 
+
+  /**
+   * A ExprName is used for motion handlers, mostly for easings, to have
+   * dynamic names.
+   * Since an expression can be used to interpolate, by using expressions starting
+   * with '==', it will compute immediately the expression and the output
+   * must the motion name.
+   * @example == 'easeIn' + iff(frameWidth < 100, 'Quad', 'Cubic')
+   */
+  export type ExprName = ExprString;
+
   /**
    * Defines parameters used both by `Animation` and `AnimationProp`.
    * The `AnimationProp` overrides the parameters defined by `Animation`.
@@ -508,6 +519,11 @@ namespace ABeamer {
         handler = numToName(handler as number);
       // it flows to string case
       case 'string':
+
+        if ((handler as string).startsWith('==')) {
+          handler = calcStr((handler as string).substr(1), args);
+        }
+
         if (isExpr(handler as string)) {
           func = exprMotionHandler;
           ((params as any) as _WorkExprMotionParams)._expression = handler as any;

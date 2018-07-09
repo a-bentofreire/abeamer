@@ -69,6 +69,9 @@ var ABeamer;
                 handler = numToName(handler);
             // it flows to string case
             case 'string':
+                if (handler.startsWith('==')) {
+                    handler = ABeamer.calcStr(handler.substr(1), args);
+                }
                 if (ABeamer.isExpr(handler)) {
                     func = exprMotionHandler;
                     params._expression = handler;

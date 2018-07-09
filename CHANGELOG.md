@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add object variables in `add-vars` tasks.
 - Add `overwrite` parameter to `add-vars` tasks.
 - Add `calcStr` to compute textual expressions and check the output.
+- Add easings with names defined as an expression starting with '=='
 
 ### Fixed
 - Fix `ChartLegend` in `chart-tasks` that had required typing `mark` parameter.
