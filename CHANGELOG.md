@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `gallery/animate-badges` read parameters via `--render-vars`.
 - (DEV) Set The `README` gif loops more times and waits longer between loops.
 - (DEV) Refactor set width/height in story.constructor.
+- Change from fixed to dynamic dimensions in `animate-badges/main.scss`.
 
 ### Added
 - Add Google Analytics to Documentation.
