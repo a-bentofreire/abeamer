@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Breaking changes
 - `abeamer render` `--width` and `--height` parameter override abeamer.ini/story.json definition
   and override story CSS dimension properties.
+- Remove hide the story when the render starts, and then show it again to avoid first frame problem.
+  It best method is author the way it is, and when authoring is finished hide the story on CSS.
+
 
 ### Changed
 - Documentation breadcrumbs points to new links.

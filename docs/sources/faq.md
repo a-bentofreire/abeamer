@@ -150,6 +150,14 @@ Yes, you can.
 Double slash followed by slash-quote.  
 `"='\\\'=sen(t)\\\''`
 
+### Why it shows a ghost first frame?
+If the animations substantially change the first frame, 
+it will show a ghost first frame while rending on the client, 
+on the server this frame won't be rendered.  
+To make authoring easier, abeamer doesn't hides the story before it's rendered.
+When the story authoring is finished, hide the story on the css properties,
+this will prevent the ghost first frame.
+
 ---------------------
 ## Rendering
 

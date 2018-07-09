@@ -734,12 +734,6 @@ var ABeamer;
                 this._queueRenders.push(frameOpts);
                 return;
             }
-            if (!this.hasServer) {
-                // @TODO: Determine why the first frame still shows the last frame.
-                // hide the story in case it takes time to build the first frame.
-                this._renderHiddenStory = true;
-                this.storyAdapter.setProp('visible', false, this._args);
-            }
             this._internalRender(playSpeedMs, frameOpts);
         };
         _Story.prototype._internalRender = function (playSpeedMs, frameOpts) {
@@ -755,6 +749,7 @@ var ABeamer;
             this._renderPlaySpeed = !this.hasServer && playSpeedMs !== undefined
                 && playSpeedMs > 0 ? playSpeedMs : 0;
             this._setupTransitions();
+            this.storyAdapter.setProp('visible', true, this._args);
             if (!this.hasServer) {
                 this._renderLoop();
             }
@@ -766,10 +761,6 @@ var ABeamer;
          * Aborts the rendering process.
          */
         _Story.prototype.finishRender = function () {
-            if (this._renderHiddenStory) {
-                this._renderHiddenStory = false;
-                this.storyAdapter.setProp('visible', true, this._args);
-            }
             if (this._isRendering) {
                 this._isRendering = false;
                 if (this._renderTimer) {
@@ -837,10 +828,6 @@ var ABeamer;
                     case 5:
                         stage++;
                         this._curScene._internalRenderFrame(this._renderFramePos - this._curScene.storyFrameStart, this._renderDir, this._isVerbose, false);
-                        if (this._renderHiddenStory) {
-                            this._renderHiddenStory = false;
-                            this.storyAdapter.setProp('visible', true, this._args);
-                        }
                         break;
                     case 6:
                         if (this.hasServer) {
