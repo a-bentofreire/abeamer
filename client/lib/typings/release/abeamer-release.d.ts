@@ -1152,7 +1152,7 @@ declare namespace ABeamer {
 
 
   export interface AddVarsTaskParams extends AnyParams {
-    vars: { [varName: string]: string | number };
+    vars: { [varName: string]: string | number | number[] };
   }
 
 

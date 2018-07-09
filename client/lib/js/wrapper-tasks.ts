@@ -75,8 +75,34 @@ namespace ABeamer {
   }
 
 
+  /**
+   * Adds multiple variables to `args.vars`.
+   * Variables can be:
+   *
+   * - textual, numerical and arrays.
+   * - object variables of the above types.
+   *
+   * If the object variable starts with `renderVars` it will change
+   * `args.renderVars` instead of `args.vars`.
+   *
+   * ## Example
+   *
+   * ```typescript
+   * tasks: [{
+   *    handler: 'add-vars',
+   *    params: {
+   *      vars: {
+   *        'prop1': 'changes the args.vars.prop1',
+   *        'obj1.prop2': 'creates an object obj1 in vars, set prop2',
+   *        'renderVars.prop2': 'changes renderVars instead of vars',
+   *        'renderVars.over.about.blue': 'creates obj over.about.sets prop blue',
+   *      },
+   *    }
+   * }]
+   * ```
+   */
   export interface AddVarsTaskParams extends AnyParams {
-    vars: { [varName: string]: string | number };
+    vars: { [varName: string]: string | number | number[] };
   }
 
   // #export-section-end: release

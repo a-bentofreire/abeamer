@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - (DEV) Set The `README` gif loops more times and waits longer between loops.
 - (DEV) Refactor set width/height in story.constructor.
 - Change from fixed to dynamic dimensions in `animate-badges/main.scss`.
+- Object variables starting with `renderVars` will change `renderVars` instead of `vars`.
 
 ### Added
 - Add Google Analytics to Documentation.
@@ -26,6 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `duration`, `wait`, `name-background-color`, `value-background-color` to `gallery/animate-badges`.
 - Add `name-width` to `gallery/animate-badges`.
 - Add all parameters to the serverless pageUrl output in `abeamer render`.
+- Add object variables in `add-vars` tasks. 
 
 ### Fixed
 - Fix `ChartLegend` in `chart-tasks` that had required typing `mark` parameter.
