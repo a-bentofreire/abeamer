@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Update Documentation favicon.
 - `gallery/animate-badges` read parameters via `--render-vars`.
 - (DEV) Set The `README` gif loops more times and waits longer between loops.
+- (DEV) Refactor set width/height in story.constructor.
 
 ### Added
 - Add Google Analytics to Documentation.

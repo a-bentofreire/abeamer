@@ -512,37 +512,39 @@ namespace ABeamer {
       const urlParams = window.location.search || '';
 
       const args = this._args;
+      const self = this;
       this._waitMan = new _WaitMan();
       args.waitMan = this._waitMan;
-      let qsWidth: uint;
-      let qsHeight: uint;
 
       this.storyAdapter = createParams.storyAdapter || new _DOMSceneAdapter('.abeamer-story');
-
-      if (urlParams) {
-        urlParams.replace(new RegExp(_SRV_CNT.WIDTH_SUFFIX + '(\\d+)'), (m, p1) => {
-          qsWidth = parseInt(p1);
-          return '';
-        });
-
-        urlParams.replace(new RegExp(_SRV_CNT.HEIGHT_SUFFIX + '(\\d+)'), (m, p1) => {
-          qsHeight = parseInt(p1);
-          return '';
-        });
-      }
 
       cfg.fps = cfg.fps || this.storyAdapter.getProp('fps', args) as uint;
       throwIfI8n(!isPositiveNatural(cfg.fps), Msgs.MustNatPositive, { p: 'fps' });
       _vars.fps = cfg.fps;
 
-      cfg.width = qsWidth || cfg.width || this.storyAdapter.getProp('frame-width', args) as uint;
-      throwIfI8n(!isPositiveNatural(cfg.width), Msgs.MustNatPositive, { p: 'frame-width' });
-      this.storyAdapter.setProp('frame-width', cfg.width, args);
+
+      function setDim(srvPropPrefix: string, cfgValue: uint, propName: string): uint {
+
+        let storyNeedsDimUpdate = false;
+        let res = cfgValue || self.storyAdapter.getProp(propName, args) as uint;
+        if (urlParams) {
+          urlParams.replace(new RegExp(srvPropPrefix + '(\\d+)'), (m, p1) => {
+            const qsValue = parseInt(p1);
+            storyNeedsDimUpdate = qsValue !== res;
+            res = qsValue || res;
+            return '';
+          });
+        }
+
+        throwIfI8n(!isPositiveNatural(res), Msgs.MustNatPositive, { p: propName });
+        self.storyAdapter.setProp(propName, res, args);
+        return res;
+      }
+
+      this._width = cfg.width = setDim(_SRV_CNT.WIDTH_SUFFIX, cfg.width, 'frame-width');
       _vars.frameWidth = cfg.width;
 
-      cfg.height = qsHeight || cfg.height || this.storyAdapter.getProp('frame-height', args) as uint;
-      throwIfI8n(!isPositiveNatural(cfg.height), Msgs.MustNatPositive, { p: 'frame-height' });
-      this.storyAdapter.setProp('frame-height', cfg.height, args);
+      this._height = cfg.height = setDim(_SRV_CNT.HEIGHT_SUFFIX, cfg.height, 'frame-height');
       _vars.frameHeight = cfg.height;
 
       // setting clip-path is used because of slide transitions that display outside
@@ -550,8 +552,6 @@ namespace ABeamer {
       this.storyAdapter.setProp('clip-path',
         `polygon(0 0, 0 ${cfg.height}px, ${cfg.width}px ${cfg.height}px, ${cfg.width}px 0px)`, args);
 
-      this._width = cfg.width;
-      this._height = cfg.height;
       args.story = this;
       this.fps = cfg.fps;
       this._isTeleporting = createParams.toTeleport || false;

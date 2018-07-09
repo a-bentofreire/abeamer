@@ -125,37 +125,35 @@ var ABeamer;
             ABeamer._initBrowser();
             var urlParams = window.location.search || '';
             var args = this._args;
+            var self = this;
             this._waitMan = new _WaitMan();
             args.waitMan = this._waitMan;
-            var qsWidth;
-            var qsHeight;
             this.storyAdapter = createParams.storyAdapter || new ABeamer._DOMSceneAdapter('.abeamer-story');
-            if (urlParams) {
-                urlParams.replace(new RegExp(ABeamer._SRV_CNT.WIDTH_SUFFIX + '(\\d+)'), function (m, p1) {
-                    qsWidth = parseInt(p1);
-                    return '';
-                });
-                urlParams.replace(new RegExp(ABeamer._SRV_CNT.HEIGHT_SUFFIX + '(\\d+)'), function (m, p1) {
-                    qsHeight = parseInt(p1);
-                    return '';
-                });
-            }
             cfg.fps = cfg.fps || this.storyAdapter.getProp('fps', args);
             ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(cfg.fps), ABeamer.Msgs.MustNatPositive, { p: 'fps' });
             ABeamer._vars.fps = cfg.fps;
-            cfg.width = qsWidth || cfg.width || this.storyAdapter.getProp('frame-width', args);
-            ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(cfg.width), ABeamer.Msgs.MustNatPositive, { p: 'frame-width' });
-            this.storyAdapter.setProp('frame-width', cfg.width, args);
+            function setDim(srvPropPrefix, cfgValue, propName) {
+                var storyNeedsDimUpdate = false;
+                var res = cfgValue || self.storyAdapter.getProp(propName, args);
+                if (urlParams) {
+                    urlParams.replace(new RegExp(srvPropPrefix + '(\\d+)'), function (m, p1) {
+                        var qsValue = parseInt(p1);
+                        storyNeedsDimUpdate = qsValue !== res;
+                        res = qsValue || res;
+                        return '';
+                    });
+                }
+                ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(res), ABeamer.Msgs.MustNatPositive, { p: propName });
+                self.storyAdapter.setProp(propName, res, args);
+                return res;
+            }
+            this._width = cfg.width = setDim(ABeamer._SRV_CNT.WIDTH_SUFFIX, cfg.width, 'frame-width');
             ABeamer._vars.frameWidth = cfg.width;
-            cfg.height = qsHeight || cfg.height || this.storyAdapter.getProp('frame-height', args);
-            ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(cfg.height), ABeamer.Msgs.MustNatPositive, { p: 'frame-height' });
-            this.storyAdapter.setProp('frame-height', cfg.height, args);
+            this._height = cfg.height = setDim(ABeamer._SRV_CNT.HEIGHT_SUFFIX, cfg.height, 'frame-height');
             ABeamer._vars.frameHeight = cfg.height;
             // setting clip-path is used because of slide transitions that display outside
             // the story boundaries
             this.storyAdapter.setProp('clip-path', "polygon(0 0, 0 " + cfg.height + "px, " + cfg.width + "px " + cfg.height + "px, " + cfg.width + "px 0px)", args);
-            this._width = cfg.width;
-            this._height = cfg.height;
             args.story = this;
             this.fps = cfg.fps;
             this._isTeleporting = createParams.toTeleport || false;
