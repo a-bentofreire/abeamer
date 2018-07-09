@@ -13,17 +13,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Documentation breadcrumbs points to new links.
 - Documentation uses a custom theme based on mkdocs.
 - Update Documentation favicon.
-- `gallery/animate-badges` read parameters via `--render-vars`.
+- Read parameters of `gallery/animate-badges` via command line `--var` parameter.
 - (DEV) Set The `README` gif loops more times and waits longer between loops.
 - (DEV) Refactor set width/height in story.constructor.
 - Change from fixed to dynamic dimensions in `animate-badges/main.scss`.
-- Object variables starting with `renderVars` will change `renderVars` instead of `vars`.
 
 ### Added
 - Add Google Analytics to Documentation.
 - (DEV) Add array and object type to command line parameters.
-- `abeamer render` can pass `--render-var` parameters to client lib as `args.renderVars`.
-- `story.args` is exposed as readonly property to allow to access `renderVars`.
+- `abeamer render` can pass `--var` parameters to client lib as `args.vars`.
+- `story.args` is exposed as readonly property to allow to access `story.args.vars`.
 - Add `duration`, `wait`, `name-background-color`, `value-background-color` to `gallery/animate-badges`.
 - Add `name-width` to `gallery/animate-badges`.
 - Add all parameters to the serverless pageUrl output in `abeamer render`.

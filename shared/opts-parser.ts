@@ -139,11 +139,12 @@ export namespace OptsParser {
            see https://github.com/a-bentofreire/abeamer/docs/config-file.md`,
     },
 
-    renderVar: {
+    var: {
       param: 'object', desc:
         `allows to pass multiple variables to client web library.
-         accessible as args.renderVars
-e.g --render-var name=end-user --render-var value=1.2.3`,
+         accessible as story.args.vars or in expressions.
+         if the variable name has dashes, it will be converted to camelCase
+           e.g --var name=end-user --var value=1.2.3`,
     },
   } as {
       [name: string]: {

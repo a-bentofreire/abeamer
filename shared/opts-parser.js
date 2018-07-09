@@ -84,8 +84,8 @@ var OptsParser;
         config: {
             param: 'string', desc: "loads the config from a ini or json file\n           see https://github.com/a-bentofreire/abeamer/docs/config-file.md",
         },
-        renderVar: {
-            param: 'object', desc: "allows to pass multiple variables to client web library.\n         accessible as args.renderVars\ne.g --render-var name=end-user --render-var value=1.2.3",
+        var: {
+            param: 'object', desc: "allows to pass multiple variables to client web library.\n         accessible as story.args.vars or in expressions.\n         if the variable name has dashes, it will be converted to camelCase\n           e.g --var name=end-user --var value=1.2.3",
         },
     };
     // ------------------------------------------------------------------------

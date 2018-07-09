@@ -93,10 +93,6 @@ var ABeamer;
                     var varParts = varName.split('.');
                     var argsPointer = args.vars;
                     var objPartName = varParts.shift();
-                    if (objPartName === 'renderVars') {
-                        argsPointer = args.renderVars;
-                        objPartName = varParts.shift();
-                    }
                     while (varParts.length) {
                         argsPointer[objPartName] = argsPointer[objPartName] || {};
                         argsPointer = argsPointer[objPartName];

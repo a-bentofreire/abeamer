@@ -102,7 +102,7 @@ export namespace ServerAgent {
     configPath: string = '';
     frameNr = 0;
     frameCount = 0;
-    renderVars;
+    argsVars;
     configFileMode = false;
 
 
@@ -128,9 +128,9 @@ export namespace ServerAgent {
 
 
     getSetupVars(): string {
-      return this.renderVars ?
-        (Object.keys(this.renderVars).map(key =>
-          sc.RENDER_VAR_SUFFIX + encodeURIComponent(`${key}=${this.renderVars[key]}`),
+      return this.argsVars ?
+        (Object.keys(this.argsVars).map(key =>
+          sc.RENDER_VAR_SUFFIX + encodeURIComponent(`${key}=${this.argsVars[key]}`),
         ).join('&') + '&') : '';
     }
 
@@ -284,9 +284,9 @@ export namespace ServerAgent {
             if (self.isVerbose) { console.log(`url: ${self.url}`); }
             break;
 
-          case 'renderVar':
-            self.renderVars = multipleValue;
-            if (self.isVerbose) { console.log(`renderVar: ${multipleValue}`); }
+          case 'var':
+            self.argsVars = multipleValue;
+            if (self.isVerbose) { console.log(`var: ${multipleValue}`); }
             break;
 
           case 'file':

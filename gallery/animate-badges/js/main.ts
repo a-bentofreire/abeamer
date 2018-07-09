@@ -14,24 +14,52 @@ $(window).on("load", () => {
   //                               Scene
   // ------------------------------------------------------------------------
 
-  const args = story.args;
-  const nameText = args.renderVars['name'] || 'target';
-  const valueText = args.renderVars['value'] || 'developer';
-  const duration = args.renderVars['duration'] || '2s';
-  const waitTime = args.renderVars['wait'] || '0.5s';
-  const nameBackgroundColor = args.renderVars['name-background-color'] || '#5a5a5a';
-  const valueBackgroundColor = args.renderVars['value-background-color'] || '#49c31b';
-  const easing = args.renderVars['easing'] || ABeamer.EasingName.easeOutElastic;
-  const nameWidth = parseInt(args.renderVars['name-width'] || 55);
-  const valueWidth = story.width - nameWidth;
+  /**
+   * For command line rendering use '-' notation.
+   * e.g.:
+   * abeamer render --var name-background-color=blue
+   */
 
   const scene1 = story.scenes[0];
+
+  scene1
+    .addAnimations([{
+      selector: '#label',
+      tasks: [{
+        handler: 'add-vars',
+        params: {
+          overwrite: false,
+          vars: {
+            name: 'target',
+            value: 'developer',
+            duration: '2s',
+            wait: '0.5s',
+            nameBackgroundColor: '#5a5a5a',
+            valueBackgroundColor: '#49c31b',
+            easing: 'easeOutElastic',
+            nameWidth: 55,
+          },
+        } as ABeamer.AddVarsTaskParams,
+      }],
+    }]);
+
+  const args = story.args;
+  const nameText = args.vars['name'] as string;
+  const valueText = args.vars['value'] as string;
+  const duration = args.vars['duration'] as string;
+  const waitTime = args.vars['wait'] as string;
+  const nameBackgroundColor = args.vars['nameBackgroundColor'] as string;
+  const valueBackgroundColor = args.vars['valueBackgroundColor'] as string;
+  const easing = args.vars['easing'] as string;
+  const nameWidth = parseInt(args.vars['nameWidth'] as string);
+  const valueWidth = story.width - nameWidth;
+
   scene1
     .addAnimations([{
       selector: '#label',
       props: [{
         prop: 'background-color',
-        valueText: [nameBackgroundColor],
+        valueText: '=nameBackgroundColor',
       }, {
         prop: 'width',
         value: nameWidth,
@@ -51,14 +79,14 @@ $(window).on("load", () => {
     }, {
       selector: '#text-value',
       duration,
-      props: [ {
+      props: [{
         prop: 'text',
         duration: 1,
         valueText: [valueText],
       }, {
-          prop: 'top',
-          easing,
-        }],
+        prop: 'top',
+        easing,
+      }],
     }])
     .addStills(waitTime);
 

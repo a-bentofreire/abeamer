@@ -252,8 +252,8 @@ namespace Gulp {
     const outBadgeFileName = `${BADGES_FOLDER}${outBadgeFileBase}`;
     if (!sysFs.existsSync(outBadgeFileName)) {
       const path = `gallery/animate-badges`;
-      const url = `http://localhost:9000/${path}/?render-var=name%3Dversion&`
-        + `render-var=value%3D${version}&render-var=wait%3D2s`;
+      const url = `http://localhost:9000/${path}/?var=name%3Dversion&`
+        + `var=value%3D${version}&var=wait%3D2s`;
       const config = `./${path}/abeamer.ini`;
 
       // build animated badges

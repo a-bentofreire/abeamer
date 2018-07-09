@@ -75,13 +75,25 @@ namespace ABeamer {
     isTeleporting?: boolean;
     /** If true, perform type checks and other restriction checks. */
     isStrict?: boolean;
-    /** Global variables used as variables in expressions. */
-    vars: Vars;
-    /**
-     * Parameters passed by the server via command-line `abeamer render`.
-     * @example: --render-var name=end-user --render-var value=1.2.3
+
+    /*
+     * Global variables used as variables of expressions.
+     * `abeamer render` command-line can change these variables by passing them
+     * as multiple `--var` parameters,
+     * these parameters will be converted to queryString and added to url.
+     *
+     * ## Examples
+     *
+     * accessed by expressions in client library:
+     * `valueText: 'pi*2'`
+     *
+     * passed by command line:
+     * `abeamer render --var name=end-user --var value=1.2.3`.
+     *
+     * passed on the url:
+     * ?var=name%3Dend-user&var=value%3D1.2.3
      */
-    renderVars: AnyParams;
+    vars: Vars;
   }
 
 

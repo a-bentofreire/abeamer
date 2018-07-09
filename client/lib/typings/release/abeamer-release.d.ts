@@ -1070,13 +1070,13 @@ declare namespace ABeamer {
     isTeleporting?: boolean;
     /** If true, perform type checks and other restriction checks. */
     isStrict?: boolean;
-    /** Global variables used as variables in expressions. */
-    vars: Vars;
-    /**
-     * Parameters passed by the server via command-line `abeamer render`.
-     * @example: --render-var name=end-user --render-var value=1.2.3
+
+    /*
+     * Global variables used as variables in expressions.
+     * And parameters passed by the server via command-line `abeamer render`.
+     * @example: --var name=end-user --var value=1.2.3
      */
-    renderVars: AnyParams;
+    vars: Vars;
   }
 
 
@@ -1151,7 +1151,34 @@ declare namespace ABeamer {
   }
 
 
+  /**
+   * Adds multiple variables to `args.vars`.
+   * Variables can be:
+   *
+   * - textual, numerical and arrays.
+   * - object variables of the above types.
+   *
+   * ## Example
+   *
+   * ```typescript
+   * tasks: [{
+   *    handler: 'add-vars',
+   *    params: {
+   *      vars: {
+   *        'prop1': 'changes the args.vars.prop1',
+   *        'obj1.prop2': 'creates an object obj1 in vars, set prop2',
+   *        'over.about.blue': 'creates obj over.about.sets prop blue',
+   *      },
+   *    }
+   * }]
+   * ```
+   */
   export interface AddVarsTaskParams extends AnyParams {
+    /** If false, it won't overwrite the previous value */
+    overwrite?: boolean;
+    /**
+     * Object with name: value of all the variables to add to `args.vars`.
+     */
     vars: { [varName: string]: string | number | number[] };
   }
 

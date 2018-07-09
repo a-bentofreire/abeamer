@@ -82,9 +82,6 @@ namespace ABeamer {
    * - textual, numerical and arrays.
    * - object variables of the above types.
    *
-   * If the object variable starts with `renderVars` it will change
-   * `args.renderVars` instead of `args.vars`.
-   *
    * ## Example
    *
    * ```typescript
@@ -94,8 +91,7 @@ namespace ABeamer {
    *      vars: {
    *        'prop1': 'changes the args.vars.prop1',
    *        'obj1.prop2': 'creates an object obj1 in vars, set prop2',
-   *        'renderVars.prop2': 'changes renderVars instead of vars',
-   *        'renderVars.over.about.blue': 'creates obj over.about.sets prop blue',
+   *        'over.about.blue': 'creates obj over.about.sets prop blue',
    *      },
    *    }
    * }]
@@ -105,8 +101,7 @@ namespace ABeamer {
     /** If false, it won't overwrite the previous value */
     overwrite?: boolean;
     /**
-     * Object with name: value of all the variables to add to `args.vars` or
-     * `args.renderVars`.
+     * Object with name: value of all the variables to add to `args.vars`.
      */
     vars: { [varName: string]: string | number | number[] };
   }
@@ -200,10 +195,6 @@ namespace ABeamer {
           const varParts = varName.split('.');
           let argsPointer = args.vars as AnyParams;
           let objPartName = varParts.shift();
-          if (objPartName === 'renderVars') {
-            argsPointer = args.renderVars;
-            objPartName = varParts.shift();
-          }
           while (varParts.length) {
             argsPointer[objPartName] = argsPointer[objPartName] || {};
             argsPointer = argsPointer[objPartName];

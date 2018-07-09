@@ -23,7 +23,7 @@ var ABeamer;
         SERVER_SUFFIX: 'abeamer-server=',
         LOG_LEVEL_SUFFIX: 'loglevel=',
         TELEPORT_SUFFIX: 'teleport=',
-        RENDER_VAR_SUFFIX: 'render-var=',
+        RENDER_VAR_SUFFIX: 'var=',
         WIDTH_SUFFIX: 'frame-width=',
         HEIGHT_SUFFIX: 'frame-height=',
         // client messages

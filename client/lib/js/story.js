@@ -79,7 +79,6 @@ var ABeamer;
                 renderNr: 0,
                 stage: ABeamer.AS_UNKNOWN,
                 vars: ABeamer._vars,
-                renderVars: {},
             };
             /**
              * Default unit used when input time values are used in numeric forms.
@@ -178,10 +177,10 @@ var ABeamer;
                     // tslint:disable-next-line:prefer-const
                     var _a = p1.match(/^([^=]+)=(.*)$/) || ['', '', ''], key = _a[1], value = _a[2];
                     if (!key) {
-                        throw "render-var " + p1 + " requires the key field";
+                        throw "var " + p1 + " requires the key field";
                     }
                     key = key.replace(/-(\w)/g, function (all, p) { return p.toUpperCase(); });
-                    args.renderVars[key] = value;
+                    args.vars[key] = value;
                     return '';
                 });
             }
@@ -329,7 +328,7 @@ var ABeamer;
         Object.defineProperty(_Story.prototype, "args", {
             /**
              * Returns ABeamerArgs.
-             * This should be used only in specific cases such the access to renderVars.
+             * This should be used only in specific cases such the access to --var.
              * In most cases, this property is passed as an argument to plugins and callbacks.
              *
              * #end-user @readonly

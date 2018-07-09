@@ -9,23 +9,48 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Scene
     // ------------------------------------------------------------------------
-    var args = story.args;
-    var nameText = args.renderVars['name'] || 'target';
-    var valueText = args.renderVars['value'] || 'developer';
-    var duration = args.renderVars['duration'] || '2s';
-    var waitTime = args.renderVars['wait'] || '0.5s';
-    var nameBackgroundColor = args.renderVars['name-background-color'] || '#5a5a5a';
-    var valueBackgroundColor = args.renderVars['value-background-color'] || '#49c31b';
-    var easing = args.renderVars['easing'] || ABeamer.EasingName.easeOutElastic;
-    var nameWidth = parseInt(args.renderVars['name-width'] || 55);
-    var valueWidth = story.width - nameWidth;
+    /**
+     * For command line rendering use '-' notation.
+     * e.g.:
+     * abeamer render --var name-background-color=blue
+     */
     var scene1 = story.scenes[0];
+    scene1
+        .addAnimations([{
+            selector: '#label',
+            tasks: [{
+                    handler: 'add-vars',
+                    params: {
+                        overwrite: false,
+                        vars: {
+                            name: 'target',
+                            value: 'developer',
+                            duration: '2s',
+                            wait: '0.5s',
+                            nameBackgroundColor: '#5a5a5a',
+                            valueBackgroundColor: '#49c31b',
+                            easing: 'easeOutElastic',
+                            nameWidth: 55,
+                        },
+                    },
+                }],
+        }]);
+    var args = story.args;
+    var nameText = args.vars['name'];
+    var valueText = args.vars['value'];
+    var duration = args.vars['duration'];
+    var waitTime = args.vars['wait'];
+    var nameBackgroundColor = args.vars['nameBackgroundColor'];
+    var valueBackgroundColor = args.vars['valueBackgroundColor'];
+    var easing = args.vars['easing'];
+    var nameWidth = parseInt(args.vars['nameWidth']);
+    var valueWidth = story.width - nameWidth;
     scene1
         .addAnimations([{
             selector: '#label',
             props: [{
                     prop: 'background-color',
-                    valueText: [nameBackgroundColor],
+                    valueText: '=nameBackgroundColor',
                 }, {
                     prop: 'width',
                     value: nameWidth,

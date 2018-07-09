@@ -116,9 +116,9 @@ var ServerAgent;
         };
         BaseServer.prototype.getSetupVars = function () {
             var _this = this;
-            return this.renderVars ?
-                (Object.keys(this.renderVars).map(function (key) {
-                    return sc.RENDER_VAR_SUFFIX + encodeURIComponent(key + "=" + _this.renderVars[key]);
+            return this.argsVars ?
+                (Object.keys(this.argsVars).map(function (key) {
+                    return sc.RENDER_VAR_SUFFIX + encodeURIComponent(key + "=" + _this.argsVars[key]);
                 }).join('&') + '&') : '';
         };
         BaseServer.prototype.getPageUrl = function () {
@@ -239,10 +239,10 @@ var ServerAgent;
                             console.log("url: " + self.url);
                         }
                         break;
-                    case 'renderVar':
-                        self.renderVars = multipleValue;
+                    case 'var':
+                        self.argsVars = multipleValue;
                         if (self.isVerbose) {
-                            console.log("renderVar: " + multipleValue);
+                            console.log("var: " + multipleValue);
                         }
                         break;
                     case 'file':

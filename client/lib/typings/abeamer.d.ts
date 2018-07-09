@@ -415,7 +415,7 @@ declare namespace ABeamer {
 
     /**
      * Returns ABeamerArgs.
-     * This should be used only in specific cases such the access to renderVars.
+     * This should be used only in specific cases such the access to --var.
      * In most cases, this property is passed as an argument to plugins and callbacks.
      *
      * @readonly

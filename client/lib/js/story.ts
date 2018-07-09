@@ -224,7 +224,6 @@ namespace ABeamer {
       renderNr: 0,
       stage: AS_UNKNOWN,
       vars: _vars,
-      renderVars: {},
     };
 
 
@@ -372,7 +371,7 @@ namespace ABeamer {
 
     /**
      * Returns ABeamerArgs.
-     * This should be used only in specific cases such the access to renderVars.
+     * This should be used only in specific cases such the access to --var.
      * In most cases, this property is passed as an argument to plugins and callbacks.
      *
      * #end-user @readonly
@@ -581,10 +580,10 @@ namespace ABeamer {
           // tslint:disable-next-line:prefer-const
           let [, key, value] = p1.match(/^([^=]+)=(.*)$/) || ['', '', ''];
           if (!key) {
-            throw `render-var ${p1} requires the key field`;
+            throw `var ${p1} requires the key field`;
           }
           key = key.replace(/-(\w)/g, (all, p: string) => p.toUpperCase());
-          args.renderVars[key] = value;
+          args.vars[key] = value;
           return '';
         });
       }
