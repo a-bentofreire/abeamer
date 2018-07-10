@@ -142,7 +142,8 @@ var ServerAgent;
                     case 2:
                         page = _a.sent();
                         /** Receives Client Messages */
-                        page.on('console', function (e) {
+                        page
+                            .on('console', function (e) {
                             server
                                 .handleMessage(e.text(), sendClientMsg, function (outFileName, onDone) {
                                 page.screenshot({
@@ -153,6 +154,9 @@ var ServerAgent;
                                     onDone();
                                 });
                             });
+                        })
+                            .on('pageerror', function (errMsg) {
+                            server.handleError(errMsg);
                         })
                             .on('error', function (e) {
                             server.handleError(e.message);
@@ -183,5 +187,8 @@ var ServerAgent;
             });
         });
     }
+    sysProcess.on('unhandledRejection', function (error) {
+        console.log('unhandledRejection', error.message);
+    });
 })(ServerAgent || (ServerAgent = {}));
 //# sourceMappingURL=server-agent-puppeteer.js.map

@@ -98,20 +98,25 @@ namespace ServerAgent {
     }
 
     /** Receives Client Messages */
-    page.on('console', (e: puppeteer.ConsoleMessage) => {
+    page
+      .on('console', (e: puppeteer.ConsoleMessage) => {
 
-      server
-        .handleMessage(e.text(), sendClientMsg,
-          (outFileName: string, onDone: () => void) => {
-            page.screenshot({
-              path: outFileName,
-              omitBackground: true,
-            })
-              .then(() => {
-                onDone();
-              });
-          });
-    })
+        server
+          .handleMessage(e.text(), sendClientMsg,
+            (outFileName: string, onDone: () => void) => {
+              page.screenshot({
+                path: outFileName,
+                omitBackground: true,
+              })
+                .then(() => {
+                  onDone();
+                });
+            });
+      })
+
+      .on('pageerror', (errMsg: string) => {
+        server.handleError(errMsg);
+      })
 
       .on('error', (e: Error) => {
         server.handleError(e.message);
@@ -139,4 +144,9 @@ namespace ServerAgent {
         server.exitServer(OptsParser.ON_ERROR_EXIT_VALUE);
       });
   }
+
+  sysProcess.on('unhandledRejection', error => {
+    console.log('unhandledRejection', error.message);
+  });
+
 }
