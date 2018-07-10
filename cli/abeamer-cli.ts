@@ -481,7 +481,7 @@ To modify the fps, edit the [js/main.ts] file.
     }
 
     // if use hasn't provided the folder name nor config file
-    if (!cmdParam && !argOpts.config.value) { outArgs.push('.'); }
+    if (!cmdParam && !argOpts.config.value && !argOpts.url.value) { outArgs.push('.'); }
 
     outArgs.splice(0, 0, `${fsix.toPosixSlash(__dirname)}/../server/server-agent-${serverName}.js`);
 

@@ -402,7 +402,10 @@ var ServerAgent;
                 return res;
             }
             if (this.url) {
-                if (this.projDir && !this.framesPattern) {
+                if (!this.projDir) {
+                    this.projDir = '.';
+                }
+                if (!this.framesPattern) {
                     setFramesPattern();
                 }
                 return (this.framesPattern ? DO_RUN_SERVER : DO_PRINT_USAGE);

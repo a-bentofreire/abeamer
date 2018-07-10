@@ -448,7 +448,8 @@ export namespace ServerAgent {
       const res = OptsParser.iterateArgOpts(true, () => args[argI++], parseOption);
       if (res) { return res; }
       if (this.url) {
-        if (this.projDir && !this.framesPattern) { setFramesPattern(); }
+        if (!this.projDir) { this.projDir = '.'; }
+        if (!this.framesPattern) { setFramesPattern(); }
         return (this.framesPattern ? DO_RUN_SERVER : DO_PRINT_USAGE);
       }
       return DO_PRINT_USAGE;
