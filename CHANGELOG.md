@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Change `gallery/animate-badges` to support teleported dynamic story.
 - Change `server-agent` to operate without --file or --out if there is --url.
 - Change `abeamer render` to operate without any local file, only needs --url,--width,--height.
+- Remove unnecessary `text-tasks` from `gallery/animate-badges`.
 
 ### Added
 - Add Google Analytics to Documentation.
