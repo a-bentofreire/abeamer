@@ -69,6 +69,13 @@ namespace ABeamer {
   export type SceneHandler = Scene | uint | string;
 
 
+  export interface StoryConfig {
+    config: {
+      abeamer: any;
+    };
+  }
+
+
   export interface StoryMetadata {
     version?: string;
     author?: string;
@@ -504,7 +511,7 @@ namespace ABeamer {
     /**
      * Sets up the Story and adds the Default Scenes.
      */
-    constructor(cfg: _Config, createParams: CreateStoryParams) {
+    constructor(cfg: _InnerConfig, createParams: CreateStoryParams) {
       _initBrowser();
 
       const urlParams = window.location.search || '';
@@ -862,18 +869,32 @@ namespace ABeamer {
      * Set frameOpts, if you need segment rendering.
      * Set isPretty = true, to test only, since this mode will return a formatted output but bigger in size.
      */
-    getStoryToTeleport(frameOpts?: RenderFrameOptions,
-      isPretty?: boolean): string {
+    getStoryToTeleport(frameOpts?: RenderFrameOptions, isPretty?: boolean): string {
+
+      const cfg = this.getStoryToTeleportAsConfig(frameOpts);
+      return cfg !== undefined ?
+        JSON.stringify(cfg, undefined, isPretty ? 2 : undefined) : '';
+    }
+
+
+    /**
+     * Same as `getStoryToTeleport()` but it returns as `StoryConfig` object.
+     * Use this function instead of getStoryToTeleport, if you need to
+     * add extra fields.
+     * Modifying the content of `config.abeamer` is forbidden for 3rd-party
+     * remote server rendering.
+     */
+    getStoryToTeleportAsConfig(frameOpts?: RenderFrameOptions): StoryConfig {
 
       if (!this._isTeleporting) {
         throw `getStoryToTeleport requires to be in teleporting mode`;
       }
 
       if (!this._calcRenderFrameOptions(frameOpts)) {
-        return '';
+        return undefined;
       }
 
-      return this._teleporter._getStoryToTeleport(isPretty);
+      return this._teleporter._getStoryToTeleportAsConfig();
     }
 
 
@@ -1332,9 +1353,9 @@ namespace ABeamer {
         cfgRoot = { config: { abeamer: cfgRoot } };
       }
 
-      const cfgConfig = cfgRoot['config'];
+      const cfgConfig = (cfgRoot as StoryConfig).config;
       if (cfgConfig) {
-        const cfg: _Config = cfgConfig['abeamer'];
+        const cfg: _InnerConfig = cfgConfig.abeamer;
         if (cfg) {
           cfg.fps = cfg.fps || fps;
           _abeamer = new _Story(cfg, createParams || {});

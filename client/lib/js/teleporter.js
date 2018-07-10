@@ -117,7 +117,7 @@
  * This data was generated via `story.getStoryToTeleport()`
  * This is the data you have to send via Ajax to the remote server.
  *
- * In this case is no longer needed: `abeamer render --teleport`, nor access to the computer disk.
+ * In this case, it's no longer needed: `abeamer render --teleport`, nor access to the computer disk.
  *
  * ## How it works?
  *
@@ -130,6 +130,11 @@
  *
  * Instead of calling render, the `getStoryToTeleport` will generate data ready to be teleported.
  * This data must be **beamed** to the remote machine, usually via Ajax.
+ *
+ * `getStoryToTeleport` will return a string, if you want to add more parameters,
+ * use `getStoryToTeleportAsConfig`, and it will return an Object.
+ * ABeamer uses only `config.abeamer` record inside the generated object,
+ * any other field can be used to store extra data.
  *
  * The remote machine has an empty story body,
  * see [remote-server](https://a-bentofreire.github.io/abeamer-gallery-release/#remote-server), where it fills
@@ -153,12 +158,12 @@
  */
 var ABeamer;
 (function (ABeamer) {
-    var _Config = /** @class */ (function () {
-        function _Config() {
+    var _InnerConfig = /** @class */ (function () {
+        function _InnerConfig() {
         }
-        return _Config;
+        return _InnerConfig;
     }());
-    ABeamer._Config = _Config;
+    ABeamer._InnerConfig = _InnerConfig;
     var _Teleporter = /** @class */ (function () {
         function _Teleporter(story, cfg, isTeleport) {
             this._active = false;
@@ -197,13 +202,11 @@ var ABeamer;
             enumerable: true,
             configurable: true
         });
-        _Teleporter.prototype._getStoryToTeleport = function (isPretty) {
+        _Teleporter.prototype._getStoryToTeleportAsConfig = function () {
             this._cfg.renderPos = this._story.renderFramePos;
             this._cfg.renderCount = this._story.renderFrameCount;
             this._cfg.metadata = this._story.metadata;
-            return JSON.stringify({
-                config: { abeamer: this._cfg },
-            }, undefined, isPretty ? 2 : undefined);
+            return { config: { abeamer: this._cfg } };
         };
         _Teleporter.prototype._rebuildStory = function () {
             var story = this._story;

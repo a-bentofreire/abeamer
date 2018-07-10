@@ -593,8 +593,18 @@ declare namespace ABeamer {
      * Set frameOpts, if you need segment rendering.
      * Set isPretty = true, to test only, since this mode will return a formatted output but bigger in size.
      */
-    getStoryToTeleport(frameOpts?: RenderFrameOptions,
-      isPretty?: boolean): string;
+    getStoryToTeleport(frameOpts?: RenderFrameOptions, isPretty?: boolean): string;
+
+
+    /**
+     * Returns the animations, html, CSS as an object.
+     * Use only if `isTeleporting = true`.
+     * Send this information via Ajax to the remote server.
+     * Due CORS, it requires a live server to access CSS information.
+     * Set frameOpts, if you need segment rendering.
+     * Set isPretty = true, to test only, since this mode will return a formatted output but bigger in size.
+     */
+    getStoryToTeleportAsConfig(frameOpts?: RenderFrameOptions): StoryConfig;
 
 
     /**

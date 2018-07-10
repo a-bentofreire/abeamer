@@ -120,7 +120,7 @@
  * This data was generated via `story.getStoryToTeleport()`
  * This is the data you have to send via Ajax to the remote server.
  *
- * In this case is no longer needed: `abeamer render --teleport`, nor access to the computer disk.
+ * In this case, it's no longer needed: `abeamer render --teleport`, nor access to the computer disk.
  *
  * ## How it works?
  *
@@ -133,6 +133,11 @@
  *
  * Instead of calling render, the `getStoryToTeleport` will generate data ready to be teleported.
  * This data must be **beamed** to the remote machine, usually via Ajax.
+ *
+ * `getStoryToTeleport` will return a string, if you want to add more parameters,
+ * use `getStoryToTeleportAsConfig`, and it will return an Object.
+ * ABeamer uses only `config.abeamer` record inside the generated object,
+ * any other field can be used to store extra data.
  *
  * The remote machine has an empty story body,
  * see [remote-server](https://a-bentofreire.github.io/abeamer-gallery-release/#remote-server), where it fills
@@ -165,7 +170,7 @@ namespace ABeamer {
   }
 
 
-  export class _Config {
+  export class _InnerConfig {
     version?: string;
 
     width?: uint;
@@ -191,12 +196,12 @@ namespace ABeamer {
   export class _Teleporter {
 
     protected _active: boolean = false;
-    protected _cfg: _Config;
+    protected _cfg: _InnerConfig;
     protected _story: _StoryImpl;
     hasStory: boolean = false;
 
 
-    constructor(story: _StoryImpl, cfg: _Config, isTeleport: boolean) {
+    constructor(story: _StoryImpl, cfg: _InnerConfig, isTeleport: boolean) {
       this._story = story;
       this._cfg = cfg;
 
@@ -233,15 +238,11 @@ namespace ABeamer {
     }
 
 
-    _getStoryToTeleport(isPretty?: boolean): string {
-
+    _getStoryToTeleportAsConfig(): StoryConfig {
       this._cfg.renderPos = this._story.renderFramePos;
       this._cfg.renderCount = this._story.renderFrameCount;
       this._cfg.metadata = this._story.metadata;
-
-      return JSON.stringify({
-        config: { abeamer: this._cfg },
-      }, undefined, isPretty ? 2 : undefined);
+      return { config: { abeamer: this._cfg } };
     }
 
 

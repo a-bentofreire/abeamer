@@ -318,7 +318,7 @@ declare namespace ABeamer {
    *
    * The easing function interpolates from [0, 1].
    */
-  export type EasingHandler = EasingName | string | ExprString | EasingFunc;
+  export type EasingHandler = EasingName | string | ExprString | EasingFunc | ExprName;
 
 
   /**
@@ -1233,6 +1233,17 @@ declare namespace ABeamer {
   /** Value used, if no duration is defined for a fade in/out. */
   export const DEFAULT_FADE_DURATION = '400ms';
 
+
+  /**
+   * A ExprName is used for motion handlers, mostly for easings, to have
+   * dynamic names.
+   * Since an expression can be used to interpolate, by using expressions starting
+   * with '==', it will compute immediately the expression and the output
+   * must the motion name.
+   * @example == 'easeIn' + iff(frameWidth < 100, 'Quad', 'Cubic')
+   */
+  export type ExprName = ExprString;
+
   /**
    * Defines parameters used both by `Animation` and `AnimationProp`.
    * The `AnimationProp` overrides the parameters defined by `Animation`.
@@ -1667,6 +1678,13 @@ declare namespace ABeamer {
 
   /** Scene by Object, index or name */
   export type SceneHandler = Scene | uint | string;
+
+
+  export interface StoryConfig {
+    config: {
+      abeamer: any;
+    };
+  }
 
 
   export interface StoryMetadata {

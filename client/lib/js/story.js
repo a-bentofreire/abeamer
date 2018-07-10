@@ -611,13 +611,25 @@ var ABeamer;
          * Set isPretty = true, to test only, since this mode will return a formatted output but bigger in size.
          */
         _Story.prototype.getStoryToTeleport = function (frameOpts, isPretty) {
+            var cfg = this.getStoryToTeleportAsConfig(frameOpts);
+            return cfg !== undefined ?
+                JSON.stringify(cfg, undefined, isPretty ? 2 : undefined) : '';
+        };
+        /**
+         * Same as `getStoryToTeleport()` but it returns as `StoryConfig` object.
+         * Use this function instead of getStoryToTeleport, if you need to
+         * add extra fields.
+         * Modifying the content of `config.abeamer` is forbidden for 3rd-party
+         * remote server rendering.
+         */
+        _Story.prototype.getStoryToTeleportAsConfig = function (frameOpts) {
             if (!this._isTeleporting) {
                 throw "getStoryToTeleport requires to be in teleporting mode";
             }
             if (!this._calcRenderFrameOptions(frameOpts)) {
-                return '';
+                return undefined;
             }
-            return this._teleporter._getStoryToTeleport(isPretty);
+            return this._teleporter._getStoryToTeleportAsConfig();
         };
         /**
          * Stores the complete story on a file in the disk.
@@ -1013,9 +1025,9 @@ var ABeamer;
                 });
                 cfgRoot = { config: { abeamer: cfgRoot } };
             }
-            var cfgConfig = cfgRoot['config'];
+            var cfgConfig = cfgRoot.config;
             if (cfgConfig) {
-                var cfg = cfgConfig['abeamer'];
+                var cfg = cfgConfig.abeamer;
                 if (cfg) {
                     cfg.fps = cfg.fps || fps;
                     _abeamer = new _Story(cfg, createParams || {});
