@@ -218,6 +218,13 @@ var ServerAgent;
                 }
                 return configFileName;
             }
+            function setFramesPattern(framesPattern) {
+                self.framesPattern = toPosixSlash(framesPattern || opts_parser_js_1.OptsParser.DEFAULT_OUT_PATTERN)
+                    .replace('__PROJDIR__', self.projDir);
+                if (self.isVerbose && self.toGenFrames) {
+                    console.log("framesPattern: " + self.framesPattern);
+                }
+            }
             function parseOption(option, value, multipleValue) {
                 switch (option) {
                     case '@param':
@@ -262,7 +269,7 @@ var ServerAgent;
                         }
                         self.projDir = dirName(filename);
                         if (!self.framesPattern) {
-                            self.framesPattern = self.projDir + opts_parser_js_1.OptsParser.DEFAULT_OUT_PATTERN;
+                            setFramesPattern();
                         }
                         if (!self.existsSync(filename)) {
                             throw "Page File " + filename + " doesn't exists";
@@ -276,12 +283,7 @@ var ServerAgent;
                         }
                         break;
                     case 'out':
-                        // @TODO: Make framesPattern not have the absolute path for security and sharing
-                        self.framesPattern = toPosixSlash(value)
-                            .replace('__PROJDIR__', self.projDir);
-                        if (self.isVerbose && self.toGenFrames) {
-                            console.log("framesPattern: " + self.framesPattern);
-                        }
+                        setFramesPattern(value);
                         break;
                     case 'width':
                         if (!self.hasArgWidth) {
@@ -395,7 +397,17 @@ var ServerAgent;
                         break;
                 }
             }
-            return opts_parser_js_1.OptsParser.iterateArgOpts(true, function () { return args[argI++]; }, parseOption) || (this.url && this.framesPattern ? DO_RUN_SERVER : DO_PRINT_USAGE);
+            var res = opts_parser_js_1.OptsParser.iterateArgOpts(true, function () { return args[argI++]; }, parseOption);
+            if (res) {
+                return res;
+            }
+            if (this.url) {
+                if (this.projDir && !this.framesPattern) {
+                    setFramesPattern();
+                }
+                return (this.framesPattern ? DO_RUN_SERVER : DO_PRINT_USAGE);
+            }
+            return DO_PRINT_USAGE;
         };
         /**
          * Parse Arguments is async to later provide async config loading

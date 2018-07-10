@@ -12,7 +12,7 @@ import { RelConsts } from "../shared/rel-consts.js";
 
 export namespace OptsParser {
 
-  export const DEFAULT_OUT_PATTERN = '/story-frames/frame%05d.png';
+  export const DEFAULT_OUT_PATTERN = '__PROJDIR__/story-frames/frame%05d.png';
   export const DEFAULT_OUT_REPORT = '__FRAMES_DIR__/frame-report.json';
   export const ON_ERROR_EXIT_VALUE = -1;
   /** For security reasons, the user can't access this constant  */
@@ -47,15 +47,15 @@ export namespace OptsParser {
     file: {
       param: 'string', desc:
         `for running local files with relative paths
-           if --out isn't defined it sets to __PROJDIR__${DEFAULT_OUT_PATTERN}
+           if --out isn't defined it sets to ${DEFAULT_OUT_PATTERN}
               e.g --file gallery/hello-world/`},
 
     out: {
       param: 'string', desc:
         `output file pattern. use %(0<n>)d for sequence,
            creates the destination folder if doesn't exists
-           if it's defined after --file, the macro __PROJDIR__ will be file value
-             e.g. --out __PROJDIR__${DEFAULT_OUT_PATTERN}`,
+           if it's defined after --file, the macro  will be file value
+             e.g. --out ${DEFAULT_OUT_PATTERN}`,
     },
 
     report: {

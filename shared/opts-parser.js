@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var rel_consts_js_1 = require("../shared/rel-consts.js");
 var OptsParser;
 (function (OptsParser) {
-    OptsParser.DEFAULT_OUT_PATTERN = '/story-frames/frame%05d.png';
+    OptsParser.DEFAULT_OUT_PATTERN = '__PROJDIR__/story-frames/frame%05d.png';
     OptsParser.DEFAULT_OUT_REPORT = '__FRAMES_DIR__/frame-report.json';
     OptsParser.ON_ERROR_EXIT_VALUE = -1;
     /** For security reasons, the user can't access this constant  */
@@ -32,10 +32,10 @@ var OptsParser;
             param: 'string', desc: "url of the page containing the animation\n              e.g. http://www.abeamer.com/\n              e.g. file:///home/abeamer/Documents/test/"
         },
         file: {
-            param: 'string', desc: "for running local files with relative paths\n           if --out isn't defined it sets to __PROJDIR__" + OptsParser.DEFAULT_OUT_PATTERN + "\n              e.g --file gallery/hello-world/"
+            param: 'string', desc: "for running local files with relative paths\n           if --out isn't defined it sets to " + OptsParser.DEFAULT_OUT_PATTERN + "\n              e.g --file gallery/hello-world/"
         },
         out: {
-            param: 'string', desc: "output file pattern. use %(0<n>)d for sequence,\n           creates the destination folder if doesn't exists\n           if it's defined after --file, the macro __PROJDIR__ will be file value\n             e.g. --out __PROJDIR__" + OptsParser.DEFAULT_OUT_PATTERN,
+            param: 'string', desc: "output file pattern. use %(0<n>)d for sequence,\n           creates the destination folder if doesn't exists\n           if it's defined after --file, the macro  will be file value\n             e.g. --out " + OptsParser.DEFAULT_OUT_PATTERN,
         },
         report: {
             param: 'string', desc: "output report filename providing information about dimensions and fps\n           default is " + OptsParser.DEFAULT_OUT_REPORT,

@@ -261,6 +261,14 @@ export namespace ServerAgent {
         return configFileName;
       }
 
+      function setFramesPattern(framesPattern?: string): void {
+        self.framesPattern = toPosixSlash(framesPattern || OptsParser.DEFAULT_OUT_PATTERN)
+          .replace('__PROJDIR__', self.projDir);
+        if (self.isVerbose && self.toGenFrames) {
+          console.log(`framesPattern: ${self.framesPattern}`);
+        }
+      }
+
       function parseOption(option: string, value, multipleValue?): uint {
 
         switch (option) {
@@ -307,7 +315,7 @@ export namespace ServerAgent {
 
             self.projDir = dirName(filename);
             if (!self.framesPattern) {
-              self.framesPattern = self.projDir + OptsParser.DEFAULT_OUT_PATTERN;
+              setFramesPattern();
             }
 
             if (!self.existsSync(filename)) {
@@ -323,12 +331,7 @@ export namespace ServerAgent {
             break;
 
           case 'out':
-            // @TODO: Make framesPattern not have the absolute path for security and sharing
-            self.framesPattern = toPosixSlash(value)
-              .replace('__PROJDIR__', self.projDir);
-            if (self.isVerbose && self.toGenFrames) {
-              console.log(`framesPattern: ${self.framesPattern}`);
-            }
+            setFramesPattern(value);
             break;
 
           case 'width':
@@ -442,9 +445,13 @@ export namespace ServerAgent {
         }
       }
 
-      return OptsParser.iterateArgOpts(true, () => args[argI++],
-        parseOption,
-      ) || (this.url && this.framesPattern ? DO_RUN_SERVER : DO_PRINT_USAGE);
+      const res = OptsParser.iterateArgOpts(true, () => args[argI++], parseOption);
+      if (res) { return res; }
+      if (this.url) {
+        if (this.projDir && !this.framesPattern) { setFramesPattern(); }
+        return (this.framesPattern ? DO_RUN_SERVER : DO_PRINT_USAGE);
+      }
+      return DO_PRINT_USAGE;
     }
 
 

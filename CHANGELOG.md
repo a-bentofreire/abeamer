@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - (DEV) Refactor set width/height in story.constructor.
 - Change from fixed to dynamic dimensions in `animate-badges/main.scss`.
 - Change `gallery/animate-badges` to support teleported dynamic story.
+- Change `server-agent` to operate without --file or --out if there is --url.
 
 ### Added
 - Add Google Analytics to Documentation.
