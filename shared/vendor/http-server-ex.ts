@@ -147,8 +147,9 @@ export namespace HttpServerEx {
 
         sysFs.readdir(rp.path, (err, files: string[]) => {
 
+          const slashedPath = rp.path + (rp.path.endsWith('/') ? '' : '/');
           const filesInfo = files.map(file => {
-            const fileName = `${rp.path}${rp.path.endsWith('/') ? '' : '/'}${file}`;
+            const fileName = `${slashedPath}${file}`;
             const url = fileName.substr(1);
             const isDir = sysFs.statSync(fileName).isDirectory();
             return {
@@ -164,6 +165,14 @@ export namespace HttpServerEx {
               (fa.isDir ? -1 : 1);
           });
 
+          if (slashedPath !== './')  {
+            filesInfo.unshift({
+              file: '..',
+              fileName: `${slashedPath}..`,
+              url: `${slashedPath.substr(1)}../`,
+              isDir: true,
+            });
+          }
 
           const html = `<html>\n<head>
 <style>

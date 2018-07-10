@@ -108,8 +108,9 @@ var HttpServerEx;
             var DIR_PREFIX = '?dir';
             if (this.allowDirListing && rp.search === DIR_PREFIX) {
                 sysFs.readdir(rp.path, function (err, files) {
+                    var slashedPath = rp.path + (rp.path.endsWith('/') ? '' : '/');
                     var filesInfo = files.map(function (file) {
-                        var fileName = "" + rp.path + (rp.path.endsWith('/') ? '' : '/') + file;
+                        var fileName = "" + slashedPath + file;
                         var url = fileName.substr(1);
                         var isDir = sysFs.statSync(fileName).isDirectory();
                         return {
@@ -123,6 +124,14 @@ var HttpServerEx;
                         return fa.isDir === fb.isDir ? fa.file.localeCompare(fb.file) :
                             (fa.isDir ? -1 : 1);
                     });
+                    if (slashedPath !== './') {
+                        filesInfo.unshift({
+                            file: '..',
+                            fileName: slashedPath + "..",
+                            url: slashedPath.substr(1) + "../",
+                            isDir: true,
+                        });
+                    }
                     var html = "<html>\n<head>\n<style>\nbody {\n    font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Helvetica,Arial,\n      sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\";\n      color: #24292e;\n      background-color: white;\n}\n</style>\n          </head><body>\n"
                         + filesInfo.map(function (fileInf) {
                             var isDir = fileInf.isDir;
