@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fix `ChartLegend` in `chart-tasks` that had required typing `mark` parameter.
 - (DEV) Fix `gulp build-release` in Windows, by disable `gulpPreserveTime` in `rel:server-minify` task.
 - Fix CSS transform property on IE11, by disable overwriting property vendor remapping.
-
+- Fix the transparency in area charts for IE11/MS Edge by changing from #RRGGBBAA to rgb(r,g,b,a).
 
 ## [0.3.2] -
 ### Changed

@@ -73,7 +73,7 @@ $(window).on("load", () => {
       captions: ['17Q1', '17Q2', '17Q3', '17Q4', '18Q1', '18Q2', '18Q3'],
     },
     labelsY: "=v + '%'",
-    fillColors: ['#35a9c070', '#adffb970'],
+    fillColors: ['rgba(53, 169, 192, 0.4392)', 'rgba(173, 255, 185, 0.4392)'],
     strokeColors: ['#9c9c9c', '#9c9c9c'],
     strokeWidth: [2, 2],
     sweepStart: 0.2,
