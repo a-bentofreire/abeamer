@@ -107,6 +107,14 @@ namespace ABeamer {
      * default DOM Adapter.
      */
     storyAdapter?: SceneAdapter;
+
+    /**
+     * Defines the log level. Use `LL_VERBOSE` for debugging.
+     * The server can modify this mode.
+     * Set this parameter to log during the constructor phase,
+     * otherwise is also possible to set later via `story.logLevel`.
+     */
+    logLevel?: uint;
   }
 
 
@@ -512,12 +520,22 @@ namespace ABeamer {
      * Sets up the Story and adds the Default Scenes.
      */
     constructor(cfg: _InnerConfig, createParams: CreateStoryParams) {
-      _initBrowser();
 
       const urlParams = window.location.search || '';
 
       const args = this._args;
       const self = this;
+
+      this.logLevel = createParams.logLevel || LL_SILENT;
+      if (urlParams) {
+        urlParams.replace(new RegExp(_SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), (m, p1) => {
+          this.logLevel = parseInt(p1); // don't use _logLevel
+          return '';
+        });
+      }
+
+      _initBrowser(args);
+
       this._waitMan = new _WaitMan();
       args.waitMan = this._waitMan;
 
@@ -563,11 +581,6 @@ namespace ABeamer {
 
       if (urlParams) {
 
-        urlParams.replace(new RegExp(_SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), (m, p1) => {
-          this.logLevel = parseInt(p1); // don't use _logLevel
-          return '';
-        });
-
         urlParams.replace(new RegExp(_SRV_CNT.TELEPORT_SUFFIX + '(\\w+)'), (m, p1) => {
           this._isTeleporting = p1 === 'true';
           return '';
@@ -607,6 +620,10 @@ namespace ABeamer {
           ['urlParams', urlParams],
           ['hasServer', this.hasServer.toString()],
           ['hasStory', this._teleporter.hasStory.toString()],
+          ['frame-width', this._width],
+          ['frame-height', this._height],
+          ['browser.isMsIE', browser.isMsIE.toString()],
+          ['browser.vendorPrefix', browser.vendorPrefix],
           ['toTeleport', this._isTeleporting.toString()],
         ]);
       }

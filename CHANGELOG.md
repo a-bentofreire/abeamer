@@ -40,6 +40,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add extra exception handling server-agent-puppeteer to prevent freezing.
 - Add `story.getStoryToTeleportAsConfig` to provide an object access to story to teleport.
 - Add '[..]' to the listing in `abeamer serve --list-dir`.
+- Add `logLevel` to `story.constructor`, allowing to get verbose
+    information during story constructor phase.
 
 ### Fixed
 - Fix `ChartLegend` in `chart-tasks` that had required typing `mark` parameter.

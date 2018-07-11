@@ -121,10 +121,17 @@ var ABeamer;
              * Returns the play speed that best matches the fps.
              */
             this.bestPlaySpeed = function () { return Math.abs(1000 / _this.fps); };
-            ABeamer._initBrowser();
             var urlParams = window.location.search || '';
             var args = this._args;
             var self = this;
+            this.logLevel = createParams.logLevel || ABeamer.LL_SILENT;
+            if (urlParams) {
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), function (m, p1) {
+                    _this.logLevel = parseInt(p1); // don't use _logLevel
+                    return '';
+                });
+            }
+            ABeamer._initBrowser(args);
             this._waitMan = new _WaitMan();
             args.waitMan = this._waitMan;
             this.storyAdapter = createParams.storyAdapter || new ABeamer._DOMSceneAdapter('.abeamer-story');
@@ -157,10 +164,6 @@ var ABeamer;
             this.fps = cfg.fps;
             this._isTeleporting = createParams.toTeleport || false;
             if (urlParams) {
-                urlParams.replace(new RegExp(ABeamer._SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), function (m, p1) {
-                    _this.logLevel = parseInt(p1); // don't use _logLevel
-                    return '';
-                });
                 urlParams.replace(new RegExp(ABeamer._SRV_CNT.TELEPORT_SUFFIX + '(\\w+)'), function (m, p1) {
                     _this._isTeleporting = p1 === 'true';
                     return '';
@@ -195,6 +198,10 @@ var ABeamer;
                     ['urlParams', urlParams],
                     ['hasServer', this.hasServer.toString()],
                     ['hasStory', this._teleporter.hasStory.toString()],
+                    ['frame-width', this._width],
+                    ['frame-height', this._height],
+                    ['browser.isMsIE', ABeamer.browser.isMsIE.toString()],
+                    ['browser.vendorPrefix', ABeamer.browser.vendorPrefix],
                     ['toTeleport', this._isTeleporting.toString()],
                 ]);
             }

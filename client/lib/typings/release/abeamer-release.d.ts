@@ -976,13 +976,14 @@ declare namespace ABeamer {
   // ------------------------------------------------------------------------
 
   export interface Browser {
-
+    isMsIE: boolean;
     vendorPrefix: string;
     prefixedProps: string[];
   }
 
 
   export const browser: Browser = {
+    isMsIE: false,
     vendorPrefix: '',
     prefixedProps: [],
   };
@@ -1718,6 +1719,14 @@ declare namespace ABeamer {
      * default DOM Adapter.
      */
     storyAdapter?: SceneAdapter;
+
+    /**
+     * Defines the log level. Use `LL_VERBOSE` for debugging.
+     * The server can modify this mode.
+     * Set this parameter to log during the constructor phase,
+     * otherwise is also possible to set later via `story.logLevel`.
+     */
+    logLevel?: uint;
   }
 
 

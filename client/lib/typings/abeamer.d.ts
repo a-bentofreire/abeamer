@@ -597,12 +597,11 @@ declare namespace ABeamer {
 
 
     /**
-     * Returns the animations, html, CSS as an object.
-     * Use only if `isTeleporting = true`.
-     * Send this information via Ajax to the remote server.
-     * Due CORS, it requires a live server to access CSS information.
-     * Set frameOpts, if you need segment rendering.
-     * Set isPretty = true, to test only, since this mode will return a formatted output but bigger in size.
+     * Same as `getStoryToTeleport()` but it returns as `StoryConfig` object.
+     * Use this function instead of getStoryToTeleport, if you need to
+     * add extra fields.
+     * Modifying the content of `config.abeamer` is forbidden for 3rd-party
+     * remote server rendering.
      */
     getStoryToTeleportAsConfig(frameOpts?: RenderFrameOptions): StoryConfig;
 

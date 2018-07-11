@@ -263,13 +263,14 @@ namespace ABeamer {
   // ------------------------------------------------------------------------
 
   export interface Browser {
-
+    isMsIE: boolean;
     vendorPrefix: string;
     prefixedProps: string[];
   }
 
 
   export const browser: Browser = {
+    isMsIE: false,
     vendorPrefix: '',
     prefixedProps: [],
   };
@@ -1035,11 +1036,11 @@ namespace ABeamer {
    * Discovers the vendor prefix and vendor prefixed CSS properties
    * by using `window.getComputedStyle`.
    */
-  export function _initBrowser(): void {
+  export function _initBrowser(args: ABeamerArgs): void {
 
     if (browser.vendorPrefix) { return; }
     const isMsIE = navigator.userAgent.search(/Trident/) !== -1;
-    // console.log(`isMsIE: ${isMsIE}`);
+    browser.isMsIE = isMsIE;
 
     const cssMap = window.getComputedStyle(document.body);
     const cssMapLen = (cssMap || []).length;
@@ -1051,7 +1052,6 @@ namespace ABeamer {
 
         if (!foundVendorPrefix) {
           const vendorPrefix = parts[1];
-          // console.log(vendorPrefix);
           browser.vendorPrefix = vendorPrefix;
           foundVendorPrefix = true;
 

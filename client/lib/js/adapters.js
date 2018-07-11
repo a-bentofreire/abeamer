@@ -64,6 +64,7 @@ var ABeamer;
         WaitForWhat[WaitForWhat["MediaSync"] = 2] = "MediaSync";
     })(WaitForWhat = ABeamer.WaitForWhat || (ABeamer.WaitForWhat = {}));
     ABeamer.browser = {
+        isMsIE: false,
         vendorPrefix: '',
         prefixedProps: [],
     };
@@ -688,12 +689,12 @@ var ABeamer;
      * Discovers the vendor prefix and vendor prefixed CSS properties
      * by using `window.getComputedStyle`.
      */
-    function _initBrowser() {
+    function _initBrowser(args) {
         if (ABeamer.browser.vendorPrefix) {
             return;
         }
         var isMsIE = navigator.userAgent.search(/Trident/) !== -1;
-        // console.log(`isMsIE: ${isMsIE}`);
+        ABeamer.browser.isMsIE = isMsIE;
         var cssMap = window.getComputedStyle(document.body);
         var cssMapLen = (cssMap || []).length;
         var foundVendorPrefix = false;
@@ -703,7 +704,6 @@ var ABeamer;
             if (parts) {
                 if (!foundVendorPrefix) {
                     var vendorPrefix_1 = parts[1];
-                    // console.log(vendorPrefix);
                     ABeamer.browser.vendorPrefix = vendorPrefix_1;
                     foundVendorPrefix = true;
                     var forcedProps = FORCED_PROP_REMAPS[vendorPrefix_1];
