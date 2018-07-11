@@ -97,7 +97,7 @@ var DevWebLinks;
             ? 'https://a-bentofreire.github.io/abeamer-docs'
             : "http://localhost:" + LOCAL_PORT + "/docs/build";
         var releaseStatic = !isLocal
-            ? 'https://cdn.rawgit.com/a-bentofreire/abeamer-release/master/'
+            ? 'https://a-bentofreire.github.io/abeamer-release/'
             : "http://localhost:" + LOCAL_PORT + "/release/";
         var main = !isLocal ? 'abeamer' : '';
         var mainPrefix = !isLocal ? 'abeamer-' : '';

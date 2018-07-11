@@ -124,7 +124,7 @@ export namespace DevWebLinks {
 
 
     const releaseStatic = !isLocal
-      ? 'https://cdn.rawgit.com/a-bentofreire/abeamer-release/master/'
+      ? 'https://a-bentofreire.github.io/abeamer-release/'
       : `http://localhost:${LOCAL_PORT}/release/`;
 
 
