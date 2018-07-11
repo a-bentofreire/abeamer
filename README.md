@@ -3,7 +3,7 @@
   
 ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-abeamer/story-frames/story.gif)  
   
-**ABeamer** is a powerful animation EcoSystem, designed to create an animated story 
+**ABeamer** is a powerful frame-by-frame animation ecosystem, designed to create an animated story 
 in the web browser and generate the file images of each frame in either a local machine or in the cloud.  
   
 Unlike `VelocityJs` and `JQuery.animate` which were built for real-time user interaction, 
@@ -22,16 +22,25 @@ the story to the company's machine to render the frame images and generate anima
   
 ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-charts/story-frames/story.gif) ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-plot/story-frames/story.gif)   
 
+ABeamer was raised to production level with the release of ABeamer 1.0.0.  
+This is the first LTS version and it includes many improvements, bug fixes, a few cosmetics changes in the documentation, 
+and better support on Windows platform and Microsoft web browsers.  
+ABeamer 1.0.0 gives great access to the command-line allowing to create stories that can 
+be configure by the server, opening the door to multiple dimension rendering.  
+[read more >>>](https://www.abeamer.com/blog/2018/07/11/abeamer-1.0.0-released.html)  
+The `animated-badges` now are configurable by the server, and don't require the installation of local js/css files.  
+[How to generate an animated badge with ABeamer >>>](https://www.abeamer.com/blog/2018/07/11/how-to-generate-an-animated-badge-with-abeamer.html)  
+  
 ABeamer 0.3.2: Now ABeamer has a website and blog. Have a look: [https://www.abeamer.com](https://www.abeamer.com).  
 With the creation of the blog, the project updates will be described in more detail and its information can be used as documentation.
 In this version includes more detailed documentation and several fixed several documentation bugs.
 The major goal now is to raise the ABeamer to production level.  
 The [roadmap](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/roadmap/) was also updated and added many details.   
-
+  
 ABeamer 0.3.1 includes chart series as expressions, allowing to plot mathematical functions.  
 The standard library now also includes `log`, `log10` and `exp`.  
 [read more >>>](https://www.abeamer.com/blog/2018/06/29/abeamer-0.3.1-released.html)  
-
+  
 ABeamer 0.3.0 includes the first implementation of the charts plugin.  
 Although there is still a lot of work for reach production stage, and the API can still change,
 is already usable in projects.  
@@ -270,12 +279,13 @@ However, in order to render frames, generate gifs and movies, it requires:
 1. [nodejs](https://nodejs.org/en/).
      
 2. To render, it requires [puppeteer](https://www.npmjs.com/package/puppeteer) render server `npm install -g puppeteer`.  
-   Puppeteer installs Chromium by default, since Chromium is outdated and has less features than Chrome,  
-   before installing puppeteer, read the following [note](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/faq/#can-i-install-puppeteer-without-chromium).   
-   ABeamer also supports `phantomjs` but since its features are outdated is preferable to use `puppeteer`.  
+   Puppeteer installs Chromium by default, since Chromium is outdated and it has less features than Chrome,  
+   before installing puppeteer, read the following [note](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/faq/#can-i-install-puppeteer-without-chromium)
+   on how to configure puppeteer to use Chrome instead of Chromium.
+   ABeamer also supports `phantomjs` but since its features are outdated it is preferable to use puppeteer.  
      
 3. To generate gifs, it requires to have [imagemagick](https://www.imagemagick.org) on system path.  
-   For Windows users, read the following [note](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/faq/#it-doesnt-creates-a-gif-file).
+   For Windows users, read the following [note](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/faq/#it-doesnt-creates-a-gif-file). 
      
 4. To create movies, it requires to have [ffmpeg](https://www.ffmpeg.org/) on the system path.
 
@@ -398,20 +408,13 @@ to install if you need to render, create gifs or movies on the local machine.
 
 ## Contribute
 
-![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/sources/warning.png) ABeamer is still in **beta** stage,
-and before the first GitHub commit it went through multiple redesigns both the 
-code and the documentation as well, although it has now reach a mature phase, 
-now is in a process of harmonize the code and documentation created during the multiple designs.   
-It still has bugs and inconsistences to tackle.
-
 ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/sources/warning.png) ABeamer 
-was built on Linux/Chrome/Puppeteer and tested on Windows, Firefox, Opera and MS Edge.  
-There is still a lot of work to support all the most common web browsers, OSes and render servers.
+was built on Linux/Chrome/Puppeteer and tested on Windows, Firefox, Opera, MS IE11 and MS Edge.  
 
 To keep an healthy cooperation environment, before posting an issue, please read 
 [Code Of Conduct](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/code-of-conduct/).
 
-To report issues, use the main repo [issues](https://github.com/a-bentofreire/abeamer/issues/).
+Report issues on [github](https://github.com/a-bentofreire/abeamer/issues/).
 
 ## License
 
