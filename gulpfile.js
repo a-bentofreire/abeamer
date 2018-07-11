@@ -67,6 +67,7 @@ var Gulp;
     var joinedArgs = sysProcess.argv.join(' ');
     var isLocal = joinedArgs.indexOf('--local') !== -1;
     var isProduction = joinedArgs.indexOf('--production') !== -1;
+    var isWin = sysProcess.platform === 'win32';
     dev_web_links_js_1.DevWebLinks.setup(isLocal);
     function printOptions() {
         console.log("Options:\n    local: " + isLocal + "\n    production: " + isProduction + "\n");
@@ -302,7 +303,7 @@ var Gulp;
         }));
     });
     gulp.task('rel:server-minify', function () {
-        return gulp.src('server/*.js')
+        var res = gulp.src('server/*.js')
             .pipe(gulpMinify({
             noSource: true,
             ext: {
@@ -310,8 +311,11 @@ var Gulp;
             },
         }))
             .pipe(gulpReplace(/("use strict";)/, SERVER_UUID + COPYRIGHTS + '$1\n'))
-            .pipe(gulp.dest(RELEASE_PATH + "/server"))
-            .pipe(gulpPreserveTime());
+            .pipe(gulp.dest(RELEASE_PATH + "/server"));
+        if (!isWin) {
+            res = res.pipe(gulpPreserveTime());
+        }
+        return res;
     });
     // copies package.json cleaning the unnecessary config
     gulp.task('rel:build-package.json', function () {

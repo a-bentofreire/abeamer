@@ -79,6 +79,7 @@ namespace Gulp {
   const joinedArgs = sysProcess.argv.join(' ');
   const isLocal = joinedArgs.indexOf('--local') !== -1;
   const isProduction = joinedArgs.indexOf('--production') !== -1;
+  const isWin = sysProcess.platform === 'win32';
   webLinks.setup(isLocal);
 
 
@@ -431,7 +432,7 @@ namespace Gulp {
 
 
   gulp.task('rel:server-minify', () => {
-    return gulp.src('server/*.js')
+    let res = gulp.src('server/*.js')
       .pipe(gulpMinify({
         noSource: true,
         ext: {
@@ -440,8 +441,11 @@ namespace Gulp {
       }))
       .pipe(gulpReplace(/("use strict";)/,
         SERVER_UUID + COPYRIGHTS + '$1\n'))
-      .pipe(gulp.dest(`${RELEASE_PATH}/server`))
-      .pipe(gulpPreserveTime());
+      .pipe(gulp.dest(`${RELEASE_PATH}/server`));
+      if (!isWin) {
+        res = res.pipe(gulpPreserveTime());
+      }
+    return res;
   });
 
 
