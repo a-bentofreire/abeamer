@@ -675,8 +675,11 @@ var ABeamer;
     /**
      * Adds a vendor prefixed CSS properties to the domPropMapper.
      */
-    function _addPropToDomPropMapper(subPropName, propName) {
+    function _addPropToDomPropMapper(subPropName, propName, canOverwrite) {
         var mapValue = domPropMapper[subPropName];
+        if (!canOverwrite && mapValue !== undefined && mapValue[1][0] === '-') {
+            return;
+        }
         var propType = mapValue !== undefined ? mapValue[0] : ABeamer.DPT_STYLE;
         domPropMapper[propName] = [propType, propName];
         domPropMapper[subPropName] = [propType, propName];
@@ -689,6 +692,8 @@ var ABeamer;
         if (ABeamer.browser.vendorPrefix) {
             return;
         }
+        var isMsIE = navigator.userAgent.search(/Trident/) !== -1;
+        // console.log(`isMsIE: ${isMsIE}`);
         var cssMap = window.getComputedStyle(document.body);
         var cssMapLen = (cssMap || []).length;
         var foundVendorPrefix = false;
@@ -698,18 +703,19 @@ var ABeamer;
             if (parts) {
                 if (!foundVendorPrefix) {
                     var vendorPrefix_1 = parts[1];
+                    // console.log(vendorPrefix);
                     ABeamer.browser.vendorPrefix = vendorPrefix_1;
                     foundVendorPrefix = true;
                     var forcedProps = FORCED_PROP_REMAPS[vendorPrefix_1];
                     if (forcedProps) {
                         forcedProps.forEach(function (forcedProp) {
-                            _addPropToDomPropMapper(forcedProp, vendorPrefix_1 + forcedProp);
+                            _addPropToDomPropMapper(forcedProp, vendorPrefix_1 + forcedProp, !isMsIE);
                         });
                     }
                 }
                 var subPropName = parts[2];
                 ABeamer.browser.prefixedProps.push(subPropName);
-                _addPropToDomPropMapper(subPropName, propName);
+                _addPropToDomPropMapper(subPropName, propName, !isMsIE);
             }
         };
         for (var i = 0; i < cssMapLen; i++) {

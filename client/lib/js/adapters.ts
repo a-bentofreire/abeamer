@@ -1019,8 +1019,12 @@ namespace ABeamer {
   /**
    * Adds a vendor prefixed CSS properties to the domPropMapper.
    */
-  function _addPropToDomPropMapper(subPropName: string, propName: string): void {
+  function _addPropToDomPropMapper(subPropName: string, propName: string,
+    canOverwrite: boolean): void {
     const mapValue = domPropMapper[subPropName];
+    if (!canOverwrite && mapValue !== undefined && mapValue[1][0] === '-') {
+      return;
+    }
     const propType = mapValue !== undefined ? mapValue[0] : DPT_STYLE;
     domPropMapper[propName] = [propType, propName];
     domPropMapper[subPropName] = [propType, propName];
@@ -1034,6 +1038,8 @@ namespace ABeamer {
   export function _initBrowser(): void {
 
     if (browser.vendorPrefix) { return; }
+    const isMsIE = navigator.userAgent.search(/Trident/) !== -1;
+    // console.log(`isMsIE: ${isMsIE}`);
 
     const cssMap = window.getComputedStyle(document.body);
     const cssMapLen = (cssMap || []).length;
@@ -1045,20 +1051,21 @@ namespace ABeamer {
 
         if (!foundVendorPrefix) {
           const vendorPrefix = parts[1];
+          // console.log(vendorPrefix);
           browser.vendorPrefix = vendorPrefix;
           foundVendorPrefix = true;
 
           const forcedProps = FORCED_PROP_REMAPS[vendorPrefix] as string[];
           if (forcedProps) {
             forcedProps.forEach(forcedProp => {
-              _addPropToDomPropMapper(forcedProp, vendorPrefix + forcedProp);
+              _addPropToDomPropMapper(forcedProp, vendorPrefix + forcedProp, !isMsIE);
             });
           }
         }
 
         const subPropName = parts[2];
         browser.prefixedProps.push(subPropName);
-        _addPropToDomPropMapper(subPropName, propName);
+        _addPropToDomPropMapper(subPropName, propName, !isMsIE);
       }
     }
   }
