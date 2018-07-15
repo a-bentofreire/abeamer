@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fix
 - Update cdn.rawgit.com links with a-bentofreire.github.io.
    > Using cdn.rawgit.com didn't guarantee the updated links to abeamer-release files.
+### Change
+- Change README doc links from latest to 1.0.
+  > This change applies only to 1.0-lts versions.
 
 
 ## [1.0.0] -
