@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] -
+### Fix
+- Update cdn.rawgit.com links with a-bentofreire.github.io.
+   > Using cdn.rawgit.com didn't guarantee the updated links to abeamer-release files.
+
+
 ## [1.0.0] -
 ### Breaking changes
 - `abeamer render` `--width` and `--height` parameter override abeamer.ini/story.json definition

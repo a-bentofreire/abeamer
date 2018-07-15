@@ -3,7 +3,7 @@
   "uuid": "f709f52e-de91-4010-bca1-4cfb921fd995",
   "displayName": "abeamer",
   "description": "Animation for the cloud",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "a-bentofreire",
   "keywords": [
     "animation",
@@ -64,7 +64,7 @@
     "mocha-image-compare": "^1.0.3",
     "phantom": "^4.0.12",
     "phantomjs": "^2.1.7",
-    "puppeteer": "^1.5.0",
+    "puppeteer": "^1.6.0",
     "rimraf": "^2.6.2",
     "typescript": "^2.9.2",
     "typescript-parser": "^2.5.0"

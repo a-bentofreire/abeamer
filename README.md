@@ -1,5 +1,5 @@
 ## Description
-![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/developer-badge.gif)![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/v-1.0.0.gif)  
+![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/developer-badge.gif)![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/v-1.0.1.gif)  
   
 ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-abeamer/story-frames/story.gif)  
   
