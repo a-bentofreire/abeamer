@@ -146,6 +146,7 @@ declare namespace ABeamer {
 
 
     _isVerbose: boolean;
+    _virtualAnimators?: VirtualAnimator[];
     /**
      * Internal and faster version of gotoScene.
      */

@@ -634,7 +634,9 @@ namespace ABeamer {
 
     const selector = fullId.substr(1);
 
-    const animator = story.virtualAnimators.find(vAnimator =>
+    // Although there is _virtualAnimatorMap and provides faster access,
+    // until the access to virtualAnimators has been disabled, it can't be used.
+    const animator = story._virtualAnimators.find(vAnimator =>
       vAnimator.selector === selector,
     );
 

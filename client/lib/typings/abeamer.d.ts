@@ -504,7 +504,28 @@ declare namespace ABeamer {
     onGetVirtualElement?: (id: string, args?: ABeamerArgs) => VirtualElement;
 
 
-    virtualAnimators?: VirtualAnimator[];
+    /**
+     * @deprecated Use addVirtualAnimator instead.
+     * The direct access to virtualAnimators in future versions will likely be disabled
+     *
+     */
+    virtualAnimators: VirtualAnimator[];
+
+
+    /**
+     * Adds a [](VirtualAnimator) to the story.
+     * Use [](removeVirtualAnimator) to take it from the story.
+     */
+    addVirtualAnimator(animator: VirtualAnimator): void;
+
+
+    /**
+     * Removes a [](VirtualAnimator) to the story.
+     * Use [](addVirtualAnimator) to add it to the story.
+     */
+    removeVirtualAnimator(animator: VirtualAnimator): void;
+
+
     /**
      * Adds scenes defined in the html by `.abeamer-scene` class.
      * These classes are added automatically during Story constructor.

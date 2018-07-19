@@ -513,7 +513,27 @@ namespace ABeamer {
     onGetVirtualElement?: (id: string, args?: ABeamerArgs) => VirtualElement;
 
 
-    virtualAnimators?: VirtualAnimator[] = [];
+    _virtualAnimators?: VirtualAnimator[] = [];
+
+
+    /**
+     * @deprecated Use addVirtualAnimator instead.
+     * The direct access to virtualAnimators in future versions will likely be disabled
+     *
+     */
+    get virtualAnimators(): VirtualAnimator[] {
+      console.log(`virtualAnimators has been deprecated, use addVirtualAnimator`);
+      return this._virtualAnimators;
+    }
+
+
+    /**
+     * Internal map from selectors to VirtualAnimators.
+     * Each animator must have a unique selector, but future versions
+     * might support different animators have the selector.
+     */
+    protected _virtualAnimatorMap: { [selector: number]: VirtualAnimator } = {};
+
 
 
     /**
@@ -633,6 +653,42 @@ namespace ABeamer {
         this._teleporter._rebuildStory();
       } else {
         if (!createParams.dontAddDefaultScenes) { this.addDefaultScenes(); }
+      }
+    }
+
+    // ------------------------------------------------------------------------
+    //                               Virtual Animators
+    // ------------------------------------------------------------------------
+
+    /**
+     * Adds a [](VirtualAnimator) to the story.
+     * Use [](removeVirtualAnimator) to take it from the story.
+     */
+    addVirtualAnimator(animator: VirtualAnimator): void {
+      const selector = animator.selector;
+      if (!selector) {
+        throwI8n(Msgs.NoEmptySelector);
+      }
+      if (this._virtualAnimatorMap[selector]) {
+        throwErr(`The selector must be unique`);
+      }
+      this._virtualAnimators.push(animator);
+      this._virtualAnimatorMap[selector] = animator;
+    }
+
+
+    /**
+     * Removes a [](VirtualAnimator) to the story.
+     * Use [](addVirtualAnimator) to add it to the story.
+     */
+    removeVirtualAnimator(animator: VirtualAnimator): void {
+      const index = this._virtualAnimators.indexOf(animator);
+
+      if (index !== -1) {
+        this._virtualAnimators.splice(index, 1);
+        // Although there is _virtualAnimatorMap and provides faster access,
+        // until the access to virtualAnimators has been disabled, it can't be used.
+        delete this._virtualAnimatorMap[animator.selector];
       }
     }
 

@@ -116,7 +116,13 @@ var ABeamer;
              * @default true
              */
             this.toExitOnRenderFinished = true;
-            this.virtualAnimators = [];
+            this._virtualAnimators = [];
+            /**
+             * Internal map from selectors to VirtualAnimators.
+             * Each animator must have a unique selector, but future versions
+             * might support different animators have the selector.
+             */
+            this._virtualAnimatorMap = {};
             /**
              * Returns the play speed that best matches the fps.
              */
@@ -392,6 +398,50 @@ var ABeamer;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(_Story.prototype, "virtualAnimators", {
+            /**
+             * @deprecated Use addVirtualAnimator instead.
+             * The direct access to virtualAnimators in future versions will likely be disabled
+             *
+             */
+            get: function () {
+                console.log("virtualAnimators has been deprecated, use addVirtualAnimator");
+                return this._virtualAnimators;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        // ------------------------------------------------------------------------
+        //                               Virtual Animators
+        // ------------------------------------------------------------------------
+        /**
+         * Adds a [](VirtualAnimator) to the story.
+         * Use [](removeVirtualAnimator) to take it from the story.
+         */
+        _Story.prototype.addVirtualAnimator = function (animator) {
+            var selector = animator.selector;
+            if (!selector) {
+                ABeamer.throwI8n(ABeamer.Msgs.NoEmptySelector);
+            }
+            if (this._virtualAnimatorMap[selector]) {
+                ABeamer.throwErr("The selector must be unique");
+            }
+            this._virtualAnimators.push(animator);
+            this._virtualAnimatorMap[selector] = animator;
+        };
+        /**
+         * Removes a [](VirtualAnimator) to the story.
+         * Use [](addVirtualAnimator) to add it to the story.
+         */
+        _Story.prototype.removeVirtualAnimator = function (animator) {
+            var index = this._virtualAnimators.indexOf(animator);
+            if (index !== -1) {
+                this._virtualAnimators.splice(index, 1);
+                // Although there is _virtualAnimatorMap and provides faster access,
+                // until the access to virtualAnimators has been disabled, it can't be used.
+                delete this._virtualAnimatorMap[animator.selector];
+            }
+        };
         // ------------------------------------------------------------------------
         //                               Addition
         // ------------------------------------------------------------------------

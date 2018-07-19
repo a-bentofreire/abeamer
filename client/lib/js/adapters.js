@@ -369,7 +369,9 @@ var ABeamer;
      */
     function _getVirtualElement(story, fullId) {
         var selector = fullId.substr(1);
-        var animator = story.virtualAnimators.find(function (vAnimator) {
+        // Although there is _virtualAnimatorMap and provides faster access,
+        // until the access to virtualAnimators has been disabled, it can't be used.
+        var animator = story._virtualAnimators.find(function (vAnimator) {
             return vAnimator.selector === selector;
         });
         if (animator) {
