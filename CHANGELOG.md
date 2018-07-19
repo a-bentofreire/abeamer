@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > These arguments to be passed to ffmpeg before/after the arguments passed by abeamer
 - Add `--gif-pre` and `--gif-post` parameters to abeamer cli.
   > These arguments to be passed to convert before/after the arguments passed by abeamer
+### Fix
+-- Fix http-server for URL with path with %20(spaces)
+
 
 ## [1.0.1] -
 ### Fix

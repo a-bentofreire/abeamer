@@ -71,7 +71,7 @@ var HttpServer;
             }
             var parsedUrl = sysUrl.parse(req.url);
             var rp = {
-                path: "." + parsedUrl.pathname,
+                path: "." + decodeURI(parsedUrl.pathname),
                 search: parsedUrl.search,
                 res: res,
             };

@@ -95,7 +95,7 @@ export namespace HttpServer {
 
       const parsedUrl = sysUrl.parse(req.url);
       const rp: Response = {
-        path: `.${parsedUrl.pathname}`,
+        path: `.${decodeURI(parsedUrl.pathname)}`,
         search: parsedUrl.search,
         res,
       };
