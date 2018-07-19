@@ -228,25 +228,21 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               _ChartVirtualAnimator
     // ------------------------------------------------------------------------
-    var _ChartVirtualAnimator = /** @class */ (function () {
+    var _ChartVirtualAnimator = /** @class */ (function (_super) {
+        __extends(_ChartVirtualAnimator, _super);
         function _ChartVirtualAnimator() {
-            this.charts = [];
-            this.props = {};
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.charts = [];
+            return _this;
         }
-        _ChartVirtualAnimator.prototype.getProp = function (name) {
-            return this.props[name];
-        };
-        _ChartVirtualAnimator.prototype.setProp = function (name, value) {
+        _ChartVirtualAnimator.prototype.animateProp = function (name, value) {
             var _this = this;
-            this.props[name] = value;
-            if (name !== 'uid') {
-                this.charts.forEach(function (chart) {
-                    chart._drawChart(_this.params);
-                });
-            }
+            this.charts.forEach(function (chart) {
+                chart._drawChart(_this.params);
+            });
         };
         return _ChartVirtualAnimator;
-    }());
+    }(ABeamer.SimpleVirtualAnimator));
     function _setUpCaptionsFont(l, ctx) {
         ctx.font = l.fontSize + "px " + l.fontFamily;
         ctx.fillStyle = l.fontColor;

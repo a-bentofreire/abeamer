@@ -526,26 +526,15 @@ namespace ABeamer {
   //                               _ChartVirtualAnimator
   // ------------------------------------------------------------------------
 
-  class _ChartVirtualAnimator implements VirtualAnimator {
+  class _ChartVirtualAnimator extends SimpleVirtualAnimator implements VirtualAnimator {
 
     charts: _WkChart[] = [];
     params: BaseChartTaskParams;
-    props: AnyParams = {};
-    selector: string;
 
-
-    getProp(name: PropName): PropValue {
-      return this.props[name];
-    }
-
-
-    setProp(name: PropName, value: PropValue): void {
-      this.props[name] = value;
-      if (name !== 'uid') {
-        this.charts.forEach(chart => {
-          chart._drawChart(this.params);
-        });
-      }
+    protected animateProp(name: PropName, value: PropValue): void {
+      this.charts.forEach(chart => {
+        chart._drawChart(this.params);
+      });
     }
   }
 

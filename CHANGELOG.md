@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Access to story.virtualAnimator is deprecated.
   > use addVirtualAnimator/removeVirtualAnimator instead.
+- (DEV) Port _ChartVirtualAnimator to SimpleVirtualAnimator.
 
 ### Added
 - Add addVirtualAnimator/removeVirtualAnimator to the story.
