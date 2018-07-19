@@ -136,6 +136,12 @@ var Cli;
     argOpts['moviePost'] = {
         param: 'array', allowOption: true, desc: "arguments to be passed to ffmpeg after the arguments passed by abeamer",
     };
+    argOpts['gifPre'] = {
+        param: 'array', allowOption: true, desc: "arguments to be passed to gif generator(convert) before the arguments passed by abeamer",
+    };
+    argOpts['gifPost'] = {
+        param: 'array', allowOption: true, desc: "arguments to be passed to gif generator(convert) after the arguments passed by abeamer",
+    };
     // ------------------------------------------------------------------------
     //                               Print Usage
     // ------------------------------------------------------------------------
@@ -431,6 +437,12 @@ var Cli;
             args.push('-strip', '-layers', 'optimize', '-alpha', 'deactivate');
         }
         args.push(report.framespattern.replace(/\%\d*d/, '*'), gifFileName);
+        if (argOpts['gifPre'].multipleValue) {
+            args = argOpts['gifPre'].multipleValue.concat(args);
+        }
+        if (argOpts['gifPost'].multipleValue) {
+            args = args.concat(argOpts['gifPost'].multipleValue);
+        }
         if (isVerbose) {
             console.log("\n" + cmdLine + " " + args.join(' ') + "\n");
         }
