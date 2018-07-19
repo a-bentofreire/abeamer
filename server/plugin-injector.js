@@ -20,8 +20,8 @@ var PluginInjector;
         allowedPlugins = JSON.parse(readUtf8Sync(fileName)).plugins;
     }
     PluginInjector.loadAllowedPlugins = loadAllowedPlugins;
-    function processUrl(url) {
-        return url.search(/^http/) !== -1 ? url : "abeamer/" + url;
+    function processUrl(urlBase, url) {
+        return url.search(/^http/) !== -1 ? url : urlBase + "/" + url;
     }
     PluginInjector.processUrl = processUrl;
     function inject(existsSync, readUtf8Sync, writeFileSync) {
@@ -46,12 +46,17 @@ var PluginInjector;
         });
         var content = readUtf8Sync(PluginInjector.injectPage);
         writeFileSync(PluginInjector.injectPage + '.bak.html', content);
+        var urlMatches = content.match(/["']([^"']+)\/css\/abeamer\.[\w\.]*css["']/);
+        if (!urlMatches) {
+            throw "Couldn't parse abeamer script link";
+        }
+        var urlBase = urlMatches[1];
         // inject js scripts
         content = content.replace(/(#plugins-js-block-start.*\n)((?:.|\n)*)(\n.*#plugins-js-block-end)/, function (all, before, replaceArea, after) {
             var output = [];
             PluginInjector.plugins.forEach(function (plugin) {
                 (plugin.jsUrls || []).forEach(function (url) {
-                    output.push("    <script src=\"" + processUrl(url) + "\"></script>");
+                    output.push("    <script src=\"" + processUrl(urlBase, url) + "\"></script>");
                 });
             });
             return before + '\n' + output.join('\n') + '\n' + after;
@@ -61,7 +66,7 @@ var PluginInjector;
             var output = [];
             PluginInjector.plugins.forEach(function (plugin) {
                 (plugin.cssUrls || []).forEach(function (url) {
-                    output.push("    <link href=\"" + processUrl(url) + "\" rel=\"stylesheet\">");
+                    output.push("    <link href=\"" + processUrl(urlBase, url) + "\" rel=\"stylesheet\">");
                 });
             });
             return before + '\n' + output.join('\n') + '\n' + after;

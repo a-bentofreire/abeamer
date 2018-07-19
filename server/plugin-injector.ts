@@ -46,8 +46,8 @@ export namespace PluginInjector {
   }
 
 
-  export function processUrl(url: string): string {
-    return url.search(/^http/) !== -1 ? url : `abeamer/${url}`;
+  export function processUrl(urlBase: string, url: string): string {
+    return url.search(/^http/) !== -1 ? url : `${urlBase}/${url}`;
   }
 
 
@@ -81,13 +81,18 @@ export namespace PluginInjector {
 
     let content = readUtf8Sync(injectPage);
     writeFileSync(injectPage + '.bak.html', content);
+    const urlMatches = content.match(/["']([^"']+)\/css\/abeamer\.[\w\.]*css["']/);
+    if (!urlMatches) {
+      throw `Couldn't parse abeamer script link`;
+    }
+    const urlBase = urlMatches[1];
     // inject js scripts
     content = content.replace(/(#plugins-js-block-start.*\n)((?:.|\n)*)(\n.*#plugins-js-block-end)/,
       (all, before, replaceArea, after) => {
         const output = [];
         plugins.forEach(plugin => {
           (plugin.jsUrls || []).forEach(url => {
-            output.push(`    <script src="${processUrl(url)}"></script>`);
+            output.push(`    <script src="${processUrl(urlBase, url)}"></script>`);
           });
         });
         return before + '\n' + output.join('\n') + '\n' + after;
@@ -99,7 +104,7 @@ export namespace PluginInjector {
         const output = [];
         plugins.forEach(plugin => {
           (plugin.cssUrls || []).forEach(url => {
-            output.push(`    <link href="${processUrl(url)}" rel="stylesheet">`);
+            output.push(`    <link href="${processUrl(urlBase, url)}" rel="stylesheet">`);
           });
         });
         return before + '\n' + output.join('\n') + '\n' + after;
