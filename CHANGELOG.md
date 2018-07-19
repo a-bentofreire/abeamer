@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add SimpleVirtualAnimator class.
   > To be used by plugin creators to simplify the process of animating their content
 - Add support value parameters starting with -- in the abeamer cli.
+- Add `--movie-pre` and `--movie-post` parameters to abeamer cli.
+  > These arguments to be passed to ffmpeg before/after the arguments passed by abeamer
 
 ## [1.0.1] -
 ### Fix

@@ -130,6 +130,12 @@ var Cli;
     argOpts['loop'] = {
         param: 'string', desc: "defines how many times a gif will loop. set to -1 if you don't won't it to loop",
     };
+    argOpts['moviePre'] = {
+        param: 'array', allowOption: true, desc: "arguments to be passed to ffmpeg before the arguments passed by abeamer",
+    };
+    argOpts['moviePost'] = {
+        param: 'array', allowOption: true, desc: "arguments to be passed to ffmpeg after the arguments passed by abeamer",
+    };
     // ------------------------------------------------------------------------
     //                               Print Usage
     // ------------------------------------------------------------------------
@@ -467,6 +473,12 @@ var Cli;
             args.push('-vcodec', codec);
         }
         args.push(movieFileName);
+        if (argOpts['moviePre'].multipleValue) {
+            args = argOpts['moviePre'].multipleValue.concat(args);
+        }
+        if (argOpts['moviePost'].multipleValue) {
+            args = args.concat(argOpts['moviePost'].multipleValue);
+        }
         if (isVerbose) {
             console.log("\next: " + ext + "\n");
             console.log("cmdLine:[" + cmdLine + " " + args.join(' ') + "]\n\n");

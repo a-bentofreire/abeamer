@@ -156,6 +156,16 @@ namespace Cli {
       `defines how many times a gif will loop. set to -1 if you don't won't it to loop`,
   };
 
+  argOpts['moviePre'] = {
+    param: 'array', allowOption: true, desc:
+      `arguments to be passed to ffmpeg before the arguments passed by abeamer`,
+  };
+
+  argOpts['moviePost'] = {
+    param: 'array', allowOption: true, desc:
+      `arguments to be passed to ffmpeg after the arguments passed by abeamer`,
+  };
+
   // ------------------------------------------------------------------------
   //                               Print Usage
   // ------------------------------------------------------------------------
@@ -573,7 +583,7 @@ To modify the fps, edit the [js/main.ts] file.
       || `${report.dirname}/${DEFAULT_MOVIE_NAME}`;
     const bkgMovieFileName = argOpts['bkgMovie'].value as string;
     const cmdLine = 'ffmpeg';
-    const args = ['-r', report.fps.toString(), '-f', 'image2',
+    let args = ['-r', report.fps.toString(), '-f', 'image2',
       '-s', `${report.width}x${report.height}`,
       '-i', report.framespattern,
       '-y', // overwrites automatically
@@ -596,6 +606,14 @@ To modify the fps, edit the [js/main.ts] file.
       args.push('-vcodec', codec);
     }
     args.push(movieFileName);
+
+    if (argOpts['moviePre'].multipleValue) {
+      args = [...argOpts['moviePre'].multipleValue as string[], ...args];
+    }
+
+    if (argOpts['moviePost'].multipleValue) {
+      args = [...args, ...argOpts['moviePost'].multipleValue as string[]];
+    }
 
     if (isVerbose) {
       console.log(`\next: ${ext}\n`);
