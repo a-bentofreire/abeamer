@@ -8,4 +8,4 @@
 
 # this script is designed only for testing abeamer cli in a bash enviroment.
 
-node ./cli/abeamer-cli.js $@
+node ./cli/abeamer-cli.js "$@"

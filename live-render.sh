@@ -40,7 +40,7 @@ else
   echo "CONFIG=$CONFIG"
 
   echo "node ./cli/abeamer-cli.js render $@ --dp --url $URL --config $CONFIG"
-  node ./cli/abeamer-cli.js render $@ --dp --url $URL --config $CONFIG
+  node ./cli/abeamer-cli.js render "$@" --dp --url "$URL" --config "$CONFIG"
 
   if [ $GEN_GIF == 1 ]; then
     node ./cli/abeamer-cli.js gif "./$DFOLDER"
