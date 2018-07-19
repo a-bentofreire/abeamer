@@ -22,12 +22,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - (DEV) Add `Launch abeamer cli` to VSC debugger configuration.
 ### Fix
 - Fix http-server for URL with path with %20(spaces).
-- (DEV) Fix unix test scripts project paths spaces.
+- (DEV) Fix unix test scripts project paths containing spaces.
 - Fix render plugin injector to apply the same url base part.
   > This allows the dev script teleport.sh to inject on non-release version,
   > and in the release version to correctly inject in case the user changed from abeamer
   > to another path.
-
+- (DEV) Fix unix test script teleport.sh project paths containing spaces.
 
 ## [1.0.1] -
 ### Fix
