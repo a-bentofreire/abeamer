@@ -7,6 +7,16 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Launch abeamer cli",
+      "program": "${workspaceFolder}/cli/abeamer-cli.js",
+      "args": [
+        "render",
+        "gallery/animate-plot"
+      ],
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "mocha test-props",
       "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
       "args": [
