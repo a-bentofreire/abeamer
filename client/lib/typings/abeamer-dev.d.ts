@@ -27,6 +27,17 @@ declare namespace ABeamer {
   // ------------------------------------------------------------------------
 
   /**
+   * It simplifies the usage of [](VirtualAnimator) by plugins.
+   * In many cases plugins just need to receive the changing property,
+   * in order to modify its state.
+   * Override `animateProp` to receive the changing property.
+   * animateProp isn't called if the property is `uid`.
+   */
+  export interface SimpleVirtualAnimatorImpl extends SimpleVirtualAnimator {
+
+  }
+
+  /**
    * Base class for all adapters: Element, Scene, Story,
    * and both DOM and virtual.
    */

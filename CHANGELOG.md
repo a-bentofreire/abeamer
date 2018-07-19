@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Add addVirtualAnimator/removeVirtualAnimator to the story.
-
+- Add SimpleVirtualAnimator class.
+  > To be used by plugin creators to simplify the process of animating their content
 
 ## [1.0.1] -
 ### Fix

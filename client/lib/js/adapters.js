@@ -63,6 +63,34 @@ var ABeamer;
         WaitForWhat[WaitForWhat["ImageLoad"] = 1] = "ImageLoad";
         WaitForWhat[WaitForWhat["MediaSync"] = 2] = "MediaSync";
     })(WaitForWhat = ABeamer.WaitForWhat || (ABeamer.WaitForWhat = {}));
+    /**
+     * It simplifies the usage of [](VirtualAnimator) by plugins.
+     * In many cases plugins just need to receive the changing property,
+     * in order to modify its state.
+     * Override `animateProp` to receive the changing property.
+     * animateProp isn't called if the property is `uid`.
+     */
+    var SimpleVirtualAnimator = /** @class */ (function () {
+        function SimpleVirtualAnimator() {
+            this.props = {};
+        }
+        SimpleVirtualAnimator.prototype.animateProp = function (name, value) {
+            if (this.onAnimateProp) {
+                this.onAnimateProp(name, value);
+            }
+        };
+        SimpleVirtualAnimator.prototype.getProp = function (name) {
+            return this.props[name];
+        };
+        SimpleVirtualAnimator.prototype.setProp = function (name, value) {
+            this.props[name] = value;
+            if (name !== 'uid') {
+                this.animateProp(name, value);
+            }
+        };
+        return SimpleVirtualAnimator;
+    }());
+    ABeamer.SimpleVirtualAnimator = SimpleVirtualAnimator;
     ABeamer.browser = {
         isMsIE: false,
         vendorPrefix: '',

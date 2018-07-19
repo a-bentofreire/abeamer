@@ -895,8 +895,53 @@ declare namespace ABeamer {
   export type PElement = HTMLElement | VirtualElement;
 
 
+  // ------------------------------------------------------------------------
+  //                               VirtualAnimator
+  // ------------------------------------------------------------------------
+
+  /**
+   * Used by plugin creators to allow their content to be animated.
+   * A plugin can animate canvas, WebGl, svg or reduce the complexity of a CSS animation.
+   * The story uses `uid` to manage animators.
+   */
   export interface VirtualAnimator extends VirtualElement {
     selector: string;
+  }
+
+
+  /**
+   * It simplifies the usage of [](VirtualAnimator) by plugins.
+   * In many cases plugins just need to receive the changing property,
+   * in order to modify its state.
+   * Override `animateProp` to receive the changing property.
+   * animateProp isn't called if the property is `uid`.
+   */
+  export class SimpleVirtualAnimator implements VirtualAnimator {
+
+    props: AnyParams = {};
+    selector: string;
+
+    onAnimateProp: (name: PropName, value: PropValue) => void;
+
+
+    protected animateProp(name: PropName, value: PropValue): void {
+      if (this.onAnimateProp) {
+        this.onAnimateProp(name, value);
+      }
+    }
+
+
+    getProp(name: PropName): PropValue {
+      return this.props[name];
+    }
+
+
+    setProp(name: PropName, value: PropValue): void {
+      this.props[name] = value;
+      if (name !== 'uid') {
+        this.animateProp(name, value);
+      }
+    }
   }
 
   // ------------------------------------------------------------------------
