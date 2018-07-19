@@ -152,6 +152,7 @@ export namespace OptsParser {
         value?: string | number | boolean,
         multipleValue?: MultipleValue,
         hasOption?: boolean,
+        allowOption?: boolean,
         desc: string,
       },
     };
@@ -194,7 +195,7 @@ export namespace OptsParser {
         opt.hasOption = true;
         if (opt.param) {
           opt.value = getNext();
-          if (!opt.value || isOption(opt.value)) {
+          if (!opt.value || (isOption(opt.value) && !opt.allowOption)) {
             throw `Missing value for ${name}`;
           }
           if (toParseValue) {

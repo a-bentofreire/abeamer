@@ -117,7 +117,7 @@ var OptsParser;
                 opt.hasOption = true;
                 if (opt.param) {
                     opt.value = getNext();
-                    if (!opt.value || OptsParser.isOption(opt.value)) {
+                    if (!opt.value || (OptsParser.isOption(opt.value) && !opt.allowOption)) {
                         throw "Missing value for " + name_1;
                     }
                     if (toParseValue) {
