@@ -95,6 +95,7 @@ var Cli;
     var DO_RUN_COMMAND = 1;
     var DO_EXIT = 2;
     var DEFAULT_PORT = 9000;
+    var CMD_CHECK = 'check';
     var CMD_CREATE = 'create';
     var CMD_SERVE = 'serve';
     var CMD_RENDER = 'render';
@@ -107,6 +108,7 @@ var Cli;
     var cmdName = '';
     var cmdParam = '';
     var outArgs = [];
+    var isWin = sysProcess.platform === 'win32';
     var argOpts = opts_parser_js_1.OptsParser.argOpts;
     argOpts['port'] = {
         param: 'int', desc: "port for serve command. default is " + DEFAULT_PORT,
@@ -148,7 +150,7 @@ var Cli;
     //                               Print Usage
     // ------------------------------------------------------------------------
     function printUsage() {
-        console.log("abeamer [command] [options] [project-name|report-name]\nThe commands are:\n    " + CMD_CREATE + " creates a project with project-name\n    " + CMD_SERVE + "  starts a live server. Use it in case you need to load the config from JSON file\n    " + CMD_RENDER + " runs your project in the context of the headless browser.\n    " + CMD_GIF + "    creates an animated gif from the project-name or report-name\n    " + CMD_MOVIE + "  creates a movie from the project-name or report-name\n\n    e.g.\n      echo \"create folder foo and copy necessary files\"\n      abeamer " + CMD_CREATE + " --width 640 --height 480 --fps 25 foo\n\n      cd foo\n\n      echo \"start a live server\"\n      echo \"only required if you need to load your configuration from json file\"\n      abeamer " + CMD_SERVE + "\n\n      echo \"generates the png files and a report on story-frames folder\"\n      abeamer " + CMD_RENDER + "\n\n      echo \"creates story.gif file on story-frames folder\"\n      abeamer " + CMD_GIF + "\n\n      echo \"creates story.mp4 file on story-frames folder\"\n      abeamer " + CMD_MOVIE + "\n\n      For more information, read:\n      https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/abeamer-cli/\n\n");
+        console.log("abeamer [command] [options] [project-name|report-name]\nThe commands are:\n    " + CMD_CHECK + " checks if the all requirements are installed and configured\n    " + CMD_CREATE + " creates a project with project-name\n    " + CMD_SERVE + "  starts a live server. Use it in case you need to load the config from JSON file\n    " + CMD_RENDER + " runs your project in the context of the headless browser.\n    " + CMD_GIF + "    creates an animated gif from the project-name or report-name\n    " + CMD_MOVIE + "  creates a movie from the project-name or report-name\n\n    e.g.\n      echo \"checks if chrome, puppeteer, imagemagick, ffmpeg are installed and configured\"\n      abeamer " + CMD_CHECK + "\n\n      echo \"create folder foo and copy necessary files\"\n      abeamer " + CMD_CREATE + " --width 640 --height 480 --fps 25 foo\n\n      cd foo\n\n      echo \"start a live server\"\n      echo \"only required if you need to load your configuration from json file\"\n      abeamer " + CMD_SERVE + "\n\n      echo \"generates the png files and a report on story-frames folder\"\n      abeamer " + CMD_RENDER + "\n\n      echo \"creates story.gif file on story-frames folder\"\n      abeamer " + CMD_GIF + "\n\n      echo \"creates story.mp4 file on story-frames folder\"\n      abeamer " + CMD_MOVIE + "\n\n      For more information, read:\n      https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/abeamer-cli/\n\n");
         opts_parser_js_1.OptsParser.printUsage();
     }
     // ------------------------------------------------------------------------
@@ -232,6 +234,58 @@ var Cli;
         ls.on('close', function (code) {
             callback();
         });
+    }
+    // ------------------------------------------------------------------------
+    //                                Command: Check
+    // ------------------------------------------------------------------------
+    function commandCheck() {
+        var checkCount = 0;
+        var TOTAL_CHECK_COUNT = 5;
+        function displayCheck(what, passed, failedMsg) {
+            checkCount++;
+            console.log(checkCount + ". Check: " + what + " --> " + (passed ? 'OK' : 'Failed'));
+            if (!passed) {
+                console.log('  TODO:' + failedMsg + '\n');
+            }
+            if (checkCount === TOTAL_CHECK_COUNT) {
+                console.log('\n');
+            }
+        }
+        function addToStartUp(passed, key, value, failedMsg) {
+            displayCheck(key + "=" + value, passed, "\n    " + failedMsg + "\n    Add to the shell startup script:\n" + (isWin ? 'SET' : 'export') + " " + key + "=" + value);
+        }
+        function checkProgramIsValid(envKey, appName, versionParam, matchRegEx, requireMsg) {
+            function displayResult(passed) {
+                displayCheck(appName, passed, "\n    ABeamer requires " + requireMsg + "\n    Either add the executable to the system path, or add to the shell startup script:\n" + (isWin ? 'set' : 'export') + " " + envKey + "=<absolute-path-to-" + appName + ">");
+            }
+            var envValue = sysProcess.env[envKey];
+            if (!envValue) {
+                fsix_js_1.fsix.runExternal(appName + " " + versionParam, function (error, stdout, stderr) {
+                    displayResult(stderr === '' && stdout.match(matchRegEx));
+                });
+            }
+            else {
+                displayResult(sysFs.existsSync(envValue));
+            }
+        }
+        console.log("\nChecking:\n");
+        addToStartUp((sysProcess.env['PUPPETEER_SKIP_CHROMIUM_DOWNLOAD'] || '').toLowerCase() === 'true', 'PUPPETEER_SKIP_CHROMIUM_DOWNLOAD', 'TRUE', 'by default puppeteer downloads Chromium which is doesn\'t support many features');
+        var chromeBin = sysProcess.env['CHROME_BIN'];
+        if (!chromeBin) {
+            addToStartUp(false, 'CHROME_BIN', '<chrome-path>', 'puppeteer uses by default Chromium, set CHROME_BIN with the absolute path to chrome web browser executable');
+        }
+        else {
+            addToStartUp(sysFs.existsSync(chromeBin), 'CHROME_BIN', '<chrome-path>', 'CHROME_BIN points to a missing chrome executable');
+        }
+        checkProgramIsValid('FFMPEG_BIN', 'ffmpeg', '-version', /ffmpeg version/, 'ffmpeg to generate movies');
+        checkProgramIsValid('IM_CONVERT_BIN', 'convert', '--version', /Version: ImageMagick/, 'ImageMagick convert program to generate gifs');
+        var puppeteer;
+        try {
+            puppeteer = require('puppeteer');
+        }
+        catch (error) {
+        }
+        displayCheck('puppeteer', puppeteer, "\n   ABeamer requires puppeteer. Install using the following command\nnpm i puppeteer");
     }
     // ------------------------------------------------------------------------
     //                                Command: Create
@@ -516,6 +570,9 @@ var Cli;
                     console.log("Run Command: " + cmdName);
                 }
                 switch (cmdName) {
+                    case CMD_CHECK:
+                        commandCheck();
+                        break;
                     case CMD_CREATE:
                         commandCreate();
                         break;

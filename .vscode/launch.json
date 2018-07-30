@@ -10,8 +10,7 @@
       "name": "Launch abeamer cli",
       "program": "${workspaceFolder}/cli/abeamer-cli.js",
       "args": [
-        "render",
-        "gallery/animate-plot"
+        "check"
       ],
     },
     {

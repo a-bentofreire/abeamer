@@ -57,7 +57,17 @@ Set the environments variables on your terminal console:
 ```shell
 PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 CHROME_BIN=<full-chrome-path-including-file-name>
+```  
+  
+the previous code depends of the running OS, the best it's just type  
+   
+```shell
+abeamer check
 ```
+
+---------------------
+
+
 ---------------------
 ## Execution
 
@@ -73,12 +83,19 @@ set the environment variable to:
 ```shell
 CHROME_PATH=<full-chrome-path-including-file-name>
 ```
+the previous code depends of the running OS, the best it's just type  
+   
+```shell
+abeamer check
+```
 
 ### It doesn't creates a gif file.
 
 On Windows, the system includes a program called `convert`.  
 It's necessary to add the `imagemagick` at the beginning of the system path.  
 `SET PATH=<my-imagemagik-path>;%PATH%`
+or
+`SET IM_CONVERT_BIN=<my-imagemagik-convert.exe-path>`
 
 ### My animation doesn't changes the current physical position.
 

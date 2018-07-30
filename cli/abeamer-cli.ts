@@ -101,6 +101,7 @@ namespace Cli {
   const DO_EXIT = 2;
   const DEFAULT_PORT = 9000;
 
+  const CMD_CHECK = 'check';
   const CMD_CREATE = 'create';
   const CMD_SERVE = 'serve';
   const CMD_RENDER = 'render';
@@ -115,6 +116,7 @@ namespace Cli {
   let cmdName = '';
   let cmdParam = '';
   const outArgs: string[] = [];
+  const isWin = sysProcess.platform === 'win32';
 
   const argOpts = OptsParser.argOpts;
 
@@ -185,6 +187,7 @@ namespace Cli {
   function printUsage(): void {
     console.log(`abeamer [command] [options] [project-name|report-name]
 The commands are:
+    ${CMD_CHECK} checks if the all requirements are installed and configured
     ${CMD_CREATE} creates a project with project-name
     ${CMD_SERVE}  starts a live server. Use it in case you need to load the config from JSON file
     ${CMD_RENDER} runs your project in the context of the headless browser.
@@ -192,6 +195,9 @@ The commands are:
     ${CMD_MOVIE}  creates a movie from the project-name or report-name
 
     e.g.
+      echo "checks if chrome, puppeteer, imagemagick, ffmpeg are installed and configured"
+      abeamer ${CMD_CHECK}
+
       echo "create folder foo and copy necessary files"
       abeamer ${CMD_CREATE} --width 640 --height 480 --fps 25 foo
 
@@ -310,6 +316,86 @@ The commands are:
     ls.on('close', (code) => {
       callback();
     });
+  }
+
+  // ------------------------------------------------------------------------
+  //                                Command: Check
+  // ------------------------------------------------------------------------
+
+  function commandCheck(): void {
+
+    let checkCount = 0;
+    const TOTAL_CHECK_COUNT = 5;
+
+    function displayCheck(what: string, passed: boolean, failedMsg: string): void {
+      checkCount++;
+      console.log(`${checkCount}. Check: ${what} --> ${passed ? 'OK' : 'Failed'}`);
+      if (!passed) {
+        console.log('  TODO:' + failedMsg + '\n');
+      }
+      if (checkCount === TOTAL_CHECK_COUNT) {
+        console.log('\n');
+      }
+    }
+
+    function addToStartUp(passed: boolean, key: string, value: string,
+      failedMsg: string): void {
+
+      displayCheck(`${key}=${value}`, passed, `
+    ${failedMsg}
+    Add to the shell startup script:
+${isWin ? 'SET' : 'export'} ${key}=${value}`);
+    }
+
+    function checkProgramIsValid(envKey: string, appName: string,
+      versionParam: string, matchRegEx: RegExp, requireMsg: string): void {
+
+      function displayResult(passed: boolean): void {
+        displayCheck(appName, passed, `
+    ABeamer requires ${requireMsg}
+    Either add the executable to the system path, or add to the shell startup script:
+${isWin ? 'set' : 'export'} ${envKey}=<absolute-path-to-${appName}>`);
+      }
+
+      const envValue = sysProcess.env[envKey];
+
+      if (!envValue) {
+        fsix.runExternal(`${appName} ${versionParam}`,
+          (error, stdout, stderr) => {
+            displayResult(stderr === '' && stdout.match(matchRegEx));
+          });
+      } else {
+        displayResult(sysFs.existsSync(envValue));
+      }
+    }
+
+
+    console.log(`\nChecking:\n`);
+    addToStartUp((sysProcess.env['PUPPETEER_SKIP_CHROMIUM_DOWNLOAD'] || '').toLowerCase() === 'true',
+      'PUPPETEER_SKIP_CHROMIUM_DOWNLOAD', 'TRUE',
+      'by default puppeteer downloads Chromium which is doesn\'t support many features');
+
+    const chromeBin = sysProcess.env['CHROME_BIN'];
+    if (!chromeBin) {
+      addToStartUp(false, 'CHROME_BIN', '<chrome-path>',
+        'puppeteer uses by default Chromium, set CHROME_BIN with the absolute path to chrome web browser executable');
+    } else {
+      addToStartUp(sysFs.existsSync(chromeBin), 'CHROME_BIN', '<chrome-path>',
+        'CHROME_BIN points to a missing chrome executable');
+    }
+    checkProgramIsValid('FFMPEG_BIN', 'ffmpeg', '-version', /ffmpeg version/,
+      'ffmpeg to generate movies');
+    checkProgramIsValid('IM_CONVERT_BIN', 'convert', '--version', /Version: ImageMagick/,
+      'ImageMagick convert program to generate gifs');
+
+    let puppeteer;
+    try {
+      puppeteer = require('puppeteer');
+    } catch (error) {
+    }
+    displayCheck('puppeteer', puppeteer, `
+   ABeamer requires puppeteer. Install using the following command
+npm i puppeteer`);
   }
 
   // ------------------------------------------------------------------------
@@ -664,6 +750,10 @@ To modify the fps, edit the [js/main.ts] file.
         }
 
         switch (cmdName) {
+          case CMD_CHECK:
+            commandCheck();
+            break;
+
           case CMD_CREATE:
             commandCreate();
             break;

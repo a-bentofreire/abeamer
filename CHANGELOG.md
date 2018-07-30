@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - (DEV) Add excludes to vsc files.watcher
 - Add support of system env FFMPEG_BIN to locate ffmpeg executable.
 - Add support of system env IM_CONVERT_BIN to locate imagemagick convert executable.
+- Add `check` command to the abeamer cli.
 
 ### Fix
 - Fix http-server for URL with path with %20(spaces).

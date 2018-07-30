@@ -288,6 +288,9 @@ However, in order to render frames, generate gifs and movies, it requires:
    For Windows users, read the following [note](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/faq/#it-doesnt-creates-a-gif-file). 
      
 4. To create movies, it requires to have [ffmpeg](https://www.ffmpeg.org/) on the system path.
+  
+To check if 2-4 points are installed and configured, execute:  
+  `abeamer check`  
 
 ## Playground
 
@@ -379,11 +382,12 @@ You can add multiple properties in parallel or off-sync with the `position` or `
 
 **ABeamer** command line utility is used to:
 
-1. create projects: `abeamer create`.
-2. launch a live server: `abeamer serve`.
-3. create a png file sequence: `abeamer render`.
-4. create gifs: `abeamer gif`.
-5. create movies: `abeamer movie`.
+1. checks if requirements are configured: `abeamer check`.
+2. create projects: `abeamer create`.
+3. launch a live server: `abeamer serve`.
+4. create a png file sequence: `abeamer render`.
+5. create gifs: `abeamer gif`.
+6. create movies: `abeamer movie`.
 
 For detailed examples, read: [Command Line Utility](https://a-bentofreire.github.io/abeamer/).  
 Read [Requirements](#requirements) for details about the necessary software 
