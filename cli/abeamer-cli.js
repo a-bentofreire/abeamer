@@ -77,6 +77,7 @@ var http_server_ex_js_1 = require("../shared/vendor/http-server-ex.js");
  *
  *  Creates a movie from the previous generated image sequence on `foo/story-frames/movie.mp4`.
  * `abeamer movie foo/`.
+ *  Requires that `ffmpeg` to be on the search path, or set `FFMPEG_BIN=<absolute-path-to-executable>`
  *
  *  Creates the movie `foo/story.webm`.
  * `abeamer movie foo/ --movie foo/story.webm`.
@@ -460,7 +461,7 @@ var Cli;
         var movieFileName = argOpts['movie'].value
             || report.dirname + "/" + DEFAULT_MOVIE_NAME;
         var bkgMovieFileName = argOpts['bkgMovie'].value;
-        var cmdLine = 'ffmpeg';
+        var cmdLine = sysProcess.env['FFMPEG_BIN'] || 'ffmpeg';
         var args = ['-r', report.fps.toString(), '-f', 'image2',
             '-s', report.width + "x" + report.height,
             '-i', report.framespattern,
