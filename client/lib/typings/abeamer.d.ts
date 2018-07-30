@@ -33,6 +33,7 @@ declare namespace ABeamer {
     props: AnyParams;
     selector: string;
     onAnimateProp: (name: PropName, value: PropValue) => void;
+    animateProp(name: PropName, value: PropValue): void;
     getProp(name: PropName): PropValue;
     setProp(name: PropName, value: PropValue): void;
   }

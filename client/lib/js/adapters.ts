@@ -211,7 +211,7 @@ namespace ABeamer {
     onAnimateProp: (name: PropName, value: PropValue) => void;
 
 
-    protected animateProp(name: PropName, value: PropValue): void {
+    animateProp(name: PropName, value: PropValue): void {
       if (this.onAnimateProp) {
         this.onAnimateProp(name, value);
       }
