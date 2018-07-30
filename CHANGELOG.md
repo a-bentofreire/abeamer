@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add support of system env FFMPEG_BIN to locate ffmpeg executable.
 - Add support of system env IM_CONVERT_BIN to locate imagemagick convert executable.
 - Add `check` command to the abeamer cli.
+- (DEV) Add windows test batch files.
 
 ### Fix
 - Fix http-server for URL with path with %20(spaces).
