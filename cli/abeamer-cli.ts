@@ -73,6 +73,7 @@ import { HttpServerEx } from "../shared/vendor/http-server-ex.js";
  *
  *  Creates an animated gif from the previous generated image sequence on `foo/story-frames/story.gif`.
  * `abeamer gif foo/`.
+ *  Requires that imagemagick `convert` to be on the search path, or set `IM_CONVERT_BIN=<absolute-path-to-executable>`
  *
  *  Creates an animated gif from the previous generated image sequence on `hello.gif`.
  * `abeamer gif foo/ --gif hello.gif`.
@@ -566,7 +567,7 @@ To modify the fps, edit the [js/main.ts] file.
       || `${report.dirname}/${DEFAULT_GIF_NAME}`;
     const toOptimize = true;
 
-    const cmdLine = 'convert';
+    const cmdLine = sysProcess.env['IM_CONVERT_BIN'] || 'convert';
 
     let args = ['-delay', `1x${report.fps}`];
     const loop = argOpts['loop'].value as string || '0';

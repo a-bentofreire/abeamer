@@ -68,6 +68,7 @@ var http_server_ex_js_1 = require("../shared/vendor/http-server-ex.js");
  *
  *  Creates an animated gif from the previous generated image sequence on `foo/story-frames/story.gif`.
  * `abeamer gif foo/`.
+ *  Requires that imagemagick `convert` to be on the search path, or set `IM_CONVERT_BIN=<absolute-path-to-executable>`
  *
  *  Creates an animated gif from the previous generated image sequence on `hello.gif`.
  * `abeamer gif foo/ --gif hello.gif`.
@@ -430,7 +431,7 @@ var Cli;
         var gifFileName = argOpts['gif'].value
             || report.dirname + "/" + DEFAULT_GIF_NAME;
         var toOptimize = true;
-        var cmdLine = 'convert';
+        var cmdLine = sysProcess.env['IM_CONVERT_BIN'] || 'convert';
         var args = ['-delay', "1x" + report.fps];
         var loop = argOpts['loop'].value || '0';
         args.push('-loop', loop);
