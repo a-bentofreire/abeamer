@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `--gif-pre` and `--gif-post` parameters to abeamer cli.
   > These arguments to be passed to convert before/after the arguments passed by abeamer
 - (DEV) Add `Launch abeamer cli` to VSC debugger configuration.
+- (DEV) Add excludes to vsc files.watcher
+
 ### Fix
 - Fix http-server for URL with path with %20(spaces).
 - (DEV) Fix unix test scripts project paths containing spaces.

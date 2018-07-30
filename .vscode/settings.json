@@ -100,5 +100,16 @@
         "uuid",
         "validators",
         "webm"
-    ]
+    ],
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true,
+      "**/node_modules/**": true,
+      "**/private/**": true,
+      "**/website/**": true,
+      "**/test/tests.run/**": true,
+      "**/*release/**": true,
+      "**/docs/build/**": true,
+      "**/*.bak.*": true,
+    },
 }
