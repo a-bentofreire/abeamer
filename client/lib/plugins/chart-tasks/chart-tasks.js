@@ -1011,7 +1011,7 @@ var ABeamer;
                     animator_1 = new _ChartVirtualAnimator();
                     animator_1.selector = params.animeSelector;
                     animator_1.params = params;
-                    args.story.virtualAnimators.push(animator_1);
+                    args.story.addVirtualAnimator(animator_1);
                 }
                 var elAdapters = args.scene.getElementAdapters(anime.selector);
                 args.vars.elCount = elAdapters.length;

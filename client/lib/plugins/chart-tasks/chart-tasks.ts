@@ -1591,7 +1591,7 @@ namespace ABeamer {
           animator = new _ChartVirtualAnimator();
           animator.selector = params.animeSelector;
           animator.params = params;
-          args.story.virtualAnimators.push(animator);
+          args.story.addVirtualAnimator(animator);
         }
 
         const elAdapters = args.scene.getElementAdapters(anime.selector);
