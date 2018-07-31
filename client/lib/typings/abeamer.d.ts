@@ -32,10 +32,28 @@ declare namespace ABeamer {
 
     props: AnyParams;
     selector: string;
+    propsChanged: boolean;
     onAnimateProp: (name: PropName, value: PropValue) => void;
+    onAnimateProps: (args?: ABeamerArgs) => void;
+    /**
+     * Called after property value changed.
+     * Use this method instead animateProps, if the rendering should be right after
+     * each property is updated, otherwise use animateProps.
+     */
     animateProp(name: PropName, value: PropValue): void;
+
+
+    /**
+     * Called after actions from the frame are rendered, and if at least one property changed.
+     * Use this method instead animateProp, if the animation has multiple virtual properties and
+     * each animation can be done after all are updated.
+     */
+    animateProps(args?: ABeamerArgs): void;
+
+
     getProp(name: PropName): PropValue;
     setProp(name: PropName, value: PropValue): void;
+    frameRendered(args?: ABeamerArgs);
   }
 
   /**

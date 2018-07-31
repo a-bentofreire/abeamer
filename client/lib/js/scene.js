@@ -470,10 +470,12 @@ var ABeamer;
             if (this._frames[pos] === undefined) {
                 this._frames[pos] = {
                     elActions: [getIAction()],
+                    uniqueElementAdpt: new Set([elementAdpt]),
                 };
             }
             else {
                 frame = this._frames[pos];
+                frame.uniqueElementAdpt.add(elementAdpt);
                 var item = frame.elActions.find(function (it) { return it.elementAdpt === elementAdpt; });
                 if (!item) {
                     frame.elActions.push(getIAction());
@@ -531,6 +533,7 @@ var ABeamer;
                 this._renderFramePos += dir;
                 return;
             }
+            // execute each action of a frame
             var itemCount = frame.elActions.length;
             for (var i = 0; i < itemCount; i++) {
                 var item = frame.elActions[i];
@@ -556,6 +559,11 @@ var ABeamer;
                     ABeamer._applyAction(action, elementAdpt, isVerbose, args);
                 }
             }
+            frame.uniqueElementAdpt.forEach(function (elAdapter) {
+                if (elAdapter.frameRendered) {
+                    elAdapter.frameRendered(args);
+                }
+            });
             this._renderFramePos += dir;
         };
         // ------------------------------------------------------------------------

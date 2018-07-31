@@ -65,6 +65,7 @@ namespace ABeamer {
    */
   export interface _Frame {
     elActions: _ElActions[];
+    uniqueElementAdpt: Set<_ElementAdapter>;
   }
 
   // ------------------------------------------------------------------------

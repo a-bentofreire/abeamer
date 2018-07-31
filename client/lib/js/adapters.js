@@ -73,10 +73,26 @@ var ABeamer;
     var SimpleVirtualAnimator = /** @class */ (function () {
         function SimpleVirtualAnimator() {
             this.props = {};
+            this.propsChanged = false;
         }
+        /**
+         * Called after property value changed.
+         * Use this method instead animateProps, if the rendering should be right after
+         * each property is updated, otherwise use animateProps.
+         */
         SimpleVirtualAnimator.prototype.animateProp = function (name, value) {
             if (this.onAnimateProp) {
                 this.onAnimateProp(name, value);
+            }
+        };
+        /**
+         * Called after actions from the frame are rendered, and if at least one property changed.
+         * Use this method instead animateProp, if the animation has multiple virtual properties and
+         * each animation can be done after all are updated.
+         */
+        SimpleVirtualAnimator.prototype.animateProps = function (args) {
+            if (this.onAnimateProps) {
+                this.onAnimateProps(args);
             }
         };
         SimpleVirtualAnimator.prototype.getProp = function (name) {
@@ -85,7 +101,14 @@ var ABeamer;
         SimpleVirtualAnimator.prototype.setProp = function (name, value) {
             this.props[name] = value;
             if (name !== 'uid') {
+                this.propsChanged = true;
                 this.animateProp(name, value);
+            }
+        };
+        SimpleVirtualAnimator.prototype.frameRendered = function (args) {
+            if (this.propsChanged) {
+                this.animateProps(args);
+                this.propsChanged = false;
             }
         };
         return SimpleVirtualAnimator;
@@ -173,6 +196,7 @@ var ABeamer;
         function _AbstractAdapter() {
         }
         _AbstractAdapter.prototype.waitFor = function (waitItem, onDone, args) { };
+        _AbstractAdapter.prototype.frameRendered = function (args) { };
         return _AbstractAdapter;
     }());
     ABeamer._AbstractAdapter = _AbstractAdapter;
@@ -376,6 +400,11 @@ var ABeamer;
         };
         _VirtualElementAdapter.prototype.waitFor = function (waitItem, onDone, args) {
             this.vElement.waitFor(waitItem, onDone, args);
+        };
+        _VirtualElementAdapter.prototype.frameRendered = function (args) {
+            if (this.vElement.frameRendered) {
+                this.vElement.frameRendered(args);
+            }
         };
         return _VirtualElementAdapter;
     }(_ElementAdapter));

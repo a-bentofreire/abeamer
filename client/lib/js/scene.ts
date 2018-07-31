@@ -560,9 +560,11 @@ namespace ABeamer {
       if (this._frames[pos] === undefined) {
         this._frames[pos] = {
           elActions: [getIAction()],
+          uniqueElementAdpt: new Set([elementAdpt]),
         };
       } else {
         frame = this._frames[pos];
+        frame.uniqueElementAdpt.add(elementAdpt);
         const item = frame.elActions.find(it => it.elementAdpt === elementAdpt);
         if (!item) {
           frame.elActions.push(getIAction());
@@ -629,7 +631,7 @@ namespace ABeamer {
         return;
       }
 
-
+      // execute each action of a frame
       const itemCount = frame.elActions.length;
       for (let i = 0; i < itemCount; i++) {
 
@@ -662,6 +664,11 @@ namespace ABeamer {
           _applyAction(action, elementAdpt, isVerbose, args);
         }
       }
+
+      frame.uniqueElementAdpt.forEach(elAdapter => {
+        if (elAdapter.frameRendered) { elAdapter.frameRendered(args); }
+      });
+
       this._renderFramePos += dir;
     }
 

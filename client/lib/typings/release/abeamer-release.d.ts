@@ -889,6 +889,14 @@ declare namespace ABeamer {
     getProp(name: PropName, args?: ABeamerArgs): PropValue;
     setProp(name: PropName, value: PropValue, args?: ABeamerArgs): void;
     waitFor?(waitFor: WaitFor, onDone: DoneFunc, args?: ABeamerArgs): void;
+
+
+    /**
+     * Called after the frame is rendered, and before moves to the next frame.
+     * This method is called even if no property changed.
+     * It's an optional method, but future version might require its implementation.
+     */
+    frameRendered?(args?: ABeamerArgs): void;
   }
 
 
@@ -920,13 +928,32 @@ declare namespace ABeamer {
 
     props: AnyParams = {};
     selector: string;
+    propsChanged: boolean = false;
 
     onAnimateProp: (name: PropName, value: PropValue) => void;
+    onAnimateProps: (args?: ABeamerArgs) => void;
 
 
+    /**
+     * Called after property value changed.
+     * Use this method instead animateProps, if the rendering should be right after
+     * each property is updated, otherwise use animateProps.
+     */
     animateProp(name: PropName, value: PropValue): void {
       if (this.onAnimateProp) {
         this.onAnimateProp(name, value);
+      }
+    }
+
+
+    /**
+     * Called after actions from the frame are rendered, and if at least one property changed.
+     * Use this method instead animateProp, if the animation has multiple virtual properties and
+     * each animation can be done after all are updated.
+     */
+    animateProps(args?: ABeamerArgs): void {
+      if (this.onAnimateProps) {
+        this.onAnimateProps(args);
       }
     }
 
@@ -939,7 +966,16 @@ declare namespace ABeamer {
     setProp(name: PropName, value: PropValue): void {
       this.props[name] = value;
       if (name !== 'uid') {
+        this.propsChanged = true;
         this.animateProp(name, value);
+      }
+    }
+
+
+    frameRendered(args?: ABeamerArgs) {
+      if (this.propsChanged) {
+        this.animateProps(args);
+        this.propsChanged = false;
       }
     }
   }
