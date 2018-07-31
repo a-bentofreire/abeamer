@@ -58,6 +58,16 @@
  * - Interpolate n-dimension paths for virtual elements.
  *     Virtual Elements such as WebGL can use 3D paths to move their objects.
  *
+ * ## Core paths
+ * **WARNING!** In the ABeamer 2.x these core paths will move `core-paths` plugin.
+ * To prevent breaking changes include now the js script `core-paths.js` on the html file.
+ *
+ *  ABeamer has the following core paths:
+ *  - `line`
+ *  - `rect`
+ *  - `circle`
+ *  - `ellipse`
+ *
  * @see gallery/gallery-path
  */
 namespace ABeamer {

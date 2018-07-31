@@ -35,6 +35,30 @@
             "uuid": "ce739c9f-13ba-4742-b1c3-dec56624be7d",
             "jsUrls": ["plugins/color-functions/color-functions.js"],
             "cssUrls": []
+        },
+        {
+            "id": "abeamer.core-functions",
+            "uuid": "3e5d5813-348a-4eb1-a8b5-9c87c3988923",
+            "jsUrls": ["plugins/core-functions/core-functions.js"],
+            "cssUrls": []
+        },
+        {
+            "id": "abeamer.core-oscillators",
+            "uuid": "bb845fdf-7493-4000-8b04-6ec2a386ea21",
+            "jsUrls": ["plugins/core-oscillators/core-oscillators.js"],
+            "cssUrls": []
+        },
+        {
+            "id": "abeamer.core-paths",
+            "uuid": "1f43711e-d3e7-49bb-a26f-156f05597682",
+            "jsUrls": ["plugins/core-paths/core-paths.js"],
+            "cssUrls": []
+        },
+        {
+            "id": "abeamer.core-transitions",
+            "uuid": "b948c9cc-60e7-4106-bb88-f038b6fa9cf4",
+            "jsUrls": ["plugins/core-transitions/core-transitions.js"],
+            "cssUrls": []
         }
     ]
 }

@@ -25,7 +25,7 @@
  * 2. Flashing elements, where an element changes its `opacity` or `text-shadow`,
  * and these values oscillate between [0, 1].
  *
- * 3. Uni-dimensional paths. Unlike paths, the oscillators have their value stored
+ * 3. Uni-dimensional oscillators. Unlike oscillators, the oscillators have their value stored
  * in the Action Link, allowing to link the end value to the next animation.
  *
  * An oscillator if it's used together with an easing will if it's in the same dimension
@@ -47,7 +47,12 @@
  * Pulsars only have energy during a certain amount of time,
  * the rest of the time are motionless.
  *
- * ABeamer has following built-in oscillators:
+ *
+ * ## Core oscillators
+ * **WARNING!** In the ABeamer 2.x these core oscillators will move `core-oscillators` plugin.
+ * To prevent breaking changes include now the js script `core-oscillators.js` on the html file.
+ *
+ *  ABeamer has the following core oscillators:
  *
  * - `harmonic` - it generates a sinusoidal function that repeats it self every
  * duration / cycles.

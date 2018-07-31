@@ -5,6 +5,10 @@
     "__msg4": "Also used by `gulp build-docs` and `gulp build-release`",
 
     "pluginModules": [
+        "core-functions",
+        "core-oscillators",
+        "core-paths",
+        "core-transitions",
         "text-tasks",
         "shape-tasks",
         "attack-tasks",

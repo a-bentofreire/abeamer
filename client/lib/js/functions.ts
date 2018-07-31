@@ -19,9 +19,11 @@
  * The user can create its own custom functions but only built-in functions
  * and official plugins can create functions that support [teleportation](teleporter.md).
  *
- * ## Built-in Functions
+ * ## Core functions
+ * **WARNING!** In the ABeamer 2.x these core functions will move `core-functions` plugin.
+ * To prevent breaking changes include now the js script `core-functions.js` on the html file.
  *
- * ABeamer has the following built-in functions:
+ * ABeamer has the following core functions:
  *
  * - `sin` - 'sine' trigonometric function.
  * - `cos` - 'cosine' trigonometric function.

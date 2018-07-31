@@ -27,6 +27,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - (DEV) Add windows test batch files.
 - Add adapters.frameRendered.
 - Add SimpleVirtualAnimator.animateProps.
+- Prepare core parts to be moved into plugins on version 2.x.
+  > By having many core parts as plugins, the ABeamer will load faster
+  > and the user can opt-out parts that aren't needed in a project
+  > But because this will generate breaking changes
+  > this phase will only be a preparation
 
 ### Fix
 - Fix http-server for URL with path with %20(spaces).
