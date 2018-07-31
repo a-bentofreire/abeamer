@@ -1,5 +1,27 @@
 ## What's new
 
+## [1.1.0] -
+  
+- Improves and simplifies the usage of Virtual Animators.
+- The CLI has:
+    * a new `check` command to verify the requirements and help to configure puppeteer.
+    * new parameters to fine-tune the generation of movies and gifs.
+    * new environments variables to avoid changing the search path to execute `ffmpeg` and imagemagick `convert`.
+- Better support for paths with spaces.
+- Improved support for windows developers with new batch files.
+[read more >>>](https://www.abeamer.com/blog/2018/07/31/abeamer-1.1.0-released.html)  
+
+## [1.0.0] -
+  
+ABeamer was raised to production level with the release of ABeamer 1.0.0.  
+This is the first LTS version and it includes many improvements, bug fixes, a few cosmetics changes in the documentation, 
+and better support on Windows platform and Microsoft web browsers.  
+ABeamer 1.0.0 gives great access to the command-line allowing to create stories that can 
+be configure by the server, opening the door to multiple dimension rendering.  
+[read more >>>](https://www.abeamer.com/blog/2018/07/11/abeamer-1.0.0-released.html)  
+The `animated-badges` now are configurable by the server, and don't require the installation of local js/css files.  
+[How to generate an animated badge with ABeamer >>>](https://www.abeamer.com/blog/2018/07/11/how-to-generate-an-animated-badge-with-abeamer.html)  
+
 ## [0.3.2] -
   
 ABeamer 0.3.2: Now ABeamer has a website and blog. Have a look: [https://www.abeamer.com](https://www.abeamer.com).  

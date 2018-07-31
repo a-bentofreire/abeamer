@@ -20,7 +20,15 @@ the story to the company's machine to render the frame images and generate anima
 
 ## What's new
   
-![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-charts/story-frames/story.gif) ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-plot/story-frames/story.gif)   
+ABeamer 1.1.0: 
+- Improves and simplifies the usage of Virtual Animators.
+- The CLI has:
+    * a new `check` command to verify the requirements and help to configure puppeteer.
+    * new parameters to fine-tune the generation of movies and gifs.
+    * new environments variables to avoid changing the search path to execute `ffmpeg` and imagemagick `convert`.
+- Better support for paths with spaces.
+- Improved support for windows developers with new batch files.
+[read more >>>](https://www.abeamer.com/blog/2018/07/31/abeamer-1.1.0-released.html)  
 
 ABeamer was raised to production level with the release of ABeamer 1.0.0.  
 This is the first LTS version and it includes many improvements, bug fixes, a few cosmetics changes in the documentation, 
@@ -37,9 +45,13 @@ In this version includes more detailed documentation and several fixed several d
 The major goal now is to raise the ABeamer to production level.  
 The [roadmap](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/roadmap/) was also updated and added many details.   
   
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-plot/story-frames/story.gif)   
+  
 ABeamer 0.3.1 includes chart series as expressions, allowing to plot mathematical functions.  
 The standard library now also includes `log`, `log10` and `exp`.  
 [read more >>>](https://www.abeamer.com/blog/2018/06/29/abeamer-0.3.1-released.html)  
+  
+![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-charts/story-frames/story.gif) 
   
 ABeamer 0.3.0 includes the first implementation of the charts plugin.  
 Although there is still a lot of work for reach production stage, and the API can still change,
@@ -115,7 +127,7 @@ and [F/X](https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/
   
 ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-virtual/story-frames/story.gif)  
   
-* DOM and Virtual Elements, Animators and Scenes.
+* DOM and Virtual Elements, Animators and Scenes. [read more >>>](https://www.abeamer.com/blog/2018/07/31/how-to-use-virtual-animators-in-abeamer.html)  
   
 ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer-gallery-release/master/animate-localization/story-frames/story.gif)  
   
