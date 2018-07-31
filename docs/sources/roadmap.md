@@ -3,16 +3,14 @@ Read a detailed description about the roadmap updates on the blog [post](https:/
 
 ## General
 
-- Raising ABeamer to Production Level.
+- Research how to fix vsc max file watcher problem.
+- Port core parts to plugins.
 
 ### Command-line
 - Allow to define the gifs optimization level.
-- Allow to pass parameters to `ffmpeg` and `convert` to fine tune settings.
-- Allow to pass setup parameters from the `abeamer render` to the library.
 
 ### Teleportation
 - Allow to delay the teleportation initial snapshot.
-- Review if it's better to have a single string for the teleportable story or an object.
 - Create a complete example of how to send to teleport and receive in the server side.
 - Add setup parameters to the teleported story.
 - Add video sync information to the teleported story.
@@ -24,8 +22,11 @@ and to allow reverse bypass the pipeline to allow to repeat an animation.
 
 ### Server Rendering
 - Research how to disable Chrome auto-play policy on puppeteer.
-- Research why sometimes puppeteer aborts the render process.
 - Research why the render frames on the server rendering don't match the client rendering.
+- Research why the slow fonts don't always render.
+
+### Gif Generation
+- Research why gif generator on Windows doesn't always gives the expected result.
 
 ### Builders
 - Fix the bug in `gulp build-release` that forces to have 2 folders in the gallery.
@@ -33,6 +34,7 @@ and to allow reverse bypass the pipeline to allow to repeat an animation.
 remove the export from all code that starts with underscore, creating a lighter and faster
 `abeamer.min.js`.
 - Generate `abeamer.min.js` and `abeamer.debug.min.js` where in the first case all the testing code is removed.
+- Add abeamer library and plugins to each gallery-release.
 
 ### Documentation
 - Fix the JSDocs parser bug in the documentation generator.
@@ -45,25 +47,22 @@ and have linkable code.
 ### Add Animations Phase
 - Allow to filter and remap urls.
 - Improve Wait for assets load and sync support.
-- Test more cases when isn't the first animation of a property in order to 
+- Test more cases when isn't the first animation of a property in order to
 ensure it can properly read the end value of the previous animation and is able to guess the correct type.
 
 ### Video sync
-- Add `frameStart` and `frameEnd` parameters.
+- Add `frameStart` and `frameEnd` segment parameters.
 - Research more about video sync by using canvas API.
 
 ### Expressions
-- Implement `not` and `power` operator.
+- Implement `not` operator.
 - Implement `power` operator.
 - Add more functions and operators to Numeric Arrays.
-- Implement a default value, if a variable is missing.
 - Implement compiled expressions for faster access.
 
 ### Adapters
 - Implement teleportable canvas adapter.
 - Implement teleportable SVG adapter.
-- Implement Common Virtual Element Adapter to simplify the usage the use of
-virtual adapters in charts, shapes and plugins.
 
 ### General Tasks
 - Improve `factory` task in order to be more dynamic.
@@ -96,7 +95,6 @@ as `t` iterator increases.
 - Implement Color band attack task.
 
 ### Functions
-- Implement setvar function.
 - Implement Time functions plugin.
 - Implement Formatter functions plugin.
 - Add more functions to Color plugin.
