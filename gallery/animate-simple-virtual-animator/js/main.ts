@@ -12,6 +12,7 @@ $(window).on("load", () => {
 
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const ctx = canvas.getContext('2d');
+  let drawCallTimes = 0;
 
   // ------------------------------------------------------------------------
   //                               CanvasAnimator
@@ -19,7 +20,23 @@ $(window).on("load", () => {
 
   class CanvasAnimator extends ABeamer.SimpleVirtualAnimator {
 
+    /**
+     * This method is called after each property were updated.
+     * In this case, it would generate 3x times more calls since there are
+     * the 3 animation properties in this example.
+     * Use animateProps instead.
+     */
     animateProp(name: ABeamer.PropName, value: ABeamer.PropValue): void {
+      // this.draw();
+    }
+
+
+    /**
+     * This method is called after all properties were updated.
+     * It's the preferable method of this case.
+     * You can get the values props property.
+     */
+    animateProps(): void {
       this.draw();
     }
 
@@ -40,6 +57,9 @@ $(window).on("load", () => {
       const lineWidth = this.props.lineWidth;
       ctx.fillStyle = '#FF3333';
       ctx.fillRect((w - lineWidth) / 2, y + 2, lineWidth, 4);
+
+      drawCallTimes++;
+      // console.log(`drawCallTimes: ${drawCallTimes}`);
     }
   }
 

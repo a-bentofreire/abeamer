@@ -18,6 +18,7 @@ $(window).on("load", function () {
     var story = ABeamer.createStory(/*FPS:*/ 20);
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
+    var drawCallTimes = 0;
     // ------------------------------------------------------------------------
     //                               CanvasAnimator
     // ------------------------------------------------------------------------
@@ -26,7 +27,21 @@ $(window).on("load", function () {
         function CanvasAnimator() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        /**
+         * This method is called after each property were updated.
+         * In this case, it would generate 3x times more calls since there are
+         * the 3 animation properties in this example.
+         * Use animateProps instead.
+         */
         CanvasAnimator.prototype.animateProp = function (name, value) {
+            // this.draw();
+        };
+        /**
+         * This method is called after all properties were updated.
+         * It's the preferable method of this case.
+         * You can get the values props property.
+         */
+        CanvasAnimator.prototype.animateProps = function () {
             this.draw();
         };
         CanvasAnimator.prototype.draw = function () {
@@ -42,6 +57,8 @@ $(window).on("load", function () {
             var lineWidth = this.props.lineWidth;
             ctx.fillStyle = '#FF3333';
             ctx.fillRect((w - lineWidth) / 2, y + 2, lineWidth, 4);
+            drawCallTimes++;
+            // console.log(`drawCallTimes: ${drawCallTimes}`);
         };
         return CanvasAnimator;
     }(ABeamer.SimpleVirtualAnimator));
