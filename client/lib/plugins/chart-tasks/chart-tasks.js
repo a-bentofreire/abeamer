@@ -235,7 +235,7 @@ var ABeamer;
             _this.charts = [];
             return _this;
         }
-        _ChartVirtualAnimator.prototype.animateProp = function (name, value) {
+        _ChartVirtualAnimator.prototype.animateProps = function () {
             var _this = this;
             this.charts.forEach(function (chart) {
                 chart._drawChart(_this.params);

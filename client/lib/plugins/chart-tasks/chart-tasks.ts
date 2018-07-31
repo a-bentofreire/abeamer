@@ -531,7 +531,7 @@ namespace ABeamer {
     charts: _WkChart[] = [];
     params: BaseChartTaskParams;
 
-    animateProp(name: PropName, value: PropValue): void {
+    animateProps(): void {
       this.charts.forEach(chart => {
         chart._drawChart(this.params);
       });
