@@ -9,9 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Access to story.virtualAnimator is deprecated.
   > use addVirtualAnimator/removeVirtualAnimator instead.
 - (DEV) Port _ChartVirtualAnimator to SimpleVirtualAnimator.
+  > Using SimpleVirtualAnimator gives a cleaner implementation, and by also using
+  > animateProps reduces the render count when the animator has multiple animation properties.
 
 ### Added
 - Add addVirtualAnimator/removeVirtualAnimator to the story.
+ > By using these methods instead of direct access to virtualAnimator,
+ > allows to create maps for quicker access to virtual animators.
 - Add SimpleVirtualAnimator class.
   > To be used by plugin creators to simplify the process of animating their content
 - Add support value parameters starting with -- in the abeamer cli.
@@ -21,11 +25,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > These arguments to be passed to convert before/after the arguments passed by abeamer
 - (DEV) Add `Launch abeamer cli` to VSC debugger configuration.
 - (DEV) Add excludes to vsc files.watcher
+  > VSC complains about too many files on the project,
+  > This change is an attempt to solve this issue.
 - Add support of system env FFMPEG_BIN to locate ffmpeg executable.
+  > By having an environment variable pointing to the ffmpeg executable,
+  > ABeamer can generate a movie without requiring ffmpeg to be in the search path.
 - Add support of system env IM_CONVERT_BIN to locate imagemagick convert executable.
+  > By having an environment variable pointing to the imagemagick convert executable,
+  > ABeamer can generate a gif without requiring imagemagick convert to be in the search path.
+  > On windows the search path points to windows convert program which can conflict with imagemagick convert.
 - Add `check` command to the abeamer cli.
+  > Gives the user information how to configure puppeteer to use Chrome instead of Chromium.
 - (DEV) Add windows test batch files.
+  > It helps windows developers to test developer versions.
 - Add adapters.frameRendered.
+  > Using frameRendered allows animators with multiple animation properties
+  > to be called only once per frame. This is the case of charts and
+  > many other common canvas and WebGL virtual animators.
 - Add SimpleVirtualAnimator.animateProps.
 - Prepare core parts to be moved into plugins on version 2.x.
   > By having many core parts as plugins, the ABeamer will load faster
