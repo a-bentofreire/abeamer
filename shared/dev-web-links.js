@@ -18,10 +18,11 @@ var DevWebLinks;
     var localUrl = "http://localhost:" + LOCAL_PORT;
     var repoUrl = "https://github.com/a-bentofreire/";
     var pagesUrl = "https://a-bentofreire.github.io/";
+    var docsUrl = "https://www.abeamer.com";
     var rawUrl = "https://raw.githubusercontent.com/a-bentofreire/";
     var urlMapper = {
-        'docs/build/end-user': 'abeamer-docs/end-user',
-        'docs/build/developer': 'abeamer-docs/developer',
+        'docs/build/end-user': 'end-user',
+        'docs/build/developer': 'developer',
         'gallery-release': 'abeamer-gallery-release',
         'release': 'abeamer-gallery-release',
     };
@@ -94,7 +95,7 @@ var DevWebLinks;
             ? 'https://a-bentofreire.github.io/abeamer-gallery-release'
             : "http://localhost:" + LOCAL_PORT + "/gallery-release";
         var docsServer = !isLocal
-            ? 'https://a-bentofreire.github.io/abeamer-docs'
+            ? 'https://www.abeamer.com/docs'
             : "http://localhost:" + LOCAL_PORT + "/docs/build";
         var releaseStatic = !isLocal
             ? 'https://a-bentofreire.github.io/abeamer-release/'

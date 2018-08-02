@@ -28,12 +28,13 @@ export namespace DevWebLinks {
   const localUrl = `http://localhost:${LOCAL_PORT}`;
   const repoUrl = `https://github.com/a-bentofreire/`;
   const pagesUrl = `https://a-bentofreire.github.io/`;
+  const docsUrl = `https://www.abeamer.com`;
   const rawUrl = `https://raw.githubusercontent.com/a-bentofreire/`;
 
 
   const urlMapper = {
-    'docs/build/end-user': 'abeamer-docs/end-user',
-    'docs/build/developer': 'abeamer-docs/developer',
+    'docs/build/end-user': 'end-user',
+    'docs/build/developer': 'developer',
     'gallery-release': 'abeamer-gallery-release',
     'release': 'abeamer-gallery-release',
   };
@@ -119,7 +120,7 @@ export namespace DevWebLinks {
       : `http://localhost:${LOCAL_PORT}/gallery-release`;
 
     const docsServer = !isLocal
-      ? 'https://a-bentofreire.github.io/abeamer-docs'
+      ? 'https://www.abeamer.com/docs'
       : `http://localhost:${LOCAL_PORT}/docs/build`;
 
 

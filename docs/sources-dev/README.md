@@ -35,5 +35,4 @@ This documentation contains information about the:
 
 * [Developer version](https://github.com/a-bentofreire/abeamer)
 * [Release version](https://github.com/a-bentofreire/abeamer-release)
-* [Documentation](https://github.com/a-bentofreire/abeamer-docs)
 * [Gallery Release version](https://github.com/a-bentofreire/abeamer-gallery-release)

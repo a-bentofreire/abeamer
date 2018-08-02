@@ -226,7 +226,7 @@ The commands are:
       abeamer ${CMD_MOVIE}
 
       For more information, read:
-      https://a-bentofreire.github.io/abeamer-docs/end-user/versions/latest/en/site/abeamer-cli/
+      https://www.abeamer.com/docs/end-user/versions/latest/en/site/abeamer-cli/
 
 `);
     OptsParser.printUsage();
