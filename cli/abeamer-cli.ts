@@ -658,7 +658,10 @@ To modify the fps, edit the [js/main.ts] file.
     let args = ['-delay', `1x${report.fps}`];
     const loop = argOpts['loop'].value as string || '0';
     args.push('-loop', loop);
-    if (toOptimize) { args.push('-strip', '-layers', 'optimize', '-alpha', 'deactivate'); }
+    if (toOptimize) {
+      args.push('-strip', '-layers', 'optimize',
+        '-background', 'white', '-alpha', 'background');
+    }
 
     args.push(report.framespattern.replace(/\%\d*d/, '*'), gifFileName);
 

@@ -490,7 +490,7 @@ var Cli;
         var loop = argOpts['loop'].value || '0';
         args.push('-loop', loop);
         if (toOptimize) {
-            args.push('-strip', '-layers', 'optimize', '-alpha', 'deactivate');
+            args.push('-strip', '-layers', 'optimize', '-background', 'white', '-alpha', 'background');
         }
         args.push(report.framespattern.replace(/\%\d*d/, '*'), gifFileName);
         if (argOpts['gifPre'].multipleValue) {
