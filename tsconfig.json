@@ -21,6 +21,7 @@
         "gallery-release/",
         "private/",
         "website/",
+        "node_modules/",
         "private-projects/**/typings/*",
         "client/lib/typings/release/abeamer-release.d.ts",
         "client/lib/typings/dev"
