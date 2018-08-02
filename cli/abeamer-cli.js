@@ -103,6 +103,8 @@ var Cli;
     var CMD_MOVIE = 'movie';
     var DEFAULT_GIF_NAME = 'story.gif';
     var DEFAULT_MOVIE_NAME = 'story.mp4';
+    var DEFAULT_BACKGROUND = 'white';
+    var MANUAL_BACKGROUND = 'manual';
     var logLevel = consts_js_1.Consts.LL_ERROR;
     var isVerbose = false;
     var cmdName = '';
@@ -145,6 +147,9 @@ var Cli;
     };
     argOpts['gifPost'] = {
         param: 'array', allowOption: true, desc: "arguments to be passed to gif generator(convert) after the arguments passed by abeamer",
+    };
+    argOpts['gifBackground'] = {
+        param: 'string', desc: "background color used to replace the alpha channel in gif generation.\nif this is value is set to \"" + MANUAL_BACKGROUND + "\" , no parameters relating are passed to the gif generator.\ndefault is " + MANUAL_BACKGROUND,
     };
     // ------------------------------------------------------------------------
     //                               Print Usage
@@ -490,7 +495,11 @@ var Cli;
         var loop = argOpts['loop'].value || '0';
         args.push('-loop', loop);
         if (toOptimize) {
-            args.push('-strip', '-layers', 'optimize', '-background', 'white', '-alpha', 'background');
+            args.push('-strip', '-layers', 'optimize');
+            var gifBackground = argOpts['gifBackground'].value || DEFAULT_BACKGROUND;
+            if (gifBackground !== MANUAL_BACKGROUND) {
+                args.push('-background', gifBackground, '-alpha', 'remove');
+            }
         }
         args.push(report.framespattern.replace(/\%\d*d/, '*'), gifFileName);
         if (argOpts['gifPre'].multipleValue) {

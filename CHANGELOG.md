@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Change imagemagick convert alpha parameters to fix gif generation on windows.
 
+### Added
+- Add parameter `--gif-background` to `abeamer gif` CLI.
+
 ## [1.1.0] -
 ### Changed
 - Access to story.virtualAnimator is deprecated.

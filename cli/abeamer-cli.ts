@@ -110,6 +110,8 @@ namespace Cli {
 
   const DEFAULT_GIF_NAME = 'story.gif';
   const DEFAULT_MOVIE_NAME = 'story.mp4';
+  const DEFAULT_BACKGROUND = 'white';
+  const MANUAL_BACKGROUND = 'manual';
 
   let logLevel = Consts.LL_ERROR;
   let isVerbose = false;
@@ -178,6 +180,13 @@ namespace Cli {
   argOpts['gifPost'] = {
     param: 'array', allowOption: true, desc:
       `arguments to be passed to gif generator(convert) after the arguments passed by abeamer`,
+  };
+
+  argOpts['gifBackground'] = {
+    param: 'string', desc:
+      `background color used to replace the alpha channel in gif generation.
+if this is value is set to "${MANUAL_BACKGROUND}" , no parameters relating are passed to the gif generator.
+default is ${MANUAL_BACKGROUND}`,
   };
 
   // ------------------------------------------------------------------------
@@ -659,8 +668,11 @@ To modify the fps, edit the [js/main.ts] file.
     const loop = argOpts['loop'].value as string || '0';
     args.push('-loop', loop);
     if (toOptimize) {
-      args.push('-strip', '-layers', 'optimize',
-        '-background', 'white', '-alpha', 'background');
+      args.push('-strip', '-layers', 'optimize');
+      const gifBackground = argOpts['gifBackground'].value || DEFAULT_BACKGROUND;
+      if (gifBackground !== MANUAL_BACKGROUND) {
+        args.push('-background', gifBackground as string, '-alpha', 'remove');
+      }
     }
 
     args.push(report.framespattern.replace(/\%\d*d/, '*'), gifFileName);
