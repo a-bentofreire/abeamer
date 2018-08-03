@@ -401,7 +401,7 @@ You can add multiple properties in parallel or off-sync with the `position` or `
 5. create gifs: `abeamer gif`.
 6. create movies: `abeamer movie`.
 
-For detailed examples, read: [Command Line Utility](https://a-bentofreire.github.io/abeamer/).  
+For detailed examples, read: [Command Line Utility](https://www.abeamer.com/docs/latest/end-user/en/site/abeamer-cli/).  
 Read [Requirements](#requirements) for details about the necessary software 
 to install if you need to render, create gifs or movies on the local machine.
 
