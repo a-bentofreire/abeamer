@@ -16,7 +16,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "mocha test-props",
+      "name": "mocha",
       "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
       "args": [
         "-u",
@@ -31,10 +31,10 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "gulp build-docs",
+      "name": "gulp",
       "program": "${workspaceFolder}/node_modules/gulp/bin/gulp.js",
       "args": [
-        "build-docs"
+        "gal-rel:process-readme"
       ]
     },
     {
