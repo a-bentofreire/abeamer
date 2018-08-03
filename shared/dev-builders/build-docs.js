@@ -41,7 +41,7 @@ var BuildDocs;
     var EMPTY = ['', '', '', '', '', '', '', '', '', ''];
     var MARKDOWN_FOLDER = 'docs';
     BuildDocs.API_FOLDER = 'api';
-    BuildDocs.EN_LAST_VERSION_PATH = 'versions/latest/en';
+    BuildDocs.EN_LAST_VERSION_PATH = 'en';
     var badgeLine = '';
     BuildDocs.targets = [
         {

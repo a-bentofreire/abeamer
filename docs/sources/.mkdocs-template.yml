@@ -9,7 +9,7 @@ extra_css:
   - './custom.css'
 theme:
   name: null
-  custom_dir: ../../../../../theme/custom-readthedocs
+  custom_dir: ../../../../theme/custom-readthedocs
 pages: []
 production:
   is_production: true

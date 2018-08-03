@@ -33,10 +33,9 @@ export namespace DevWebLinks {
 
 
   const urlMapper = {
-    'docs/build/end-user': 'end-user',
-    'docs/build/developer': 'developer',
-    'gallery-release': 'abeamer-gallery-release',
-    'release': 'abeamer-gallery-release',
+    'docs/release': 'docs/latest',
+    'gallery-release': 'gallery/latest',
+    'release': 'release/latest',
   };
 
   const urlMapperKeys = Object.keys(urlMapper);
@@ -116,16 +115,16 @@ export namespace DevWebLinks {
       : `http://localhost:${LOCAL_PORT}/__REPO__/`;
 
     const galleryReleaseServer = !isLocal
-      ? 'https://a-bentofreire.github.io/abeamer-gallery-release'
+      ? 'https://www.abeamer.com/gallery/latest'
       : `http://localhost:${LOCAL_PORT}/gallery-release`;
 
     const docsServer = !isLocal
-      ? 'https://www.abeamer.com/docs'
-      : `http://localhost:${LOCAL_PORT}/docs/build`;
+      ? 'https://www.abeamer.com/docs/latest'
+      : `http://localhost:${LOCAL_PORT}/docs/release`;
 
 
     const releaseStatic = !isLocal
-      ? 'https://a-bentofreire.github.io/abeamer-release/'
+      ? 'https://www.abeamer.com/release/latest/'
       : `http://localhost:${LOCAL_PORT}/release/`;
 
 

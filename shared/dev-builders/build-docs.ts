@@ -46,7 +46,7 @@ export namespace BuildDocs {
 
   const MARKDOWN_FOLDER = 'docs';
   export const API_FOLDER = 'api';
-  export const EN_LAST_VERSION_PATH = 'versions/latest/en';
+  export const EN_LAST_VERSION_PATH = 'en';
 
   interface LocalWebLinks { [link: string]: string; }
 

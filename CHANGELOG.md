@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.2.0] -
 ### Changed
 - Change imagemagick convert alpha parameters to fix gif generation on windows.
-- Move documentation from github repo to www.abeamer.com/docs
+- Move documentation from github repo to www.abeamer.com/docs.
+- Update links and generators to move docs, gallery and release to abeamer website.
+  > The github repos are replaced with folders on https://www.abeamer.com
+  > docs/build/(target)/versions/latest/en ----> docs/release/latest/(target)/en
+  > git repo abeamer-release ----> release/latest
+  > git repo abeamer-gallery-release ----> gallery/latest
+  > git repo abeamer-docs ----> docs/latest
 
 ### Added
 - Add parameter `--gif-background` to `abeamer gif` CLI.

@@ -11,7 +11,7 @@ gallery/remote-server/story.json
 gallery/**/story-frames/
 test/tests.run/
 test/log/
-docs/build
+docs/release/
 shared/dev-builders/output
 release{/**,}
 *.js.map

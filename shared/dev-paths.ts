@@ -28,8 +28,8 @@ export namespace DevPaths {
   export const GALLERY_PATH = 'gallery';
   export const DOCS_PATH = 'docs';
 
-  export const END_USER_DOCS_PATH = `${DOCS_PATH}/build/end-user`;
-  export const DEV_DOCS_PATH = `${DOCS_PATH}/build/developer`;
+  export const END_USER_DOCS_PATH = `${DOCS_PATH}/release/latest/end-user`;
+  export const DEV_DOCS_PATH = `${DOCS_PATH}/release/latest/developer`;
   export const SOURCE_DOCS_PATH = `${DOCS_PATH}/sources`;
   export const SOURCE_DEV_DOCS_PATH = `${DOCS_PATH}/sources-dev`;
   export const MODULES_LIST_FILE = `${fsix.toPosixSlash(__dirname)}`

@@ -21,10 +21,9 @@ var DevWebLinks;
     var docsUrl = "https://www.abeamer.com";
     var rawUrl = "https://raw.githubusercontent.com/a-bentofreire/";
     var urlMapper = {
-        'docs/build/end-user': 'end-user',
-        'docs/build/developer': 'developer',
-        'gallery-release': 'abeamer-gallery-release',
-        'release': 'abeamer-gallery-release',
+        'docs/release': 'docs/latest',
+        'gallery-release': 'gallery/latest',
+        'release': 'release/latest',
     };
     var urlMapperKeys = Object.keys(urlMapper);
     var exceptionsUrls = [/blob\/master/, /archive\/master\.zip/, /\/issues\/$/];
@@ -92,13 +91,13 @@ var DevWebLinks;
             ? 'https://raw.githubusercontent.com/a-bentofreire/__REPO__/master/' // master/
             : "http://localhost:" + LOCAL_PORT + "/__REPO__/";
         var galleryReleaseServer = !isLocal
-            ? 'https://a-bentofreire.github.io/abeamer-gallery-release'
+            ? 'https://www.abeamer.com/gallery/latest'
             : "http://localhost:" + LOCAL_PORT + "/gallery-release";
         var docsServer = !isLocal
-            ? 'https://www.abeamer.com/docs'
-            : "http://localhost:" + LOCAL_PORT + "/docs/build";
+            ? 'https://www.abeamer.com/docs/latest'
+            : "http://localhost:" + LOCAL_PORT + "/docs/release";
         var releaseStatic = !isLocal
-            ? 'https://a-bentofreire.github.io/abeamer-release/'
+            ? 'https://www.abeamer.com/release/latest/'
             : "http://localhost:" + LOCAL_PORT + "/release/";
         var main = !isLocal ? 'abeamer' : '';
         var mainPrefix = !isLocal ? 'abeamer-' : '';

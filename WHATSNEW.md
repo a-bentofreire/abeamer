@@ -28,7 +28,7 @@ ABeamer 0.3.2: Now ABeamer has a website and blog. Have a look: [https://www.abe
 With the creation of the blog, the project updates will be described in more detail and its information can be used as documentation.
 In this version includes more detailed documentation and several fixed several documentation bugs.
 The major goal now is to raise the ABeamer to production level.  
-The [roadmap](https://www.abeamer.com/docs/end-user/versions/latest/en/site/roadmap/) was also updated and added many details.   
+The [roadmap](https://www.abeamer.com/docs/latest/end-user/en/site/roadmap/) was also updated and added many details.   
   
 ## [0.3.1] -
   
