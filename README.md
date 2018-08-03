@@ -410,12 +410,6 @@ to install if you need to render, create gifs or movies on the local machine.
 * [End-User Documentation](https://www.abeamer.com/docs/latest/end-user/en/site/)
 * [Developer Documentation](https://www.abeamer.com/docs/latest/developer/en/site/)
 
-## GitHub Repositories
-
-* [Developer version](https://github.com/a-bentofreire/abeamer)
-* [Release version](https://github.com/a-bentofreire/abeamer-release)
-* [Gallery - Release version](https://github.com/a-bentofreire/abeamer-gallery-release)
-
 ## Roadmap & Known Issues
 
 * [Roadmap](https://www.abeamer.com/docs/latest/end-user/en/site/roadmap/)
