@@ -155,7 +155,7 @@ export namespace BuildGalleryRelease {
   /**
    * Builds the gallery-release ReadMe file
    */
-  export function buildReadMe(): void {
+  export function buildReadMe(): string {
     const galleryLinks: string[] = [];
     releaseExamples.forEach(ex => {
       galleryLinks.push(`\n--------------------------`
@@ -186,6 +186,78 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
     const outREADME = fsix.readUtf8Sync(`${SRC_GALLERY_PATH}/README-rel.md`)
       + galleryLinks.join('');
     sysFs.writeFileSync(`${DST_GALLERY_RELEASE_PATH}/README.md`, outREADME);
+    return outREADME;
+  }
+
+
+  function markdownToHtml(markdownCompiler, highlightJs,
+    sourceMarkdown: string): string {
+
+    markdownCompiler.setOptions({
+      renderer: new markdownCompiler.Renderer(),
+      highlight: (code) => highlightJs
+        ? highlightJs.highlightAuto(code).value : code,
+      pedantic: false,
+      gfm: true,
+      tables: true,
+      breaks: false,
+      sanitize: false,
+      smartLists: true,
+      smartypants: false,
+      xhtml: false,
+    });
+    /* spell-checker: disable */
+    const html = '<html>\n<head>\n'
+      // this sytle used in html output of the markdown is designed to be similar
+      // to the github markdown rendered in order to have a good simulation of
+      // how the user will see the documentation.
+      + (highlightJs ? `
+  <link rel="stylesheet" href="node_modules/github.css">
+  <link rel="stylesheet" href="node_modules/font-awesome.css">
+  <style>
+  body {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,
+      sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+      color: #24292e;
+      background-color: white;
+  }
+  pre {
+    background-color: #1b1f230d;
+    padding: 0.2em 0.4em;
+  }
+  #__page {
+     max-width: 980px;
+     padding: 45px;
+     border: 1px solid #ddd;
+     border-bottom-right-radius: 3px;
+     border-bottom-left-radius: 3px;
+     margin-left: 20px;
+  }
+  code {
+    background-color: #1b1f230d;
+    padding: 0.2em 0.4em;
+  }
+  pre code {
+    background-color: transparent;
+    padding: 0;
+  }
+
+  </style>
+  <script src="node_modules/highlight.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>\n` : '')
+      + '</head>\n<body>\n<div id=__page>'
+      + markdownCompiler(sourceMarkdown)
+      + '</div></body>\n</html>';
+    return html;
+
+  }
+
+
+  export function buildIndexHtml(readMe: string) {
+    const markdownCompiler = require('marked');
+    const highlightJs = require('highlight.js');
+    const indexHtml = markdownToHtml(markdownCompiler, highlightJs, readMe);
+    sysFs.writeFileSync(`${DST_GALLERY_RELEASE_PATH}/index.html`, indexHtml);
   }
 
   // ------------------------------------------------------------------------

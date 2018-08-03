@@ -133,8 +133,41 @@ var BuildGalleryRelease;
         var outREADME = fsix_js_1.fsix.readUtf8Sync(BuildGalleryRelease.SRC_GALLERY_PATH + "/README-rel.md")
             + galleryLinks.join('');
         sysFs.writeFileSync(BuildGalleryRelease.DST_GALLERY_RELEASE_PATH + "/README.md", outREADME);
+        return outREADME;
     }
     BuildGalleryRelease.buildReadMe = buildReadMe;
+    function markdownToHtml(markdownCompiler, highlightJs, sourceMarkdown) {
+        markdownCompiler.setOptions({
+            renderer: new markdownCompiler.Renderer(),
+            highlight: function (code) { return highlightJs
+                ? highlightJs.highlightAuto(code).value : code; },
+            pedantic: false,
+            gfm: true,
+            tables: true,
+            breaks: false,
+            sanitize: false,
+            smartLists: true,
+            smartypants: false,
+            xhtml: false,
+        });
+        /* spell-checker: disable */
+        var html = '<html>\n<head>\n'
+            // this sytle used in html output of the markdown is designed to be similar
+            // to the github markdown rendered in order to have a good simulation of
+            // how the user will see the documentation.
+            + (highlightJs ? "\n  <link rel=\"stylesheet\" href=\"node_modules/github.css\">\n  <link rel=\"stylesheet\" href=\"node_modules/font-awesome.css\">\n  <style>\n  body {\n    font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Helvetica,Arial,\n      sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\";\n      color: #24292e;\n      background-color: white;\n  }\n  pre {\n    background-color: #1b1f230d;\n    padding: 0.2em 0.4em;\n  }\n  #__page {\n     max-width: 980px;\n     padding: 45px;\n     border: 1px solid #ddd;\n     border-bottom-right-radius: 3px;\n     border-bottom-left-radius: 3px;\n     margin-left: 20px;\n  }\n  code {\n    background-color: #1b1f230d;\n    padding: 0.2em 0.4em;\n  }\n  pre code {\n    background-color: transparent;\n    padding: 0;\n  }\n\n  </style>\n  <script src=\"node_modules/highlight.js\"></script>\n  <script>hljs.initHighlightingOnLoad();</script>\n" : '')
+            + '</head>\n<body>\n<div id=__page>'
+            + markdownCompiler(sourceMarkdown)
+            + '</div></body>\n</html>';
+        return html;
+    }
+    function buildIndexHtml(readMe) {
+        var markdownCompiler = require('marked');
+        var highlightJs = require('highlight.js');
+        var indexHtml = markdownToHtml(markdownCompiler, highlightJs, readMe);
+        sysFs.writeFileSync(BuildGalleryRelease.DST_GALLERY_RELEASE_PATH + "/index.html", indexHtml);
+    }
+    BuildGalleryRelease.buildIndexHtml = buildIndexHtml;
     // ------------------------------------------------------------------------
     //                               Runs External Commands
     // ------------------------------------------------------------------------

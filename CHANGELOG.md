@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Add parameter `--gif-background` to `abeamer gif` CLI.
+- (DEV) `gulp build-gallery-release` generate index.html.
+  > Since www.abeamer.com doesn't support markdown render, it's required to generate the index.html
 
 ## [1.1.0] -
 ### Changed

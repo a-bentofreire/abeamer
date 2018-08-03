@@ -450,8 +450,14 @@ var Gulp;
     });
     gulp.task('gal-rel:process-readme', ['gal-rel:create-zip'], function (cb) {
         printOptions();
-        build_gallery_release_js_1.BuildGalleryRelease.buildReadMe();
-        cb();
+        build_gallery_release_js_1.BuildGalleryRelease.buildIndexHtml(build_gallery_release_js_1.BuildGalleryRelease.buildReadMe());
+        return gulp.src([
+            "./node_modules/highlight.js/styles/github.css",
+            "./node_modules/font-awesome/css/font-awesome.css",
+            './node_modules/highlight.js/lib/highlight.js',
+        ])
+            .pipe(gulp.dest(build_gallery_release_js_1.BuildGalleryRelease.DST_GALLERY_RELEASE_PATH + '/node_modules'))
+            .pipe(gulpPreserveTime());
     });
     gulp.task('build-gallery-release', ['gal-rel:process-readme']);
     // ------------------------------------------------------------------------
