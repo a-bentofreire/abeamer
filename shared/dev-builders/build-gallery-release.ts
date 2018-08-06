@@ -157,6 +157,15 @@ export namespace BuildGalleryRelease {
    */
   export function buildReadMe(): string {
     const galleryLinks: string[] = [];
+    const missingFiles: string[] = [];
+
+    function checkFile(fileName: string) {
+      if (!sysFs.existsSync(fileName)) {
+        missingFiles.push(fileName);
+      }
+      return fileName;
+    }
+
     releaseExamples.forEach(ex => {
       galleryLinks.push(`\n--------------------------`
         + `\n### ${ex.folder}\n`
@@ -165,6 +174,7 @@ export namespace BuildGalleryRelease {
       const storyFramesFolder = `${webLinks.repos.galleryReleaseRaw}${ex.folder}/story-frames`;
 
       if (!ex.noGifImage) {
+        checkFile(`./${SRC_GALLERY_PATH}/${ex.folder}/story-frames/story.gif`);
         galleryLinks.push(`\n  `
           + `\n![Image](${storyFramesFolder}/story.gif)${'  '}\n  `);
       }
@@ -186,6 +196,9 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
     const outREADME = fsix.readUtf8Sync(`${SRC_GALLERY_PATH}/README-rel.md`)
       + galleryLinks.join('');
     sysFs.writeFileSync(`${DST_GALLERY_RELEASE_PATH}/README.md`, outREADME);
+    if (missingFiles.length) {
+      throw `Missing files:\n` + missingFiles.join('\n');
+    }
     return outREADME;
   }
 

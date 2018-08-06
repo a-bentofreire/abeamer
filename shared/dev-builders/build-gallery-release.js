@@ -114,12 +114,20 @@ var BuildGalleryRelease;
      */
     function buildReadMe() {
         var galleryLinks = [];
+        var missingFiles = [];
+        function checkFile(fileName) {
+            if (!sysFs.existsSync(fileName)) {
+                missingFiles.push(fileName);
+            }
+            return fileName;
+        }
         BuildGalleryRelease.releaseExamples.forEach(function (ex) {
             galleryLinks.push("\n--------------------------"
                 + ("\n### " + ex.folder + "\n")
                 + ("" + ex.description.join('  \n') + '  '));
             var storyFramesFolder = "" + dev_web_links_js_1.DevWebLinks.repos.galleryReleaseRaw + ex.folder + "/story-frames";
             if (!ex.noGifImage) {
+                checkFile("./" + BuildGalleryRelease.SRC_GALLERY_PATH + "/" + ex.folder + "/story-frames/story.gif");
                 galleryLinks.push("\n  "
                     + ("\n![Image](" + storyFramesFolder + "/story.gif)" + '  ' + "\n  "));
             }
@@ -133,6 +141,9 @@ var BuildGalleryRelease;
         var outREADME = fsix_js_1.fsix.readUtf8Sync(BuildGalleryRelease.SRC_GALLERY_PATH + "/README-rel.md")
             + galleryLinks.join('');
         sysFs.writeFileSync(BuildGalleryRelease.DST_GALLERY_RELEASE_PATH + "/README.md", outREADME);
+        if (missingFiles.length) {
+            throw "Missing files:\n" + missingFiles.join('\n');
+        }
         return outREADME;
     }
     BuildGalleryRelease.buildReadMe = buildReadMe;
