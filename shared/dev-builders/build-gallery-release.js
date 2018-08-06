@@ -228,10 +228,8 @@ var BuildGalleryRelease;
         }
         else {
             content = content
-                .replace(/(<head>)/, "$1\n<title>ABeamer Gallery</title>\n" + css);
-            /*         .replace(/(<body>)/, `$1
-            <div class=website-header><a href="/">Home</a><span class=separator>&gt;</span>Gallery</div>
-            `); */
+                .replace(/(<head>)/, "$1\n<title>ABeamer Gallery</title>\n" + css)
+                .replace(/(<body>)/, "$1\n<div class=website-header><a href=\"/\">Home</a><span class=separator>&gt;</span>Gallery</div>\n");
         }
         content = content
             .replace(/(<head>)/g, '<!-- This file was created to be used online only. -->\n$1')

@@ -364,9 +364,9 @@ body {
     } else {
       content = content
         .replace(/(<head>)/, `$1\n<title>ABeamer Gallery</title>\n${css}`)
-/*         .replace(/(<body>)/, `$1
+        .replace(/(<body>)/, `$1
 <div class=website-header><a href="/">Home</a><span class=separator>&gt;</span>Gallery</div>
-`); */
+`);
     }
 
     content = content

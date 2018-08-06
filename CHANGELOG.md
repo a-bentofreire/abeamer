@@ -29,7 +29,7 @@ ro
 - Add core plugins to gallery examples using oscillators, paths, transitions and functions.
 - (DEV) Add check for missing gif files on `gulp build-gallery-release`.
 - Add Google Analytics and title to gallery-release index and each example gallery.
-
+- Add Header to gallery-release index.
 
 ## [1.1.0] -
 ### Changed
