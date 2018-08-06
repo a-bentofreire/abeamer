@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add parameter `--gif-background` to `abeamer gif` CLI.
 - (DEV) `gulp build-gallery-release` generate index.html.
   > Since www.abeamer.com doesn't support markdown render, it's required to generate the index.html
+- Add messages/messages-en.js to be the version 2.x holder of the english messages.
+  > The messages in i18n.ts file will be moved to messages/messages-en.ts file on version 2.x.
+  > Users are encouraged to include the messages/messages-en.js on their index.html
+  > even though for now it's an empty file to prevent breaking changes.
+
 
 ## [1.1.0] -
 ### Changed

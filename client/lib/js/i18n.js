@@ -9,6 +9,10 @@
  *
  * ## Description
  *
+ * **WARNING:** The messages in this file will be moved to messages/messages-en.ts file on version 2.x.
+ * Users are encouraged to include the messages/messages-en.js on their index.html
+ * even though for now it's an empty file to prevent breaking changes.
+ *
  * ABeamer allows to localize the name of functions and other functionalities
  * such the names of tasks, flyovers and scene transitions.
  * The names can include non-latin characters.
@@ -22,6 +26,9 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Messages
     // ------------------------------------------------------------------------
+    /**
+     * These messages will be moved messages/messages-en.ts on version 2.x
+     */
     var Msgs;
     (function (Msgs) {
         Msgs["MustNatPositive"] = "The value of %p% must be a natural positive";
