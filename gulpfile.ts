@@ -38,6 +38,7 @@ namespace Gulp {
 
   sysProcess.chdir(__dirname);
 
+  const GOOGLE_ANALYTICS_ID = 'UA-121864319-1';
   /** List of files and folders to typical preserve on `rm -rf` */
   const PRESERVE_FILES = ['README.md', 'README-dev.md', '.git', '.gitignore'];
   const CLIENT_UUID = '// uuid: 3b50413d-12c3-4a6c-9877-e6ead77f58c5\n\n';
@@ -442,9 +443,9 @@ namespace Gulp {
       .pipe(gulpReplace(/("use strict";)/,
         SERVER_UUID + COPYRIGHTS + '$1\n'))
       .pipe(gulp.dest(`${RELEASE_PATH}/server`));
-      if (!isWin) {
-        res = res.pipe(gulpPreserveTime());
-      }
+    if (!isWin) {
+      res = res.pipe(gulpPreserveTime());
+    }
     return res;
   });
 
@@ -608,8 +609,12 @@ namespace Gulp {
     const onlineLink = `${webLinks.repos.releaseStatic}client/lib`;
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       return gulp.src([`${ex.dstFullPath}/index.html`])
-        .pipe(gulpReplace(/(<head>)/g, '<!-- This file was created only testing. -->\n$1'))
-        .pipe(gulpReplace(/"abeamer\//g, `"${onlineLink}/`))
+        .pipe(gulpReplace(/^(?:.|\n)+$/, (all: string) =>
+          BuildGalRel.integrateHtmlWithWebSite(all, {
+            onlineLink,
+            gaID: GOOGLE_ANALYTICS_ID,
+            folder: ex.folder,
+          }, false)))
         .pipe(gulpRename('index-online.html'))
         .pipe(gulp.dest(ex.dstFullPath))
         .pipe(gulpPreserveTime());
@@ -635,7 +640,7 @@ namespace Gulp {
   (gulp as any).task('gal-rel:process-readme', ['gal-rel:create-zip'],
     (cb) => {
       printOptions();
-      BuildGalRel.buildIndexHtml(BuildGalRel.buildReadMe());
+      BuildGalRel.buildIndexHtml(BuildGalRel.buildReadMe(), GOOGLE_ANALYTICS_ID);
 
       return gulp.src([
         `./node_modules/highlight.js/styles/github.css`,

@@ -33,6 +33,7 @@ var build_gallery_release_js_1 = require("./shared/dev-builders/build-gallery-re
 var Gulp;
 (function (Gulp) {
     sysProcess.chdir(__dirname);
+    var GOOGLE_ANALYTICS_ID = 'UA-121864319-1';
     /** List of files and folders to typical preserve on `rm -rf` */
     var PRESERVE_FILES = ['README.md', 'README-dev.md', '.git', '.gitignore'];
     var CLIENT_UUID = '// uuid: 3b50413d-12c3-4a6c-9877-e6ead77f58c5\n\n';
@@ -429,8 +430,13 @@ var Gulp;
         var onlineLink = dev_web_links_js_1.DevWebLinks.repos.releaseStatic + "client/lib";
         return mergeStream(build_gallery_release_js_1.BuildGalleryRelease.releaseExamples.map(function (ex) {
             return gulp.src([ex.dstFullPath + "/index.html"])
-                .pipe(gulpReplace(/(<head>)/g, '<!-- This file was created only testing. -->\n$1'))
-                .pipe(gulpReplace(/"abeamer\//g, "\"" + onlineLink + "/"))
+                .pipe(gulpReplace(/^(?:.|\n)+$/, function (all) {
+                return build_gallery_release_js_1.BuildGalleryRelease.integrateHtmlWithWebSite(all, {
+                    onlineLink: onlineLink,
+                    gaID: GOOGLE_ANALYTICS_ID,
+                    folder: ex.folder,
+                }, false);
+            }))
                 .pipe(gulpRename('index-online.html'))
                 .pipe(gulp.dest(ex.dstFullPath))
                 .pipe(gulpPreserveTime());
@@ -451,7 +457,7 @@ var Gulp;
     });
     gulp.task('gal-rel:process-readme', ['gal-rel:create-zip'], function (cb) {
         printOptions();
-        build_gallery_release_js_1.BuildGalleryRelease.buildIndexHtml(build_gallery_release_js_1.BuildGalleryRelease.buildReadMe());
+        build_gallery_release_js_1.BuildGalleryRelease.buildIndexHtml(build_gallery_release_js_1.BuildGalleryRelease.buildReadMe(), GOOGLE_ANALYTICS_ID);
         return gulp.src([
             "./node_modules/highlight.js/styles/github.css",
             "./node_modules/font-awesome/css/font-awesome.css",

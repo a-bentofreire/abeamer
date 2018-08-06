@@ -171,7 +171,7 @@ export namespace BuildGalleryRelease {
         + `\n### ${ex.folder}\n`
         + `${ex.description.join('  \n')}${'  '}`);
 
-      const storyFramesFolder = `${webLinks.repos.galleryReleaseRaw}${ex.folder}/story-frames`;
+      const storyFramesFolder = `${ex.folder}/story-frames`;
 
       if (!ex.noGifImage) {
         checkFile(`./${SRC_GALLERY_PATH}/${ex.folder}/story-frames/story.gif`);
@@ -186,8 +186,8 @@ export namespace BuildGalleryRelease {
       }
 
       galleryLinks.push(`
-Download code: [zip](${webLinks.repos.galleryReleaseRaw}${ex.folder}/${EXAMPLE_ZIP_FILE})${'  '}
-Try it <a href="${webLinks.repos.galleryReleaseRaw}${ex.folder}/index-online.html">online</a>.${'  '}
+Download code: [zip](${ex.folder}/${EXAMPLE_ZIP_FILE})${'  '}
+Try it <a href="${ex.folder}/index-online.html">online</a>.${'  '}
 ${ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n'}
 ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n'}
     `);
@@ -241,7 +241,6 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
   #__page {
      max-width: 980px;
      padding: 45px;
-     border: 1px solid #ddd;
      border-bottom-right-radius: 3px;
      border-bottom-left-radius: 3px;
      margin-left: 20px;
@@ -266,10 +265,12 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
   }
 
 
-  export function buildIndexHtml(readMe: string) {
+  export function buildIndexHtml(readMe: string, gaID: string) {
     const markdownCompiler = require('marked');
     const highlightJs = require('highlight.js');
-    const indexHtml = markdownToHtml(markdownCompiler, highlightJs, readMe);
+    const indexHtml = integrateHtmlWithWebSite(
+      markdownToHtml(markdownCompiler, highlightJs, readMe),
+      { gaID }, true);
     sysFs.writeFileSync(`${DST_GALLERY_RELEASE_PATH}/index.html`, indexHtml);
   }
 
@@ -319,5 +320,67 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
       // }
       console.log(`example.folder: ${example.folder}`);
     });
+  }
+
+  // ------------------------------------------------------------------------
+  //                               integrateHtmlWithWebSite
+  // ------------------------------------------------------------------------
+  export interface IntegrateOptions {
+    onlineLink?: string;
+    folder?: string;
+    gaID: string;
+  }
+
+  export function integrateHtmlWithWebSite(content: string,
+    opts: IntegrateOptions, isIndex: boolean): string {
+const css = `
+<style>
+body {
+  margin: 0 !important;
+}
+.website-header {
+  background-color: #2C3E50 !important;
+  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+  "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: white;
+  text-align: left;
+  padding: 1rem 1rem;
+}
+.website-header a:link, .website-header a:visited {
+  color: white;
+}
+.website-header .separator {
+  padding: 3px;
+}
+  </style>`;
+
+    if (!isIndex) {
+      content = content
+        .replace(/"abeamer\//g, `"${opts.onlineLink}/`)
+        .replace(/(<head>)/, `$1\n<title>ABeamer example: [${opts.folder}]</title>`);
+    } else {
+      content = content
+        .replace(/(<head>)/, `$1\n<title>ABeamer Gallery</title>\n${css}`)
+/*         .replace(/(<body>)/, `$1
+<div class=website-header><a href="/">Home</a><span class=separator>&gt;</span>Gallery</div>
+`); */
+    }
+
+    content = content
+      .replace(/(<head>)/g, '<!-- This file was created to be used online only. -->\n$1')
+      .replace(/<\/head>/, () => `
+<script async src="https://www.googletagmanager.com/gtag/js?id=${opts.gaID}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '${opts.gaID}');
+</script>
+</head>
+`);
+    return content;
   }
 }
