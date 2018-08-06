@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [1.2.0] -
+ro
 ### Changed
 - Change imagemagick convert alpha parameters to fix gif generation on windows.
 - Move documentation from github repo to www.abeamer.com/docs.
@@ -14,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > git repo abeamer-release ----> release/latest
   > git repo abeamer-gallery-release ----> gallery/latest
   > git repo abeamer-docs ----> docs/latest
+- Remove index-online.html from gallery/*/code.zip.
+  > This file will be integrated with the website and shouldn't be part of user files.
 
 ### Added
 - Add parameter `--gif-background` to `abeamer gif` CLI.

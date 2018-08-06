@@ -441,6 +441,7 @@ var Gulp;
             return gulp.src([
                 ex.dstFullPath + "/**",
                 ex.dstFullPath + "/.allowed-plugins.json",
+                "!" + ex.dstFullPath + "/index-online.html",
                 "!" + ex.dstFullPath + "/*.zip",
                 "!" + ex.dstFullPath + "/story-frames/*.{json,gif,mp4}",
             ])
