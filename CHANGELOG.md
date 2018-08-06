@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > The messages in i18n.ts file will be moved to messages/messages-en.ts file on version 2.x.
   > Users are encouraged to include the messages/messages-en.js on their index.html
   > even though for now it's an empty file to prevent breaking changes.
+- Add core plugins to gallery examples using oscillators, paths, transitions and functions
 
 
 ## [1.1.0] -
