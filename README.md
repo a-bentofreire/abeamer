@@ -282,7 +282,7 @@ If you have nodejs already installed, install using npm:
   
 `[sudo] npm install -g abeamer`  
   
-Otherwise if you don't want to install nodejs, download from [here](https://github.com/a-bentofreire/abeamer-release/archive/master.zip),
+Otherwise if you don't want to install nodejs, download from [here](https://www.abeamer.com/release/latest/abeamer-release.zip),
 but it won't execute the command-line utility.
 
 ## Requirements

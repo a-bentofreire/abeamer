@@ -42,7 +42,7 @@ via [teleporting](teleporter.md) then you don't need to install nodejs.
 ### Can I download just the animation library?
 
 Yes, you can.  
-Download from [here](https://github.com/a-bentofreire/abeamer-release/archive/master.zip).  
+Download from [here](https://www.abeamer.com/release/latest/abeamer-release.zip).  
 
 ### I can't install puppeteer.   
 
