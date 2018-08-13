@@ -16,6 +16,7 @@
     },
     "tslint.exclude": "client/lib/typings/vendor/*.ts",
     "exclude": [
+        ".git/",
         "docs/",
         "release/",
         "gallery-release/",
