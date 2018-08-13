@@ -13,7 +13,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 var DevWebLinks;
 (function (DevWebLinks) {
-    var repoSuffixes = ['*', 'release', 'gallery-release', 'docs'];
     var LOCAL_PORT = 9000;
     var localUrl = "http://localhost:" + LOCAL_PORT;
     var repoUrl = "https://github.com/a-bentofreire/";

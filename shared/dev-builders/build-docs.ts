@@ -588,14 +588,6 @@ export namespace BuildDocs {
       sysFs.writeFileSync(dstFileName, yaml.safeDump(this.yamlDoc));
     }
 
-
-    addProduction(): void {
-      Object.keys(this.yamlDoc.production).forEach(key => {
-        this.yamlDoc[key] = this.yamlDoc.production[key];
-      });
-    }
-
-
     addSourceFile(opts: Opts, fileName: string, content: string): string {
       const pageName = sysPath.posix.basename(fileName);
 
@@ -770,8 +762,7 @@ export namespace BuildDocs {
    * This is the main entry point.
    * Read the module information for details.
    */
-  export function build(libModules: string[], pluginModules: string[],
-    isProduction: boolean): void {
+  export function build(libModules: string[], pluginModules: string[]): void {
 
     const localWebLinks = buildWebLinks();
 
@@ -792,11 +783,6 @@ export namespace BuildDocs {
         generated: [],
         refs: {},
       };
-
-      // production mode
-      if (isProduction) {
-        mkDocsYml.addProduction();
-      }
 
       // index.html
       copyMarkdownFile(target.indexFile,

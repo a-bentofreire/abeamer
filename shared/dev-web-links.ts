@@ -22,7 +22,6 @@ export namespace DevWebLinks {
     docs,
   }
 
-  const repoSuffixes = ['*', 'release', 'gallery-release', 'docs'];
 
   const LOCAL_PORT = 9000;
   const localUrl = `http://localhost:${LOCAL_PORT}`;

@@ -395,7 +395,7 @@ var Gulp;
     // ------------------------------------------------------------------------
     gulp.task('build-docs', function () {
         printOptions();
-        build_docs_js_1.BuildDocs.build(libModules, pluginModules, isProduction);
+        build_docs_js_1.BuildDocs.build(libModules, pluginModules);
     });
     // ------------------------------------------------------------------------
     //                               Builds Release Version Of The Gallery

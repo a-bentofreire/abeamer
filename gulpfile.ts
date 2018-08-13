@@ -563,7 +563,7 @@ namespace Gulp {
 
   gulp.task('build-docs', () => {
     printOptions();
-    BuildDocs.build(libModules, pluginModules, isProduction);
+    BuildDocs.build(libModules, pluginModules);
   });
 
   // ------------------------------------------------------------------------
