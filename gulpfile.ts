@@ -11,6 +11,7 @@ import * as sysPath from "path";
 import * as sysProcess from "process";
 import * as gulp from "gulp";
 import * as rimraf from "rimraf";
+import * as globule from "globule";
 
 import { fsix } from "./shared/vendor/fsix.js";
 import { DevPaths } from "./shared/dev-paths.js";
@@ -41,8 +42,6 @@ namespace Gulp {
   /** List of files and folders to typical preserve on `rm -rf` */
   const PRESERVE_FILES = ['README.md', 'README-dev.md', '.git', '.gitignore'];
   const CLIENT_UUID = '// uuid: 3b50413d-12c3-4a6c-9877-e6ead77f58c5\n\n';
-  const CLI_UUID = '// uuid: b88b17e7-5918-44f7-82f7-f0e80c242a82\n\n';
-  const SERVER_UUID = '// uuid: 2460e386-36d9-49ec-afd6-30963ab2e387\n\n';
   const COPYRIGHTS = '' +
 
     '// ------------------------------------------------------------------------\n' +
@@ -311,6 +310,8 @@ namespace Gulp {
       `${DevPaths.CLIENT_PATH}/**`,
       `!${DevPaths.CLIENT_PATH}/**/*.map`,
       `!${DevPaths.JS_PATH}/*`,
+      `!${DevPaths.PLUGINS_PATH}/**`,
+      `!${DevPaths.MESSAGES_PATH}/*`,
       `!${DevPaths.TYPINGS_PATH}/release{,/**}`,
       `!${DevPaths.TYPINGS_PATH}/README.*`,
       `!${DevPaths.TYPINGS_PATH}/vendor/phantomjs{,/**}`,
@@ -399,57 +400,50 @@ namespace Gulp {
   });
 
 
-  gulp.task('rel:cli-minify', () => {
-    return gulp.src('cli/abeamer-cli.js')
+
+  const JS_FILES = [
+    'server/*.js',
+    'cli/*.js',
+    `${DevPaths.SHARED_PATH}/*.js`,
+    `${DevPaths.SHARED_PATH}/**/*.js`,
+    `${DevPaths.MESSAGES_PATH}/*.js`,
+    `${DevPaths.PLUGINS_PATH}/*/*.js`,
+    `!${DevPaths.SHARED_PATH}/dev-builders{/**,}`,
+    `!${DevPaths.SHARED_PATH}/dev-*.js`,
+    `!${DevPaths.SHARED_PATH}/**/dev-*.js`,
+  ];
+
+  gulp.task('rel:minify', () => {
+    // not required to preserve timestamp since `rel:add-copyrights` does the job
+    return gulp.src(JS_FILES, { base: '.' })
       .pipe(gulpMinify({
         noSource: true,
         ext: {
           min: '.js',
         },
       }))
-      .pipe(gulpReplace(/("use strict";)/,
-        CLI_UUID + COPYRIGHTS + '$1\n'))
-      .pipe(gulp.dest(`${RELEASE_PATH}/cli`));
+      .pipe(gulp.dest(`${RELEASE_PATH}`));
   });
 
 
-  (gulp as any).task('rel:cli-chmod', ['rel:cli-minify'], (cb) => {
-    // this task is done only for testing purposes since
-    // `npm publish` doesn't uses the `chmod u+x`.
-    const RELEASE_CLI_FILE = `${RELEASE_PATH}/cli/abeamer-cli.js`;
-    sysFs.chmodSync(RELEASE_CLI_FILE, 0o744);
+  gulp.task('rel:add-copyrights', (cb) => {
+
+    globule.find(JS_FILES).forEach(file => {
+      const srcFileContent = fsix.readUtf8Sync(file);
+      const uuidMatches = srcFileContent.match(/uuid:\s*([\w\-]+)/);
+      if (uuidMatches) {
+        const dstFileName = `${RELEASE_PATH}/${file}`;
+        let content = fsix.readUtf8Sync(dstFileName);
+        content = content.replace(/("use strict";)/, (all) =>
+          `${all}\n// uuid: ${uuidMatches[1]}\n` + COPYRIGHTS,
+        );
+        sysFs.writeFileSync(dstFileName, content);
+        const stat = sysFs.statSync(file);
+        sysFs.utimesSync(dstFileName, stat.atime, stat.mtime);
+      }
+    });
     cb();
   });
-
-
-  gulp.task('rel:shared', () => {
-    return mergeStream(['', '/vendor', '/lib'].map((subPath) => {
-      return gulp.src([
-        `shared${subPath}/*.js`,
-        `!shared${subPath}/dev*.js`,
-      ])
-        .pipe(gulp.dest(`${RELEASE_PATH}/shared${subPath}`));
-    }));
-  });
-
-
-  gulp.task('rel:server-minify', () => {
-    let res = gulp.src('server/*.js')
-      .pipe(gulpMinify({
-        noSource: true,
-        ext: {
-          min: '.js',
-        },
-      }))
-      .pipe(gulpReplace(/("use strict";)/,
-        SERVER_UUID + COPYRIGHTS + '$1\n'))
-      .pipe(gulp.dest(`${RELEASE_PATH}/server`));
-    if (!isWin) {
-      res = res.pipe(gulpPreserveTime());
-    }
-    return res;
-  });
-
 
 
   // copies package.json cleaning the unnecessary config
@@ -531,9 +525,8 @@ namespace Gulp {
     'rel:client-js-join',
     'rel:root',
     'rel:README',
-    'rel:cli-chmod',
-    'rel:shared',
-    'rel:server-minify',
+    'rel:minify',
+    'rel:add-copyrights',
     'rel:jquery-typings',
     'rel:build-package.json',
     'rel:build-tsconfig.ts',

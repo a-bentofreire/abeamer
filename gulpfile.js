@@ -10,6 +10,7 @@ var sysPath = require("path");
 var sysProcess = require("process");
 var gulp = require("gulp");
 var rimraf = require("rimraf");
+var globule = require("globule");
 var fsix_js_1 = require("./shared/vendor/fsix.js");
 var dev_paths_js_1 = require("./shared/dev-paths.js");
 var dev_web_links_js_1 = require("./shared/dev-web-links.js");
@@ -36,8 +37,6 @@ var Gulp;
     /** List of files and folders to typical preserve on `rm -rf` */
     var PRESERVE_FILES = ['README.md', 'README-dev.md', '.git', '.gitignore'];
     var CLIENT_UUID = '// uuid: 3b50413d-12c3-4a6c-9877-e6ead77f58c5\n\n';
-    var CLI_UUID = '// uuid: b88b17e7-5918-44f7-82f7-f0e80c242a82\n\n';
-    var SERVER_UUID = '// uuid: 2460e386-36d9-49ec-afd6-30963ab2e387\n\n';
     var COPYRIGHTS = '' +
         '// ------------------------------------------------------------------------\n' +
         '// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.\n' +
@@ -211,6 +210,8 @@ var Gulp;
             dev_paths_js_1.DevPaths.CLIENT_PATH + "/**",
             "!" + dev_paths_js_1.DevPaths.CLIENT_PATH + "/**/*.map",
             "!" + dev_paths_js_1.DevPaths.JS_PATH + "/*",
+            "!" + dev_paths_js_1.DevPaths.PLUGINS_PATH + "/**",
+            "!" + dev_paths_js_1.DevPaths.MESSAGES_PATH + "/*",
             "!" + dev_paths_js_1.DevPaths.TYPINGS_PATH + "/release{,/**}",
             "!" + dev_paths_js_1.DevPaths.TYPINGS_PATH + "/README.*",
             "!" + dev_paths_js_1.DevPaths.TYPINGS_PATH + "/vendor/phantomjs{,/**}",
@@ -277,47 +278,44 @@ var Gulp;
         return mergeStream(updateHtmlPages(dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + releaseDemosRegEx + "/*.html", RELEASE_PATH + "/gallery", ["../../" + dev_paths_js_1.DevPaths.JS_PATH + "/abeamer.min"], true)
             .pipe(gulpPreserveTime()));
     });
-    gulp.task('rel:cli-minify', function () {
-        return gulp.src('cli/abeamer-cli.js')
+    var JS_FILES = [
+        'server/*.js',
+        'cli/*.js',
+        dev_paths_js_1.DevPaths.SHARED_PATH + "/*.js",
+        dev_paths_js_1.DevPaths.SHARED_PATH + "/**/*.js",
+        dev_paths_js_1.DevPaths.MESSAGES_PATH + "/*.js",
+        dev_paths_js_1.DevPaths.PLUGINS_PATH + "/*/*.js",
+        "!" + dev_paths_js_1.DevPaths.SHARED_PATH + "/dev-builders{/**,}",
+        "!" + dev_paths_js_1.DevPaths.SHARED_PATH + "/dev-*.js",
+        "!" + dev_paths_js_1.DevPaths.SHARED_PATH + "/**/dev-*.js",
+    ];
+    gulp.task('rel:minify', function () {
+        // not required to preserve timestamp since `rel:add-copyrights` does the job
+        return gulp.src(JS_FILES, { base: '.' })
             .pipe(gulpMinify({
             noSource: true,
             ext: {
                 min: '.js',
             },
         }))
-            .pipe(gulpReplace(/("use strict";)/, CLI_UUID + COPYRIGHTS + '$1\n'))
-            .pipe(gulp.dest(RELEASE_PATH + "/cli"));
+            .pipe(gulp.dest("" + RELEASE_PATH));
     });
-    gulp.task('rel:cli-chmod', ['rel:cli-minify'], function (cb) {
-        // this task is done only for testing purposes since
-        // `npm publish` doesn't uses the `chmod u+x`.
-        var RELEASE_CLI_FILE = RELEASE_PATH + "/cli/abeamer-cli.js";
-        sysFs.chmodSync(RELEASE_CLI_FILE, 484);
+    gulp.task('rel:add-copyrights', function (cb) {
+        globule.find(JS_FILES).forEach(function (file) {
+            var srcFileContent = fsix_js_1.fsix.readUtf8Sync(file);
+            var uuidMatches = srcFileContent.match(/uuid:\s*([\w\-]+)/);
+            if (uuidMatches) {
+                var dstFileName = RELEASE_PATH + "/" + file;
+                var content = fsix_js_1.fsix.readUtf8Sync(dstFileName);
+                content = content.replace(/("use strict";)/, function (all) {
+                    return all + "\n// uuid: " + uuidMatches[1] + "\n" + COPYRIGHTS;
+                });
+                sysFs.writeFileSync(dstFileName, content);
+                var stat = sysFs.statSync(file);
+                sysFs.utimesSync(dstFileName, stat.atime, stat.mtime);
+            }
+        });
         cb();
-    });
-    gulp.task('rel:shared', function () {
-        return mergeStream(['', '/vendor', '/lib'].map(function (subPath) {
-            return gulp.src([
-                "shared" + subPath + "/*.js",
-                "!shared" + subPath + "/dev*.js",
-            ])
-                .pipe(gulp.dest(RELEASE_PATH + "/shared" + subPath));
-        }));
-    });
-    gulp.task('rel:server-minify', function () {
-        var res = gulp.src('server/*.js')
-            .pipe(gulpMinify({
-            noSource: true,
-            ext: {
-                min: '.js',
-            },
-        }))
-            .pipe(gulpReplace(/("use strict";)/, SERVER_UUID + COPYRIGHTS + '$1\n'))
-            .pipe(gulp.dest(RELEASE_PATH + "/server"));
-        if (!isWin) {
-            res = res.pipe(gulpPreserveTime());
-        }
-        return res;
     });
     // copies package.json cleaning the unnecessary config
     gulp.task('rel:build-package.json', function () {
@@ -378,7 +376,7 @@ var Gulp;
             .pipe(gulp.dest(RELEASE_PATH + "/" + dev_paths_js_1.DevPaths.TYPINGS_PATH))
             .pipe(gulpPreserveTime());
     });
-    gulp.task('build-release', ['rel:clean'], gulpSequence('rel:client', 'rel:gallery', 'rel:gallery-html', 'rel:client-js-join', 'rel:root', 'rel:README', 'rel:cli-chmod', 'rel:shared', 'rel:server-minify', 'rel:jquery-typings', 'rel:build-package.json', 'rel:build-tsconfig.ts', 'rel:build-abeamer.d.ts', 'rel:build-plugins-list.json'));
+    gulp.task('build-release', ['rel:clean'], gulpSequence('rel:client', 'rel:gallery', 'rel:gallery-html', 'rel:client-js-join', 'rel:root', 'rel:README', 'rel:minify', 'rel:add-copyrights', 'rel:jquery-typings', 'rel:build-package.json', 'rel:build-tsconfig.ts', 'rel:build-abeamer.d.ts', 'rel:build-plugins-list.json'));
     // ------------------------------------------------------------------------
     //                               Builds Shared Modules from Client
     // ------------------------------------------------------------------------

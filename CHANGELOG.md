@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > This change will allow a local webserver have access to the same
   > url subpart as it is on the www.abeamer.com site
   > Simplifying the process of testing and deploying release versions
+- Add minify to all js files during the `build-release` phase.
 
 ### Added
 - Add parameter `--gif-background` to `abeamer gif` CLI.

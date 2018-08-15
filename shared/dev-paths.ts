@@ -22,6 +22,7 @@ export namespace DevPaths {
   export const LIB_PATH = `${CLIENT_PATH}/lib`;
   export const JS_PATH = `${LIB_PATH}/js`;
   export const PLUGINS_PATH = `${LIB_PATH}/plugins`;
+  export const MESSAGES_PATH = `${LIB_PATH}/messages`;
   export const TYPINGS_PATH = `${LIB_PATH}/typings`;
   export const SHARED_PATH = 'shared';
   export const SHARED_LIB_PATH = `${SHARED_PATH}/lib`;

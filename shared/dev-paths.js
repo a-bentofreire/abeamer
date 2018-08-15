@@ -19,6 +19,7 @@ var DevPaths;
     DevPaths.LIB_PATH = DevPaths.CLIENT_PATH + "/lib";
     DevPaths.JS_PATH = DevPaths.LIB_PATH + "/js";
     DevPaths.PLUGINS_PATH = DevPaths.LIB_PATH + "/plugins";
+    DevPaths.MESSAGES_PATH = DevPaths.LIB_PATH + "/messages";
     DevPaths.TYPINGS_PATH = DevPaths.LIB_PATH + "/typings";
     DevPaths.SHARED_PATH = 'shared';
     DevPaths.SHARED_LIB_PATH = DevPaths.SHARED_PATH + "/lib";

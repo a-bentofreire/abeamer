@@ -1,5 +1,16 @@
 ## What's new
 
+## [1.3.0] -
+- Fixes font rendering on `animate-transitions` example.
+- Adds minify to all abeamer release js files.
+- Adds execution scripts (linux and windows) when ABeamer is downloaded as [zip](https://www.abeamer.com/downloads.html) file.
+[read more >>>](https://www.abeamer.com/blog/2018/08/15/abeamer-1.3.0-released.html)  
+
+## [1.2.0] -
+- Fixes gif generator bug on Windows.
+- Adds `--gif-background` to `abeamer gif` CLI.
+[read more >>>](https://www.abeamer.com/blog/2018/08/06/abeamer-1.2.0-released.html)  
+
 ## [1.1.0] -
   
 - Improves and simplifies the usage of Virtual Animators.
