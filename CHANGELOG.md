@@ -5,8 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [1.2.0] -
-### Changed
+### Fixed
 - Change imagemagick convert alpha parameters to fix gif generation on windows.
+- Fix font rendering bug in `animate-transitions` example
+  > The problem was due a bug in Chrome as described in:
+  > http://localhost:8500/blog/2018/08/15/abeamer-1.3.0-released.html
+
+### Changed
 - Move documentation from github repo to www.abeamer.com/docs.
 - Update links and generators to move docs, gallery and release to abeamer website.
   > The github repos are replaced with folders on https://www.abeamer.com
@@ -24,7 +29,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > url subpart as it is on the www.abeamer.com site
   > Simplifying the process of testing and deploying release versions
 
-
 ### Added
 - Add parameter `--gif-background` to `abeamer gif` CLI.
 - (DEV) `gulp build-gallery-release` generate index.html.
@@ -35,8 +39,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > even though for now it's an empty file to prevent breaking changes.
 - Add core plugins to gallery examples using oscillators, paths, transitions and functions.
 - (DEV) Add check for missing gif files on `gulp build-gallery-release`.
-- Add Google Analytics and title to gallery-release index and each example gallery.
-- Add Header to gallery-release index.
 - Add abeamer scripts to abeamer-release.zip
   > This addition allows users how just want to download abeamer as a zip instead of using
   > npm to have running scripts without having to build their own scripts.
