@@ -38,7 +38,6 @@ namespace Gulp {
 
   sysProcess.chdir(__dirname);
 
-  const GOOGLE_ANALYTICS_ID = 'UA-121864319-1';
   /** List of files and folders to typical preserve on `rm -rf` */
   const PRESERVE_FILES = ['README.md', 'README-dev.md', '.git', '.gitignore'];
   const CLIENT_UUID = '// uuid: 3b50413d-12c3-4a6c-9877-e6ead77f58c5\n\n';
@@ -610,17 +609,15 @@ namespace Gulp {
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       return gulp.src([`${ex.dstFullPath}/index.html`])
         .pipe(gulpReplace(/^(?:.|\n)+$/, (all: string) =>
-          BuildGalRel.integrateHtmlWithWebSite(all, {
-            onlineLink,
-            gaID: GOOGLE_ANALYTICS_ID,
-            folder: ex.folder,
-          }, false)))
+          all
+            .replace(/"abeamer\//g, `"${onlineLink}/`)
+            .replace(/(<head>)/g, '<!-- This file was created to be used online only. -->\n$1')
+        ))
         .pipe(gulpRename('index-online.html'))
         .pipe(gulp.dest(ex.dstFullPath))
         .pipe(gulpPreserveTime());
     }));
   });
-
 
   (gulp as any).task('gal-rel:create-zip', ['gal-rel:online-html-files'], () => {
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
@@ -640,15 +637,8 @@ namespace Gulp {
   (gulp as any).task('gal-rel:process-readme', ['gal-rel:create-zip'],
     (cb) => {
       printOptions();
-      BuildGalRel.buildIndexHtml(BuildGalRel.buildReadMe(), GOOGLE_ANALYTICS_ID);
-
-      return gulp.src([
-        `./node_modules/highlight.js/styles/github.css`,
-        `./node_modules/font-awesome/css/font-awesome.css`,
-        './node_modules/highlight.js/lib/highlight.js',
-      ])
-        .pipe(gulp.dest(BuildGalRel.DST_GALLERY_RELEASE_PATH + '/node_modules'))
-        .pipe(gulpPreserveTime());
+      BuildGalRel.buildReadMe();
+      cb();
     });
 
 

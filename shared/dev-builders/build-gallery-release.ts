@@ -155,7 +155,7 @@ export namespace BuildGalleryRelease {
   /**
    * Builds the gallery-release ReadMe file
    */
-  export function buildReadMe(): string {
+  export function buildReadMe(): void {
     const galleryLinks: string[] = [];
     const missingFiles: string[] = [];
 
@@ -199,79 +199,6 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
     if (missingFiles.length) {
       throw `Missing files:\n` + missingFiles.join('\n');
     }
-    return outREADME;
-  }
-
-
-  function markdownToHtml(markdownCompiler, highlightJs,
-    sourceMarkdown: string): string {
-
-    markdownCompiler.setOptions({
-      renderer: new markdownCompiler.Renderer(),
-      highlight: (code) => highlightJs
-        ? highlightJs.highlightAuto(code).value : code,
-      pedantic: false,
-      gfm: true,
-      tables: true,
-      breaks: false,
-      sanitize: false,
-      smartLists: true,
-      smartypants: false,
-      xhtml: false,
-    });
-    /* spell-checker: disable */
-    const html = '<html>\n<head>\n'
-      // this sytle used in html output of the markdown is designed to be similar
-      // to the github markdown rendered in order to have a good simulation of
-      // how the user will see the documentation.
-      + (highlightJs ? `
-  <link rel="stylesheet" href="node_modules/github.css">
-  <link rel="stylesheet" href="node_modules/font-awesome.css">
-  <style>
-  body {
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,
-      sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
-      color: #24292e;
-      background-color: white;
-  }
-  pre {
-    background-color: #1b1f230d;
-    padding: 0.2em 0.4em;
-  }
-  #__page {
-     max-width: 980px;
-     padding: 45px;
-     border-bottom-right-radius: 3px;
-     border-bottom-left-radius: 3px;
-     margin-left: 20px;
-  }
-  code {
-    background-color: #1b1f230d;
-    padding: 0.2em 0.4em;
-  }
-  pre code {
-    background-color: transparent;
-    padding: 0;
-  }
-
-  </style>
-  <script src="node_modules/highlight.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>\n` : '')
-      + '</head>\n<body>\n<div id=__page>'
-      + markdownCompiler(sourceMarkdown)
-      + '</div></body>\n</html>';
-    return html;
-
-  }
-
-
-  export function buildIndexHtml(readMe: string, gaID: string) {
-    const markdownCompiler = require('marked');
-    const highlightJs = require('highlight.js');
-    const indexHtml = integrateHtmlWithWebSite(
-      markdownToHtml(markdownCompiler, highlightJs, readMe),
-      { gaID }, true);
-    sysFs.writeFileSync(`${DST_GALLERY_RELEASE_PATH}/index.html`, indexHtml);
   }
 
   // ------------------------------------------------------------------------
@@ -320,67 +247,5 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
       // }
       console.log(`example.folder: ${example.folder}`);
     });
-  }
-
-  // ------------------------------------------------------------------------
-  //                               integrateHtmlWithWebSite
-  // ------------------------------------------------------------------------
-  export interface IntegrateOptions {
-    onlineLink?: string;
-    folder?: string;
-    gaID: string;
-  }
-
-  export function integrateHtmlWithWebSite(content: string,
-    opts: IntegrateOptions, isIndex: boolean): string {
-const css = `
-<style>
-body {
-  margin: 0 !important;
-}
-.website-header {
-  background-color: #2C3E50 !important;
-  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
-  "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: white;
-  text-align: left;
-  padding: 1rem 1rem;
-}
-.website-header a:link, .website-header a:visited {
-  color: white;
-}
-.website-header .separator {
-  padding: 3px;
-}
-  </style>`;
-
-    if (!isIndex) {
-      content = content
-        .replace(/"abeamer\//g, `"${opts.onlineLink}/`)
-        .replace(/(<head>)/, `$1\n<title>ABeamer example: [${opts.folder}]</title>`);
-    } else {
-      content = content
-        .replace(/(<head>)/, `$1\n<title>ABeamer Gallery</title>\n${css}`)
-        .replace(/(<body>)/, `$1
-<div class=website-header><a href="/">Home</a><span class=separator>&gt;</span>Gallery</div>
-`);
-    }
-
-    content = content
-      .replace(/(<head>)/g, '<!-- This file was created to be used online only. -->\n$1')
-      .replace(/<\/head>/, () => `
-<script async src="https://www.googletagmanager.com/gtag/js?id=${opts.gaID}"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', '${opts.gaID}');
-</script>
-</head>
-`);
-    return content;
   }
 }
