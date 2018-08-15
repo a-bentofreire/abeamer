@@ -54,7 +54,9 @@ declare namespace ABeamer {
     functionalities?: [Functionalities | string, { src: string, dst: string }[]][];
   }
 
-
+  /**
+   * These messages will be moved messages/messages-en.ts on version 2.x
+   */
   export enum Msgs {
     MustNatPositive = 'The value of %p% must be a natural positive',
     MustNatNotNegative = 'The value of %p% must be a natural non-negative',

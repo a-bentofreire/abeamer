@@ -5,5 +5,5 @@
   // @WARN: Don't edit this file. See the ./package.json
 
 namespace ABeamer {
-  export const VERSION = "1.2.0";
+  export const VERSION = "1.3.0";
 }
