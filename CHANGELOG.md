@@ -17,6 +17,14 @@ ro
   > git repo abeamer-docs ----> docs/latest
 - Remove index-online.html from gallery/*/code.zip.
   > This file will be integrated with the website and shouldn't be part of user files.
+- Remove docs and gallery-release visual customization.
+  > Since the website, blog, release, and gallery-release are all hosted by the www.abeamer.com
+  > website, this is now in responsibility to do all the customization.
+- Change the release version from release to release/latest.
+  > This change will allow a local webserver have access to the same
+  > url subpart as it is on the www.abeamer.com site
+  > Simplifying the process of testing and deploying release versions
+
 
 ### Added
 - Add parameter `--gif-background` to `abeamer gif` CLI.

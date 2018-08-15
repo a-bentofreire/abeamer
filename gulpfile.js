@@ -201,7 +201,7 @@ var Gulp;
     // ------------------------------------------------------------------------
     //                               Build Release
     // ------------------------------------------------------------------------
-    var RELEASE_PATH = 'release';
+    var RELEASE_PATH = 'release/latest';
     gulp.task('rel:clean', function (cb) {
         rimrafExcept(RELEASE_PATH, ['.git']);
         cb();

@@ -298,7 +298,7 @@ namespace Gulp {
   //                               Build Release
   // ------------------------------------------------------------------------
 
-  const RELEASE_PATH = 'release';
+  const RELEASE_PATH = 'release/latest';
 
   gulp.task('rel:clean', (cb) => {
     rimrafExcept(RELEASE_PATH, ['.git']);
