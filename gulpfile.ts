@@ -368,6 +368,8 @@ namespace Gulp {
 
   gulp.task('rel:root', () => {
     return gulp.src([
+      'abeamer.sh',
+      'abeamer.cmd',
       'CHANGELOG.md',
       'LICENSE.txt',
       '.npmignore',

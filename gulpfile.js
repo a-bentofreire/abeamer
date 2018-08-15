@@ -256,6 +256,8 @@ var Gulp;
     });
     gulp.task('rel:root', function () {
         return gulp.src([
+            'abeamer.sh',
+            'abeamer.cmd',
             'CHANGELOG.md',
             'LICENSE.txt',
             '.npmignore',

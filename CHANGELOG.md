@@ -5,7 +5,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [1.2.0] -
-ro
 ### Changed
 - Change imagemagick convert alpha parameters to fix gif generation on windows.
 - Move documentation from github repo to www.abeamer.com/docs.
@@ -38,6 +37,9 @@ ro
 - (DEV) Add check for missing gif files on `gulp build-gallery-release`.
 - Add Google Analytics and title to gallery-release index and each example gallery.
 - Add Header to gallery-release index.
+- Add abeamer scripts to abeamer-release.zip
+  > This addition allows users how just want to download abeamer as a zip instead of using
+  > npm to have running scripts without having to build their own scripts.
 
 ## [1.1.0] -
 ### Changed
