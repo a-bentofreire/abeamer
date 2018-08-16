@@ -23,6 +23,7 @@
         "private/",
         "website/",
         "node_modules/",
+        "shared/dev-builders/output/",
         "private-projects/**/typings/*",
         "client/lib/typings/release/abeamer-release.d.ts",
         "client/lib/typings/dev"

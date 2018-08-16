@@ -23,7 +23,7 @@ export namespace BuildSingleLibFile {
 
   export function build(libModules: string[],
     srcPath: string, dstPath: string, dstFile: string,
-    generateMsg: string) {
+    generateMsg: string, excludeIdList: string[], isDebug: boolean): void {
 
     const WARN_MSG = `
 // This file was generated via ${generateMsg}
@@ -33,45 +33,24 @@ export namespace BuildSingleLibFile {
 `;
 
     const outputList = [];
-    const extRefs = [];
 
     libModules.forEach(fileTitle => {
-      const srcFileName = `${srcPath}/${fileTitle}.js`;
-      const content = fsix.readUtf8Sync(srcFileName);
-      outputList.push(content);
-
-        // removes the namespace initial part including all the previous comments
-        // @TODO: Make it work!!!
-        // .replace(/(?:.|\n)*function\s*\(ABeamer.*\n/, '')
-
-        // removes the end part
-        // @TODO: Make it work!!!
-        // .replace(/^\s*\}\)\(ABeamer.*$/m, '')
-        // .replace(/^\s*var _abeamer;\n/m, '')
-
-        // stores the list of external ids
-        // it must be before transform all external references
-        // @TODO: Make it work!!!
-        // .replace(/^\s*ABeamer\.(\w+)\s*=\s*(\w+);\s*/mg,
-        //   (all, extRef: string, intRef) => {
-        //   if (extRef !== intRef) { return all; }
-        //   if (/* extRef[0] !== '_' */true) { extRefs.push(extRef); }
-        //   return '';
-        // })
-
-        // transforms all external references into internal references
-        // @TODO: Make it work!!!
-        // .replace(/\bABeamer\./g, ''),
+      const srcFileName = `${srcPath}/${fileTitle}.ts`;
+      outputList.push(fsix.readUtf8Sync(srcFileName));
     });
 
-    const output = ''
-      // 'var ABeamer;\n'
-      // + '(function (ABeamer): void {\n'
-      + outputList.join('\n') + '\n'
-      // + extRefs.map(ref => `ABeamer.${ref}=${ref};`).join('\n') + '\n'
-      // + '})(ABeamer || (ABeamer = {}));\n'
-      // + 'var _abeamer;\n'
-      ;
+    let output = WARN_MSG + '\nnamespace ABeamer {'
+      + outputList.join('\n')
+        .replace(/}\s*\n+\s*"use strict";/g, '') // removes the inter namespaces
+        .replace(/namespace ABeamer\s*{/g, '')
+        .replace(/export\s+(\w+)\s+_(\w+)/g, (all, tokType, id) =>
+          excludeIdList.indexOf(id) !== -1 ? `${tokType} _${id}` : all,
+        );
+
+    if (!isDebug) {
+      output = output.replace(/\/\/\s*#debug-start(?:.|\n)*?\/\/\s*#debug-end/g,
+        (all) => '');
+    }
 
     fsix.mkdirpSync(dstPath);
     sysFs.writeFileSync(dstFile, output);

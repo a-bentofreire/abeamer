@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] -
+### Added
+- Add abeamer-debug.min.js to release version and both min.js are smaller.
+ > To generate the release version, all core .ts files are joined and
+ >  it's removed the inner namespaces and removed the exports from id starting with _
+ > Then they are compiled again using tsc.
+ > This process makes the minify compress more since there more internal symbols.
+ > The abeamer.min takes one step further by stripping all the code
+ > inside #debug-start/#debug-end section.
+ > This will remove its capacity to provide debug logs but it will make it lighter.
+
+
 ## [1.2.0] -
 ### Fixed
 - Change imagemagick convert alpha parameters to fix gif generation on windows.

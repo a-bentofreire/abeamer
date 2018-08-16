@@ -18,38 +18,23 @@ var fsix_js_1 = require("../vendor/fsix.js");
  */
 var BuildSingleLibFile;
 (function (BuildSingleLibFile) {
-    function build(libModules, srcPath, dstPath, dstFile, generateMsg) {
+    function build(libModules, srcPath, dstPath, dstFile, generateMsg, excludeIdList, isDebug) {
         var WARN_MSG = "\n// This file was generated via " + generateMsg + "\n// It shares the uuid\n//\n// @WARN: Don't edit this file.\n";
         var outputList = [];
-        var extRefs = [];
         libModules.forEach(function (fileTitle) {
-            var srcFileName = srcPath + "/" + fileTitle + ".js";
-            var content = fsix_js_1.fsix.readUtf8Sync(srcFileName);
-            outputList.push(content);
-            // removes the namespace initial part including all the previous comments
-            // @TODO: Make it work!!!
-            // .replace(/(?:.|\n)*function\s*\(ABeamer.*\n/, '')
-            // removes the end part
-            // @TODO: Make it work!!!
-            // .replace(/^\s*\}\)\(ABeamer.*$/m, '')
-            // .replace(/^\s*var _abeamer;\n/m, '')
-            // stores the list of external ids
-            // it must be before transform all external references
-            // @TODO: Make it work!!!
-            // .replace(/^\s*ABeamer\.(\w+)\s*=\s*(\w+);\s*/mg,
-            //   (all, extRef: string, intRef) => {
-            //   if (extRef !== intRef) { return all; }
-            //   if (/* extRef[0] !== '_' */true) { extRefs.push(extRef); }
-            //   return '';
-            // })
-            // transforms all external references into internal references
-            // @TODO: Make it work!!!
-            // .replace(/\bABeamer\./g, ''),
+            var srcFileName = srcPath + "/" + fileTitle + ".ts";
+            outputList.push(fsix_js_1.fsix.readUtf8Sync(srcFileName));
         });
-        var output = ''
-            // 'var ABeamer;\n'
-            // + '(function (ABeamer): void {\n'
-            + outputList.join('\n') + '\n';
+        var output = WARN_MSG + '\nnamespace ABeamer {'
+            + outputList.join('\n')
+                .replace(/}\s*\n+\s*"use strict";/g, '') // removes the inter namespaces
+                .replace(/namespace ABeamer\s*{/g, '')
+                .replace(/export\s+(\w+)\s+_(\w+)/g, function (all, tokType, id) {
+                return excludeIdList.indexOf(id) !== -1 ? tokType + " _" + id : all;
+            });
+        if (!isDebug) {
+            output = output.replace(/\/\/\s*#debug-start(?:.|\n)*?\/\/\s*#debug-end/g, function (all) { return ''; });
+        }
         fsix_js_1.fsix.mkdirpSync(dstPath);
         sysFs.writeFileSync(dstFile, output);
     }

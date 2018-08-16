@@ -294,6 +294,48 @@ namespace Gulp {
   });
 
   // ------------------------------------------------------------------------
+  //                               Pre-Build Release
+  // ------------------------------------------------------------------------
+
+  const SINGLE_LIB_PATH = `${DevPaths.SHARED_PATH}/dev-builders/output`;
+  const SINGLE_LIB_MODES = [
+    { folder: 'min', suffix: '', isDebug: false },
+    { folder: 'debug.min', suffix: '-debug', isDebug: true },
+  ];
+
+  gulp.task('pre-rel:clean', (cb) => {
+    rimrafExcept(SINGLE_LIB_PATH, []);
+    cb();
+  });
+
+
+  gulp.task('pre-rel:copy', () => {
+    return mergeStream(SINGLE_LIB_MODES.map(mode =>
+      gulp.src([
+        './tsconfig.json',
+        './client/lib/typings/**',
+        '!./client/lib/typings/release/**',
+      ], { base: '.' })
+        .pipe(gulp.dest(`${SINGLE_LIB_PATH}/${mode.folder}`)),
+    ));
+  });
+
+
+  gulp.task('pre-rel:build-single-file', () => {
+
+    SINGLE_LIB_MODES.forEach(mode => {
+      const singleLibFile = `${SINGLE_LIB_PATH}/${mode.folder}/abeamer${mode.suffix}.ts`;
+      BuildSingleLibFile.build(libModules, DevPaths.JS_PATH,
+        `${SINGLE_LIB_PATH}/${mode.folder}`, singleLibFile,
+        'gulp `build-release`', ['_Story'], mode.isDebug);
+    });
+  });
+
+
+  gulp.task('build-pre-release-internal', gulpSequence('pre-rel:clean', 'pre-rel:copy',
+    'pre-rel:build-single-file'));
+
+  // ------------------------------------------------------------------------
   //                               Build Release
   // ------------------------------------------------------------------------
 
@@ -303,6 +345,7 @@ namespace Gulp {
     rimrafExcept(RELEASE_PATH, ['.git']);
     cb();
   });
+
 
 
   gulp.task('rel:client', () => {
@@ -333,25 +376,19 @@ namespace Gulp {
       .pipe(gulpPreserveTime());
   });
 
-
   gulp.task('rel:client-js-join', () => {
 
-    const singleLibPath = `${DevPaths.SHARED_PATH}/dev-builders/output`;
-    const singleLibFile = `${singleLibPath}/abeamer-single.js`;
-    BuildSingleLibFile.build(libModules, DevPaths.JS_PATH,
-      singleLibPath, singleLibFile, 'gulp `build-release`');
-
     return gulp
-      .src(singleLibFile)
+      .src(`${SINGLE_LIB_PATH}/*/abeamer*.js`)
       .pipe(gulpMinify({
         noSource: true,
         ext: {
           min: '.min.js',
         },
       }))
+      .pipe(gulpRename({ dirname: '' }))
       .pipe(gulpReplace(/^(.)/,
         CLIENT_UUID + COPYRIGHTS + '$1'))
-      .pipe(gulpRename('abeamer.min.js'))
       .pipe(gulp.dest(`${RELEASE_PATH}/${DevPaths.JS_PATH}`));
   });
 
@@ -518,7 +555,7 @@ namespace Gulp {
   });
 
 
-  (gulp as any).task('build-release', ['rel:clean'], gulpSequence(
+  (gulp as any).task('build-release-internal', ['rel:clean'], gulpSequence(
     'rel:client',
     'rel:gallery',
     'rel:gallery-html',
@@ -606,7 +643,7 @@ namespace Gulp {
         .pipe(gulpReplace(/^(?:.|\n)+$/, (all: string) =>
           all
             .replace(/"abeamer\//g, `"${onlineLink}/`)
-            .replace(/(<head>)/g, '<!-- This file was created to be used online only. -->\n$1')
+            .replace(/(<head>)/g, '<!-- This file was created to be used online only. -->\n$1'),
         ))
         .pipe(gulpRename('index-online.html'))
         .pipe(gulp.dest(ex.dstFullPath))

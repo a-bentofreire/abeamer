@@ -198,6 +198,35 @@ var Gulp;
         });
     });
     // ------------------------------------------------------------------------
+    //                               Pre-Build Release
+    // ------------------------------------------------------------------------
+    var SINGLE_LIB_PATH = dev_paths_js_1.DevPaths.SHARED_PATH + "/dev-builders/output";
+    var SINGLE_LIB_MODES = [
+        { folder: 'min', suffix: '', isDebug: false },
+        { folder: 'debug.min', suffix: '-debug', isDebug: true },
+    ];
+    gulp.task('pre-rel:clean', function (cb) {
+        rimrafExcept(SINGLE_LIB_PATH, []);
+        cb();
+    });
+    gulp.task('pre-rel:copy', function () {
+        return mergeStream(SINGLE_LIB_MODES.map(function (mode) {
+            return gulp.src([
+                './tsconfig.json',
+                './client/lib/typings/**',
+                '!./client/lib/typings/release/**',
+            ], { base: '.' })
+                .pipe(gulp.dest(SINGLE_LIB_PATH + "/" + mode.folder));
+        }));
+    });
+    gulp.task('pre-rel:build-single-file', function () {
+        SINGLE_LIB_MODES.forEach(function (mode) {
+            var singleLibFile = SINGLE_LIB_PATH + "/" + mode.folder + "/abeamer" + mode.suffix + ".ts";
+            build_single_lib_file_js_1.BuildSingleLibFile.build(libModules, dev_paths_js_1.DevPaths.JS_PATH, SINGLE_LIB_PATH + "/" + mode.folder, singleLibFile, 'gulp `build-release`', ['_Story'], mode.isDebug);
+        });
+    });
+    gulp.task('build-pre-release-internal', gulpSequence('pre-rel:clean', 'pre-rel:copy', 'pre-rel:build-single-file'));
+    // ------------------------------------------------------------------------
     //                               Build Release
     // ------------------------------------------------------------------------
     var RELEASE_PATH = 'release/latest';
@@ -231,19 +260,16 @@ var Gulp;
             .pipe(gulpPreserveTime());
     });
     gulp.task('rel:client-js-join', function () {
-        var singleLibPath = dev_paths_js_1.DevPaths.SHARED_PATH + "/dev-builders/output";
-        var singleLibFile = singleLibPath + "/abeamer-single.js";
-        build_single_lib_file_js_1.BuildSingleLibFile.build(libModules, dev_paths_js_1.DevPaths.JS_PATH, singleLibPath, singleLibFile, 'gulp `build-release`');
         return gulp
-            .src(singleLibFile)
+            .src(SINGLE_LIB_PATH + "/*/abeamer*.js")
             .pipe(gulpMinify({
             noSource: true,
             ext: {
                 min: '.min.js',
             },
         }))
+            .pipe(gulpRename({ dirname: '' }))
             .pipe(gulpReplace(/^(.)/, CLIENT_UUID + COPYRIGHTS + '$1'))
-            .pipe(gulpRename('abeamer.min.js'))
             .pipe(gulp.dest(RELEASE_PATH + "/" + dev_paths_js_1.DevPaths.JS_PATH));
     });
     gulp.task('rel:gallery', function () {
@@ -376,7 +402,7 @@ var Gulp;
             .pipe(gulp.dest(RELEASE_PATH + "/" + dev_paths_js_1.DevPaths.TYPINGS_PATH))
             .pipe(gulpPreserveTime());
     });
-    gulp.task('build-release', ['rel:clean'], gulpSequence('rel:client', 'rel:gallery', 'rel:gallery-html', 'rel:client-js-join', 'rel:root', 'rel:README', 'rel:minify', 'rel:add-copyrights', 'rel:jquery-typings', 'rel:build-package.json', 'rel:build-tsconfig.ts', 'rel:build-abeamer.d.ts', 'rel:build-plugins-list.json'));
+    gulp.task('build-release-internal', ['rel:clean'], gulpSequence('rel:client', 'rel:gallery', 'rel:gallery-html', 'rel:client-js-join', 'rel:root', 'rel:README', 'rel:minify', 'rel:add-copyrights', 'rel:jquery-typings', 'rel:build-package.json', 'rel:build-tsconfig.ts', 'rel:build-abeamer.d.ts', 'rel:build-plugins-list.json'));
     // ------------------------------------------------------------------------
     //                               Builds Shared Modules from Client
     // ------------------------------------------------------------------------
