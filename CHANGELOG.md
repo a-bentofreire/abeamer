@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [1.3.0] -
+### Fixed
+- Fix the bug in `gulp build-release` that forced to have 2 folders in the gallery.
+
 ### Added
 - Add abeamer-debug.min.js to release version and both min.js are smaller.
  > To generate the release version, all core .ts files are joined and

@@ -53,7 +53,7 @@ var Gulp;
     var gulpSequence = require('gulp-sequence');
     var mergeStream = require('merge-stream');
     // @TODO: Discover why if I remove `abeamer-logo`, it doesn't creates `hello-world` correctly.
-    var RELEASE_DEMOS = ['hello-world', 'abeamer-logo'];
+    var RELEASE_DEMOS = ['hello-world' /* , 'abeamer-logo' */];
     // this line is not solving the problem above.
     var releaseDemosRegEx = RELEASE_DEMOS.length > 1 ?
         "{" + RELEASE_DEMOS.join(',') + "}" : RELEASE_DEMOS[0];
@@ -107,8 +107,8 @@ var Gulp;
      * and replaces with the compiled version.
      * In other cases, just updates links.
      */
-    function updateHtmlPages(srcPath, destPath, newScriptFiles, setReleaseLinks) {
-        return gulp.src(srcPath)
+    function updateHtmlPages(srcPath, destPath, newScriptFiles, setReleaseLinks, srcOptions) {
+        return gulp.src(srcPath, srcOptions)
             .pipe(gulpReplace(/<body>((?:.|\n)+)<\/body>/, function (all, p) {
             var lines = p.split('\n');
             var outLines = [];
@@ -276,8 +276,8 @@ var Gulp;
         return gulp.src([
             dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + releaseDemosRegEx + "/**",
             "!" + dev_paths_js_1.DevPaths.GALLERY_PATH + "/**/*.html",
-            "!" + dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/out/*",
-        ])
+            "!" + dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/story-frames/*",
+        ], { base: dev_paths_js_1.DevPaths.GALLERY_PATH })
             .pipe(gulp.dest(RELEASE_PATH + "/gallery"))
             .pipe(gulpPreserveTime());
     });
@@ -301,7 +301,7 @@ var Gulp;
             .pipe(gulpPreserveTime());
     });
     gulp.task('rel:gallery-html', function () {
-        return mergeStream(updateHtmlPages(dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + releaseDemosRegEx + "/*.html", RELEASE_PATH + "/gallery", ["../../" + dev_paths_js_1.DevPaths.JS_PATH + "/abeamer.min"], true)
+        return mergeStream(updateHtmlPages(dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + releaseDemosRegEx + "/*.html", RELEASE_PATH + "/gallery", ["../../" + dev_paths_js_1.DevPaths.JS_PATH + "/abeamer.min"], true, { base: dev_paths_js_1.DevPaths.GALLERY_PATH })
             .pipe(gulpPreserveTime()));
     });
     var JS_FILES = [

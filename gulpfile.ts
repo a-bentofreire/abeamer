@@ -62,7 +62,7 @@ namespace Gulp {
   const mergeStream = require('merge-stream');
 
   // @TODO: Discover why if I remove `abeamer-logo`, it doesn't creates `hello-world` correctly.
-  const RELEASE_DEMOS = ['hello-world', 'abeamer-logo'];
+  const RELEASE_DEMOS = ['hello-world'/* , 'abeamer-logo' */];
   // this line is not solving the problem above.
   const releaseDemosRegEx = RELEASE_DEMOS.length > 1 ?
     `{${RELEASE_DEMOS.join(',')}}` : RELEASE_DEMOS[0];
@@ -182,9 +182,10 @@ namespace Gulp {
    * In other cases, just updates links.
    */
   function updateHtmlPages(srcPath: string, destPath: string,
-    newScriptFiles: string[], setReleaseLinks: boolean): NodeJS.ReadWriteStream {
+    newScriptFiles: string[], setReleaseLinks: boolean,
+    srcOptions?: any): NodeJS.ReadWriteStream {
 
-    return gulp.src(srcPath)
+    return gulp.src(srcPath, srcOptions)
       .pipe(gulpReplace(/<body>((?:.|\n)+)<\/body>/, (all, p: string) => {
         const lines = p.split('\n');
         const outLines = [];
@@ -397,8 +398,8 @@ namespace Gulp {
     return gulp.src([
       `${DevPaths.GALLERY_PATH}/${releaseDemosRegEx}/**`,
       `!${DevPaths.GALLERY_PATH}/**/*.html`,
-      `!${DevPaths.GALLERY_PATH}/*/out/*`,
-    ])
+      `!${DevPaths.GALLERY_PATH}/*/story-frames/*`,
+    ], { base: DevPaths.GALLERY_PATH })
       .pipe(gulp.dest(`${RELEASE_PATH}/gallery`))
       .pipe(gulpPreserveTime());
   });
@@ -432,7 +433,7 @@ namespace Gulp {
       updateHtmlPages(`${DevPaths.GALLERY_PATH}/${releaseDemosRegEx}/*.html`,
         `${RELEASE_PATH}/gallery`,
         [`../../${DevPaths.JS_PATH}/abeamer.min`],
-        true)
+        true, { base: DevPaths.GALLERY_PATH })
         .pipe(gulpPreserveTime()));
   });
 
