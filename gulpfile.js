@@ -67,7 +67,6 @@ var Gulp;
     var isLocal = joinedArgs.indexOf('--local') !== -1;
     var isProduction = joinedArgs.indexOf('--production') !== -1;
     var isWin = sysProcess.platform === 'win32';
-    dev_web_links_js_1.DevWebLinks.setup(isLocal);
     function printOptions() {
         console.log("Options:\n    local: " + isLocal + "\n    production: " + isProduction + "\n");
     }
@@ -121,7 +120,7 @@ var Gulp;
                     }
                     else if (state === 1 && line.trim()) {
                         newScriptFiles.forEach(function (srcFile) {
-                            outLines.push("  <script src=\"" + srcFile + ".js\"></script>");
+                            outLines.push("   <script src=\"" + srcFile + ".js\"></script>");
                         });
                         state = 2;
                     }
@@ -144,7 +143,7 @@ var Gulp;
     // ------------------------------------------------------------------------
     gulp.task('bump-version', function (cb) {
         var SRC_FILENAME = './package.json';
-        var BADGES_FOLDER = './docs/badges/';
+        var BADGES_FOLDER = "./" + dev_paths_js_1.DevPaths.BADGES_PATH + "/";
         var WARN_MSG = "\n  // This file was generated via gulp bump-version\n  // It has no uuid\n  //\n  // @WARN: Don't edit this file. See the " + SRC_FILENAME + "\n\n";
         var matches = fsix_js_1.fsix.readUtf8Sync(SRC_FILENAME).match(/"version": "([\d\.]+)"/);
         if (!matches) {
@@ -158,7 +157,7 @@ var Gulp;
         var outBadgeFileBase = "v-" + version + ".gif";
         var outBadgeFileName = "" + BADGES_FOLDER + outBadgeFileBase;
         if (!sysFs.existsSync(outBadgeFileName)) {
-            var path_1 = "gallery/animate-badges";
+            var path_1 = dev_paths_js_1.DevPaths.GALLERY_PATH + "/animate-badges";
             var url = "http://localhost:9000/" + path_1 + "/?var=name%3Dversion&"
                 + ("var=value%3D" + version + "&var=wait%3D2s");
             var config = "./" + path_1 + "/abeamer.ini";
@@ -374,7 +373,7 @@ var Gulp;
                 tsconfig["tslint.exclude"] = undefined;
                 return JSON.stringify(tsconfig, undefined, 2);
             }))
-                .pipe(gulp.dest(RELEASE_PATH + "/" + dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + demo))
+                .pipe(gulp.dest(RELEASE_PATH + "/gallery/" + demo))
                 .pipe(gulpPreserveTime());
         }));
     });
@@ -420,13 +419,13 @@ var Gulp;
     // ------------------------------------------------------------------------
     gulp.task('build-docs', function () {
         printOptions();
-        build_docs_js_1.BuildDocs.build(libModules, pluginModules);
+        build_docs_js_1.BuildDocs.build(libModules, pluginModules, isLocal);
     });
     // ------------------------------------------------------------------------
     //                               Builds Release Version Of The Gallery
     // ------------------------------------------------------------------------
     gulp.task('gal-rel:clear', function (cb) {
-        rimrafExcept(build_gallery_release_js_1.BuildGalleryRelease.DST_GALLERY_RELEASE_PATH, ['.git']);
+        rimrafExcept(dev_paths_js_1.DevPaths.GALLERY_RELEASE_PATH, ['.git']);
         cb();
     });
     gulp.task('gal-rel:get-examples', ['gal-rel:clear'], function (cb) {
@@ -452,7 +451,7 @@ var Gulp;
         }));
     });
     gulp.task('gal-rel:online-html-files', ['gal-rel:update-html-files'], function () {
-        var onlineLink = dev_web_links_js_1.DevWebLinks.repos.releaseStatic + "client/lib";
+        var onlineLink = dev_web_links_js_1.DevWebLinks.webDomain + "/" + dev_paths_js_1.DevPaths.RELEASE_LATEST_PATH + "/client/lib";
         return mergeStream(build_gallery_release_js_1.BuildGalleryRelease.releaseExamples.map(function (ex) {
             return gulp.src([ex.dstFullPath + "/index.html"])
                 .pipe(gulpReplace(/^(?:.|\n)+$/, function (all) {
@@ -499,7 +498,6 @@ var Gulp;
     //                               Creates gallery examples gif image
     // ------------------------------------------------------------------------
     gulp.task('build-gallery-gifs', ['clean-gallery-png'], function (cb) {
-        dev_web_links_js_1.DevWebLinks.setup(true);
         build_gallery_release_js_1.BuildGalleryRelease.buildGifs();
         cb();
     });
@@ -507,12 +505,12 @@ var Gulp;
     //                               Update Gallery Scripts
     // ------------------------------------------------------------------------
     gulp.task('update-gallery-scripts', function () {
-        var DEST_PATH = 'gallery-updated';
-        rimraf.sync(DEST_PATH + "/**");
+        var DST_PATH = dev_paths_js_1.DevPaths.GALLERY_PATH + "-updated";
+        rimraf.sync(DST_PATH + "/**");
         var newScriptFiles = libModules.map(function (srcFile) {
             return "../../" + dev_paths_js_1.DevPaths.JS_PATH + "/" + srcFile;
         });
-        return mergeStream(updateHtmlPages(dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/*.html", DEST_PATH, newScriptFiles, false));
+        return mergeStream(updateHtmlPages(dev_paths_js_1.DevPaths.GALLERY_PATH + "/*/*.html", DST_PATH, newScriptFiles, false));
     });
     // ------------------------------------------------------------------------
     //                               Updates Test List
@@ -565,14 +563,14 @@ var Gulp;
     // ------------------------------------------------------------------------
     //                               Lists ./docs Files As Links
     // ------------------------------------------------------------------------
-    function changeReadmeLinks(isTargetLocal) {
+    function changeReadmeLinks(toLocal) {
         var IN_FILE = './README.md';
         var BAK_FILE = IN_FILE + '.bak.md';
+        var srcRegEx = new RegExp('\\]\\(' + (toLocal ? dev_web_links_js_1.DevWebLinks.webDomain : '') + '/', 'g');
+        var dstLink = '](' + (toLocal ? '' : dev_web_links_js_1.DevWebLinks.webDomain) + '/';
         var content = fsix_js_1.fsix.readUtf8Sync(IN_FILE);
         sysFs.writeFileSync(BAK_FILE, content);
-        content = content.replace(/http([^ \)]+)/g, function (all, p) {
-            return dev_web_links_js_1.DevWebLinks.convertLink(all, isTargetLocal);
-        });
+        content = content.replace(srcRegEx, dstLink);
         sysFs.writeFileSync(IN_FILE, content);
     }
     gulp.task('README-to-online', function () {

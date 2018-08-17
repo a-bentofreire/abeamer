@@ -9,6 +9,7 @@ var sysFs = require("fs");
 var child_process_1 = require("child_process");
 var fsix_js_1 = require("../vendor/fsix.js");
 var dev_web_links_js_1 = require("../dev-web-links.js");
+var dev_paths_js_1 = require("../dev-paths.js");
 /** @module developer | This module won't be part of release version */
 /**
  * ## Description
@@ -18,8 +19,6 @@ var dev_web_links_js_1 = require("../dev-web-links.js");
  */
 var BuildGalleryRelease;
 (function (BuildGalleryRelease) {
-    BuildGalleryRelease.SRC_GALLERY_PATH = 'gallery';
-    BuildGalleryRelease.DST_GALLERY_RELEASE_PATH = 'gallery-release';
     BuildGalleryRelease.EXAMPLE_ZIP_FILE = 'code.zip';
     BuildGalleryRelease.releaseExamples = [];
     /**
@@ -27,13 +26,13 @@ var BuildGalleryRelease;
      * is prepared to be released.
      */
     function populateReleaseExamples() {
-        var exclusions = fsix_js_1.fsix.loadJsonSync(BuildGalleryRelease.SRC_GALLERY_PATH + "/exclude-from-release.json");
-        sysFs.readdirSync(BuildGalleryRelease.SRC_GALLERY_PATH).forEach(function (folder) {
+        var exclusions = fsix_js_1.fsix.loadJsonSync(dev_paths_js_1.DevPaths.GALLERY_PATH + "/exclude-from-release.json");
+        sysFs.readdirSync(dev_paths_js_1.DevPaths.GALLERY_PATH).forEach(function (folder) {
             if (exclusions.indexOf(folder) !== -1) {
                 return;
             }
-            var srcFullPath = BuildGalleryRelease.SRC_GALLERY_PATH + "/" + folder;
-            var dstFullPath = BuildGalleryRelease.DST_GALLERY_RELEASE_PATH + "/" + folder;
+            var srcFullPath = dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + folder;
+            var dstFullPath = dev_paths_js_1.DevPaths.GALLERY_RELEASE_PATH + "/" + folder;
             var iniFileName = srcFullPath + "/abeamer.ini";
             if (sysFs.existsSync(iniFileName)) {
                 var ex_1 = {
@@ -127,7 +126,7 @@ var BuildGalleryRelease;
                 + ("" + ex.description.join('  \n') + '  '));
             var storyFramesFolder = ex.folder + "/story-frames";
             if (!ex.noGifImage) {
-                checkFile("./" + BuildGalleryRelease.SRC_GALLERY_PATH + "/" + ex.folder + "/story-frames/story.gif");
+                checkFile("./" + dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + ex.folder + "/story-frames/story.gif");
                 galleryLinks.push("\n  "
                     + ("\n![Image](" + storyFramesFolder + "/story.gif)" + '  ' + "\n  "));
             }
@@ -138,9 +137,9 @@ var BuildGalleryRelease;
             }
             galleryLinks.push("\nDownload code: [zip](" + ex.folder + "/" + BuildGalleryRelease.EXAMPLE_ZIP_FILE + ")" + '  ' + "\nTry it <a href=\"" + ex.folder + "/index-online.html\">online</a>." + '  ' + "\n" + (ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n') + "\n" + (!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n') + "\n    ");
         });
-        var outREADME = fsix_js_1.fsix.readUtf8Sync(BuildGalleryRelease.SRC_GALLERY_PATH + "/README-rel.md")
+        var outREADME = fsix_js_1.fsix.readUtf8Sync(dev_paths_js_1.DevPaths.GALLERY_PATH + "/README-rel.md")
             + galleryLinks.join('');
-        sysFs.writeFileSync(BuildGalleryRelease.DST_GALLERY_RELEASE_PATH + "/README.md", outREADME);
+        sysFs.writeFileSync(dev_paths_js_1.DevPaths.GALLERY_RELEASE_PATH + "/README.md", outREADME);
         if (missingFiles.length) {
             throw "Missing files:\n" + missingFiles.join('\n');
         }
@@ -174,10 +173,10 @@ var BuildGalleryRelease;
             }
             // if (example.folder === 'animate-attack-task') { // use to test one example only
             runSpawn('npm', ['run', '--', 'render', '--dp', '--url',
-                dev_web_links_js_1.DevWebLinks.repos.main + "gallery/" + example.folder + "/",
-                '--config', "./gallery/" + example.folder + "/abeamer.ini",
+                dev_web_links_js_1.DevWebLinks.localServer + "/" + dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + example.folder + "/",
+                '--config', "./" + dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + example.folder + "/abeamer.ini",
             ], function () {
-                runSpawn('npm', ['run', '--', 'gif', "gallery/" + example.folder + "/"], function () {
+                runSpawn('npm', ['run', '--', 'gif', dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + example.folder + "/"], function () {
                     console.log("Done example: " + example.folder);
                 });
             });

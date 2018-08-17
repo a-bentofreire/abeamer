@@ -23,10 +23,14 @@ var DevPaths;
     DevPaths.TYPINGS_PATH = DevPaths.LIB_PATH + "/typings";
     DevPaths.SHARED_PATH = 'shared';
     DevPaths.SHARED_LIB_PATH = DevPaths.SHARED_PATH + "/lib";
-    DevPaths.GALLERY_PATH = 'gallery';
+    DevPaths.GALLERY_PATH = 'gallery-src';
+    DevPaths.GALLERY_RELEASE_PATH = 'gallery/latest';
+    DevPaths.BADGES_PATH = 'assets/badges';
+    DevPaths.ICONS_PATH = 'assets/icons';
+    DevPaths.RELEASE_LATEST_PATH = 'release/latest';
     DevPaths.DOCS_PATH = 'docs';
-    DevPaths.END_USER_DOCS_PATH = DevPaths.DOCS_PATH + "/release/latest/end-user";
-    DevPaths.DEV_DOCS_PATH = DevPaths.DOCS_PATH + "/release/latest/developer";
+    DevPaths.END_USER_DOCS_PATH = DevPaths.DOCS_PATH + "/latest/end-user";
+    DevPaths.DEV_DOCS_PATH = DevPaths.DOCS_PATH + "/latest/developer";
     DevPaths.SOURCE_DOCS_PATH = DevPaths.DOCS_PATH + "/sources";
     DevPaths.SOURCE_DEV_DOCS_PATH = DevPaths.DOCS_PATH + "/sources-dev";
     DevPaths.MODULES_LIST_FILE = "" + fsix_js_1.fsix.toPosixSlash(__dirname)

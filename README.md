@@ -1,5 +1,5 @@
 ## Description
-![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/developer-badge.gif)![Target](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/badges/v-1.3.0.gif)  
+![Target](https://www.abeamer.com/assets/badges/developer-badge.gif)![Target](https://www.abeamer.com/assets/badges/v-1.3.0.gif)  
   
 ![Image](https://www.abeamer.com/gallery/latest/animate-abeamer/story-frames/story.gif)  
   
@@ -105,8 +105,8 @@ To build this project, and take it to the next level with the creation of the [A
 please, consider donating to keep this project
 alive and help to tell your story or to grow your business:  
 
-* ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/sources/paypal.png) [paypal](https://www.paypal.me/abentofreire) 
-* ![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/sources/bitcoin.png) Bitcoin: `1mH89kWbvffActY7FAke26t2fbJE9U6jv`
+* ![Image](https://www.abeamer.com/assets/icons/paypal.png) [paypal](https://www.paypal.me/abentofreire) 
+* ![Image](https://www.abeamer.com/assets/icons/bitcoin.png) Bitcoin: `1mH89kWbvffActY7FAke26t2fbJE9U6jv`
 * Add a star to the [github repo](https://github.com/a-bentofreire/abeamer).
 
 ## Features
@@ -293,7 +293,7 @@ If you have nodejs already installed, install using npm:
   
 `[sudo] npm install -g abeamer`  
   
-Otherwise if you don't want to install nodejs, download from [here](https://www.abeamer.com/release/latest/abeamer-release.zip),
+Otherwise if you don't want to install nodejs, download from [here](https://www.abeamer.com/downloads.zip),
 but it won't execute the command-line utility.
 
 ## Requirements
@@ -428,7 +428,7 @@ to install if you need to render, create gifs or movies on the local machine.
 
 ## Contribute
 
-![Image](https://raw.githubusercontent.com/a-bentofreire/abeamer/master/docs/sources/warning.png) ABeamer 
+![Image](https://www.abeamer.com/assets/icons/warning.png) ABeamer 
 was built on Linux/Chrome/Puppeteer and tested on Windows, Firefox, Opera, MS IE11 and MS Edge.  
 
 To keep an healthy cooperation environment, before posting an issue, please read 

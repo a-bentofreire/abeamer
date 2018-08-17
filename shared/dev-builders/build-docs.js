@@ -527,8 +527,8 @@ var BuildDocs;
     // ------------------------------------------------------------------------
     //                               buildWebLinks
     // ------------------------------------------------------------------------
-    function buildWebLinks() {
-        return { gallery: dev_web_links_js_1.DevWebLinks.repos.galleryRelease };
+    function buildWebLinks(isLocal) {
+        return { gallery: dev_web_links_js_1.DevWebLinks.getServer(isLocal) + "/" + dev_paths_js_1.DevPaths.GALLERY_RELEASE_PATH };
     }
     // ------------------------------------------------------------------------
     //                               buildMarkdownFromSourceFile
@@ -584,8 +584,8 @@ var BuildDocs;
      * This is the main entry point.
      * Read the module information for details.
      */
-    function build(libModules, pluginModules) {
-        var localWebLinks = buildWebLinks();
+    function build(libModules, pluginModules, isLocal) {
+        var localWebLinks = buildWebLinks(isLocal);
         // in case of documentation, it's better to visualize the more specific at the top.
         libModules.reverse();
         BuildDocs.targets.forEach(function (target) {

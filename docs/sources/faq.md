@@ -3,7 +3,7 @@
 <!--- @author: Alexandre Bento Freire -->
 # Description
 This document provides information regarding installation and execution for the end-user.  
-For developers and plugin creators read: [Developer Documentation](../../../../../developer/versions/latest/en/site/)  
+For developers and plugin creators read: [Developer Documentation](/docs/latest/developer/en/site/)  
 
 ---------------------
 ## Installation
@@ -42,7 +42,7 @@ via [teleporting](teleporter.md) then you don't need to install nodejs.
 ### Can I download just the animation library?
 
 Yes, you can.  
-Download from [here](https://www.abeamer.com/release/latest/abeamer-release.zip).  
+Download from [here](https://www.abeamer.com/downloads.html).  
 
 ### I can't install puppeteer.   
 

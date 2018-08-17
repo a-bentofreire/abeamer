@@ -18,6 +18,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  > inside #debug-start/#debug-end section.
  > This will remove its capacity to provide debug logs but it will make it lighter.
 
+### Changed
+- Move gallery, badges, icons file paths to be compatible with the website.
+> This change moves not only the file structure but also updates all the build scripts.
+> With this change, it simplifies the process of local testing 
+> and converting from local links to online links back and forth.
+> Information regarding the old repos and git pages is removed.
+> Documentation links are also updated to reflect this change.
+> File structure changes: 
+> gallery -> gallery-src
+> gallery-release -> gallery/latest
+> docs/sources/*.{svg,gif} -> assets/badges
+> docs/sources/*.png -> assets/icons
+
 
 ## [1.2.0] -
 ### Fixed

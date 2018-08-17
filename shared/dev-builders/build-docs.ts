@@ -682,8 +682,8 @@ export namespace BuildDocs {
   //                               buildWebLinks
   // ------------------------------------------------------------------------
 
-  function buildWebLinks(): LocalWebLinks {
-    return { gallery: webLinks.repos.galleryRelease };
+  function buildWebLinks(isLocal: boolean): LocalWebLinks {
+    return { gallery: `${webLinks.getServer(isLocal)}/${DevPaths.GALLERY_RELEASE_PATH}` };
   }
 
   // ------------------------------------------------------------------------
@@ -762,9 +762,9 @@ export namespace BuildDocs {
    * This is the main entry point.
    * Read the module information for details.
    */
-  export function build(libModules: string[], pluginModules: string[]): void {
+  export function build(libModules: string[], pluginModules: string[], isLocal): void {
 
-    const localWebLinks = buildWebLinks();
+    const localWebLinks = buildWebLinks(isLocal);
 
     // in case of documentation, it's better to visualize the more specific at the top.
     libModules.reverse();

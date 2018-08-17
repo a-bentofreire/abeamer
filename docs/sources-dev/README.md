@@ -18,7 +18,7 @@ There is still a lot of work to support other web browsers, OSes and render serv
 
 Before delve into the code, read:
 
-- [End-User Documentation](../../../../../end-user/versions/latest/en/site/) -
+- [End-User Documentation](/docs/latest/end-user/en/site/) -
 To understand how to install, use ABeamer and learn about its fundamental aspects.
 - [Code Of Conduct](code-of-conduct.md) - To keep an healthy cooperation environment.
 - [Developer Guidelines](dev-guidelines.md) - Coding, Formating and Documentation rules.
@@ -30,9 +30,3 @@ This documentation contains information about the:
 * API.  
 * Testing.  
 * Documenting.  
-
-## GitHub Repositories
-
-* [Developer version](https://github.com/a-bentofreire/abeamer)
-* [Release version](https://github.com/a-bentofreire/abeamer-release)
-* [Gallery Release version](https://github.com/a-bentofreire/abeamer-gallery-release)

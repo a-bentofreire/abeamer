@@ -26,11 +26,16 @@ export namespace DevPaths {
   export const TYPINGS_PATH = `${LIB_PATH}/typings`;
   export const SHARED_PATH = 'shared';
   export const SHARED_LIB_PATH = `${SHARED_PATH}/lib`;
-  export const GALLERY_PATH = 'gallery';
+  export const GALLERY_PATH = 'gallery-src';
+  export const GALLERY_RELEASE_PATH = 'gallery/latest';
+  export const BADGES_PATH = 'assets/badges';
+  export const ICONS_PATH = 'assets/icons';
+  export const RELEASE_LATEST_PATH = 'release/latest';
+
   export const DOCS_PATH = 'docs';
 
-  export const END_USER_DOCS_PATH = `${DOCS_PATH}/release/latest/end-user`;
-  export const DEV_DOCS_PATH = `${DOCS_PATH}/release/latest/developer`;
+  export const END_USER_DOCS_PATH = `${DOCS_PATH}/latest/end-user`;
+  export const DEV_DOCS_PATH = `${DOCS_PATH}/latest/developer`;
   export const SOURCE_DOCS_PATH = `${DOCS_PATH}/sources`;
   export const SOURCE_DEV_DOCS_PATH = `${DOCS_PATH}/sources-dev`;
   export const MODULES_LIST_FILE = `${fsix.toPosixSlash(__dirname)}`

@@ -15,7 +15,7 @@ import * as globule from "globule";
 
 import { fsix } from "./shared/vendor/fsix.js";
 import { DevPaths } from "./shared/dev-paths.js";
-import { DevWebLinks as webLinks } from "./shared/dev-web-links.js";
+import { DevWebLinks as webLinks, DevWebLinks } from "./shared/dev-web-links.js";
 import { BuildDTsFilesABeamer } from "./shared/dev-builders/build-d-ts-abeamer.js";
 import { BuildDocs } from "./shared/dev-builders/build-docs.js";
 import { BuildShared } from "./shared/dev-builders/build-shared.js";
@@ -79,8 +79,6 @@ namespace Gulp {
   const isLocal = joinedArgs.indexOf('--local') !== -1;
   const isProduction = joinedArgs.indexOf('--production') !== -1;
   const isWin = sysProcess.platform === 'win32';
-  webLinks.setup(isLocal);
-
 
   function printOptions(): void {
     console.log(`Options:
@@ -197,7 +195,7 @@ namespace Gulp {
               return;
             } else if (state === 1 && line.trim()) {
               newScriptFiles.forEach(srcFile => {
-                outLines.push(`  <script src="${srcFile}.js"></script>`);
+                outLines.push(`   <script src="${srcFile}.js"></script>`);
               });
               state = 2;
             }
@@ -226,7 +224,7 @@ namespace Gulp {
 
   gulp.task('bump-version', (cb) => {
     const SRC_FILENAME = './package.json';
-    const BADGES_FOLDER = './docs/badges/';
+    const BADGES_FOLDER = `./${DevPaths.BADGES_PATH}/`;
     const WARN_MSG = `
   // This file was generated via gulp bump-version
   // It has no uuid
@@ -252,7 +250,7 @@ namespace Gulp {
     const outBadgeFileBase = `v-${version}.gif`;
     const outBadgeFileName = `${BADGES_FOLDER}${outBadgeFileBase}`;
     if (!sysFs.existsSync(outBadgeFileName)) {
-      const path = `gallery/animate-badges`;
+      const path = `${DevPaths.GALLERY_PATH}/animate-badges`;
       const url = `http://localhost:9000/${path}/?var=name%3Dversion&`
         + `var=value%3D${version}&var=wait%3D2s`;
       const config = `./${path}/abeamer.ini`;
@@ -522,7 +520,7 @@ namespace Gulp {
             tsconfig["tslint.exclude"] = undefined;
             return JSON.stringify(tsconfig, undefined, 2);
           }))
-          .pipe(gulp.dest(`${RELEASE_PATH}/${DevPaths.GALLERY_PATH}/${demo}`))
+          .pipe(gulp.dest(`${RELEASE_PATH}/gallery/${demo}`))
           .pipe(gulpPreserveTime());
       }));
   });
@@ -595,7 +593,7 @@ namespace Gulp {
 
   gulp.task('build-docs', () => {
     printOptions();
-    BuildDocs.build(libModules, pluginModules);
+    BuildDocs.build(libModules, pluginModules, isLocal);
   });
 
   // ------------------------------------------------------------------------
@@ -603,7 +601,7 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   gulp.task('gal-rel:clear', (cb) => {
-    rimrafExcept(BuildGalRel.DST_GALLERY_RELEASE_PATH, ['.git']);
+    rimrafExcept(DevPaths.GALLERY_RELEASE_PATH, ['.git']);
     cb();
   });
 
@@ -638,7 +636,7 @@ namespace Gulp {
 
 
   (gulp as any).task('gal-rel:online-html-files', ['gal-rel:update-html-files'], () => {
-    const onlineLink = `${webLinks.repos.releaseStatic}client/lib`;
+    const onlineLink = `${webLinks.webDomain}/${DevPaths.RELEASE_LATEST_PATH}/client/lib`;
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       return gulp.src([`${ex.dstFullPath}/index.html`])
         .pipe(gulpReplace(/^(?:.|\n)+$/, (all: string) =>
@@ -696,7 +694,6 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   (gulp as any).task('build-gallery-gifs', ['clean-gallery-png'], (cb) => {
-    webLinks.setup(true);
     BuildGalRel.buildGifs();
     cb();
   });
@@ -706,11 +703,11 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   gulp.task('update-gallery-scripts', () => {
-    const DEST_PATH = 'gallery-updated';
-    rimraf.sync(`${DEST_PATH}/**`);
+    const DST_PATH = `${DevPaths.GALLERY_PATH}-updated`;
+    rimraf.sync(`${DST_PATH}/**`);
     const newScriptFiles = libModules.map(srcFile =>
       `../../${DevPaths.JS_PATH}/${srcFile}`);
-    return mergeStream(updateHtmlPages(`${DevPaths.GALLERY_PATH}/*/*.html`, DEST_PATH, newScriptFiles, false));
+    return mergeStream(updateHtmlPages(`${DevPaths.GALLERY_PATH}/*/*.html`, DST_PATH, newScriptFiles, false));
   });
 
   // ------------------------------------------------------------------------
@@ -780,16 +777,15 @@ namespace Gulp {
   //                               Lists ./docs Files As Links
   // ------------------------------------------------------------------------
 
-  function changeReadmeLinks(isTargetLocal: boolean): void {
+  function changeReadmeLinks(toLocal: boolean): void {
     const IN_FILE = './README.md';
     const BAK_FILE = IN_FILE + '.bak.md';
+    const srcRegEx = new RegExp('\\]\\(' + (toLocal ? DevWebLinks.webDomain : '') + '/', 'g');
+    const dstLink = '](' +  (toLocal ? '' : DevWebLinks.webDomain) + '/';
 
     let content = fsix.readUtf8Sync(IN_FILE);
     sysFs.writeFileSync(BAK_FILE, content);
-
-    content = content.replace(/http([^ \)]+)/g, (all, p) =>
-      webLinks.convertLink(all, isTargetLocal));
-
+    content = content.replace(srcRegEx, dstLink);
     sysFs.writeFileSync(IN_FILE, content);
   }
 
