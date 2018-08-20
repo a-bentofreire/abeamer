@@ -4,13 +4,10 @@ Read a detailed description about the roadmap updates on the blog [post](https:/
 ## General
 
 - Research how to fix vsc max file watcher problem.
+- Research on the side-effects of no longer using `clip-path` on body to allow to add widgets and toolbars to the ABeamer.
 - Port core parts to plugins.
 
-### Command-line
-- Allow to define the gifs optimization level.
-
 ### Teleportation
-- Allow to delay the teleportation initial snapshot.
 - Create a complete example of how to send to teleport and receive in the server side.
 - Add setup parameters to the teleported story.
 - Add video sync information to the teleported story.
@@ -23,18 +20,11 @@ and to allow reverse bypass the pipeline to allow to repeat an animation.
 ### Server Rendering
 - Research how to disable Chrome auto-play policy on puppeteer.
 - Research why the render frames on the server rendering don't match the client rendering.
-- Research why the slow fonts don't always render.
-
-### Gif Generation
-- Research why gif generator on Windows doesn't always gives the expected result.
+- Research why the slow fonts don't always render (chrome font fallback feature).
+- Research on distributed rendering.
 
 ### Builders
-- Fix the bug in `gulp build-release` that forces to have 2 folders in the gallery.
-- During the `gulp build-release`, pass all library code inside a single namespace and
-remove the export from all code that starts with underscore, creating a lighter and faster
-`abeamer.min.js`.
-- Generate `abeamer.min.js` and `abeamer.debug.min.js` where in the first case all the testing code is removed.
-- Add abeamer library and plugins to each gallery-release.
+- Add abeamer library and plugins to each gallery/latest.
 
 ### Documentation
 - Fix the JSDocs parser bug in the documentation generator.
@@ -51,7 +41,7 @@ and have linkable code.
 ensure it can properly read the end value of the previous animation and is able to guess the correct type.
 
 ### Video sync
-- Add `frameStart` and `frameEnd` segment parameters.
+- Add `storyStart`, `storyEnd`, `videoStart` and `videoEnd` multiple segment parameters.
 - Research more about video sync by using canvas API.
 
 ### Expressions
@@ -113,10 +103,7 @@ as `t` iterator increases.
 - animate-pulsar: add a tracer to improve the visibility of the path followed by the pulsar.
 - animate-transition: improve the generate quality of this example.
 - animate-virtual: improve the generate quality of this example.
-- animate-images: generate a gif with higher quality.
-- animate-item-delay: generate a gif with higher quality.
 - animate-flyover: format the output so it doesn't keeps changing the number of digits.
-- animate-badges: use setup parameters to allow to create teleportable configurable badges. allow the color to be configurable.
 
 ## In a study phase
 
