@@ -225,11 +225,14 @@ namespace ABeamer {
         // this parameters because tend to be longer should come at the end.
         cfg.plugins = pluginManager._plugins;
         cfg.animations = [];
-        cfg.html = (story.storyAdapter.getProp('html', story._args) as string).split(/\n/);
-        cfg.css = _getStoryCSS();
       } else {
         this.hasStory = cfg.html !== undefined;
       }
+    }
+
+    createSnapshot(): void {
+      this._cfg.html = (this._story.storyAdapter.getProp('html', this._story._args) as string).split(/\n/);
+      this._cfg.css = _getStoryCSS();
     }
 
 

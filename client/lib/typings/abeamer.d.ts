@@ -676,6 +676,16 @@ declare namespace ABeamer {
 
 
     /**
+     * Use this method only if you have created the story with `toTeleport = true`
+     * and `toStartTeleporting = false`, because you need to inject
+     * html/css code into the page before the teleporting process starts.
+     * Otherwise, you won't need to call this method since it's called automatically
+     * if teleporting a story.
+     */
+    startTeleporting(): void;
+
+
+    /**
      * Returns the play speed that best matches the fps.
      */
     bestPlaySpeed: () => uint;

@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  > The abeamer.min takes one step further by stripping all the code
  > inside #debug-start/#debug-end section.
  > This will remove its capacity to provide debug logs but it will make it lighter.
+- Add `story.startTeleporting` to delay the teleportation initial snapshot.
+ > This new method allows to teleport any HTML/CSS code injected 
+ > after the story has been created and before this method was invoked.
+ > Read more on https://www.abeamer.com/blog/2018/08/20/how-to-delay-the-teleportation-in-abeamer.html
 
 ### Changed
 - Move gallery, badges, icons file paths to be compatible with the website.

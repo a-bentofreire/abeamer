@@ -188,13 +188,15 @@ var ABeamer;
                 // this parameters because tend to be longer should come at the end.
                 cfg.plugins = ABeamer.pluginManager._plugins;
                 cfg.animations = [];
-                cfg.html = story.storyAdapter.getProp('html', story._args).split(/\n/);
-                cfg.css = _getStoryCSS();
             }
             else {
                 this.hasStory = cfg.html !== undefined;
             }
         }
+        _Teleporter.prototype.createSnapshot = function () {
+            this._cfg.html = this._story.storyAdapter.getProp('html', this._story._args).split(/\n/);
+            this._cfg.css = _getStoryCSS();
+        };
         Object.defineProperty(_Teleporter.prototype, "active", {
             get: function () {
                 return this._active;

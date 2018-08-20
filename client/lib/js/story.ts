@@ -103,6 +103,15 @@ namespace ABeamer {
 
 
     /**
+     * Set this parameter to false,
+     * if you need to inject html/css code into the page before the teleporting
+     * process starts.
+     * @default true
+     */
+    toStartTeleporting?: boolean;
+
+
+    /**
      * Set this value, if you need use a Virtual Story Adapter inside of the
      * default DOM Adapter.
      */
@@ -631,6 +640,9 @@ namespace ABeamer {
       args.isTeleporting = this._isTeleporting;
       args.vars.isTeleporting = args.isTeleporting;
       this._teleporter = new _Teleporter(this, cfg, this._isTeleporting);
+      if (this._isTeleporting && createParams.toStartTeleporting !== false) {
+        this.startTeleporting();
+      }
 
       // #debug-start
       if (this._isVerbose) {
@@ -987,6 +999,20 @@ namespace ABeamer {
         console.warn(`To teleport it requires the render server agent to be running`);
       }
       this._sendCmd(_SRV_CNT.MSG_TELEPORT, this.getStoryToTeleport(frameOpts, isPretty));
+    }
+
+
+    /**
+     * Use this method only if you have created the story with `toTeleport = true`
+     * and `toStartTeleporting = false`, because you need to inject
+     * html/css code into the page before the teleporting process starts.
+     * Otherwise, you won't need to call this method since it's called automatically
+     * if teleporting a story.
+     */
+    startTeleporting(): void {
+      if (this._isTeleporting) {
+        this._teleporter.createSnapshot();
+      }
     }
 
     // ------------------------------------------------------------------------

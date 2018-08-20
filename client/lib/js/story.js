@@ -197,6 +197,9 @@ var ABeamer;
             args.isTeleporting = this._isTeleporting;
             args.vars.isTeleporting = args.isTeleporting;
             this._teleporter = new ABeamer._Teleporter(this, cfg, this._isTeleporting);
+            if (this._isTeleporting && createParams.toStartTeleporting !== false) {
+                this.startTeleporting();
+            }
             // #debug-start
             if (this._isVerbose) {
                 this.logFrmt('story', [
@@ -703,6 +706,18 @@ var ABeamer;
                 console.warn("To teleport it requires the render server agent to be running");
             }
             this._sendCmd(ABeamer._SRV_CNT.MSG_TELEPORT, this.getStoryToTeleport(frameOpts, isPretty));
+        };
+        /**
+         * Use this method only if you have created the story with `toTeleport = true`
+         * and `toStartTeleporting = false`, because you need to inject
+         * html/css code into the page before the teleporting process starts.
+         * Otherwise, you won't need to call this method since it's called automatically
+         * if teleporting a story.
+         */
+        _Story.prototype.startTeleporting = function () {
+            if (this._isTeleporting) {
+                this._teleporter.createSnapshot();
+            }
         };
         // ------------------------------------------------------------------------
         //                               Render

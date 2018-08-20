@@ -1798,6 +1798,15 @@ declare namespace ABeamer {
 
 
     /**
+     * Set this parameter to false,
+     * if you need to inject html/css code into the page before the teleporting
+     * process starts.
+     * @default true
+     */
+    toStartTeleporting?: boolean;
+
+
+    /**
      * Set this value, if you need use a Virtual Story Adapter inside of the
      * default DOM Adapter.
      */
