@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.3.0] -
+## [1.4.0] -
 ### Fixed
 - Fix the bug in `gulp build-release` that forced to have 2 folders in the gallery.
 
@@ -29,10 +29,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > and converting from local links to online links back and forth.
 > Information regarding the old repos and git pages is removed.
 > Documentation links are also updated to reflect this change.
+>
 > File structure changes:
+>
 > gallery -> gallery-src
+>
 > gallery-release -> gallery/latest
+>
 > docs/sources/*.{svg,gif} -> assets/badges
+>
 > docs/sources/*.png -> assets/icons
 - Change the background image of `animate-item-delay` to reduce the pixelization.
 > When it was converted to animated gif the image looked pixelized due the fact
@@ -40,37 +45,47 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > too many shades.
 
 
-## [1.2.0] -
+## [1.3.0] -
 ### Fixed
-- Change imagemagick convert alpha parameters to fix gif generation on windows.
 - Fix font rendering bug in `animate-transitions` example
   > The problem was due a bug in Chrome as described in:
-  > http://localhost:8500/blog/2018/08/15/abeamer-1.3.0-released.html
+  > http://www.abeamer.com/blog/2018/08/15/abeamer-1.3.0-released.html
+
+## [1.2.0] -
+### Fixed
+- Change imagemagick `convert` alpha parameters to fix gif generation on windows.
 
 ### Changed
-- Move documentation from github repo to www.abeamer.com/docs.
-- Update links and generators to move docs, gallery and release to abeamer website.
-  > The github repos are replaced with folders on https://www.abeamer.com
-  > docs/build/(target)/versions/latest/en ----> docs/release/latest/(target)/en
-  > git repo abeamer-release ----> release/latest
-  > git repo abeamer-gallery-release ----> gallery/latest
-  > git repo abeamer-docs ----> docs/latest
-- Remove index-online.html from gallery/*/code.zip.
-  > This file will be integrated with the website and shouldn't be part of user files.
-- Remove docs and gallery-release visual customization.
+- Remove `docs` and `gallery-release` visual customization.
   > Since the website, blog, release, and gallery-release are all hosted by the www.abeamer.com
   > website, this is now in responsibility to do all the customization.
-- Change the release version from release to release/latest.
+- Change the release version from release to `release/latest`.
   > This change will allow a local webserver have access to the same
-  > url subpart as it is on the www.abeamer.com site
+  > url subpart as it is on the www.abeamer.com site.
+  >
   > Simplifying the process of testing and deploying release versions
 - Add minify to all js files during the `build-release` phase.
+
+### Changed
+- Move documentation from github repo to https://www.abeamer.com/docs.
+- Update links and generators to move docs, gallery and release to abeamer website.
+  > The github repos are replaced with folders on https://www.abeamer.com.
+  >
+  > docs/build/(target)/versions/latest/en ----> docs/release/latest/(target)/en
+  >
+  > git repo abeamer-release ----> release/latest
+  >
+  > git repo abeamer-gallery-release ----> gallery/latest
+  >
+  > git repo abeamer-docs ----> docs/latest
+- Remove `index-online.html` from `gallery/*/code.zip`.
+  > This file will be integrated with the website and shouldn't be part of user files.
 
 ### Added
 - Add parameter `--gif-background` to `abeamer gif` CLI.
 - (DEV) `gulp build-gallery-release` generate index.html.
   > Since www.abeamer.com doesn't support markdown render, it's required to generate the index.html
-- Add messages/messages-en.js to be the version 2.x holder of the english messages.
+- Add `messages/messages-en.js` to be the version 2.x holder of the english messages.
   > The messages in i18n.ts file will be moved to messages/messages-en.ts file on version 2.x.
   > Users are encouraged to include the messages/messages-en.js on their index.html
   > even though for now it's an empty file to prevent breaking changes.
@@ -82,17 +97,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.1.0] -
 ### Changed
-- Access to story.virtualAnimator is deprecated.
+- Access to `story.virtualAnimator` is deprecated.
   > use addVirtualAnimator/removeVirtualAnimator instead.
-- (DEV) Port _ChartVirtualAnimator to SimpleVirtualAnimator.
+- (DEV) Port `_ChartVirtualAnimator` to `SimpleVirtualAnimator`.
   > Using SimpleVirtualAnimator gives a cleaner implementation, and by also using
   > animateProps reduces the render count when the animator has multiple animation properties.
 
 ### Added
-- Add addVirtualAnimator/removeVirtualAnimator to the story.
+- Add `addVirtualAnimator`/`removeVirtualAnimator` to the story.
  > By using these methods instead of direct access to virtualAnimator,
  > allows to create maps for quicker access to virtual animators.
-- Add SimpleVirtualAnimator class.
+- Add `SimpleVirtualAnimator` class.
   > To be used by plugin creators to simplify the process of animating their content
 - Add support value parameters starting with -- in the abeamer cli.
 - Add `--movie-pre` and `--movie-post` parameters to abeamer cli.
