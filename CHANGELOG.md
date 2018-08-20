@@ -18,22 +18,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  > inside #debug-start/#debug-end section.
  > This will remove its capacity to provide debug logs but it will make it lighter.
 - Add `story.startTeleporting` to delay the teleportation initial snapshot.
- > This new method allows to teleport any HTML/CSS code injected 
+ > This new method allows to teleport any HTML/CSS code injected
  > after the story has been created and before this method was invoked.
  > Read more on https://www.abeamer.com/blog/2018/08/20/how-to-delay-the-teleportation-in-abeamer.html
 
 ### Changed
 - Move gallery, badges, icons file paths to be compatible with the website.
 > This change moves not only the file structure but also updates all the build scripts.
-> With this change, it simplifies the process of local testing 
+> With this change, it simplifies the process of local testing
 > and converting from local links to online links back and forth.
 > Information regarding the old repos and git pages is removed.
 > Documentation links are also updated to reflect this change.
-> File structure changes: 
+> File structure changes:
 > gallery -> gallery-src
 > gallery-release -> gallery/latest
 > docs/sources/*.{svg,gif} -> assets/badges
 > docs/sources/*.png -> assets/icons
+- Change the background image of `animate-item-delay` to reduce the pixelization.
+> When it was converted to animated gif the image looked pixelized due the fact
+> there is a color reduction to 256-colors and the previous background image add
+> too many shades.
 
 
 ## [1.2.0] -
