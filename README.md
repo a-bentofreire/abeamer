@@ -1,5 +1,5 @@
 ## Description
-![Target](https://www.abeamer.com/assets/badges/developer-badge.gif)![Target](https://www.abeamer.com/assets/badges/v-1.4.0.gif)  
+![Target](https://www.abeamer.com/assets/badges/developer-badge.gif)![Target](https://www.abeamer.com/assets/badges/v-1.4.1.gif)  
   
 ![Image](https://www.abeamer.com/gallery/latest/animate-abeamer/story-frames/story.gif)  
   
