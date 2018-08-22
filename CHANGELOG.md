@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.5.0] -
 ### Changed
 - (DEV) Port documents build to mkdocs 1.0.1.
+- Improve the gallery example descriptions.
 
 ### Added
 - Add Minor cosmetic improvements on gallery README.
