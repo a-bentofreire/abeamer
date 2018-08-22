@@ -114,6 +114,7 @@ var BuildGalleryRelease;
     function buildReadMe() {
         var galleryLinks = [];
         var missingFiles = [];
+        var rnd = Math.round(Math.random() * 100000000);
         function checkFile(fileName) {
             if (!sysFs.existsSync(fileName)) {
                 missingFiles.push(fileName);
@@ -128,14 +129,14 @@ var BuildGalleryRelease;
             if (!ex.noGifImage) {
                 checkFile("./" + dev_paths_js_1.DevPaths.GALLERY_PATH + "/" + ex.folder + "/story-frames/story.gif");
                 galleryLinks.push("\n  "
-                    + ("\n![Image](" + storyFramesFolder + "/story.gif)" + '  ' + "\n  "));
+                    + ("\n![Image](" + storyFramesFolder + "/story.gif?" + rnd + ")" + '  ' + "\n  "));
             }
             if (ex.genMovie) {
                 galleryLinks.push("\n  "
                     + ("\n[![Image](" + storyFramesFolder + "/../" + ex.movieSnapshot + ")]")
                     + ("(" + storyFramesFolder + "/../" + ex.movieViewPage + ")" + '  ' + "\n  "));
             }
-            galleryLinks.push("\nDownload code: [zip](" + ex.folder + "/" + BuildGalleryRelease.EXAMPLE_ZIP_FILE + ")" + '  ' + "\nTry it <a href=\"" + ex.folder + "/index-online.html\">online</a>." + '  ' + "\n" + (ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n') + "\n" + (!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n') + "\n    ");
+            galleryLinks.push("\nDownload code: [zip](" + ex.folder + "/" + BuildGalleryRelease.EXAMPLE_ZIP_FILE + ")." + '  ' + "\nTry it <a href=\"" + ex.folder + "/index-online.html\">online</a>." + '  ' + "\n" + (ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n') + "\n" + (!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n') + "\n    ");
         });
         var outREADME = fsix_js_1.fsix.readUtf8Sync(dev_paths_js_1.DevPaths.GALLERY_PATH + "/README-rel.md")
             + galleryLinks.join('');

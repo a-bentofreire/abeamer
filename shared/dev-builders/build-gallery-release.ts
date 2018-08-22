@@ -157,6 +157,7 @@ export namespace BuildGalleryRelease {
   export function buildReadMe(): void {
     const galleryLinks: string[] = [];
     const missingFiles: string[] = [];
+    const rnd = Math.round(Math.random() * 100000000);
 
     function checkFile(fileName: string) {
       if (!sysFs.existsSync(fileName)) {
@@ -175,7 +176,7 @@ export namespace BuildGalleryRelease {
       if (!ex.noGifImage) {
         checkFile(`./${DevPaths.GALLERY_PATH}/${ex.folder}/story-frames/story.gif`);
         galleryLinks.push(`\n  `
-          + `\n![Image](${storyFramesFolder}/story.gif)${'  '}\n  `);
+          + `\n![Image](${storyFramesFolder}/story.gif?${rnd})${'  '}\n  `);
       }
 
       if (ex.genMovie) {
@@ -185,7 +186,7 @@ export namespace BuildGalleryRelease {
       }
 
       galleryLinks.push(`
-Download code: [zip](${ex.folder}/${EXAMPLE_ZIP_FILE})${'  '}
+Download code: [zip](${ex.folder}/${EXAMPLE_ZIP_FILE}).${'  '}
 Try it <a href="${ex.folder}/index-online.html">online</a>.${'  '}
 ${ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n'}
 ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n'}
