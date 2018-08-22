@@ -471,12 +471,12 @@ var BuildDocs;
                 opts.folder = folder;
                 return '';
             });
-            var folderContainer = opts.folder ? this.folderMap[opts.folder] : this.yamlDoc.pages;
+            var folderContainer = opts.folder ? this.folderMap[opts.folder] : this.yamlDoc.nav;
             if (!folderContainer) {
                 folderContainer = this.folderMap[opts.folder] = [];
                 var subFolder = {};
                 subFolder[opts.folder] = folderContainer;
-                this.yamlDoc.pages.push(subFolder);
+                this.yamlDoc.nav.push(subFolder);
             }
             if (opts.name) {
                 var formattedPageName = {};

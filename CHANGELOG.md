@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] -
+### Changed
+- (DEV) Port documents build to mkdocs 1.0.1.
+
+
 ## [1.4.0] -
 ### Fixed
 - Fix the bug in `gulp build-release` that forced to have 2 folders in the gallery.

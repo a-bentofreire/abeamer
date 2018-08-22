@@ -569,7 +569,7 @@ export namespace BuildDocs {
 
     yamlDoc: {
       site_name: string;
-      pages: (string | any)[];
+      nav: (string | any)[];
       production: any;
     };
 
@@ -615,12 +615,12 @@ export namespace BuildDocs {
         });
 
 
-      let folderContainer = opts.folder ? this.folderMap[opts.folder] : this.yamlDoc.pages;
+      let folderContainer = opts.folder ? this.folderMap[opts.folder] : this.yamlDoc.nav;
       if (!folderContainer) {
         folderContainer = this.folderMap[opts.folder] = [];
         const subFolder = {};
         subFolder[opts.folder] = folderContainer;
-        this.yamlDoc.pages.push(subFolder);
+        this.yamlDoc.nav.push(subFolder);
       }
 
       if (opts.name) {
