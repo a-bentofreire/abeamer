@@ -37,7 +37,7 @@
  *  pEls2.fadeIn();
  * ```
  *
- * @example gallery/animate-wrappers
+ * @see gallery/animate-wrappers
  *
  */
 var ABeamer;

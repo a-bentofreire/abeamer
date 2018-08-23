@@ -13,6 +13,7 @@ gallery-src/**/story-frames/
 test/tests.run/
 test/log/
 docs/release/
+docs/*.*/
 docs/latest/
 shared/dev-builders/output
 release{/**,}

@@ -61,16 +61,6 @@ var Gulp;
     var libModules = modulesList.libModules;
     var pluginModules = modulesList.pluginModules;
     // ------------------------------------------------------------------------
-    //                               Setup Command Line Options WebLinks
-    // ------------------------------------------------------------------------
-    var joinedArgs = sysProcess.argv.join(' ');
-    var isLocal = joinedArgs.indexOf('--local') !== -1;
-    var isProduction = joinedArgs.indexOf('--production') !== -1;
-    var isWin = sysProcess.platform === 'win32';
-    function printOptions() {
-        console.log("Options:\n    local: " + isLocal + "\n    production: " + isProduction + "\n");
-    }
-    // ------------------------------------------------------------------------
     //                               Print Usage
     // ------------------------------------------------------------------------
     gulp.task('default', function () {
@@ -418,8 +408,7 @@ var Gulp;
     //                               Builds the documentation
     // ------------------------------------------------------------------------
     gulp.task('build-docs', function () {
-        printOptions();
-        build_docs_js_1.BuildDocs.build(libModules, pluginModules, isLocal);
+        build_docs_js_1.BuildDocs.build(libModules, pluginModules);
     });
     // ------------------------------------------------------------------------
     //                               Builds Release Version Of The Gallery
@@ -478,7 +467,6 @@ var Gulp;
         }));
     });
     gulp.task('gal-rel:process-readme', ['gal-rel:create-zip'], function (cb) {
-        printOptions();
         build_gallery_release_js_1.BuildGalleryRelease.buildReadMe();
         cb();
     });

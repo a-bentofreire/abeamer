@@ -27,9 +27,9 @@ It supports:
 ## Example
 
 ```scss
-    $abeamer-height: 150;
-    $abeamer-width: 220;
-    $abeamer-file: "__PROJDIR__/index.html";
+$abeamer-height: 150;
+$abeamer-width: 220;
+$abeamer-file: "__PROJDIR__/index.html";
 ```
 
 ## Extra information
@@ -44,19 +44,18 @@ $abeamer-teleportable: "false"; // if false, it doesn't supports teleportation.
 $abeamer-description: "<<example description>>";
 $abeamer-description2: "<<2n line example description>>";
 ```
-
+  
 ## LESS
 
 ABeamer was designed to use `.scss` format for stylesheets, however, it also support LESS.  
 In this case modify the `abeamer.ini` file from `$abeamer` to `@abeamer`.   
 
 ```less
-    @abeamer-height: 150;
-    @abeamer-width: 220;
-    @abeamer-file: "__PROJDIR__/index.html";
+@abeamer-height: 150;
+@abeamer-width: 220;
+@abeamer-file: "__PROJDIR__/index.html";
 ```
-
-
+  
 ## "story.json" format
 
 When ABeamer was initially developer, the configuration files were `.json` files.  
@@ -67,27 +66,29 @@ if it's running using a live server.
 It was later, with the introduction of [teleportation](teleporter.md) that its main usage become to store teleportable stories,
 and its importance was reinstated.  
 
-The bare-bones of a config file:  
+The bare-bones of a config file:
+  
 ```json
-    {
-        "config": {
-            "abeamer": {
-                "width": 150,
-                "height": 220,
-                "file": "__PROJDIR__/index.html"
-            }
+{
+    "config": {
+        "abeamer": {
+            "width": 150,
+            "height": 220,
+            "file": "__PROJDIR__/index.html"
         }
     }
+}
 ```    
   
 To load this config file use the following instead of `addAnimations`:
+  
 ```ts
 ABeamer.createStoryFromConfig('story.json',
   (story: ABeamer.Story) => {
     story.render(story.bestPlaySpeed());
   });
 ```
-
+  
 A `story.json` is a config file with the extra information, including:  
 
 - CSS data.
@@ -95,6 +96,11 @@ A `story.json` is a config file with the extra information, including:
 - Animation data.
 - Plugins information.
 - Metadata.
-
-The easiest way to create a `story.json` is by running the `abeamer render --teleport`.  
+  
+The easiest way to create a `story.json` is by running
+  
+```shell
+abeamer render --teleport
+```
+  
 Read more about on [teleporter](teleporter.md).

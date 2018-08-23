@@ -72,22 +72,6 @@ namespace Gulp {
   const pluginModules = modulesList.pluginModules;
 
   // ------------------------------------------------------------------------
-  //                               Setup Command Line Options WebLinks
-  // ------------------------------------------------------------------------
-
-  const joinedArgs = sysProcess.argv.join(' ');
-  const isLocal = joinedArgs.indexOf('--local') !== -1;
-  const isProduction = joinedArgs.indexOf('--production') !== -1;
-  const isWin = sysProcess.platform === 'win32';
-
-  function printOptions(): void {
-    console.log(`Options:
-    local: ${isLocal}
-    production: ${isProduction}
-`);
-
-  }
-  // ------------------------------------------------------------------------
   //                               Print Usage
   // ------------------------------------------------------------------------
 
@@ -592,8 +576,7 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   gulp.task('build-docs', () => {
-    printOptions();
-    BuildDocs.build(libModules, pluginModules, isLocal);
+    BuildDocs.build(libModules, pluginModules);
   });
 
   // ------------------------------------------------------------------------
@@ -667,7 +650,6 @@ namespace Gulp {
 
   (gulp as any).task('gal-rel:process-readme', ['gal-rel:create-zip'],
     (cb) => {
-      printOptions();
       BuildGalRel.buildReadMe();
       cb();
     });
@@ -781,7 +763,7 @@ namespace Gulp {
     const IN_FILE = './README.md';
     const BAK_FILE = IN_FILE + '.bak.md';
     const srcRegEx = new RegExp('\\]\\(' + (toLocal ? DevWebLinks.webDomain : '') + '/', 'g');
-    const dstLink = '](' +  (toLocal ? '' : DevWebLinks.webDomain) + '/';
+    const dstLink = '](' + (toLocal ? '' : DevWebLinks.webDomain) + '/';
 
     let content = fsix.readUtf8Sync(IN_FILE);
     sysFs.writeFileSync(BAK_FILE, content);

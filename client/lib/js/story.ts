@@ -674,7 +674,7 @@ namespace ABeamer {
 
     /**
      * Adds a [](VirtualAnimator) to the story.
-     * Use [](removeVirtualAnimator) to take it from the story.
+     * Use [story.removeVirtualAnimator](#storyremovevirtualanimator) to take it from the story.
      */
     addVirtualAnimator(animator: VirtualAnimator): void {
       const selector = animator.selector;
@@ -691,7 +691,7 @@ namespace ABeamer {
 
     /**
      * Removes a [](VirtualAnimator) to the story.
-     * Use [](addVirtualAnimator) to add it to the story.
+     * Use [story.addVirtualAnimator](#storyaddvirtualanimator) to add it to the story.
      */
     removeVirtualAnimator(animator: VirtualAnimator): void {
       const index = this._virtualAnimators.indexOf(animator);

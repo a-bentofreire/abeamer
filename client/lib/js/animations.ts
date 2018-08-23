@@ -71,7 +71,7 @@ namespace ABeamer {
    * Since an expression can be used to interpolate, by using expressions starting
    * with '==', it will compute immediately the expression and the output
    * must the motion name.
-   * @example == 'easeIn' + iff(frameWidth < 100, 'Quad', 'Cubic')
+   * @example = 'easeIn' + iff(frameWidth < 100, 'Quad', 'Cubic')
    */
   export type ExprName = ExprString;
 

@@ -46,23 +46,23 @@
  * If the task just uses plain DOM, the simplest is to:
  * - inject DOM by using the animation `selector`, and then
  * ```typescript
- *     switch (stage) {
- *        case TS_INIT:
- *          const adapters = args.scene.getElementAdapters(anime.selector);
- *          elAdapters.forEach((elAdapter, elIndex) => {
- *            const html = elAdapter.getProp('html', args);
- *            const myPiece = '<div>Hello</div>';
- *            elAdapter.setProp('html', html + myPiece, args);
- *          });
- *     }
+ * switch (stage) {
+ *    case TS_INIT:
+ *      const adapters = args.scene.getElementAdapters(anime.selector);
+ *      elAdapters.forEach((elAdapter, elIndex) => {
+ *        const html = elAdapter.getProp('html', args);
+ *        const myPiece = '<div>Hello</div>';
+ *        elAdapter.setProp('html', html + myPiece, args);
+ *      });
+ * }
  * ```
  *
  * - inject animation properties into the pipeline by:
  * ```typescript
- *     switch (stage) {
- *        case TS_INIT:
- *          anime.props.push({ prop: 'text', value: ['hello'] });
- *     }
+ * switch (stage) {
+ *    case TS_INIT:
+ *      anime.props.push({ prop: 'text', value: ['hello'] });
+ * }
  * ```
  */
 var ABeamer;

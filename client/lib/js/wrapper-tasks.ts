@@ -14,7 +14,7 @@
  * ## Description
  *
  * A wrapper task calls a story or scene method, allowing for a story
- * to be loaded from JSON file or to be [](teleported).
+ * to be loaded from JSON file or to be [](teleporter).
  *
  * ABeamer has the following built-in wrapper tasks:
  *

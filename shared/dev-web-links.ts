@@ -13,8 +13,4 @@ export namespace DevWebLinks {
   const LOCAL_PORT = 9000;
   export const localServer = `http://localhost:${LOCAL_PORT}`;
   export const webDomain = 'https://www.abeamer.com';
-
-  export function getServer(isLocal: boolean): string {
-    return isLocal ? localServer : webDomain;
-  }
 }

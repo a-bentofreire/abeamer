@@ -12,7 +12,7 @@
  * ## Description
  *
  * An **expression** is a textual value that starts with `=`.
- * Expressions unlike [Code Handlers](glossary/#code-handler) can be defined on the `.json`
+ * Expressions unlike [Code Handlers](code handler) can be defined on the `.json`
  * config file and support teleporting.
  *
  * ABeamer supports:

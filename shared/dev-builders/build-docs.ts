@@ -34,7 +34,7 @@ import { DevWebLinks as webLinks } from "../dev-web-links.js";
  *  *<end slash>
  * ```
  *
- * If a line ends with '.' and is followed by another line starting with a character,
+ * If a line ends with any of the following signs `\.\`":` and is followed by another line starting with a character,
  * it automatically adds 2 spaces at the line ending.
  *
  */
@@ -48,7 +48,7 @@ export namespace BuildDocs {
   export const API_FOLDER = 'api';
   export const EN_LAST_VERSION_PATH = 'en';
 
-  interface LocalWebLinks { [link: string]: string; }
+  type LocalWebLinks = (key: string, title: string) => string;
 
   let badgeLine = '';
 
@@ -354,7 +354,7 @@ export namespace BuildDocs {
 
       this.links = [];
 
-      this.outLines.push('```TypeScript\n' + line + '\n```\n');
+      this.outLines.push('```js\n' + line.trimLeft() + '\n```\n');
 
       if (svJsDocs.length && this.lastJsDocsLineNr === this.lastPeekLineNr) {
         const formattedJsDocs = formatJsDocsMarkdown(svJsDocs.join('\n'), this.localWebLinks);
@@ -403,7 +403,7 @@ export namespace BuildDocs {
         id, parenthesisTag] = this.getLine(true)
           .match(
             /^(\s*)(protected\s+|private\s+|public\s+)?(abstract\s+)?(readonly\s+)?(get\s+)?(set\s+)?(\w+)(\s*\()?/,
-        ) || EMPTY;
+          ) || EMPTY;
 
 
       if (spaces === this.innerSpaces) {
@@ -662,28 +662,21 @@ export namespace BuildDocs {
         title = link;
       } else {
         if (folder) {
-          folder = localWebLinks[folder.substr(0, folder.length - 1)]
-            || folder;
+          const key = folder.substr(0, folder.length - 1);
+          return `_see_: ${localWebLinks(key, title)}.  `;
+        } else {
+          link = (folder || '')
+            + (title || '') + (title ? '.md' : '')
+            + (!folder && bookmark
+              ? bookmark.toLowerCase() // mkdocs lowercase the local bookmarks
+              : (bookmark || ''));
+          title = title || bookmark.substr(1);
         }
-        link = (folder || '')
-          + (title || '') + (title ? '.md' : '')
-          + (!folder && bookmark
-            ? bookmark.toLowerCase() // mkdocs lowercase the local bookmarks
-            : (bookmark || ''));
-        title = title || bookmark.substr(1);
       }
-      return `_see_: [${title || link}](${link})  `;
+      return `_see_: [${title || link}](${link}).  `;
     });
 
     return text;
-  }
-
-  // ------------------------------------------------------------------------
-  //                               buildWebLinks
-  // ------------------------------------------------------------------------
-
-  function buildWebLinks(isLocal: boolean): LocalWebLinks {
-    return { gallery: `${webLinks.getServer(isLocal)}/${DevPaths.GALLERY_RELEASE_PATH}` };
   }
 
   // ------------------------------------------------------------------------
@@ -762,9 +755,19 @@ export namespace BuildDocs {
    * This is the main entry point.
    * Read the module information for details.
    */
-  export function build(libModules: string[], pluginModules: string[], isLocal): void {
+  export function build(libModules: string[], pluginModules: string[]): void {
 
-    const localWebLinks = buildWebLinks(isLocal);
+    const localWebLinks = (key: string, title: string) => {
+      if (key === 'gallery') {
+        return `[${title}](/${DevPaths.GALLERY_RELEASE_PATH}/#${title})`;
+      } else {
+        return '';
+      }
+    };
+
+    // ------------------------------------------------------------------------
+    //                               buildWebLinks
+    // ------------------------------------------------------------------------
 
     // in case of documentation, it's better to visualize the more specific at the top.
     libModules.reverse();

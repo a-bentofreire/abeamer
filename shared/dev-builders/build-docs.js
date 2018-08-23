@@ -10,7 +10,6 @@ var sysPath = require("path");
 var fsix_js_1 = require("../vendor/fsix.js");
 var dev_paths_js_1 = require("../dev-paths.js");
 var versionLib = require("../version.js");
-var dev_web_links_js_1 = require("../dev-web-links.js");
 /** @module developer | This module won't be part of release version */
 /**
  * ## Description
@@ -31,7 +30,7 @@ var dev_web_links_js_1 = require("../dev-web-links.js");
  *  *<end slash>
  * ```
  *
- * If a line ends with '.' and is followed by another line starting with a character,
+ * If a line ends with any of the following signs `\.\`":` and is followed by another line starting with a character,
  * it automatically adds 2 spaces at the line ending.
  *
  */
@@ -278,7 +277,7 @@ var BuildDocs;
                 + '  ' + this.links.map(function (link) { return "[[" + link + "](" + link + ")]"; }).join(' ')
                 + '  ');
             this.links = [];
-            this.outLines.push('```TypeScript\n' + line + '\n```\n');
+            this.outLines.push('```js\n' + line.trimLeft() + '\n```\n');
             if (svJsDocs.length && this.lastJsDocsLineNr === this.lastPeekLineNr) {
                 var formattedJsDocs = formatJsDocsMarkdown(svJsDocs.join('\n'), this.localWebLinks);
                 this.outLines.push(formattedJsDocs);
@@ -510,25 +509,21 @@ var BuildDocs;
             }
             else {
                 if (folder) {
-                    folder = localWebLinks[folder.substr(0, folder.length - 1)]
-                        || folder;
+                    var key = folder.substr(0, folder.length - 1);
+                    return "_see_: " + localWebLinks(key, title) + ".  ";
                 }
-                link = (folder || '')
-                    + (title || '') + (title ? '.md' : '')
-                    + (!folder && bookmark
-                        ? bookmark.toLowerCase() // mkdocs lowercase the local bookmarks
-                        : (bookmark || ''));
-                title = title || bookmark.substr(1);
+                else {
+                    link = (folder || '')
+                        + (title || '') + (title ? '.md' : '')
+                        + (!folder && bookmark
+                            ? bookmark.toLowerCase() // mkdocs lowercase the local bookmarks
+                            : (bookmark || ''));
+                    title = title || bookmark.substr(1);
+                }
             }
-            return "_see_: [" + (title || link) + "](" + link + ")  ";
+            return "_see_: [" + (title || link) + "](" + link + ").  ";
         });
         return text;
-    }
-    // ------------------------------------------------------------------------
-    //                               buildWebLinks
-    // ------------------------------------------------------------------------
-    function buildWebLinks(isLocal) {
-        return { gallery: dev_web_links_js_1.DevWebLinks.getServer(isLocal) + "/" + dev_paths_js_1.DevPaths.GALLERY_RELEASE_PATH };
     }
     // ------------------------------------------------------------------------
     //                               buildMarkdownFromSourceFile
@@ -584,8 +579,18 @@ var BuildDocs;
      * This is the main entry point.
      * Read the module information for details.
      */
-    function build(libModules, pluginModules, isLocal) {
-        var localWebLinks = buildWebLinks(isLocal);
+    function build(libModules, pluginModules) {
+        var localWebLinks = function (key, title) {
+            if (key === 'gallery') {
+                return "[" + title + "](/" + dev_paths_js_1.DevPaths.GALLERY_RELEASE_PATH + "/#" + title + ")";
+            }
+            else {
+                return '';
+            }
+        };
+        // ------------------------------------------------------------------------
+        //                               buildWebLinks
+        // ------------------------------------------------------------------------
         // in case of documentation, it's better to visualize the more specific at the top.
         libModules.reverse();
         BuildDocs.targets.forEach(function (target) {

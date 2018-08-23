@@ -56,7 +56,7 @@
  *
  * - `harmonic` - it generates a sinusoidal function that repeats it self every
  * duration / cycles.
- * @see gallery/gallery-oscillator
+ * @see gallery/animate-oscillator
  *
  * - `damped` - it's a sinusoidal function that reduces its amplitude due friction in
  * every cycle.
@@ -69,7 +69,7 @@
  *     * `sine` - a sinusoidal function.
  *     * `random` - a random value within [-1, 1].
  *     * `positive-random` - a random value with [0, 1].
- * @see gallery/gallery-pulsar
+ * @see gallery/animate-pulsar
  */
 namespace ABeamer {
 

@@ -3,7 +3,7 @@
 <!--- @author: Alexandre Bento Freire -->
 # Description
 This document provides information regarding installation and execution for the end-user.  
-For developers and plugin creators read: [Developer Documentation](/docs/latest/developer/en/site/)  
+For developers and plugin creators read: [Developer Documentation](/docs/latest/developer/en/site/).  
 
 ---------------------
 ## Installation
@@ -12,22 +12,35 @@ For developers and plugin creators read: [Developer Documentation](/docs/latest/
 
 ABeamer is a nodejs package.  
 It requires the installation of nodejs.  
-It can be downloaded here: [nodejs](http://www.nodejs.com)  
+It can be downloaded here: [nodejs](http://www.nodejs.com).  
 
 During the installation process, abeamer requires to create a shortcut, 
-if you are running on linux OS, it must be installed with sudo  
-`sudo npm install -g abeamer`
-
+if you are running on linux OS, it must be installed with sudo:
+  
+```shell
+sudo npm install -g abeamer
+```
+  
 If you have access errors, consider installing your global node packages 
 on a path where you have access rights.  
-Read how to do it here: [fixing-npm-permissions](https://docs.npmjs.com/getting-started/fixing-npm-permissions)  
+Read how to do it here: [fixing-npm-permissions](https://docs.npmjs.com/getting-started/fixing-npm-permissions).  
 
 ### Can I install ABeamer as a local nodejs package?
 
 Yes, you can.  
-Install via: `npm install abeamer`  
-And then execute via `npm run abeamer --`  
-Hint: The ending `--` allows abeamer to receive options
+Install via:
+  
+```shell
+npm install abeamer
+```  
+  
+And then execute via
+  
+```shell
+npm run abeamer --
+```
+
+Hint: The ending `--` allows abeamer to receive options.
 
 ### Can I execute ABeamer without installing nodejs?
 
@@ -47,13 +60,13 @@ Download from [here](https://www.abeamer.com/downloads.html).
 ### I can't install puppeteer.   
 
 `puppeteer` is a node package just like abeamer.  
-For details, read the question above [I can't install ABeamer!](#i-cant-install-abeamer)
+For details, read the question above [I can't install ABeamer!](#i-cant-install-abeamer).
 
 ### Can I install puppeteer without chromium?
 
 Yes, you can.  
 Set the environments variables on your terminal console:
-
+  
 ```shell
 PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 CHROME_BIN=<full-chrome-path-including-file-name>
@@ -64,10 +77,7 @@ the previous code depends of the running OS, the best it's just type
 ```shell
 abeamer check
 ```
-
----------------------
-
-
+  
 ---------------------
 ## Execution
 
@@ -75,11 +85,16 @@ abeamer check
 
 ABeamer has included a render server agent, and this one requires a server.  
 The default server is `puppeteer`, you can install it via:  
-`npm install -g puppeteer`  
+  
+```shell
+npm install -g puppeteer
+```  
+  
 Tip: on linux OS, it requires a `sudo`.   
-
+  
 If you have puppeteer installed, but still have errors, 
 set the environment variable to:  
+  
 ```shell
 CHROME_PATH=<full-chrome-path-including-file-name>
 ```
@@ -93,10 +108,14 @@ abeamer check
 
 On Windows, the system includes a program called `convert`.  
 It's necessary to add the `imagemagick` at the beginning of the system path.  
-`SET PATH=<my-imagemagik-path>;%PATH%`
-or
-`SET IM_CONVERT_BIN=<my-imagemagik-convert.exe-path>`
-
+  
+```shell
+# option 1
+SET PATH=<my-imagemagik-path>;%PATH%
+# option 2
+SET IM_CONVERT_BIN=<my-imagemagik-convert.exe-path>
+```
+  
 ### My animation doesn't changes the current physical position.
 
 In order for an element to change its position, in necessary that:  
@@ -119,8 +138,12 @@ Yes, you can.
 ABeamer provides TypeScript typings for convenience and documentation purposes, 
 but all the functions and constants are designed to be used without TypeScript.   
 When creating a new project, add the option `--no-typescript`.  
-Example: `abeamer create foo-js --width 384 --height 288 --fps 30 --no-typescript`.
-
+Example: 
+  
+```shell
+abeamer create foo-js --width 384 --height 288 --fps 30 --no-typescript
+```
+  
 ### Can I use only CSS without SCSS?
 
 Yes, you can. Although, it's advisable to use SCSS.  
@@ -186,8 +209,12 @@ the ABeamer web browser library and puppeteer and which in turns communicates wi
 ### It doesn't render from my url?
 
 If your url doesn't includes the `index.html` then it must end with the slash.  
-**example:** `abeamer render --url "http://localhost:9000/gallery/remote-server/"`
-
+**example:**
+  
+```shell
+abeamer render --url "http://localhost:9000/gallery/remote-server/"
+```
+  
 ### Why I can't save the frames in jpg format?
 
 ABeamer uses puppeteer/chrome to render the images to the disk

@@ -11,9 +11,5 @@ var DevWebLinks;
     var LOCAL_PORT = 9000;
     DevWebLinks.localServer = "http://localhost:" + LOCAL_PORT;
     DevWebLinks.webDomain = 'https://www.abeamer.com';
-    function getServer(isLocal) {
-        return isLocal ? DevWebLinks.localServer : DevWebLinks.webDomain;
-    }
-    DevWebLinks.getServer = getServer;
 })(DevWebLinks = exports.DevWebLinks || (exports.DevWebLinks = {}));
 //# sourceMappingURL=dev-web-links.js.map

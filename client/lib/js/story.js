@@ -419,7 +419,7 @@ var ABeamer;
         // ------------------------------------------------------------------------
         /**
          * Adds a [](VirtualAnimator) to the story.
-         * Use [](removeVirtualAnimator) to take it from the story.
+         * Use [story.removeVirtualAnimator](#storyremovevirtualanimator) to take it from the story.
          */
         _Story.prototype.addVirtualAnimator = function (animator) {
             var selector = animator.selector;
@@ -434,7 +434,7 @@ var ABeamer;
         };
         /**
          * Removes a [](VirtualAnimator) to the story.
-         * Use [](addVirtualAnimator) to add it to the story.
+         * Use [story.addVirtualAnimator](#storyaddvirtualanimator) to add it to the story.
          */
         _Story.prototype.removeVirtualAnimator = function (animator) {
             var index = this._virtualAnimators.indexOf(animator);

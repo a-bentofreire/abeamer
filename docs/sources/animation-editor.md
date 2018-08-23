@@ -14,15 +14,15 @@ can build a beautiful animation and render it in either his machine or send it t
 
 Using ABeamer has the following benefits:
 
-- It's free and open-source [Github](https://github.com/a-bentofreire/abeamer)
-- Has a rich built-in toolset.   
+- It's free and open-source [Github](https://github.com/a-bentofreire/abeamer).  
+- It has a rich built-in toolset.   
 - It's highly extensible via plugins.   
-- Renders frame by frame at high resolutions including 4k.   
-- Can animate non DOM elements such as WebGL and Canvas.   
-- Supports transparent backgrounds, allowing to generate frames to be an overlay on top of a movie.   
-- Only requires a internet browser and an editor to create an animation.   
-- Supports [teleporting](teleporter.md).
-- Has minimum dependencies.   
+- It renders frame-by-frame at high resolutions including 4k.   
+- It can animate non DOM elements such as WebGL and Canvas.   
+- It supports transparent backgrounds, allowing to generate frames to be an overlay on top of a movie.   
+- It only requires a internet browser and an editor to create an animation.   
+- It supports [teleporting](teleporter.md).
+- It has minimum dependencies.   
 
 But, It's the ABeamer Animation Editor that will allow any user **without any computer knowledge**, 
 armed only with a web browser on its tablet or computer to create animations 

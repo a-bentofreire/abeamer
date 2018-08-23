@@ -47,54 +47,54 @@ var __extends = (this && this.__extends) || (function () {
  *
  *  The bare-bones of a `html` file:
  * ```html
- *   <div class="abeamer-story" id=story>
- *       <div class=abeamer-scene id=scene1>
- *         <canvas id=chart width=300 height=150></canvas>
- *       </div>
- *   </div>
+ * <div class="abeamer-story" id=story>
+ *     <div class=abeamer-scene id=scene1>
+ *       <canvas id=chart width=300 height=150></canvas>
+ *     </div>
+ * </div>
  * ```
  *
  * On the `hello-world` example, replace the `scene.addAnimations` with:
  * ```typescript
- *  scene.addAnimations([{
- *     selector: '#chart', // JQuery selector pointing to the HtmlElement
- *     tasks: [{
- *       handler: 'chart', // is always 'chart' for charts.
- *       params: {
- *         chartType: ABeamer.ChartTypes.bar, // or 'bar' if you are using javascript
- *         labelsX: { captions: ['A', 'B', 'C', 'D', 'E'] },
- *         title: 'My first Chart',
- *         data: [[100, 200, 50, 140, 300]],
- *       } as ABeamer.AxisChartTaskParams, // comment as ... if you are using javascript
- *     }],
- *   }]);
+ * scene.addAnimations([{
+ *    selector: '#chart', // JQuery selector pointing to the HtmlElement
+ *    tasks: [{
+ *      handler: 'chart', // is always 'chart' for charts.
+ *      params: {
+ *        chartType: ABeamer.ChartTypes.bar, // or 'bar' if you are using javascript
+ *        labelsX: { captions: ['A', 'B', 'C', 'D', 'E'] },
+ *        title: 'My first Chart',
+ *        data: [[100, 200, 50, 140, 300]],
+ *      } as ABeamer.AxisChartTaskParams, // comment as ... if you are using javascript
+ *    }],
+ *  }]);
  * ```
  * The previous example, will create a static chart.
  * To animate it, change it the to following:
  * ```typescript
- *    scene.addAnimations([{
- *     selector: 'canvas',
- *     tasks: [{
- *       handler: 'chart',
- *       params: {
- *         chartType: ABeamer.ChartTypes.bar,
- *         labelsX: { captions: ['A', 'B', 'C', 'D', 'E'] },
- *         title: 'My first Chart',
- *         data: [[100, 200, 50, 140, 300]],
- *         // animation parameters
- *         pointHeightStart: 0.1,    // defined the initial value for the animation point-height property
- *         animeSelector: 'chart-anime-01', // unique animation selector to be used by the animator
- *       } as ABeamer.AxisChartTaskParams,
+ *  scene.addAnimations([{
+ *   selector: 'canvas',
+ *   tasks: [{
+ *     handler: 'chart',
+ *     params: {
+ *       chartType: ABeamer.ChartTypes.bar,
+ *       labelsX: { captions: ['A', 'B', 'C', 'D', 'E'] },
+ *       title: 'My first Chart',
+ *       data: [[100, 200, 50, 140, 300]],
+ *       // animation parameters
+ *       pointHeightStart: 0.1,    // defined the initial value for the animation point-height property
+ *       animeSelector: 'chart-anime-01', // unique animation selector to be used by the animator
+ *     } as ABeamer.AxisChartTaskParams,
+ *   }],
+ * }])
+ *   .addAnimations([{
+ *     selector: `%chart-anime-01`, // animation selector defined previously, prefixed with '%'
+ *     duration: `1s`,
+ *     props: [{
+ *       prop: 'point-height', // property which initial value is 0.1
+ *       value: 1,             // value at the end of animation
  *     }],
- *   }])
- *     .addAnimations([{
- *       selector: `%chart-anime-01`, // animation selector defined previously, prefixed with '%'
- *       duration: `1s`,
- *       props: [{
- *         prop: 'point-height', // property which initial value is 0.1
- *         value: 1,             // value at the end of animation
- *       }],
- *     }]);
+ *   }]);
  * ```
  */
 var ABeamer;

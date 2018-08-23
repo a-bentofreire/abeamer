@@ -63,40 +63,58 @@
  *
  * The whole process is fairly simple, just follow these steps:
  *
- * 1. create a project using abeamer command line called `my-project`.
- * `abeamer create my-project`.
+ * - create a project using abeamer command line called `my-project`.
  *
- * 2. download [animate-transitions](https://a-bentofreire.github.io/abeamer-gallery-release/animate-transitions/code.zip),
+ * ```shell
+ * abeamer create my-project
+ * ```
+ *
+ * - download [animate-transitions](/gallery/latest/animate-transitions/code.zip),
  * and unzip to the newly created folder `my-project`. When asked to overwrite the files, select 'Yes'.
  * This is just a complete example of story ready to teleport.
  * The following steps are for testing purposes, for production mode will be
  * described after.
  *
- * 3. Run the live server: `abeamer serve`.
+ * - Run the live server:
+ *
+ * ```shell
+ * abeamer serve
+ * ```
+ *
  * Due CORS and since this is a local file it requires a live server.
  *
- * 4. Execute:
- * `abeamer render my-project --url http://localhost:9000/my-project/ --teleport`
+ * - Execute:
+ *
+ * ```shell
+ * abeamer render my-project --url http://localhost:9000/my-project/ --teleport
+ * ```
+ *
  * This will create a file called `story.json` on `my-project` folder.
  *
- * 5. create a project using abeamer command line called `server`.
- * `abeamer create server`.
- * Download [remote-server](https://a-bentofreire.github.io/abeamer-gallery-release/remote-server/code.zip),
+ * - create a project using abeamer command line called `server`.
+ *
+ * ```shell
+ * abeamer create server
+ * ```
+ *
+ * Download [remote-server](/gallery/latest/remote-server/code.zip),
  * and unzip  to the newly created folder `server`. When asked to overwrite the files, select 'Yes'.
  *
- * 4. Copy the `story.json` from the `my-project` folder to the `server` folder.
+ * - Copy the `story.json` from the `my-project` folder to the `server` folder.
  *
- * 6. Copy all the assets sub-folder from the `my-project` folder to the `server` folder.
+ * - Copy all the assets sub-folder from the `my-project` folder to the `server` folder.
  *
- * 7. Execute:
- * ```
+ * - Execute:
+ *
+ * ```shell
  * abeamer render \
  * --url http://localhost:9000/server/ \
  * --allowed-plugins server/.allowed-plugins.json \
  * --inject-page server/index.html \
  * --config server/story.json
  * ```
- * This will generate the frames on `server/story-frames`
+ *
+ * This will generate the frames on `server/story-frames`.
  *
  *
  * The previous steps where built for testing purposes,
@@ -137,7 +155,7 @@
  * any other field can be used to store extra data.
  *
  * The remote machine has an empty story body,
- * see [remote-server](https://a-bentofreire.github.io/abeamer-gallery-release/#remote-server), where it fills
+ * see [remote-server](/gallery/latest/#remote-server), where it fills
  * with the data has been teleported and injects the plugins.
  *
  *

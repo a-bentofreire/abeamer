@@ -24,7 +24,7 @@
  * To ensure that `normal` and `reverse` finish their cycles at the same time,
  * the `reverse` repeats the same value at the beginning of the next cycle.
  *
- * @example gallery/animate-loop
+ * @see gallery/animate-loop
  */
 namespace ABeamer {
 

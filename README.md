@@ -3,7 +3,7 @@
   
 ![Image](https://www.abeamer.com/gallery/latest/animate-abeamer/story-frames/story.gif)  
   
-**ABeamer** is a powerful frame-by-frame animation ecosystem, designed to create an animated story 
+[ABeamer](https://www.abeamer.com) is a powerful frame-by-frame animation ecosystem, designed to create an animated story 
 in the web browser and generate the file images of each frame in either a local machine or in the cloud.  
   
 Unlike `VelocityJs` and `JQuery.animate` which were built for real-time user interaction, 
@@ -322,7 +322,7 @@ If you have nodejs already installed, install using npm:
   
 `[sudo] npm install -g abeamer`  
   
-Otherwise if you don't want to install nodejs, download from [here](https://www.abeamer.com/downloads.zip),
+Otherwise if you don't want to install nodejs, download from [here](https://www.abeamer.com/downloads.html),
 but it won't execute the command-line utility.
 
 ## Requirements

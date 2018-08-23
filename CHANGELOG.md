@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - (DEV) Port documents build to mkdocs 1.0.1.
 - Improve the gallery example descriptions.
 - Improve of a few cosmetic steps of the `build gallery-release`.
+- Fix broken links, documentation formating and its output.
+> The output documentation code syntax highlight is changed to javascript due
+> the fact the highligher processor performs better.
+> The website scripts will be responsible to improve the code highlight output.
+
 
 ### Added
 - Add Minor cosmetic improvements on gallery README.
