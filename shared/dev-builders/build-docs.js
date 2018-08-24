@@ -9,6 +9,7 @@ var sysFs = require("fs");
 var sysPath = require("path");
 var fsix_js_1 = require("../vendor/fsix.js");
 var dev_paths_js_1 = require("../dev-paths.js");
+var dev_web_links_js_1 = require("../dev-web-links.js");
 var versionLib = require("../version.js");
 /** @module developer | This module won't be part of release version */
 /**
@@ -53,10 +54,12 @@ var BuildDocs;
             isEndUser: true,
             logFile: './build-docs-end-user.log',
             processIndexPage: function (data) {
-                return data.replace(/^(.*)developer-badge\.gif(.*)$/m, function (all, p1, p2) {
+                return data
+                    .replace(/^(.*)developer-badge\.gif(.*)$/m, function (all, p1, p2) {
                     badgeLine = all;
                     return p1 + 'end-user-badge.gif' + p2;
-                });
+                })
+                    .replace(new RegExp(dev_web_links_js_1.DevWebLinks.webDomain + "/", 'g'), '/');
             },
         },
         {
@@ -73,7 +76,6 @@ var BuildDocs;
                     if (!badgeLine) {
                         throw "end-user should had been processed already.";
                     }
-                    console.warn('---WARN: Make sure the README links match mkdocs-local---');
                     return all + '\n' + badgeLine + '  \n';
                 });
             },

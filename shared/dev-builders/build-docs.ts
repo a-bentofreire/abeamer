@@ -10,6 +10,7 @@ import * as sysFs from "fs";
 import * as sysPath from "path";
 import { fsix } from "../vendor/fsix.js";
 import { DevPaths } from "../dev-paths.js";
+import { DevWebLinks as webLinks, DevWebLinks } from "../dev-web-links.js";
 import * as versionLib from '../version.js';
 
 /** @module developer | This module won't be part of release version */
@@ -62,10 +63,12 @@ export namespace BuildDocs {
       isEndUser: true,
       logFile: './build-docs-end-user.log',
       processIndexPage: (data: string) => {
-        return data.replace(/^(.*)developer-badge\.gif(.*)$/m, (all, p1, p2) => {
-          badgeLine = all;
-          return p1 + 'end-user-badge.gif' + p2;
-        });
+        return data
+          .replace(/^(.*)developer-badge\.gif(.*)$/m, (all, p1, p2) => {
+            badgeLine = all;
+            return p1 + 'end-user-badge.gif' + p2;
+          })
+          .replace(new RegExp(`${DevWebLinks.webDomain}/`, 'g'), '/');
       },
     },
     {
@@ -82,7 +85,6 @@ export namespace BuildDocs {
           if (!badgeLine) {
             throw `end-user should had been processed already.`;
           }
-          console.warn('---WARN: Make sure the README links match mkdocs-local---');
           return all + '\n' + badgeLine + '  \n';
         });
       },
