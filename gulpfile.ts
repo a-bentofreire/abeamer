@@ -93,9 +93,7 @@ namespace Gulp {
     build-docs - builds both the end-user and developer documentation
       when: before publishing a new **stable** version and after testing
 
-    build-docs --local - same as build-docs but uses local links
-
-    build-docs --production - same as build-docs but adds production fields from .mkdocs-template.yml
+    post-build-docs - changes links for offline testing and adds other improvements
 
     build-definition-files - builds definition files for end-user and developer
       when: after any public or shared member of a class is modified
@@ -575,6 +573,21 @@ namespace Gulp {
 
   gulp.task('build-docs', () => {
     BuildDocs.build(libModules, pluginModules);
+  });
+
+
+  gulp.task('post-build-docs', () => {
+    const replacePaths = [
+      [/"[^"]*highlight.[^"]*\.js"/, '"/vendor/highlight.js"'],
+      [/"[^"]+jquery[^"]*\.js"/, '"/vendor/jquery-3.3.1.min.js"'],
+      [/"[\.\/]*css\/theme(\w*)\.css"/g, '"/css/mydocs/theme$1.min.css"'],
+      [/"[^"]+highlight.js[^"]*\.css"/, '"/css/my-code-theme.min.css"'],
+    ];
+
+    BuildDocs.postBuild([
+      `${DevPaths.END_USER_DOCS_PATH}/en/site{/,/*/}*.html`,
+      `${DevPaths.DEV_DOCS_PATH}/en/site{/,/*/}*.html`],
+      replacePaths);
   });
 
   // ------------------------------------------------------------------------

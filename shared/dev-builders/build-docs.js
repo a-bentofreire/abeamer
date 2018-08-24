@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License+uuid License. See License.txt for details
 // ------------------------------------------------------------------------
+var globule = require("globule");
 var sysFs = require("fs");
 var sysPath = require("path");
 var fsix_js_1 = require("../vendor/fsix.js");
@@ -638,5 +639,18 @@ var BuildDocs;
         });
     }
     BuildDocs.build = build;
+    // ------------------------------------------------------------------------
+    //                               buildWebLinks
+    // ------------------------------------------------------------------------
+    function postBuild(filePatterns, replacePaths) {
+        globule.find(filePatterns).forEach(function (file) {
+            var content = fsix_js_1.fsix.readUtf8Sync(file);
+            replacePaths.forEach(function (pathSrcDst) {
+                content = content.replace(pathSrcDst[0], pathSrcDst[1]);
+            });
+            sysFs.writeFileSync(file, content);
+        });
+    }
+    BuildDocs.postBuild = postBuild;
 })(BuildDocs = exports.BuildDocs || (exports.BuildDocs = {}));
 //# sourceMappingURL=build-docs.js.map

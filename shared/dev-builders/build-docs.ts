@@ -6,11 +6,12 @@
 // Licensed under the MIT License+uuid License. See License.txt for details
 // ------------------------------------------------------------------------
 
+import * as globule from "globule";
 import * as sysFs from "fs";
 import * as sysPath from "path";
 import { fsix } from "../vendor/fsix.js";
 import { DevPaths } from "../dev-paths.js";
-import { DevWebLinks as webLinks, DevWebLinks } from "../dev-web-links.js";
+import { DevWebLinks } from "../dev-web-links.js";
 import * as versionLib from '../version.js';
 
 /** @module developer | This module won't be part of release version */
@@ -838,6 +839,23 @@ export namespace BuildDocs {
 Generated: ${log.generated.length} files.
 Not Found references: ${log.notFound.length}
 `);
+    });
+  }
+
+  // ------------------------------------------------------------------------
+  //                               buildWebLinks
+  // ------------------------------------------------------------------------
+
+  export function postBuild(filePatterns: string[],
+     replacePaths: any[][]): void {
+
+    globule.find(filePatterns).forEach(file => {
+      let content = fsix.readUtf8Sync(file);
+      replacePaths.forEach((pathSrcDst) => {
+        content = content.replace(pathSrcDst[0], pathSrcDst[1] as string);
+      });
+
+      sysFs.writeFileSync(file, content);
     });
   }
 }
