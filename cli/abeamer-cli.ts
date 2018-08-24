@@ -29,67 +29,114 @@ import { HttpServerEx } from "../shared/vendor/http-server-ex.js";
  *
  * **ABeamer** command line utility is used to:
  *
- * 1. create projects: `abeamer create`.
- * 2. launch a live server: `abeamer serve`.
- * 3. render the project to disk: `abeamer render`.
- * 4. create gifs: `abeamer gif`.
- * 5. create movies: `abeamer movie`.
- *
+ * - create projects:
+ * ```shell
+ * abeamer create
+ * ```
+ * - launch a live server:
+ * ```shell
+ * abeamer serve
+ * ```
+ * - render the project to disk:
+ * ```shell
+ * abeamer render
+ * ```
+ * - create gifs:
+ * ```shell
+ * abeamer gif
+ * ```
+ * - create movies:
+ * ```shell
+ * abeamer movie
+ * ```
+ * ---------------------
  * ## Examples
  *
- *  Creates a TypeScript/JavaScript project.
- *  `abeamer create foo --width 720 --height 480 --fps 20`.
- *
- *  Creates a JavaScript project without TypeScript.
- *  `abeamer create foo-js --width 384 --height 288 --fps 30 --no-typescript`.
- *
- *  Starts the live server on port 9000. The url is `http://localhost:9000/`.
- * `abeamer serve`.
- *
- *  Starts the live server with list directory option if search part of url is `?dir`.
- *  The url is `http://localhost:9000/?dir`
- * `abeamer serve --list-dir`.
- *
- *  Starts the live server on port 8000. The url is `http://localhost:8000/`.
- * `abeamer serve --port 8000`.
- *
- *  Generate the animations in file image sequences from the project in the current directory.
- * `abeamer render`.
- *
- *  Same as above, but deletes the previous images and the project is on directory `foo`.
- * `abeamer render --dp foo`.
- *
- *  Same as the first render, but it renders from a live server.
- *  Required if it's loading `.json` files or is teleporting.
- * `abeamer render --url http://localhost:9000/foo/index.html`
- *
- *  Generates only the `story.json` file, it doesn't generates the file image sequence.
- *  This should be used only for testing. Teleporting should be done from the web browser library,
- *  and the teleported story via Ajax to the cloud.
- * `abeamer render --url http://localhost:9000/foo/index.html --teleport`
- *
- *  Same as the first render, but with verbose logging.
- * `abeamer render --ll 3 --dp foo`.
- *
- *  Creates an animated gif from the previous generated image sequence on `foo/story-frames/story.gif`.
- * `abeamer gif foo/`.
- *  Requires that imagemagick `convert` to be on the search path, or set `IM_CONVERT_BIN=<absolute-path-to-executable>`
- *
- *  Creates an animated gif from the previous generated image sequence on `hello.gif`.
- * `abeamer gif foo/ --gif hello.gif`.
- *
- *  Creates an animated gif without looping.
- * `abeamer gif foo/ --loop 1`.
- *
- *  Creates a movie from the previous generated image sequence on `foo/story-frames/movie.mp4`.
- * `abeamer movie foo/`.
- *  Requires that `ffmpeg` to be on the search path, or set `FFMPEG_BIN=<absolute-path-to-executable>`
- *
- *  Creates the movie `foo/story.webm`.
- * `abeamer movie foo/ --movie foo/story.webm`.
- *
- *  Creates a movie from the previous generated image sequence using `foo/bkg-movie.mp4` as a background.
- * `abeamer movie foo/ --bkg-movie foo/bkg-movie.mp4`.
+ * - Create a TypeScript/JavaScript project.
+ * ```shell
+ * abeamer create foo --width 720 --height 480 --fps 20
+ * ```
+ * ---------------------
+ * - Create a JavaScript project without TypeScript.
+ * ```shell
+ * abeamer create foo-js --width 384 --height 288 --fps 30 --no-typescript
+ * ```
+ * ---------------------
+ * - Start the live server on port 9000. The url is `http://localhost:9000/`.
+ * ```shell
+ * abeamer serve
+ * ```
+ * ---------------------
+ * - Start the live server with list directory option if search part of url is `?dir`.
+ * The url is `http://localhost:9000/?dir`.
+ * ```shell
+ * abeamer serve --list-dir
+ * ```
+ * ---------------------
+ * - Start the live server on port 8000. The url is `http://localhost:8000/`.
+ * ```shell
+ * abeamer serve --port 8000
+ * ```
+ * ---------------------
+ * - Generate the animations in file image sequences from the project in the current directory.
+ * ```shell
+ * abeamer render
+ * ```
+ * ---------------------
+ * - Same as above, but deletes the previous images and the project is on directory `foo`.
+ * ```shell
+ * abeamer render --dp foo
+ * ```
+ * ---------------------
+ * - Same as the first render, but it renders from a live server.
+ * Required if it's loading `.json` files or is teleporting.
+ * ```shell
+ * abeamer render --url http://localhost:9000/foo/index.html
+ * ```
+ * ---------------------
+ * - Generate only the `story.json` file, it doesn't generates the file image sequence.
+ * This should be used only for testing. Teleporting should be done from the web browser library,
+ * and the teleported story via Ajax to the cloud.
+ * ```shell
+ * abeamer render --url http://localhost:9000/foo/index.html --teleport
+ * ```
+ * ---------------------
+ * - Same as the first render, but with verbose logging.
+ * ```shell
+ * abeamer render --ll 3 --dp foo
+ * ```
+ * ---------------------
+ * - Create an animated gif from the previous generated image sequence on `foo/story-frames/story.gif`.
+ *  Requires that imagemagick `convert` to be on the search path, or set `IM_CONVERT_BIN=<absolute-path-to-executable>`.
+ * ```shell
+ * abeamer gif foo/
+ * ```
+ * ---------------------
+ * - Create an animated gif from the previous generated image sequence on `hello.gif`.
+ * ```shell
+ * abeamer gif foo/ --gif hello.gif
+ * ```
+ * ---------------------
+ * - Create an animated gif without looping.
+ * ```shell
+ * abeamer gif foo/ --loop 1
+ * ```
+ * ---------------------
+ * - Create a movie from the previous generated image sequence on `foo/story-frames/movie.mp4`.
+ * Requires that `ffmpeg` to be on the search path, or set `FFMPEG_BIN=<absolute-path-to-executable>`.
+ * ```shell
+ * abeamer movie foo/
+ * ```
+ * ---------------------
+ * - Create the movie `foo/story.webm`.
+ * ```shell
+ * abeamer movie foo/ --movie foo/story.webm
+ * ```
+ * ---------------------
+ * - Create a movie from the previous generated image sequence using `foo/bkg-movie.mp4` as a background.
+ * ```shell
+ * abeamer movie foo/ --bkg-movie foo/bkg-movie.mp4
+ * ```
  */
 namespace Cli {
   // ------------------------------------------------------------------------

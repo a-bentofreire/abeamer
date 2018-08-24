@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > By moving the docs and gallery to the same domain as the website and blog,
 > and by restructuring the docs and gallery output paths to be the same as online,
 > now it's possible to test the docs and gallery offline using a local server and symlinks.
+- Improve command line documentation.
 
 ### Added
 - Add Minor cosmetic improvements on gallery README.
