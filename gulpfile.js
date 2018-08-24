@@ -417,10 +417,22 @@ var Gulp;
             [/"[\.\/]*css\/theme(\w*)\.css"/g, '"/css/mydocs/theme$1.min.css"'],
             [/"[^"]+highlight.js[^"]*\.css"/, '"/css/my-code-theme.min.css"'],
         ];
+        var wordMap = {};
+        ['type', 'export', 'interface', 'function', 'readonly']
+            .forEach(function (word) { wordMap[word] = { wordClass: 'keyword' }; });
+        ['void', 'string', 'number', 'boolean', 'object', 'any']
+            .forEach(function (word) { wordMap[word] = { wordClass: 'type' }; });
+        [['uint', 'zero or positive integer'], ['int', 'integer']]
+            .forEach(function (wordPair) {
+            wordMap[wordPair[0]] = {
+                wordClass: 'type',
+                title: wordPair[1],
+            };
+        });
         build_docs_js_1.BuildDocs.postBuild([
             dev_paths_js_1.DevPaths.END_USER_DOCS_PATH + "/en/site{/,/*/}*.html",
             dev_paths_js_1.DevPaths.DEV_DOCS_PATH + "/en/site{/,/*/}*.html"
-        ], replacePaths);
+        ], replacePaths, wordMap);
     });
     // ------------------------------------------------------------------------
     //                               Builds Release Version Of The Gallery

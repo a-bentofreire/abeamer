@@ -639,14 +639,20 @@ var BuildDocs;
         });
     }
     BuildDocs.build = build;
-    // ------------------------------------------------------------------------
-    //                               buildWebLinks
-    // ------------------------------------------------------------------------
-    function postBuild(filePatterns, replacePaths) {
+    function postBuild(filePatterns, replacePaths, wordMap) {
+        var highlightRegEx = new RegExp("\\b(" + Object.keys(wordMap).join('|') + ")\\b", 'g');
         globule.find(filePatterns).forEach(function (file) {
             var content = fsix_js_1.fsix.readUtf8Sync(file);
             replacePaths.forEach(function (pathSrcDst) {
                 content = content.replace(pathSrcDst[0], pathSrcDst[1]);
+            });
+            content = content.replace(/(<code class="js">)((?:.|\n)+?)(<\/code>)/g, function (all, preTag, code, postTag) {
+                code = code.replace(highlightRegEx, function (all, word) {
+                    var wordInf = wordMap[word];
+                    return "<span class=\"hljs-" + wordInf.wordClass + "\""
+                        + ((wordInf.title ? " title=\"" + wordInf.title + "\"" : '') + ">" + word + "</span>");
+                });
+                return preTag + code + postTag;
             });
             sysFs.writeFileSync(file, content);
         });

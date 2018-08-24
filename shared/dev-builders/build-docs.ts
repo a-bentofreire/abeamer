@@ -846,8 +846,18 @@ Not Found references: ${log.notFound.length}
   //                               buildWebLinks
   // ------------------------------------------------------------------------
 
+  export interface WordMap {
+    [word: string]: {
+      wordClass: string,
+      title?: string,
+    };
+  }
+
   export function postBuild(filePatterns: string[],
-     replacePaths: any[][]): void {
+    replacePaths: any[][], wordMap: WordMap): void {
+
+    const highlightRegEx = new
+      RegExp(`\\b(${Object.keys(wordMap).join('|')})\\b`, 'g');
 
     globule.find(filePatterns).forEach(file => {
       let content = fsix.readUtf8Sync(file);
@@ -855,6 +865,16 @@ Not Found references: ${log.notFound.length}
         content = content.replace(pathSrcDst[0], pathSrcDst[1] as string);
       });
 
+      content = content.replace(/(<code class="js">)((?:.|\n)+?)(<\/code>)/g,
+        (all, preTag, code, postTag) => {
+
+          code = code.replace(highlightRegEx, (all, word) => {
+            const wordInf = wordMap[word];
+            return `<span class="hljs-${wordInf.wordClass}"`
+              + `${wordInf.title ? ` title="${wordInf.title}"` : ''}>${word}</span>`;
+          });
+          return preTag + code + postTag;
+        });
       sysFs.writeFileSync(file, content);
     });
   }

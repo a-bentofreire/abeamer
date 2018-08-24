@@ -584,10 +584,26 @@ namespace Gulp {
       [/"[^"]+highlight.js[^"]*\.css"/, '"/css/my-code-theme.min.css"'],
     ];
 
+    const wordMap: BuildDocs.WordMap = {};
+    ['type', 'export', 'interface', 'function', 'readonly']
+      .forEach(word => { wordMap[word] = { wordClass: 'keyword' }; });
+
+    ['void', 'string', 'number', 'boolean', 'object', 'any']
+      .forEach(word => { wordMap[word] = { wordClass: 'type' }; });
+
+    [['uint', 'zero or positive integer'], ['int', 'integer']]
+      .forEach(wordPair => {
+        wordMap[wordPair[0]] = {
+          wordClass: 'type',
+          title: wordPair[1],
+        };
+      });
+
+
     BuildDocs.postBuild([
       `${DevPaths.END_USER_DOCS_PATH}/en/site{/,/*/}*.html`,
       `${DevPaths.DEV_DOCS_PATH}/en/site{/,/*/}*.html`],
-      replacePaths);
+      replacePaths, wordMap);
   });
 
   // ------------------------------------------------------------------------

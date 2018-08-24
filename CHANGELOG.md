@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - (DEV) Add `gulp post-build-docs` to improve documentation output.
 > This version replaces documentation online links with local links
 > to support offline testing.
+- Add type and keyword syntax highlighting code during `post-build-docs`.
 
 
 ## [1.4.0] -
