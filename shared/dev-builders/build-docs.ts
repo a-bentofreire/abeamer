@@ -11,7 +11,6 @@ import * as sysPath from "path";
 import { fsix } from "../vendor/fsix.js";
 import { DevPaths } from "../dev-paths.js";
 import * as versionLib from '../version.js';
-import { DevWebLinks as webLinks } from "../dev-web-links.js";
 
 /** @module developer | This module won't be part of release version */
 
@@ -79,7 +78,7 @@ export namespace BuildDocs {
       isEndUser: false,
       logFile: './build-docs-dev.log',
       processIndexPage: (data: string) => {
-        return data.replace(/^(# Description.*)$/m, (all, p1, p2) => {
+        return data.replace(/^(# Description.*)$/m, (all) => {
           if (!badgeLine) {
             throw `end-user should had been processed already.`;
           }
@@ -204,13 +203,14 @@ export namespace BuildDocs {
     ConstructorName,
   }
 
-  enum ModuleType {
+
+  /* enum ModuleType {
     unknown,
     developer,
     internal,
     shared,
     'end-user',
-  }
+  } */
 
 
   const BadgeNameOfDocIdType = [

@@ -214,7 +214,6 @@ var Exact;
         var listLen = list.length;
         // tslint:disable-next-line:prefer-for-of
         for (var i = 0; i < cycle.length; i++) {
-            var v = Math.round(cycle[i] * listLen);
             var listIndex = Math.floor(listLen * Math.min(Math.max(0, cycle[i]), 0.999));
             res.push(list[listIndex]);
         }

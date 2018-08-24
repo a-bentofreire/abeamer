@@ -94,7 +94,6 @@
     "build-docs": "gulp build-docs",
     "build-docs-local": "gulp build-docs --local",
     "build-server-consts": "gulp build-server-consts",
-    "build-gallery-release-local": "gulp build-gallery-release --local",
     "gallery-update-scripts": "gulp update-gallery-scripts",
     "clean-gallery": "gulp clean-gallery",
     "---- start: render gallery commands ----": "----",

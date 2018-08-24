@@ -475,13 +475,11 @@ export namespace Exact {
     const listLen = list.length;
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < cycle.length; i++) {
-      const v = Math.round(cycle[i] * listLen);
       const listIndex = Math.floor(listLen * Math.min(Math.max(0, cycle[i]), 0.999));
       res.push(list[listIndex]);
     }
     return res;
   }
-
 
 
   export function roundToTestDigits(values: number[]): void {

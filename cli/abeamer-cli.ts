@@ -521,6 +521,7 @@ To modify the fps, edit the [js/main.ts] file.
   function copyTree(srcPath: string, dstPath: string,
     onCopyText?: (text: string, fileBase: string) => string,
     allowCopy?: (fileBase: string) => boolean) {
+
     if (isVerbose) {
       console.log(`Copying Directory ${srcPath} to ${dstPath}`);
     }
@@ -571,17 +572,6 @@ To modify the fps, edit the [js/main.ts] file.
         console.log(`Directory listing on http://localhost:${port}/?dir`);
       }
     }
-  }
-
-  // ------------------------------------------------------------------------
-  //                               Utilities
-  // ------------------------------------------------------------------------
-
-  function fileMustExists(fileName: string): string {
-    if (!sysFs.existsSync(fileName)) {
-      throw `${fileName} must exist`;
-    }
-    return fileName;
   }
 
   // ------------------------------------------------------------------------

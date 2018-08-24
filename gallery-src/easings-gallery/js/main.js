@@ -16,9 +16,7 @@ $(window).on("load", function () {
     var h = graphHeight;
     var margin = 10;
     var d = 2; // duration in seconds
-    var x0 = margin;
     var x1 = graphWidth - 2 * margin;
-    var y0 = h - margin;
     console.log(easings);
     scene1.addAnimations([{
             selector: '#gallery',

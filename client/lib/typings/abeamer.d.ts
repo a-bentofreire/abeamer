@@ -135,7 +135,7 @@ declare namespace ABeamer {
    */
   export interface PluginManager {
 
-    addPlugin(pluginInfo: PluginInfo);
+    addPlugin(pluginInfo: PluginInfo): void;
     addEasings(easings: [string, EasingFunc][]): void;
     addOscillators(oscillators: [string, OscillatorFunc][]): void;
     addPaths(paths: [string, PathFunc][]): void;
@@ -143,7 +143,7 @@ declare namespace ABeamer {
     addTransitions(transitions: [string, TransitionFunc][]): void;
     addFlyovers(flyovers: [string, FlyoverFunc][]): void;
     addFunctions(functions: [string, ExFunction][]): void;
-    addLocalization(localeInfo: Localization);
+    addLocalization(localeInfo: Localization): void;
   }
 
   export interface pEls {

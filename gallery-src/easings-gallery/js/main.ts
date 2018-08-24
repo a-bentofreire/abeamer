@@ -23,9 +23,7 @@ $(window).on("load", () => {
   const h = graphHeight;
   const margin = 10;
   const d = 2; // duration in seconds
-  const x0 = margin;
   const x1 = graphWidth - 2 * margin;
-  const y0 = h - margin;
 
   console.log(easings);
 

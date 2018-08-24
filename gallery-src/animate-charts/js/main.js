@@ -19,8 +19,6 @@ $(window).on("load", function () {
     var defLabelsX = {
         captions: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     };
-    var firstOnly = false;
-    var viewOnly = undefined;
     var charts = [{
             chartType: ABeamer.ChartTypes.bar,
             labelsX: defLabelsX,

@@ -1328,6 +1328,7 @@ declare namespace ABeamer {
    */
   export type ExprName = ExprString;
 
+
   /**
    * Defines parameters used both by `Animation` and `AnimationProp`.
    * The `AnimationProp` overrides the parameters defined by `Animation`.
@@ -1341,6 +1342,7 @@ declare namespace ABeamer {
 
     /** If it's false, it will bypass the animation or property. */
     enabled?: boolean;
+
 
     /**
      * A `Scene.addAnimations` runs its list of animations and properties in parallel,
@@ -1356,6 +1358,7 @@ declare namespace ABeamer {
      * 3. To `false` of the last animation, it won't move forward at the end.
      */
     advance?: boolean;
+
 
     /**
      * Defines the duration of the animation of a single cycle
@@ -1612,7 +1615,6 @@ declare namespace ABeamer {
     onSetValue?(value: AnimPropValue, args?: ABeamerArgs): boolean;
 
 
-
     /**
      * Formats the value using the sprintf rules.
      * This is the last node in the computation pipeline.
@@ -1636,7 +1638,6 @@ declare namespace ABeamer {
     valueText?: string[] | ExprString | ValueTextFunc;
 
 
-
     /**
      * **EXPERIMENTAL** Waits for the adapter to be ready to deliver an asset before
      * instructing the render to move to the next frame or give the server order to store the image.
@@ -1647,7 +1648,6 @@ declare namespace ABeamer {
      * @see gallery/animate-video-sync
      */
     waitFor?: WaitForList;
-
 
 
     /**
@@ -1733,6 +1733,7 @@ declare namespace ABeamer {
      */
     props?: AnimationProp[];
   }
+
 
   export type Animations = Animation[];
 

@@ -145,12 +145,10 @@ var ABeamer;
             ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(cfg.fps), ABeamer.Msgs.MustNatPositive, { p: 'fps' });
             ABeamer._vars.fps = cfg.fps;
             function setDim(srvPropPrefix, cfgValue, propName) {
-                var storyNeedsDimUpdate = false;
                 var res = cfgValue || self.storyAdapter.getProp(propName, args);
                 if (urlParams) {
                     urlParams.replace(new RegExp(srvPropPrefix + '(\\d+)'), function (m, p1) {
                         var qsValue = parseInt(p1);
-                        storyNeedsDimUpdate = qsValue !== res;
                         res = qsValue || res;
                         return '';
                     });
@@ -655,7 +653,7 @@ var ABeamer;
         //                               Transitions
         // ------------------------------------------------------------------------
         _Story.prototype._setupTransitions = function () {
-            this._scenes.forEach(function (scene, index) {
+            this._scenes.forEach(function (scene) {
                 scene._setupTransition();
             });
         };

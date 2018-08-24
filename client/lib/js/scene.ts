@@ -124,6 +124,7 @@ namespace ABeamer {
 
     constructor(story: _StoryImpl, sceneSelector: SceneSelector,
       prevScene: _SceneImpl | undefined) {
+
       this._story = story;
       this._sceneAdpt = _isVirtualScene(sceneSelector)
         ? new _VirtualSceneAdapter(sceneSelector)
@@ -136,7 +137,7 @@ namespace ABeamer {
 
 
     /** Removes it self from the story. Used internally. */
-    _remove() {
+    _remove(): void {
       if (this._prevScene) {
         this._prevScene._nextScene = this._nextScene;
       }
@@ -354,7 +355,7 @@ namespace ABeamer {
 
         let elAnimation: _ElWorkAnimation = new _ElWorkAnimation();
 
-        elAnimation.buildElements(this._story, this, this._sceneAdpt, anime);
+        elAnimation.buildElements(this._story, this._sceneAdpt, anime);
 
         if (elAnimation.elAdapters.length) {
 
@@ -467,7 +468,7 @@ namespace ABeamer {
 
               const pi = propInterpolators[propIndex];
               // properties can override the anime values
-              if (!pi || !pi.propAssignValues(inProp, story, this, ai, elIndex)) { return; }
+              if (!pi || !pi.propAssignValues(inProp, story, ai, elIndex)) { return; }
 
               let posFrame = pi.startFrame;
               const endFrame = pi.endFrame;

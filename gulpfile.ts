@@ -40,7 +40,7 @@ namespace Gulp {
   sysProcess.chdir(__dirname);
 
   /** List of files and folders to typical preserve on `rm -rf` */
-  const PRESERVE_FILES = ['README.md', 'README-dev.md', '.git', '.gitignore'];
+  // const PRESERVE_FILES = ['README.md', 'README-dev.md', '.git', '.gitignore'];
   const CLIENT_UUID = '// uuid: 3b50413d-12c3-4a6c-9877-e6ead77f58c5\n\n';
   const COPYRIGHTS = '' +
 
@@ -107,8 +107,6 @@ namespace Gulp {
     build-gallery-release - builds release version of the gallery
       --local builds using local links
       when: before publishing a new gallery, after build-gallery-gifs
-
-    build-gallery-release --local - same as build-gallery-release but uses local links
 
     clean-gallery - deletes all the gallery story-frames files and folder
       when: cleaning day!

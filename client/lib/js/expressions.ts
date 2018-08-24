@@ -887,7 +887,6 @@ namespace ABeamer {
       || value2.paType !== ExFuncParamType.Number;
     const is1stArray = value1.paType === ExFuncParamType.Array;
     const is2ndArray = value2.paType === ExFuncParamType.Array;
-    const isArray = is1stArray && is2ndArray;
 
     function NumbersOnly() {
       if (AnyNotNumber) {

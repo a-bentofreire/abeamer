@@ -230,7 +230,7 @@ namespace ABeamer {
    * Converts the Handlers into strings, and calls tasks on TELEPORT stage.
    */
   export function _prepareTasksForTeleporting(anime: Animation,
-    tasks: Task[], args: ABeamerArgs) {
+    tasks: Task[], args: ABeamerArgs): void {
 
     tasks.forEach(task => { _buildWorkTask(task, anime, true, args); });
   }
@@ -262,7 +262,7 @@ namespace ABeamer {
 
 
   export function _runTasks(wkTasks: _WorkTask[], anime: Animation,
-    animeIndex: uint, args: ABeamerArgs) {
+    animeIndex: uint, args: ABeamerArgs): void {
 
     wkTasks.forEach(wkTask => {
       wkTask.animeIndex = animeIndex;

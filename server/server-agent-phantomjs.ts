@@ -62,7 +62,7 @@ namespace Server {
 
 
       /** Handles browser errors */
-      page.onError = (msg: string, trace: string[]): any => {
+      page.onError = (msg: string/* , trace: string[] */): any => {
         server.handleError(msg);
       };
 

@@ -107,7 +107,7 @@ declare namespace ABeamer {
     _story: _StoryImpl;
     _sceneAdpt: _SceneAdapter;
     _addAnimationCallCount: uint;
-    _remove();
+    _remove(): void;
     _internalContainsFrame(storyFramePos: int): boolean;
     _setStoryParams(storyFramePos: int,
       storySceneIndex: int): int;

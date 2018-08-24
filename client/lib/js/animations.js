@@ -180,7 +180,7 @@ var ABeamer;
             _this.propInterpolators = [];
             return _this;
         }
-        _ElWorkAnimation.prototype.buildElements = function (story, scene, sceneAdpt, anime) {
+        _ElWorkAnimation.prototype.buildElements = function (story, sceneAdpt, anime) {
             this.elAdapters = ABeamer._parseInElSelector(story, this.elAdapters, sceneAdpt, anime.selector);
         };
         return _ElWorkAnimation;
@@ -220,7 +220,7 @@ var ABeamer;
                 });
             return _this;
         }
-        _WorkAnimationProp.prototype.propAssignValues = function (acp, story, scene, ai, elIndex) {
+        _WorkAnimationProp.prototype.propAssignValues = function (acp, story, ai, elIndex) {
             if (!this.assignValues(acp, story, ai, this.realPropName, ai.nextPropStartFrame !== undefined ? ai.nextPropStartFrame : ai.positionFrame)) {
                 return false;
             }

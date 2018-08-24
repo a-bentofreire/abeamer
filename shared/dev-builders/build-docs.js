@@ -69,7 +69,7 @@ var BuildDocs;
             isEndUser: false,
             logFile: './build-docs-dev.log',
             processIndexPage: function (data) {
-                return data.replace(/^(# Description.*)$/m, function (all, p1, p2) {
+                return data.replace(/^(# Description.*)$/m, function (all) {
                     if (!badgeLine) {
                         throw "end-user should had been processed already.";
                     }
@@ -159,14 +159,13 @@ var BuildDocs;
         };
         return ReferenceBuilder;
     }());
-    var ModuleType;
-    (function (ModuleType) {
-        ModuleType[ModuleType["unknown"] = 0] = "unknown";
-        ModuleType[ModuleType["developer"] = 1] = "developer";
-        ModuleType[ModuleType["internal"] = 2] = "internal";
-        ModuleType[ModuleType["shared"] = 3] = "shared";
-        ModuleType[ModuleType["end-user"] = 4] = "end-user";
-    })(ModuleType || (ModuleType = {}));
+    /* enum ModuleType {
+      unknown,
+      developer,
+      internal,
+      shared,
+      'end-user',
+    } */
     var BadgeNameOfDocIdType = [
         "enum",
         "type",

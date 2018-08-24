@@ -161,6 +161,5 @@ namespace ABeamer {
     _vars.t = t;
     return parseFloat(
       calcExpr((params as _WorkExprMotionParams)._expression, args) as any);
-
   }
 }

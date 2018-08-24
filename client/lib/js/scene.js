@@ -294,7 +294,7 @@ var ABeamer;
                     return;
                 }
                 var elAnimation = new ABeamer._ElWorkAnimation();
-                elAnimation.buildElements(_this._story, _this, _this._sceneAdpt, anime);
+                elAnimation.buildElements(_this._story, _this._sceneAdpt, anime);
                 if (elAnimation.elAdapters.length) {
                     if (elAnimation.assignValues(anime, story, undefined, elAnimation.elAdapters[0].getId(args), _this._frameInNr)) {
                         anime.props.forEach(function (prop) {
@@ -392,7 +392,7 @@ var ABeamer;
                         anime.props.forEach(function (inProp, propIndex) {
                             var pi = propInterpolators[propIndex];
                             // properties can override the anime values
-                            if (!pi || !pi.propAssignValues(inProp, story, _this, ai, elIndex)) {
+                            if (!pi || !pi.propAssignValues(inProp, story, ai, elIndex)) {
                                 return;
                             }
                             var posFrame = pi.startFrame;

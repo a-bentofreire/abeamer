@@ -159,7 +159,7 @@ var BuildGalleryRelease;
         ls.stderr.on('data', function (data) {
             console.error(data.toString());
         });
-        ls.on('close', function (code) {
+        ls.on('close', function () {
             callback();
         });
     }

@@ -577,12 +577,10 @@ namespace ABeamer {
 
       function setDim(srvPropPrefix: string, cfgValue: uint, propName: string): uint {
 
-        let storyNeedsDimUpdate = false;
         let res = cfgValue || self.storyAdapter.getProp(propName, args) as uint;
         if (urlParams) {
           urlParams.replace(new RegExp(srvPropPrefix + '(\\d+)'), (m, p1) => {
             const qsValue = parseInt(p1);
-            storyNeedsDimUpdate = qsValue !== res;
             res = qsValue || res;
             return '';
           });
@@ -937,7 +935,7 @@ namespace ABeamer {
     // ------------------------------------------------------------------------
 
     protected _setupTransitions(): void {
-      this._scenes.forEach((scene, index) => {
+      this._scenes.forEach((scene) => {
         scene._setupTransition();
       });
     }

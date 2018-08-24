@@ -667,7 +667,6 @@ var ABeamer;
             || value2.paType !== 1 /* Number */;
         var is1stArray = value1.paType === 3 /* Array */;
         var is2ndArray = value2.paType === 3 /* Array */;
-        var isArray = is1stArray && is2ndArray;
         function NumbersOnly() {
             if (AnyNotNumber) {
                 err(p, 'This op only supports numbers', value1);

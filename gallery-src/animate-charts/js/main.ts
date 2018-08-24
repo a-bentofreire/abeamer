@@ -40,9 +40,6 @@ $(window).on("load", () => {
     chartWidth?: uint;
   }
 
-  const firstOnly = false;
-  const viewOnly = undefined;
-
   const charts: (AxisChartTaskParamsEx | PieChartTaskParamsEx)[] = [{
 
     chartType: ABeamer.ChartTypes.bar,

@@ -220,7 +220,7 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
       console.error(data.toString());
     });
 
-    ls.on('close', (code) => {
+    ls.on('close', () => {
       callback();
     });
   }

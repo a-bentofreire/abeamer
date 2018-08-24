@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > The output documentation code syntax highlight is changed to javascript due
 > the fact the highligher processor performs better.
 > The website scripts will be responsible to improve the code highlight output.
-
+- (DEV) Remove dead code. Add missing void return type.
 
 ### Added
 - Add Minor cosmetic improvements on gallery README.

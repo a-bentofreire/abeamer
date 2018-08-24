@@ -18,7 +18,7 @@ $(window).on("load", function () {
     var story = ABeamer.createStory(/*FPS:*/ 20);
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
-    var drawCallTimes = 0;
+    // let drawCallTimes = 0;
     // ------------------------------------------------------------------------
     //                               CanvasAnimator
     // ------------------------------------------------------------------------
@@ -57,7 +57,7 @@ $(window).on("load", function () {
             var lineWidth = this.props.lineWidth;
             ctx.fillStyle = '#FF3333';
             ctx.fillRect((w - lineWidth) / 2, y + 2, lineWidth, 4);
-            drawCallTimes++;
+            // drawCallTimes++;
             // console.log(`drawCallTimes: ${drawCallTimes}`);
         };
         return CanvasAnimator;

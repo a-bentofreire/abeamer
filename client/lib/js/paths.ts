@@ -175,6 +175,7 @@ namespace ABeamer {
 
   export function _expressionPath(t: number, params: PathParams, stage: uint,
     args?: ABeamerArgs): number[] {
+
     _vars.t = t;
     const v = calcExpr((params as _WorkExprMotionParams)._expression, args);
     return Array.isArray(v) ? v : [parseFloat(v as any)];

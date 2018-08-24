@@ -75,6 +75,7 @@ namespace ABeamer {
    */
   export type ExprName = ExprString;
 
+
   /**
    * Defines parameters used both by `Animation` and `AnimationProp`.
    * The `AnimationProp` overrides the parameters defined by `Animation`.
@@ -88,6 +89,7 @@ namespace ABeamer {
 
     /** If it's false, it will bypass the animation or property. */
     enabled?: boolean;
+
 
     /**
      * A `Scene.addAnimations` runs its list of animations and properties in parallel,
@@ -103,6 +105,7 @@ namespace ABeamer {
      * 3. To `false` of the last animation, it won't move forward at the end.
      */
     advance?: boolean;
+
 
     /**
      * Defines the duration of the animation of a single cycle
@@ -359,7 +362,6 @@ namespace ABeamer {
     onSetValue?(value: AnimPropValue, args?: ABeamerArgs): boolean;
 
 
-
     /**
      * Formats the value using the sprintf rules.
      * This is the last node in the computation pipeline.
@@ -383,7 +385,6 @@ namespace ABeamer {
     valueText?: string[] | ExprString | ValueTextFunc;
 
 
-
     /**
      * **EXPERIMENTAL** Waits for the adapter to be ready to deliver an asset before
      * instructing the render to move to the next frame or give the server order to store the image.
@@ -394,7 +395,6 @@ namespace ABeamer {
      * @see gallery/animate-video-sync
      */
     waitFor?: WaitForList;
-
 
 
     /**
@@ -480,6 +480,7 @@ namespace ABeamer {
      */
     props?: AnimationProp[];
   }
+
 
   export type Animations = Animation[];
 
@@ -575,7 +576,6 @@ namespace ABeamer {
       parent: _AbstractWorkAnimation | undefined,
       nameTag: string,
       refOrDef: uint,
-
     ): boolean {
 
       const args = story._args;
@@ -659,8 +659,8 @@ namespace ABeamer {
     propInterpolators: _PropInterpolator[] = [];
     nextPropStartFrame: uint;
 
-    buildElements(story: _StoryImpl, scene: _SceneImpl,
-      sceneAdpt: _SceneAdapter, anime: Animation) {
+    buildElements(story: _StoryImpl,
+      sceneAdpt: _SceneAdapter, anime: Animation): void {
 
       this.elAdapters = _parseInElSelector(story, this.elAdapters,
         sceneAdpt, anime.selector);
@@ -748,7 +748,6 @@ namespace ABeamer {
     propAssignValues(
       acp: AnimationCommonParams,
       story: _StoryImpl,
-      scene: _SceneImpl,
       ai: _ElWorkAnimation,
       elIndex: uint,
     ): boolean {
@@ -776,7 +775,7 @@ namespace ABeamer {
   // ------------------------------------------------------------------------
 
   export function _prepareAnimationsForTeleporting(animes: Animations,
-    args: ABeamerArgs) {
+    args: ABeamerArgs): void {
 
     animes.forEach(anime => {
       if (anime.tasks) {

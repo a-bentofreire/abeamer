@@ -59,7 +59,7 @@ var Server;
                 });
             };
             /** Handles browser errors */
-            page.onError = function (msg, trace) {
+            page.onError = function (msg /* , trace: string[] */) {
                 server.handleError(msg);
             };
             // ------------------------------------------------------------------------

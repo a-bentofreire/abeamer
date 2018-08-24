@@ -148,7 +148,7 @@ namespace ABeamer {
     _locale: string = 'en';
 
 
-    addPlugin(pluginInfo: PluginInfo) {
+    addPlugin(pluginInfo: PluginInfo): void {
       this._plugins.push(pluginInfo);
     }
 
@@ -202,7 +202,7 @@ namespace ABeamer {
     }
 
 
-    addLocalization(localeInfo: Localization) {
+    addLocalization(localeInfo: Localization): void {
 
       this._locale = localeInfo.locale;
       if (!this._locale) {

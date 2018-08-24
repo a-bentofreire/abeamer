@@ -12,7 +12,7 @@ $(window).on("load", () => {
 
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const ctx = canvas.getContext('2d');
-  let drawCallTimes = 0;
+  // let drawCallTimes = 0;
 
   // ------------------------------------------------------------------------
   //                               CanvasAnimator
@@ -58,7 +58,7 @@ $(window).on("load", () => {
       ctx.fillStyle = '#FF3333';
       ctx.fillRect((w - lineWidth) / 2, y + 2, lineWidth, 4);
 
-      drawCallTimes++;
+      // drawCallTimes++;
       // console.log(`drawCallTimes: ${drawCallTimes}`);
     }
   }
