@@ -11,6 +11,7 @@ var sysProcess = require("process");
 var gulp = require("gulp");
 var rimraf = require("rimraf");
 var globule = require("globule");
+var child_process_1 = require("child_process");
 var fsix_js_1 = require("./shared/vendor/fsix.js");
 var build_d_ts_abeamer_js_1 = require("./shared/dev-builders/build-d-ts-abeamer.js");
 var build_shared_js_1 = require("./shared/dev-builders/build-shared.js");
@@ -187,33 +188,47 @@ var Gulp;
         });
     });
     // ------------------------------------------------------------------------
-    //                               Pre-Build Release
+    //                               Build Single Lib
     // ------------------------------------------------------------------------
     var SINGLE_LIB_MODES = [
-        { folder: 'min', suffix: '', isDebug: false },
-        { folder: 'debug.min', suffix: '-debug', isDebug: true },
-    ];
-    gulp.task('pre-rel:clean', function (cb) {
+        { folder: 'min', suffix: '', isDebug: false, path: '' },
+        { folder: 'debug.min', suffix: '-debug', isDebug: true, path: '' },
+    ].map(function (mode) {
+        mode.path = cfg.paths.SINGLE_LIB_PATH + "/" + mode.folder;
+        return mode;
+    });
+    gulp.task('bs:clean', function (cb) {
         rimrafExcept(cfg.paths.SINGLE_LIB_PATH, []);
         cb();
     });
-    gulp.task('pre-rel:copy', function () {
+    gulp.task('bs:copy', function () {
         return mergeStream(SINGLE_LIB_MODES.map(function (mode) {
             return gulp.src([
                 './tsconfig.json',
                 './client/lib/typings/**',
                 '!./client/lib/typings/release/**',
             ], { base: '.' })
-                .pipe(gulp.dest(cfg.paths.SINGLE_LIB_PATH + "/" + mode.folder));
+                .pipe(gulp.dest(mode.path));
         }));
     });
-    gulp.task('pre-rel:build-single-file', function () {
+    gulp.task('bs:build-single-ts', function () {
         SINGLE_LIB_MODES.forEach(function (mode) {
-            var singleLibFile = cfg.paths.SINGLE_LIB_PATH + "/" + mode.folder + "/abeamer" + mode.suffix + ".ts";
-            build_single_lib_file_js_1.BuildSingleLibFile.build(libModules, cfg.paths.JS_PATH, cfg.paths.SINGLE_LIB_PATH + "/" + mode.folder, singleLibFile, 'gulp `build-release-latest`', ['_Story'], mode.isDebug);
+            var singleLibFile = mode.path + "/abeamer" + mode.suffix + ".ts";
+            build_single_lib_file_js_1.BuildSingleLibFile.build(libModules, cfg.paths.JS_PATH, "" + mode.path, singleLibFile, 'gulp `build-release-latest`', ['_Story'], mode.isDebug);
         });
     });
-    gulp.task('build-pre-release-internal', gulpSequence('pre-rel:clean', 'pre-rel:copy', 'pre-rel:build-single-file'));
+    gulp.task('bs:compile-single-ts', function (cb) {
+        var finishCount = SINGLE_LIB_MODES.length;
+        SINGLE_LIB_MODES.forEach(function (mode) {
+            child_process_1.exec('tsc -p ./', { cwd: mode.path }, function () {
+                finishCount--;
+                if (!finishCount) {
+                    cb();
+                }
+            });
+        });
+    });
+    gulp.task('build-single-lib-internal', gulpSequence('bs:clean', 'bs:copy', 'bs:build-single-ts', 'bs:compile-single-ts'));
     // ------------------------------------------------------------------------
     //                               Build Release
     // ------------------------------------------------------------------------
@@ -357,7 +372,7 @@ var Gulp;
             .pipe(gulp.dest(cfg.paths.RELEASE_LATEST_PATH + "/" + cfg.paths.TYPINGS_PATH))
             .pipe(gulpPreserveTime());
     });
-    gulp.task('build-release-latest-internal', ['rel:clean'], gulpSequence('rel:client', 'rel:gallery', 'rel:gallery-html', 'rel:client-js-join', 'rel:root', 'rel:README', 'rel:minify', 'rel:add-copyrights', 'rel:jquery-typings', 'rel:build-package.json', 'rel:build-tsconfig.ts', 'rel:build-abeamer.d.ts', 'rel:build-plugins-list.json'));
+    gulp.task('build-release-latest-internal', gulpSequence('build-single-lib-internal', 'rel:clean', 'rel:client', 'rel:gallery', 'rel:gallery-html', 'rel:client-js-join', 'rel:root', 'rel:README', 'rel:minify', 'rel:add-copyrights', 'rel:jquery-typings', 'rel:build-package.json', 'rel:build-tsconfig.ts', 'rel:build-abeamer.d.ts', 'rel:build-plugins-list.json'));
     // ------------------------------------------------------------------------
     //                               Builds Shared Modules from Client
     // ------------------------------------------------------------------------
@@ -397,11 +412,11 @@ var Gulp;
         rimrafExcept(cfg.paths.GALLERY_LATEST_PATH, ['.git']);
         cb();
     });
-    gulp.task('gal-rel:get-examples', ['gal-rel:clear'], function (cb) {
+    gulp.task('gal-rel:get-examples', function (cb) {
         build_gallery_latest_js_1.BuildGalleryLatest.populateReleaseExamples(cfg);
         cb();
     });
-    gulp.task('gal-rel:copy-files', ['gal-rel:get-examples'], function () {
+    gulp.task('gal-rel:copy-files', function () {
         return mergeStream(build_gallery_latest_js_1.BuildGalleryLatest.releaseExamples.map(function (ex) {
             var srcList = [ex.srcFullPath + "/**",
                 "!" + ex.srcFullPath + "/{*.html,story.json,story-frames/*.png}"];
@@ -412,12 +427,12 @@ var Gulp;
                 .pipe(gulp.dest(ex.dstFullPath));
         }));
     });
-    gulp.task('gal-rel:update-html-files', ['gal-rel:copy-files'], function () {
+    gulp.task('gal-rel:update-html-files', function () {
         return mergeStream(build_gallery_latest_js_1.BuildGalleryLatest.releaseExamples.map(function (ex) {
             return updateHtmlPages(ex.srcFullPath + "/*.html", ex.dstFullPath, ["../../" + cfg.paths.JS_PATH + "/abeamer.min"], true);
         }));
     });
-    gulp.task('gal-rel:online-html-files', ['gal-rel:update-html-files'], function () {
+    gulp.task('gal-rel:online-html-files', function () {
         var onlineLink = cfg.webLinks.webDomain + "/" + cfg.paths.RELEASE_LATEST_PATH + "/client/lib";
         return mergeStream(build_gallery_latest_js_1.BuildGalleryLatest.releaseExamples.map(function (ex) {
             return gulp.src([ex.dstFullPath + "/index.html"])
@@ -431,7 +446,7 @@ var Gulp;
                 .pipe(gulpPreserveTime());
         }));
     });
-    gulp.task('gal-rel:create-zip', ['gal-rel:online-html-files'], function () {
+    gulp.task('gal-rel:create-zip', function () {
         return mergeStream(build_gallery_latest_js_1.BuildGalleryLatest.releaseExamples.map(function (ex) {
             return gulp.src([
                 ex.dstFullPath + "/**",
@@ -444,11 +459,11 @@ var Gulp;
                 .pipe(gulp.dest(ex.dstFullPath));
         }));
     });
-    gulp.task('gal-rel:process-readme', ['gal-rel:create-zip'], function (cb) {
+    gulp.task('gal-rel:process-readme', function (cb) {
         build_gallery_latest_js_1.BuildGalleryLatest.buildReadMe(cfg);
         cb();
     });
-    gulp.task('build-gallery-latest', ['gal-rel:process-readme']);
+    gulp.task('build-gallery-latest', gulpSequence('gal-rel:clear', 'gal-rel:get-examples', 'gal-rel:copy-files', 'gal-rel:update-html-files', 'gal-rel:online-html-files', 'gal-rel:create-zip', 'gal-rel:process-readme'));
     // ------------------------------------------------------------------------
     //                               Deletes gallery story-frames folder
     // ------------------------------------------------------------------------

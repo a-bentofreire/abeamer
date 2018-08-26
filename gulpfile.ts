@@ -12,6 +12,7 @@ import * as sysProcess from "process";
 import * as gulp from "gulp";
 import * as rimraf from "rimraf";
 import * as globule from "globule";
+import { exec as sysExec } from "child_process";
 
 import { fsix } from "./shared/vendor/fsix.js";
 import { BuildDTsFilesABeamer } from "./shared/dev-builders/build-d-ts-abeamer.js";
@@ -104,7 +105,7 @@ namespace Gulp {
     clean-gallery-src-png - deletes all the ${cfg.paths.GALLERY_SRC_PATH}/story-frames/*.png
 
     update-gallery-src-scripts - builds a new version of `
-    + `${cfg.paths.GALLERY_SRC_PATH}/*/index.html with script list updated
+      + `${cfg.paths.GALLERY_SRC_PATH}/*/index.html with script list updated
       when: every time there is a new module on the library or a module change its name
             first must update on the ${cfg.paths.CLIENT_PATH}/lib/js/modules.json
 
@@ -275,45 +276,68 @@ namespace Gulp {
   });
 
   // ------------------------------------------------------------------------
-  //                               Pre-Build Release
+  //                               Build Single Lib
   // ------------------------------------------------------------------------
 
   const SINGLE_LIB_MODES = [
-    { folder: 'min', suffix: '', isDebug: false },
-    { folder: 'debug.min', suffix: '-debug', isDebug: true },
-  ];
+    { folder: 'min', suffix: '', isDebug: false, path: '' },
+    { folder: 'debug.min', suffix: '-debug', isDebug: true, path: '' },
+  ].map(mode => {
+    mode.path = `${cfg.paths.SINGLE_LIB_PATH}/${mode.folder}`;
+    return mode;
+  });
 
-  gulp.task('pre-rel:clean', (cb) => {
+
+  gulp.task('bs:clean', (cb) => {
     rimrafExcept(cfg.paths.SINGLE_LIB_PATH, []);
     cb();
   });
 
 
-  gulp.task('pre-rel:copy', () => {
+  gulp.task('bs:copy', () => {
     return mergeStream(SINGLE_LIB_MODES.map(mode =>
       gulp.src([
         './tsconfig.json',
         './client/lib/typings/**',
         '!./client/lib/typings/release/**',
       ], { base: '.' })
-        .pipe(gulp.dest(`${cfg.paths.SINGLE_LIB_PATH}/${mode.folder}`)),
+        .pipe(gulp.dest(mode.path)),
     ));
   });
 
 
-  gulp.task('pre-rel:build-single-file', () => {
+  gulp.task('bs:build-single-ts', () => {
 
     SINGLE_LIB_MODES.forEach(mode => {
-      const singleLibFile = `${cfg.paths.SINGLE_LIB_PATH}/${mode.folder}/abeamer${mode.suffix}.ts`;
+      const singleLibFile = `${mode.path}/abeamer${mode.suffix}.ts`;
       BuildSingleLibFile.build(libModules, cfg.paths.JS_PATH,
-        `${cfg.paths.SINGLE_LIB_PATH}/${mode.folder}`, singleLibFile,
+        `${mode.path}`, singleLibFile,
         'gulp `build-release-latest`', ['_Story'], mode.isDebug);
     });
   });
 
 
-  gulp.task('build-pre-release-internal', gulpSequence('pre-rel:clean', 'pre-rel:copy',
-    'pre-rel:build-single-file'));
+
+  gulp.task('bs:compile-single-ts', (cb) => {
+    let finishCount = SINGLE_LIB_MODES.length;
+
+    SINGLE_LIB_MODES.forEach(mode => {
+      sysExec('tsc -p ./', { cwd: mode.path }, () => {
+        finishCount--;
+        if (!finishCount) {
+          cb();
+        }
+      });
+    });
+  });
+
+
+  gulp.task('build-single-lib-internal', gulpSequence(
+    'bs:clean',
+    'bs:copy',
+    'bs:build-single-ts',
+    'bs:compile-single-ts',
+  ));
 
   // ------------------------------------------------------------------------
   //                               Build Release
@@ -337,6 +361,7 @@ namespace Gulp {
       .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/${cfg.paths.TYPINGS_PATH}/vendor/jquery`))
       .pipe(gulpPreserveTime());
   });
+
 
   gulp.task('rel:client-js-join', () => {
 
@@ -391,7 +416,6 @@ namespace Gulp {
         true, { base: cfg.paths.GALLERY_SRC_PATH })
         .pipe(gulpPreserveTime()));
   });
-
 
 
   gulp.task('rel:minify', () => {
@@ -498,7 +522,9 @@ namespace Gulp {
   });
 
 
-  (gulp as any).task('build-release-latest-internal', ['rel:clean'], gulpSequence(
+  gulp.task('build-release-latest-internal', gulpSequence(
+    'build-single-lib-internal',
+    'rel:clean',
     'rel:client',
     'rel:gallery',
     'rel:gallery-html',
@@ -568,13 +594,13 @@ namespace Gulp {
   });
 
 
-  (gulp as any).task('gal-rel:get-examples', ['gal-rel:clear'], (cb) => {
+  gulp.task('gal-rel:get-examples', (cb) => {
     BuildGalRel.populateReleaseExamples(cfg);
     cb();
   });
 
 
-  (gulp as any).task('gal-rel:copy-files', ['gal-rel:get-examples'], () => {
+  gulp.task('gal-rel:copy-files', () => {
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       const srcList = [`${ex.srcFullPath}/**`,
       `!${ex.srcFullPath}/{*.html,story.json,story-frames/*.png}`];
@@ -587,7 +613,7 @@ namespace Gulp {
   });
 
 
-  (gulp as any).task('gal-rel:update-html-files', ['gal-rel:copy-files'], () => {
+  gulp.task('gal-rel:update-html-files', () => {
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       return updateHtmlPages(`${ex.srcFullPath}/*.html`, ex.dstFullPath,
         [`../../${cfg.paths.JS_PATH}/abeamer.min`], true);
@@ -595,7 +621,7 @@ namespace Gulp {
   });
 
 
-  (gulp as any).task('gal-rel:online-html-files', ['gal-rel:update-html-files'], () => {
+  gulp.task('gal-rel:online-html-files', () => {
     const onlineLink = `${cfg.webLinks.webDomain}/${cfg.paths.RELEASE_LATEST_PATH}/client/lib`;
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       return gulp.src([`${ex.dstFullPath}/index.html`])
@@ -610,7 +636,8 @@ namespace Gulp {
     }));
   });
 
-  (gulp as any).task('gal-rel:create-zip', ['gal-rel:online-html-files'], () => {
+
+  gulp.task('gal-rel:create-zip', () => {
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       return gulp.src([
         `${ex.dstFullPath}/**`,
@@ -625,14 +652,21 @@ namespace Gulp {
   });
 
 
-  (gulp as any).task('gal-rel:process-readme', ['gal-rel:create-zip'],
-    (cb) => {
-      BuildGalRel.buildReadMe(cfg);
-      cb();
-    });
+  gulp.task('gal-rel:process-readme', (cb) => {
+    BuildGalRel.buildReadMe(cfg);
+    cb();
+  });
 
 
-  (gulp as any).task('build-gallery-latest', ['gal-rel:process-readme']);
+  (gulp as any).task('build-gallery-latest', gulpSequence(
+    'gal-rel:clear',
+    'gal-rel:get-examples',
+    'gal-rel:copy-files',
+    'gal-rel:update-html-files',
+    'gal-rel:online-html-files',
+    'gal-rel:create-zip',
+    'gal-rel:process-readme',
+  ));
 
   // ------------------------------------------------------------------------
   //                               Deletes gallery story-frames folder

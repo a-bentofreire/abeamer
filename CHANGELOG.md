@@ -24,8 +24,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > without changing the gulpfile. There are still parts inside the gulp file that needs to
 > be ported.
 - (DEV) Change gulp task, npm scripts, code naming to match path names of release,gallery and docs.
-> With this change, the gulp tasks, builder filenames are easier to understand 
+> With this change, the gulp tasks, builder filenames are easier to understand
 > its meaning since they match the output path names.
+- (DEV) Change main gulp tasks into gulpSequence.
+> Instead of chaining gulp tasks with the required finished tasks and having parts of the tasks
+> in the `package.json` file. the external gulp tasks use a gulpSequence which is much easier to
+> read the workflow.
 
 ### Added
 - Add Minor cosmetic improvements on gallery README.
