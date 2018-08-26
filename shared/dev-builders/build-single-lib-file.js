@@ -13,7 +13,7 @@ var fsix_js_1 = require("../vendor/fsix.js");
  *
  * Concats all whole the lib modules javascript files into a single file
  *
- * This module is called by `gulp build-release`
+ * This module is called by `gulp build-release-latest`
  *
  */
 var BuildSingleLibFile;

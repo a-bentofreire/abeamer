@@ -13,10 +13,10 @@ var rimraf = require("rimraf");
 var globule = require("globule");
 var fsix_js_1 = require("./shared/vendor/fsix.js");
 var build_d_ts_abeamer_js_1 = require("./shared/dev-builders/build-d-ts-abeamer.js");
-var build_docs_js_1 = require("./shared/dev-builders/build-docs.js");
 var build_shared_js_1 = require("./shared/dev-builders/build-shared.js");
 var build_single_lib_file_js_1 = require("./shared/dev-builders/build-single-lib-file.js");
-var build_gallery_release_js_1 = require("./shared/dev-builders/build-gallery-release.js");
+var build_docs_latest_js_1 = require("./shared/dev-builders/build-docs-latest.js");
+var build_gallery_latest_js_1 = require("./shared/dev-builders/build-gallery-latest.js");
 var dev_config_js_1 = require("./shared/dev-config.js");
 /** @module developer | This module won't be part of release version */
 /**
@@ -58,7 +58,8 @@ var Gulp;
     //                               Print Usage
     // ------------------------------------------------------------------------
     gulp.task('default', function () {
-        console.log("gulp [task]\n  Where task is\n    bump-version - builds version files from package.json\n      when: before publishing a new version\n\n    clean - executes clean-gallery\n\n    build-release - builds the release files where all the files are compiled and minify\n      when: before publishing a new **stable** version and after testing\n\n    build-shared-lib - builds files from the client library to be used by server, tests and cli\n      when: every time a module tagged with @module shared or\n            constants that are useful for server and cli are modified\n\n    build-docs - builds both the end-user and developer documentation\n      when: before publishing a new **stable** version and after testing\n\n    post-build-docs - changes links for offline testing and adds other improvements\n\n    build-definition-files - builds definition files for end-user and developer\n      when: after any public or shared member of a class is modified\n\n    build-gallery-gifs - builds all the animated gifs for each example in the gallery\n      when: before build-gallery-release\n      warn: this can be a long operation\n\n    build-gallery-release - builds release version of the gallery\n      --local builds using local links\n      when: before publishing a new gallery, after build-gallery-gifs\n\n    clean-gallery - deletes all the gallery story-frames files and folder\n      when: cleaning day!\n\n    clean-gallery-png - deletes all the gallery/story-frames/*.png\n\n    update-gallery-scripts - builds a new version of " + cfg.paths.GALLERY_PATH + "/*/index.html with script list updated\n      when: every time there is a new module on the library or a module change its name\n            first must update on the " + cfg.paths.CLIENT_PATH + "/lib/js/modules.json\n\n    update-test-list - updates test-list.json and package.json with the full list of tests\n      when: every time there is a new test or a test change its name\n\n    list-docs-files-as-links - outputs the console the list of document files in markdown link format\n\n    list-paths-macros - lists paths & macros\n\n    README-to-online - converts all online README.md local links to online links\n\n    README-to-local - converts all online README.md online links to local links\n\n    ");
+        console.log("gulp [task]\n  Where task is\n    bump-version - builds version files from package.json\n      when: before publishing a new version\n\n    clean - executes clean-gallery-src\n\n    build-release-latest - builds the release files where all the files are compiled and minify\n      when: before publishing a new **stable** version and after testing\n\n    build-shared-lib - builds files from the client library to be used by server, tests and cli\n      when: every time a module tagged with @module shared or\n            constants that are useful for server and cli are modified\n\n    build-docs-latest - builds both the end-user and developer documentation\n      when: before publishing a new **stable** version and after testing\n\n    post-build-docs-latest - changes links for offline testing and adds other improvements\n\n    build-definition-files - builds definition files for end-user and developer\n      when: after any public or shared member of a class is modified\n\n    build-gallery-src-gifs - builds all the animated gifs for each example in the gallery\n      when: before build-gallery-latest\n      warn: this can be a long operation\n\n    build-gallery-latest - builds release version of the gallery\n      --local builds using local links\n      when: before publishing a new gallery, after build-gallery-src-gifs\n\n    clean-gallery-src - deletes all the " + cfg.paths.GALLERY_SRC_PATH + "/story-frames files and folder\n      when: cleaning day!\n\n    clean-gallery-src-png - deletes all the " + cfg.paths.GALLERY_SRC_PATH + "/story-frames/*.png\n\n    update-gallery-src-scripts - builds a new version of "
+            + (cfg.paths.GALLERY_SRC_PATH + "/*/index.html with script list updated\n      when: every time there is a new module on the library or a module change its name\n            first must update on the " + cfg.paths.CLIENT_PATH + "/lib/js/modules.json\n\n    update-test-list - updates test-list.json and package.json with the full list of tests\n      when: every time there is a new test or a test change its name\n\n    list-docs-files-as-links - outputs the console the list of document files in markdown link format\n\n    list-paths-macros - lists paths & macros\n\n    README-to-online - converts all online README.md local links to online links\n\n    README-to-local - converts all online README.md online links to local links\n\n    "));
     });
     gulp.task('list-paths-macros', function (cb) {
         console.log("cfg.paths: " + JSON.stringify(cfg.paths, undefined, 2));
@@ -126,7 +127,7 @@ var Gulp;
     // ------------------------------------------------------------------------
     //                               Clean
     // ------------------------------------------------------------------------
-    gulp.task('clean', ['clean-gallery']);
+    gulp.task('clean', ['clean-gallery-src']);
     // ------------------------------------------------------------------------
     //                               Bump Version
     // ------------------------------------------------------------------------
@@ -146,7 +147,7 @@ var Gulp;
         var outBadgeFileBase = "v-" + version + ".gif";
         var outBadgeFileName = "" + BADGES_FOLDER + outBadgeFileBase;
         if (!sysFs.existsSync(outBadgeFileName)) {
-            var path_1 = cfg.paths.GALLERY_PATH + "/animate-badges";
+            var path_1 = cfg.paths.GALLERY_SRC_PATH + "/animate-badges";
             var url = "http://localhost:9000/" + path_1 + "/?var=name%3Dversion&"
                 + ("var=value%3D" + version + "&var=wait%3D2s");
             var config = "./" + path_1 + "/abeamer.ini";
@@ -209,7 +210,7 @@ var Gulp;
     gulp.task('pre-rel:build-single-file', function () {
         SINGLE_LIB_MODES.forEach(function (mode) {
             var singleLibFile = cfg.paths.SINGLE_LIB_PATH + "/" + mode.folder + "/abeamer" + mode.suffix + ".ts";
-            build_single_lib_file_js_1.BuildSingleLibFile.build(libModules, cfg.paths.JS_PATH, cfg.paths.SINGLE_LIB_PATH + "/" + mode.folder, singleLibFile, 'gulp `build-release`', ['_Story'], mode.isDebug);
+            build_single_lib_file_js_1.BuildSingleLibFile.build(libModules, cfg.paths.JS_PATH, cfg.paths.SINGLE_LIB_PATH + "/" + mode.folder, singleLibFile, 'gulp `build-release-latest`', ['_Story'], mode.isDebug);
         });
     });
     gulp.task('build-pre-release-internal', gulpSequence('pre-rel:clean', 'pre-rel:copy', 'pre-rel:build-single-file'));
@@ -245,10 +246,10 @@ var Gulp;
     });
     gulp.task('rel:gallery', function () {
         return gulp.src([
-            cfg.paths.GALLERY_PATH + "/" + cfg.release.demosStr + "/**",
-            "!" + cfg.paths.GALLERY_PATH + "/**/*.html",
-            "!" + cfg.paths.GALLERY_PATH + "/*/story-frames/*",
-        ], { base: cfg.paths.GALLERY_PATH })
+            cfg.paths.GALLERY_SRC_PATH + "/" + cfg.release.demosStr + "/**",
+            "!" + cfg.paths.GALLERY_SRC_PATH + "/**/*.html",
+            "!" + cfg.paths.GALLERY_SRC_PATH + "/*/story-frames/*",
+        ], { base: cfg.paths.GALLERY_SRC_PATH })
             .pipe(gulp.dest(cfg.paths.RELEASE_LATEST_PATH + "/gallery"))
             .pipe(gulpPreserveTime());
     });
@@ -266,7 +267,7 @@ var Gulp;
             .pipe(gulpPreserveTime());
     });
     gulp.task('rel:gallery-html', function () {
-        return mergeStream(updateHtmlPages(cfg.paths.GALLERY_PATH + "/" + cfg.release.demosStr + "/*.html", cfg.paths.RELEASE_LATEST_PATH + "/gallery", ["../../" + cfg.paths.JS_PATH + "/abeamer.min"], true, { base: cfg.paths.GALLERY_PATH })
+        return mergeStream(updateHtmlPages(cfg.paths.GALLERY_SRC_PATH + "/" + cfg.release.demosStr + "/*.html", cfg.paths.RELEASE_LATEST_PATH + "/gallery", ["../../" + cfg.paths.JS_PATH + "/abeamer.min"], true, { base: cfg.paths.GALLERY_SRC_PATH })
             .pipe(gulpPreserveTime()));
     });
     gulp.task('rel:minify', function () {
@@ -356,7 +357,7 @@ var Gulp;
             .pipe(gulp.dest(cfg.paths.RELEASE_LATEST_PATH + "/" + cfg.paths.TYPINGS_PATH))
             .pipe(gulpPreserveTime());
     });
-    gulp.task('build-release-internal', ['rel:clean'], gulpSequence('rel:client', 'rel:gallery', 'rel:gallery-html', 'rel:client-js-join', 'rel:root', 'rel:README', 'rel:minify', 'rel:add-copyrights', 'rel:jquery-typings', 'rel:build-package.json', 'rel:build-tsconfig.ts', 'rel:build-abeamer.d.ts', 'rel:build-plugins-list.json'));
+    gulp.task('build-release-latest-internal', ['rel:clean'], gulpSequence('rel:client', 'rel:gallery', 'rel:gallery-html', 'rel:client-js-join', 'rel:root', 'rel:README', 'rel:minify', 'rel:add-copyrights', 'rel:jquery-typings', 'rel:build-package.json', 'rel:build-tsconfig.ts', 'rel:build-abeamer.d.ts', 'rel:build-plugins-list.json'));
     // ------------------------------------------------------------------------
     //                               Builds Shared Modules from Client
     // ------------------------------------------------------------------------
@@ -372,10 +373,10 @@ var Gulp;
     // ------------------------------------------------------------------------
     //                               Builds the documentation
     // ------------------------------------------------------------------------
-    gulp.task('build-docs', function () {
-        build_docs_js_1.BuildDocs.build(libModules, pluginModules, cfg);
+    gulp.task('build-docs-latest', function () {
+        build_docs_latest_js_1.BuildDocsLatest.build(libModules, pluginModules, cfg);
     });
-    gulp.task('post-build-docs', function () {
+    gulp.task('post-build-docs-latest', function () {
         var wordMap = {};
         cfg.docs.keywords.forEach(function (word) { wordMap[word] = { wordClass: 'keyword' }; });
         cfg.docs.jsTypes.forEach(function (word) { wordMap[word] = { wordClass: 'type' }; });
@@ -385,23 +386,23 @@ var Gulp;
                 title: wordPair[1],
             };
         });
-        build_docs_js_1.BuildDocs.postBuild([
-            "{" + cfg.paths.END_USER_DOCS_PATH + "," + cfg.paths.DEV_DOCS_PATH + "}/en/site{/,/*/}*.html"
+        build_docs_latest_js_1.BuildDocsLatest.postBuild([
+            "{" + cfg.paths.DOCS_LATEST_END_USER_PATH + "," + cfg.paths.DOCS_LATEST_DEVELOPER_PATH + "}/en/site{/,/*/}*.html"
         ], cfg.docs.replacePaths, wordMap);
     });
     // ------------------------------------------------------------------------
     //                               Builds Release Version Of The Gallery
     // ------------------------------------------------------------------------
     gulp.task('gal-rel:clear', function (cb) {
-        rimrafExcept(cfg.paths.GALLERY_RELEASE_PATH, ['.git']);
+        rimrafExcept(cfg.paths.GALLERY_LATEST_PATH, ['.git']);
         cb();
     });
     gulp.task('gal-rel:get-examples', ['gal-rel:clear'], function (cb) {
-        build_gallery_release_js_1.BuildGalleryRelease.populateReleaseExamples(cfg);
+        build_gallery_latest_js_1.BuildGalleryLatest.populateReleaseExamples(cfg);
         cb();
     });
     gulp.task('gal-rel:copy-files', ['gal-rel:get-examples'], function () {
-        return mergeStream(build_gallery_release_js_1.BuildGalleryRelease.releaseExamples.map(function (ex) {
+        return mergeStream(build_gallery_latest_js_1.BuildGalleryLatest.releaseExamples.map(function (ex) {
             var srcList = [ex.srcFullPath + "/**",
                 "!" + ex.srcFullPath + "/{*.html,story.json,story-frames/*.png}"];
             if (ex.srcFullPath.includes('remote-server')) {
@@ -412,13 +413,13 @@ var Gulp;
         }));
     });
     gulp.task('gal-rel:update-html-files', ['gal-rel:copy-files'], function () {
-        return mergeStream(build_gallery_release_js_1.BuildGalleryRelease.releaseExamples.map(function (ex) {
+        return mergeStream(build_gallery_latest_js_1.BuildGalleryLatest.releaseExamples.map(function (ex) {
             return updateHtmlPages(ex.srcFullPath + "/*.html", ex.dstFullPath, ["../../" + cfg.paths.JS_PATH + "/abeamer.min"], true);
         }));
     });
     gulp.task('gal-rel:online-html-files', ['gal-rel:update-html-files'], function () {
         var onlineLink = cfg.webLinks.webDomain + "/" + cfg.paths.RELEASE_LATEST_PATH + "/client/lib";
-        return mergeStream(build_gallery_release_js_1.BuildGalleryRelease.releaseExamples.map(function (ex) {
+        return mergeStream(build_gallery_latest_js_1.BuildGalleryLatest.releaseExamples.map(function (ex) {
             return gulp.src([ex.dstFullPath + "/index.html"])
                 .pipe(gulpReplace(/^(?:.|\n)+$/, function (all) {
                 return all
@@ -431,7 +432,7 @@ var Gulp;
         }));
     });
     gulp.task('gal-rel:create-zip', ['gal-rel:online-html-files'], function () {
-        return mergeStream(build_gallery_release_js_1.BuildGalleryRelease.releaseExamples.map(function (ex) {
+        return mergeStream(build_gallery_latest_js_1.BuildGalleryLatest.releaseExamples.map(function (ex) {
             return gulp.src([
                 ex.dstFullPath + "/**",
                 ex.dstFullPath + "/.allowed-plugins.json",
@@ -439,43 +440,43 @@ var Gulp;
                 "!" + ex.dstFullPath + "/*.zip",
                 "!" + ex.dstFullPath + "/story-frames/*.{json,gif,mp4}",
             ])
-                .pipe(gulpZip(build_gallery_release_js_1.BuildGalleryRelease.EXAMPLE_ZIP_FILE))
+                .pipe(gulpZip(build_gallery_latest_js_1.BuildGalleryLatest.EXAMPLE_ZIP_FILE))
                 .pipe(gulp.dest(ex.dstFullPath));
         }));
     });
     gulp.task('gal-rel:process-readme', ['gal-rel:create-zip'], function (cb) {
-        build_gallery_release_js_1.BuildGalleryRelease.buildReadMe(cfg);
+        build_gallery_latest_js_1.BuildGalleryLatest.buildReadMe(cfg);
         cb();
     });
-    gulp.task('build-gallery-release', ['gal-rel:process-readme']);
+    gulp.task('build-gallery-latest', ['gal-rel:process-readme']);
     // ------------------------------------------------------------------------
     //                               Deletes gallery story-frames folder
     // ------------------------------------------------------------------------
-    gulp.task('clean-gallery', function (cb) {
-        rimraf.sync(cfg.paths.GALLERY_PATH + "/*/story-frames");
+    gulp.task('clean-gallery-src', function (cb) {
+        rimraf.sync(cfg.paths.GALLERY_SRC_PATH + "/*/story-frames");
         cb();
     });
-    gulp.task('clean-gallery-png', function (cb) {
-        rimraf.sync(cfg.paths.GALLERY_PATH + "/*/story-frames/*.png");
+    gulp.task('clean-gallery-src-png', function (cb) {
+        rimraf.sync(cfg.paths.GALLERY_SRC_PATH + "/*/story-frames/*.png");
         cb();
     });
     // ------------------------------------------------------------------------
     //                               Creates gallery examples gif image
     // ------------------------------------------------------------------------
-    gulp.task('build-gallery-gifs', ['clean-gallery-png'], function (cb) {
-        build_gallery_release_js_1.BuildGalleryRelease.buildGifs(cfg);
+    gulp.task('build-gallery-src-gifs', ['clean-gallery-src-png'], function (cb) {
+        build_gallery_latest_js_1.BuildGalleryLatest.buildGifs(cfg);
         cb();
     });
     // ------------------------------------------------------------------------
     //                               Update Gallery Scripts
     // ------------------------------------------------------------------------
-    gulp.task('update-gallery-scripts', function () {
-        var DST_PATH = cfg.paths.GALLERY_PATH + "-updated";
+    gulp.task('update-gallery-src-scripts', function () {
+        var DST_PATH = cfg.paths.GALLERY_SRC_PATH + "-updated";
         rimraf.sync(DST_PATH + "/**");
         var newScriptFiles = libModules.map(function (srcFile) {
             return "../../" + cfg.paths.JS_PATH + "/" + srcFile;
         });
-        return mergeStream(updateHtmlPages(cfg.paths.GALLERY_PATH + "/*/*.html", DST_PATH, newScriptFiles, false));
+        return mergeStream(updateHtmlPages(cfg.paths.GALLERY_SRC_PATH + "/*/*.html", DST_PATH, newScriptFiles, false));
     });
     // ------------------------------------------------------------------------
     //                               Updates Test List

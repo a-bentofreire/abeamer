@@ -22,7 +22,7 @@ import * as versionLib from '../version.js';
  *
  * Builds documentation files from the code.
  *
- * usage: `gulp build-docs`
+ * usage: `gulp build-docs-latest`
  *
  * Uses the following grammar:
  *
@@ -40,7 +40,7 @@ import * as versionLib from '../version.js';
  * it automatically adds 2 spaces at the line ending.
  *
  */
-export namespace BuildDocs {
+export namespace BuildDocsLatest {
 
   const EMPTY = ['', '', '', '', '', '', '', '', '', ''];
 
@@ -56,12 +56,12 @@ export namespace BuildDocs {
     {
       id: 'end-user',
       name: 'End User',
-      dstPath: cfg.paths.END_USER_DOCS_PATH,
-      sourcePaths: [cfg.paths.SOURCE_DOCS_PATH],
+      dstPath: cfg.paths.DOCS_LATEST_END_USER_PATH,
+      sourcePaths: [cfg.paths.DOCS_SOURCE_PATH],
       moduleTypes: ['end-user'],
       indexFile: './README.md',
       isEndUser: true,
-      logFile: './build-docs-end-user.log',
+      logFile: './build-docs-latest-end-user.log',
       processIndexPage: (data: string) => {
         return data
           .replace(/^(.*)developer-badge\.gif(.*)$/m, (all, p1, p2) => {
@@ -74,12 +74,12 @@ export namespace BuildDocs {
     {
       id: 'dev',
       name: 'Developer',
-      dstPath: cfg.paths.DEV_DOCS_PATH,
-      sourcePaths: [cfg.paths.SOURCE_DOCS_PATH, cfg.paths.SOURCE_DEV_DOCS_PATH],
+      dstPath: cfg.paths.DOCS_LATEST_DEVELOPER_PATH,
+      sourcePaths: [cfg.paths.DOCS_SOURCE_PATH, cfg.paths.DOCS_SOURCE_DEV_PATH],
       moduleTypes: ['end-user', 'developer', 'internal'],
-      indexFile: `${cfg.paths.SOURCE_DOCS_PATH}-dev/README.md`,
+      indexFile: `${cfg.paths.DOCS_SOURCE_PATH}-dev/README.md`,
       isEndUser: false,
-      logFile: './build-docs-dev.log',
+      logFile: './build-docs-latest-dev.log',
       processIndexPage: (data: string) => {
         return data.replace(/^(# Description.*)$/m, (all) => {
           if (!badgeLine) {
@@ -763,7 +763,7 @@ export namespace BuildDocs {
 
     const localWebLinks = (key: string, title: string) => {
       if (key === 'gallery') {
-        return `[${title}](/${cfg.paths.GALLERY_RELEASE_PATH}/#${title})`;
+        return `[${title}](/${cfg.paths.GALLERY_LATEST_PATH}/#${title})`;
       } else {
         return '';
       }
@@ -781,7 +781,7 @@ export namespace BuildDocs {
       const baseDstPath = `${target.dstPath}/${EN_LAST_VERSION_PATH}`;
       const markdownDstPath = `${baseDstPath}/${MARKDOWN_FOLDER}`;
       fsix.mkdirpSync(markdownDstPath);
-      const mkDocsYml = new MkDocsYml(`${cfg.paths.SOURCE_DOCS_PATH}/.mkdocs-template.yml`,
+      const mkDocsYml = new MkDocsYml(`${cfg.paths.DOCS_SOURCE_PATH}/.mkdocs-template.yml`,
         target.name);
 
       const log: Log = {

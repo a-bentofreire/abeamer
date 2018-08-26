@@ -34,7 +34,7 @@
       },
       {
         "type": "npm",
-        "script": "build-docs-and-mkdocs",
+        "script": "build-docs-latest-and-mkdocs",
         "problemMatcher": []
       }
     ]

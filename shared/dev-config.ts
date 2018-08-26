@@ -35,8 +35,8 @@ export namespace DevCfg {
       TYPINGS_PATH: string;
       SHARED_PATH: string;
       SHARED_LIB_PATH: string;
-      GALLERY_PATH: string;
-      GALLERY_RELEASE_PATH: string;
+      GALLERY_SRC_PATH: string;
+      GALLERY_LATEST_PATH: string;
       BADGES_PATH: string;
       ICONS_PATH: string;
 
@@ -44,10 +44,10 @@ export namespace DevCfg {
 
       DOCS_PATH: string;
 
-      END_USER_DOCS_PATH: string;
-      DEV_DOCS_PATH: string;
-      SOURCE_DOCS_PATH: string;
-      SOURCE_DEV_DOCS_PATH: string;
+      DOCS_LATEST_END_USER_PATH: string;
+      DOCS_LATEST_DEVELOPER_PATH: string;
+      DOCS_SOURCE_PATH: string;
+      DOCS_SOURCE_DEV_PATH: string;
 
       MODULES_LIST_FILE: string;
 

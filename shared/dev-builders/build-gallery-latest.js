@@ -15,23 +15,23 @@ var fsix_js_1 = require("../vendor/fsix.js");
  * Builds gallery-release files.
  * Read the [](#config-file.md) for more information.
  */
-var BuildGalleryRelease;
-(function (BuildGalleryRelease) {
-    BuildGalleryRelease.EXAMPLE_ZIP_FILE = 'code.zip';
-    BuildGalleryRelease.releaseExamples = [];
+var BuildGalleryLatest;
+(function (BuildGalleryLatest) {
+    BuildGalleryLatest.EXAMPLE_ZIP_FILE = 'code.zip';
+    BuildGalleryLatest.releaseExamples = [];
     /**
      * Fills the `releaseExamples` list with every gallery example that
      * is prepared to be released.
      */
     function populateReleaseExamples(cfg) {
         var exclusions = fsix_js_1.fsix
-            .loadJsonSync(cfg.paths.GALLERY_PATH + "/exclude-from-release.json");
-        sysFs.readdirSync(cfg.paths.GALLERY_PATH).forEach(function (folder) {
+            .loadJsonSync(cfg.paths.GALLERY_SRC_PATH + "/exclude-from-release.json");
+        sysFs.readdirSync(cfg.paths.GALLERY_SRC_PATH).forEach(function (folder) {
             if (exclusions.indexOf(folder) !== -1) {
                 return;
             }
-            var srcFullPath = cfg.paths.GALLERY_PATH + "/" + folder;
-            var dstFullPath = cfg.paths.GALLERY_RELEASE_PATH + "/" + folder;
+            var srcFullPath = cfg.paths.GALLERY_SRC_PATH + "/" + folder;
+            var dstFullPath = cfg.paths.GALLERY_LATEST_PATH + "/" + folder;
             var iniFileName = srcFullPath + "/abeamer.ini";
             if (sysFs.existsSync(iniFileName)) {
                 var ex_1 = {
@@ -99,11 +99,11 @@ var BuildGalleryRelease;
                 if (!ex_1.description.length) {
                     ex_1.description.push(folder);
                 }
-                BuildGalleryRelease.releaseExamples.push(ex_1);
+                BuildGalleryLatest.releaseExamples.push(ex_1);
             }
         });
     }
-    BuildGalleryRelease.populateReleaseExamples = populateReleaseExamples;
+    BuildGalleryLatest.populateReleaseExamples = populateReleaseExamples;
     // ------------------------------------------------------------------------
     //                               buildReadMe
     // ------------------------------------------------------------------------
@@ -120,13 +120,13 @@ var BuildGalleryRelease;
             }
             return fileName;
         }
-        BuildGalleryRelease.releaseExamples.forEach(function (ex) {
+        BuildGalleryLatest.releaseExamples.forEach(function (ex) {
             galleryLinks.push("\n--------------------------"
                 + ("\n### " + ex.folder + "\n")
                 + ("" + ex.description.join('  \n') + '  '));
             var storyFramesFolder = ex.folder + "/story-frames";
             if (!ex.noGifImage) {
-                checkFile("./" + cfg.paths.GALLERY_PATH + "/" + ex.folder + "/story-frames/story.gif");
+                checkFile("./" + cfg.paths.GALLERY_SRC_PATH + "/" + ex.folder + "/story-frames/story.gif");
                 galleryLinks.push("\n  "
                     + ("\n![Image](" + storyFramesFolder + "/story.gif?" + rnd + ")" + '  ' + "\n  "));
             }
@@ -135,16 +135,16 @@ var BuildGalleryRelease;
                     + ("\n[![Image](" + storyFramesFolder + "/../" + ex.movieSnapshot + ")]")
                     + ("(" + storyFramesFolder + "/../" + ex.movieViewPage + ")" + '  ' + "\n  "));
             }
-            galleryLinks.push("\nDownload code: [zip](" + ex.folder + "/" + BuildGalleryRelease.EXAMPLE_ZIP_FILE + ")." + '  ' + "\nTry it <a href=\"" + ex.folder + "/index-online.html\">online</a>." + '  ' + "\n" + (ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n') + "\n" + (!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n') + "\n    ");
+            galleryLinks.push("\nDownload code: [zip](" + ex.folder + "/" + BuildGalleryLatest.EXAMPLE_ZIP_FILE + ")." + '  ' + "\nTry it <a href=\"" + ex.folder + "/index-online.html\">online</a>." + '  ' + "\n" + (ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n') + "\n" + (!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n') + "\n    ");
         });
-        var outREADME = fsix_js_1.fsix.readUtf8Sync(cfg.paths.GALLERY_PATH + "/README-rel.md")
+        var outREADME = fsix_js_1.fsix.readUtf8Sync(cfg.paths.GALLERY_SRC_PATH + "/README-rel.md")
             + galleryLinks.join('');
-        sysFs.writeFileSync(cfg.paths.GALLERY_RELEASE_PATH + "/README.md", outREADME);
+        sysFs.writeFileSync(cfg.paths.GALLERY_LATEST_PATH + "/README.md", outREADME);
         if (missingFiles.length) {
             throw "Missing files:\n" + missingFiles.join('\n');
         }
     }
-    BuildGalleryRelease.buildReadMe = buildReadMe;
+    BuildGalleryLatest.buildReadMe = buildReadMe;
     // ------------------------------------------------------------------------
     //                               Runs External Commands
     // ------------------------------------------------------------------------
@@ -167,16 +167,16 @@ var BuildGalleryRelease;
     // ------------------------------------------------------------------------
     function buildGifs(cfg) {
         populateReleaseExamples(cfg);
-        BuildGalleryRelease.releaseExamples.forEach(function (example /* , index */) {
+        BuildGalleryLatest.releaseExamples.forEach(function (example /* , index */) {
             if (example.noGifImage) {
                 return;
             }
             // if (example.folder === 'animate-attack-task') { // use to test one example only
             runSpawn('npm', ['run', '--', 'render', '--dp', '--url',
-                cfg.webLinks.localServer + "/" + cfg.paths.GALLERY_PATH + "/" + example.folder + "/",
-                '--config', "./" + cfg.paths.GALLERY_PATH + "/" + example.folder + "/abeamer.ini",
+                cfg.webLinks.localServer + "/" + cfg.paths.GALLERY_SRC_PATH + "/" + example.folder + "/",
+                '--config', "./" + cfg.paths.GALLERY_SRC_PATH + "/" + example.folder + "/abeamer.ini",
             ], function () {
-                runSpawn('npm', ['run', '--', 'gif', cfg.paths.GALLERY_PATH + "/" + example.folder + "/"], function () {
+                runSpawn('npm', ['run', '--', 'gif', cfg.paths.GALLERY_SRC_PATH + "/" + example.folder + "/"], function () {
                     console.log("Done example: " + example.folder);
                 });
             });
@@ -184,6 +184,6 @@ var BuildGalleryRelease;
             console.log("example.folder: " + example.folder);
         });
     }
-    BuildGalleryRelease.buildGifs = buildGifs;
-})(BuildGalleryRelease = exports.BuildGalleryRelease || (exports.BuildGalleryRelease = {}));
-//# sourceMappingURL=build-gallery-release.js.map
+    BuildGalleryLatest.buildGifs = buildGifs;
+})(BuildGalleryLatest = exports.BuildGalleryLatest || (exports.BuildGalleryLatest = {}));
+//# sourceMappingURL=build-gallery-latest.js.map

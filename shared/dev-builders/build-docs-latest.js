@@ -17,7 +17,7 @@ var versionLib = require("../version.js");
  *
  * Builds documentation files from the code.
  *
- * usage: `gulp build-docs`
+ * usage: `gulp build-docs-latest`
  *
  * Uses the following grammar:
  *
@@ -35,23 +35,23 @@ var versionLib = require("../version.js");
  * it automatically adds 2 spaces at the line ending.
  *
  */
-var BuildDocs;
-(function (BuildDocs) {
+var BuildDocsLatest;
+(function (BuildDocsLatest) {
     var EMPTY = ['', '', '', '', '', '', '', '', '', ''];
     var MARKDOWN_FOLDER = 'docs';
-    BuildDocs.API_FOLDER = 'api';
-    BuildDocs.EN_LAST_VERSION_PATH = 'en';
+    BuildDocsLatest.API_FOLDER = 'api';
+    BuildDocsLatest.EN_LAST_VERSION_PATH = 'en';
     var badgeLine = '';
-    BuildDocs.getTargets = function (cfg) { return [
+    BuildDocsLatest.getTargets = function (cfg) { return [
         {
             id: 'end-user',
             name: 'End User',
-            dstPath: cfg.paths.END_USER_DOCS_PATH,
-            sourcePaths: [cfg.paths.SOURCE_DOCS_PATH],
+            dstPath: cfg.paths.DOCS_LATEST_END_USER_PATH,
+            sourcePaths: [cfg.paths.DOCS_SOURCE_PATH],
             moduleTypes: ['end-user'],
             indexFile: './README.md',
             isEndUser: true,
-            logFile: './build-docs-end-user.log',
+            logFile: './build-docs-latest-end-user.log',
             processIndexPage: function (data) {
                 return data
                     .replace(/^(.*)developer-badge\.gif(.*)$/m, function (all, p1, p2) {
@@ -64,12 +64,12 @@ var BuildDocs;
         {
             id: 'dev',
             name: 'Developer',
-            dstPath: cfg.paths.DEV_DOCS_PATH,
-            sourcePaths: [cfg.paths.SOURCE_DOCS_PATH, cfg.paths.SOURCE_DEV_DOCS_PATH],
+            dstPath: cfg.paths.DOCS_LATEST_DEVELOPER_PATH,
+            sourcePaths: [cfg.paths.DOCS_SOURCE_PATH, cfg.paths.DOCS_SOURCE_DEV_PATH],
             moduleTypes: ['end-user', 'developer', 'internal'],
-            indexFile: cfg.paths.SOURCE_DOCS_PATH + "-dev/README.md",
+            indexFile: cfg.paths.DOCS_SOURCE_PATH + "-dev/README.md",
             isEndUser: false,
-            logFile: './build-docs-dev.log',
+            logFile: './build-docs-latest-dev.log',
             processIndexPage: function (data) {
                 return data.replace(/^(# Description.*)$/m, function (all) {
                     if (!badgeLine) {
@@ -583,7 +583,7 @@ var BuildDocs;
     function build(libModules, pluginModules, cfg) {
         var localWebLinks = function (key, title) {
             if (key === 'gallery') {
-                return "[" + title + "](/" + cfg.paths.GALLERY_RELEASE_PATH + "/#" + title + ")";
+                return "[" + title + "](/" + cfg.paths.GALLERY_LATEST_PATH + "/#" + title + ")";
             }
             else {
                 return '';
@@ -594,11 +594,11 @@ var BuildDocs;
         // ------------------------------------------------------------------------
         // in case of documentation, it's better to visualize the more specific at the top.
         libModules.reverse();
-        BuildDocs.getTargets(cfg).forEach(function (target) {
-            var baseDstPath = target.dstPath + "/" + BuildDocs.EN_LAST_VERSION_PATH;
+        BuildDocsLatest.getTargets(cfg).forEach(function (target) {
+            var baseDstPath = target.dstPath + "/" + BuildDocsLatest.EN_LAST_VERSION_PATH;
             var markdownDstPath = baseDstPath + "/" + MARKDOWN_FOLDER;
             fsix_js_1.fsix.mkdirpSync(markdownDstPath);
-            var mkDocsYml = new MkDocsYml(cfg.paths.SOURCE_DOCS_PATH + "/.mkdocs-template.yml", target.name);
+            var mkDocsYml = new MkDocsYml(cfg.paths.DOCS_SOURCE_PATH + "/.mkdocs-template.yml", target.name);
             var log = {
                 notFound: [],
                 found: [],
@@ -626,7 +626,7 @@ var BuildDocs;
                 .map(function (fileTitle) { return [fileTitle, cfg.paths.PLUGINS_PATH + "/" + fileTitle + "/" + fileTitle + ".ts", 'Plugins']; })).forEach(function (item) {
                 var fileTitle = item[0], srcFileName = item[1], folder = item[2];
                 var dstFileName = markdownDstPath + "/" + fileTitle + ".md";
-                buildMarkdownFromSourceFile(srcFileName, dstFileName, baseDstPath + "/" + BuildDocs.API_FOLDER + "/" + fileTitle + ".txt", target.moduleTypes, mkDocsYml, { folder: folder }, localWebLinks, target.isEndUser, log);
+                buildMarkdownFromSourceFile(srcFileName, dstFileName, baseDstPath + "/" + BuildDocsLatest.API_FOLDER + "/" + fileTitle + ".txt", target.moduleTypes, mkDocsYml, { folder: folder }, localWebLinks, target.isEndUser, log);
             });
             // writes mkdocs to be used by mkdocs command-line program
             mkDocsYml.save(baseDstPath + "/mkdocs.yml");
@@ -637,7 +637,7 @@ var BuildDocs;
             console.log("\nGenerated: " + log.generated.length + " files.\nNot Found references: " + log.notFound.length + "\n");
         });
     }
-    BuildDocs.build = build;
+    BuildDocsLatest.build = build;
     // ------------------------------------------------------------------------
     //                               buildWebLinks
     // ------------------------------------------------------------------------
@@ -659,6 +659,6 @@ var BuildDocs;
             sysFs.writeFileSync(file, content);
         });
     }
-    BuildDocs.postBuild = postBuild;
-})(BuildDocs = exports.BuildDocs || (exports.BuildDocs = {}));
-//# sourceMappingURL=build-docs.js.map
+    BuildDocsLatest.postBuild = postBuild;
+})(BuildDocsLatest = exports.BuildDocsLatest || (exports.BuildDocsLatest = {}));
+//# sourceMappingURL=build-docs-latest.js.map

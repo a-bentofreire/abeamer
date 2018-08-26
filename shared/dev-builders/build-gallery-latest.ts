@@ -20,7 +20,7 @@ import { DevCfg } from "../dev-config.js";
  * Builds gallery-release files.
  * Read the [](#config-file.md) for more information.
  */
-export namespace BuildGalleryRelease {
+export namespace BuildGalleryLatest {
 
   export const EXAMPLE_ZIP_FILE = 'code.zip';
 
@@ -56,14 +56,14 @@ export namespace BuildGalleryRelease {
   export function populateReleaseExamples(cfg: DevCfg.DevConfig): void {
 
     const exclusions = fsix
-      .loadJsonSync(`${cfg.paths.GALLERY_PATH}/exclude-from-release.json`) as string[];
+      .loadJsonSync(`${cfg.paths.GALLERY_SRC_PATH}/exclude-from-release.json`) as string[];
 
-    sysFs.readdirSync(cfg.paths.GALLERY_PATH).forEach(folder => {
+    sysFs.readdirSync(cfg.paths.GALLERY_SRC_PATH).forEach(folder => {
 
       if (exclusions.indexOf(folder) !== -1) { return; }
 
-      const srcFullPath = `${cfg.paths.GALLERY_PATH}/${folder}`;
-      const dstFullPath = `${cfg.paths.GALLERY_RELEASE_PATH}/${folder}`;
+      const srcFullPath = `${cfg.paths.GALLERY_SRC_PATH}/${folder}`;
+      const dstFullPath = `${cfg.paths.GALLERY_LATEST_PATH}/${folder}`;
       const iniFileName = `${srcFullPath}/abeamer.ini`;
 
       if (sysFs.existsSync(iniFileName)) {
@@ -174,7 +174,7 @@ export namespace BuildGalleryRelease {
       const storyFramesFolder = `${ex.folder}/story-frames`;
 
       if (!ex.noGifImage) {
-        checkFile(`./${cfg.paths.GALLERY_PATH}/${ex.folder}/story-frames/story.gif`);
+        checkFile(`./${cfg.paths.GALLERY_SRC_PATH}/${ex.folder}/story-frames/story.gif`);
         galleryLinks.push(`\n  `
           + `\n![Image](${storyFramesFolder}/story.gif?${rnd})${'  '}\n  `);
       }
@@ -193,9 +193,9 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
     `);
     });
 
-    const outREADME = fsix.readUtf8Sync(`${cfg.paths.GALLERY_PATH}/README-rel.md`)
+    const outREADME = fsix.readUtf8Sync(`${cfg.paths.GALLERY_SRC_PATH}/README-rel.md`)
       + galleryLinks.join('');
-    sysFs.writeFileSync(`${cfg.paths.GALLERY_RELEASE_PATH}/README.md`, outREADME);
+    sysFs.writeFileSync(`${cfg.paths.GALLERY_LATEST_PATH}/README.md`, outREADME);
     if (missingFiles.length) {
       throw `Missing files:\n` + missingFiles.join('\n');
     }
@@ -236,10 +236,10 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
       // if (example.folder === 'animate-attack-task') { // use to test one example only
 
       runSpawn('npm', ['run', '--', 'render', '--dp', '--url',
-        `${cfg.webLinks.localServer}/${cfg.paths.GALLERY_PATH}/${example.folder}/`,
-        '--config', `./${cfg.paths.GALLERY_PATH}/${example.folder}/abeamer.ini`,
+        `${cfg.webLinks.localServer}/${cfg.paths.GALLERY_SRC_PATH}/${example.folder}/`,
+        '--config', `./${cfg.paths.GALLERY_SRC_PATH}/${example.folder}/abeamer.ini`,
       ], () => {
-        runSpawn('npm', ['run', '--', 'gif', `${cfg.paths.GALLERY_PATH}/${example.folder}/`],
+        runSpawn('npm', ['run', '--', 'gif', `${cfg.paths.GALLERY_SRC_PATH}/${example.folder}/`],
           () => {
             console.log(`Done example: ${example.folder}`);
           });

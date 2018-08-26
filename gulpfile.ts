@@ -15,10 +15,10 @@ import * as globule from "globule";
 
 import { fsix } from "./shared/vendor/fsix.js";
 import { BuildDTsFilesABeamer } from "./shared/dev-builders/build-d-ts-abeamer.js";
-import { BuildDocs } from "./shared/dev-builders/build-docs.js";
 import { BuildShared } from "./shared/dev-builders/build-shared.js";
 import { BuildSingleLibFile } from "./shared/dev-builders/build-single-lib-file.js";
-import { BuildGalleryRelease as BuildGalRel } from "./shared/dev-builders/build-gallery-release.js";
+import { BuildDocsLatest } from "./shared/dev-builders/build-docs-latest.js";
+import { BuildGalleryLatest as BuildGalRel } from "./shared/dev-builders/build-gallery-latest.js";
 import { DevCfg } from "./shared/dev-config.js";
 
 /** @module developer | This module won't be part of release version */
@@ -73,37 +73,38 @@ namespace Gulp {
     bump-version - builds version files from package.json
       when: before publishing a new version
 
-    clean - executes clean-gallery
+    clean - executes clean-gallery-src
 
-    build-release - builds the release files where all the files are compiled and minify
+    build-release-latest - builds the release files where all the files are compiled and minify
       when: before publishing a new **stable** version and after testing
 
     build-shared-lib - builds files from the client library to be used by server, tests and cli
       when: every time a module tagged with @module shared or
             constants that are useful for server and cli are modified
 
-    build-docs - builds both the end-user and developer documentation
+    build-docs-latest - builds both the end-user and developer documentation
       when: before publishing a new **stable** version and after testing
 
-    post-build-docs - changes links for offline testing and adds other improvements
+    post-build-docs-latest - changes links for offline testing and adds other improvements
 
     build-definition-files - builds definition files for end-user and developer
       when: after any public or shared member of a class is modified
 
-    build-gallery-gifs - builds all the animated gifs for each example in the gallery
-      when: before build-gallery-release
+    build-gallery-src-gifs - builds all the animated gifs for each example in the gallery
+      when: before build-gallery-latest
       warn: this can be a long operation
 
-    build-gallery-release - builds release version of the gallery
+    build-gallery-latest - builds release version of the gallery
       --local builds using local links
-      when: before publishing a new gallery, after build-gallery-gifs
+      when: before publishing a new gallery, after build-gallery-src-gifs
 
-    clean-gallery - deletes all the gallery story-frames files and folder
+    clean-gallery-src - deletes all the ${cfg.paths.GALLERY_SRC_PATH}/story-frames files and folder
       when: cleaning day!
 
-    clean-gallery-png - deletes all the gallery/story-frames/*.png
+    clean-gallery-src-png - deletes all the ${cfg.paths.GALLERY_SRC_PATH}/story-frames/*.png
 
-    update-gallery-scripts - builds a new version of ${cfg.paths.GALLERY_PATH}/*/index.html with script list updated
+    update-gallery-src-scripts - builds a new version of `
+    + `${cfg.paths.GALLERY_SRC_PATH}/*/index.html with script list updated
       when: every time there is a new module on the library or a module change its name
             first must update on the ${cfg.paths.CLIENT_PATH}/lib/js/modules.json
 
@@ -197,7 +198,7 @@ namespace Gulp {
   //                               Clean
   // ------------------------------------------------------------------------
 
-  (gulp as any).task('clean', ['clean-gallery']);
+  (gulp as any).task('clean', ['clean-gallery-src']);
 
   // ------------------------------------------------------------------------
   //                               Bump Version
@@ -231,7 +232,7 @@ namespace Gulp {
     const outBadgeFileBase = `v-${version}.gif`;
     const outBadgeFileName = `${BADGES_FOLDER}${outBadgeFileBase}`;
     if (!sysFs.existsSync(outBadgeFileName)) {
-      const path = `${cfg.paths.GALLERY_PATH}/animate-badges`;
+      const path = `${cfg.paths.GALLERY_SRC_PATH}/animate-badges`;
       const url = `http://localhost:9000/${path}/?var=name%3Dversion&`
         + `var=value%3D${version}&var=wait%3D2s`;
       const config = `./${path}/abeamer.ini`;
@@ -306,7 +307,7 @@ namespace Gulp {
       const singleLibFile = `${cfg.paths.SINGLE_LIB_PATH}/${mode.folder}/abeamer${mode.suffix}.ts`;
       BuildSingleLibFile.build(libModules, cfg.paths.JS_PATH,
         `${cfg.paths.SINGLE_LIB_PATH}/${mode.folder}`, singleLibFile,
-        'gulp `build-release`', ['_Story'], mode.isDebug);
+        'gulp `build-release-latest`', ['_Story'], mode.isDebug);
     });
   });
 
@@ -356,10 +357,10 @@ namespace Gulp {
 
   gulp.task('rel:gallery', () => {
     return gulp.src([
-      `${cfg.paths.GALLERY_PATH}/${cfg.release.demosStr}/**`,
-      `!${cfg.paths.GALLERY_PATH}/**/*.html`,
-      `!${cfg.paths.GALLERY_PATH}/*/story-frames/*`,
-    ], { base: cfg.paths.GALLERY_PATH })
+      `${cfg.paths.GALLERY_SRC_PATH}/${cfg.release.demosStr}/**`,
+      `!${cfg.paths.GALLERY_SRC_PATH}/**/*.html`,
+      `!${cfg.paths.GALLERY_SRC_PATH}/*/story-frames/*`,
+    ], { base: cfg.paths.GALLERY_SRC_PATH })
       .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/gallery`))
       .pipe(gulpPreserveTime());
   });
@@ -384,10 +385,10 @@ namespace Gulp {
 
   gulp.task('rel:gallery-html', () => {
     return mergeStream(
-      updateHtmlPages(`${cfg.paths.GALLERY_PATH}/${cfg.release.demosStr}/*.html`,
+      updateHtmlPages(`${cfg.paths.GALLERY_SRC_PATH}/${cfg.release.demosStr}/*.html`,
         `${cfg.paths.RELEASE_LATEST_PATH}/gallery`,
         [`../../${cfg.paths.JS_PATH}/abeamer.min`],
-        true, { base: cfg.paths.GALLERY_PATH })
+        true, { base: cfg.paths.GALLERY_SRC_PATH })
         .pipe(gulpPreserveTime()));
   });
 
@@ -497,7 +498,7 @@ namespace Gulp {
   });
 
 
-  (gulp as any).task('build-release-internal', ['rel:clean'], gulpSequence(
+  (gulp as any).task('build-release-latest-internal', ['rel:clean'], gulpSequence(
     'rel:client',
     'rel:gallery',
     'rel:gallery-html',
@@ -535,12 +536,12 @@ namespace Gulp {
   //                               Builds the documentation
   // ------------------------------------------------------------------------
 
-  gulp.task('build-docs', () => {
-    BuildDocs.build(libModules, pluginModules, cfg);
+  gulp.task('build-docs-latest', () => {
+    BuildDocsLatest.build(libModules, pluginModules, cfg);
   });
 
 
-  gulp.task('post-build-docs', () => {
+  gulp.task('post-build-docs-latest', () => {
 
     const wordMap: DevCfg.DevDocsWordMap = {};
     cfg.docs.keywords.forEach(word => { wordMap[word] = { wordClass: 'keyword' }; });
@@ -552,8 +553,8 @@ namespace Gulp {
       };
     });
 
-    BuildDocs.postBuild([
-      `{${cfg.paths.END_USER_DOCS_PATH},${cfg.paths.DEV_DOCS_PATH}}/en/site{/,/*/}*.html`],
+    BuildDocsLatest.postBuild([
+      `{${cfg.paths.DOCS_LATEST_END_USER_PATH},${cfg.paths.DOCS_LATEST_DEVELOPER_PATH}}/en/site{/,/*/}*.html`],
       cfg.docs.replacePaths, wordMap);
   });
 
@@ -562,7 +563,7 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   gulp.task('gal-rel:clear', (cb) => {
-    rimrafExcept(cfg.paths.GALLERY_RELEASE_PATH, ['.git']);
+    rimrafExcept(cfg.paths.GALLERY_LATEST_PATH, ['.git']);
     cb();
   });
 
@@ -631,19 +632,19 @@ namespace Gulp {
     });
 
 
-  (gulp as any).task('build-gallery-release', ['gal-rel:process-readme']);
+  (gulp as any).task('build-gallery-latest', ['gal-rel:process-readme']);
 
   // ------------------------------------------------------------------------
   //                               Deletes gallery story-frames folder
   // ------------------------------------------------------------------------
 
-  gulp.task('clean-gallery', (cb) => {
-    rimraf.sync(`${cfg.paths.GALLERY_PATH}/*/story-frames`);
+  gulp.task('clean-gallery-src', (cb) => {
+    rimraf.sync(`${cfg.paths.GALLERY_SRC_PATH}/*/story-frames`);
     cb();
   });
 
-  gulp.task('clean-gallery-png', (cb) => {
-    rimraf.sync(`${cfg.paths.GALLERY_PATH}/*/story-frames/*.png`);
+  gulp.task('clean-gallery-src-png', (cb) => {
+    rimraf.sync(`${cfg.paths.GALLERY_SRC_PATH}/*/story-frames/*.png`);
     cb();
   });
 
@@ -651,7 +652,7 @@ namespace Gulp {
   //                               Creates gallery examples gif image
   // ------------------------------------------------------------------------
 
-  (gulp as any).task('build-gallery-gifs', ['clean-gallery-png'], (cb) => {
+  (gulp as any).task('build-gallery-src-gifs', ['clean-gallery-src-png'], (cb) => {
     BuildGalRel.buildGifs(cfg);
     cb();
   });
@@ -660,12 +661,12 @@ namespace Gulp {
   //                               Update Gallery Scripts
   // ------------------------------------------------------------------------
 
-  gulp.task('update-gallery-scripts', () => {
-    const DST_PATH = `${cfg.paths.GALLERY_PATH}-updated`;
+  gulp.task('update-gallery-src-scripts', () => {
+    const DST_PATH = `${cfg.paths.GALLERY_SRC_PATH}-updated`;
     rimraf.sync(`${DST_PATH}/**`);
     const newScriptFiles = libModules.map(srcFile =>
       `../../${cfg.paths.JS_PATH}/${srcFile}`);
-    return mergeStream(updateHtmlPages(`${cfg.paths.GALLERY_PATH}/*/*.html`, DST_PATH, newScriptFiles, false));
+    return mergeStream(updateHtmlPages(`${cfg.paths.GALLERY_SRC_PATH}/*/*.html`, DST_PATH, newScriptFiles, false));
   });
 
   // ------------------------------------------------------------------------

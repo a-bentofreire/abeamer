@@ -8,7 +8,7 @@
 import { fsix } from "../vendor/fsix.js";
 import { BuildDTsFiles } from "./build-d-ts.js";
 import { DevCfg } from "../dev-config.js";
-import { BuildDocs } from "./build-docs.js";
+import { BuildDocsLatest } from "./build-docs-latest.js";
 
 /** @module developer | This module won't be part of release version */
 
@@ -42,7 +42,7 @@ export namespace BuildDTsFilesABeamer {
     [{
       uuid: 'bb85cc57-f5e3-4ae9-b498-7d13c07c8516',
       srcFiles: libSourceFileNames,
-      docTarget: BuildDocs.getTargets(cfg).find(target => target.id === 'end-user'),
+      docTarget: BuildDocsLatest.getTargets(cfg).find(target => target.id === 'end-user'),
       namespace: 'ABeamer',
       outFile: `${cfg.paths.TYPINGS_PATH}/abeamer.d.ts`,
       description: `
@@ -71,7 +71,7 @@ export namespace BuildDTsFilesABeamer {
       uuid: 'a7d9ab44-f9b0-4108-b768-730d7afb20a4',
       srcFiles: libSourceFileNames,
       namespace: 'ABeamer',
-      docTarget: BuildDocs.getTargets(cfg).find(target => target.id === 'dev'),
+      docTarget: BuildDocsLatest.getTargets(cfg).find(target => target.id === 'dev'),
       outFile: `${cfg.paths.TYPINGS_PATH}/abeamer-dev.d.ts`,
       description: `
   //
@@ -124,8 +124,8 @@ export namespace BuildDTsFilesABeamer {
 
       let apiPath;
       if (target.docTarget) {
-        apiPath = `${target.docTarget.dstPath}/${BuildDocs.EN_LAST_VERSION_PATH}`
-          + `/${BuildDocs.API_FOLDER}`;
+        apiPath = `${target.docTarget.dstPath}/${BuildDocsLatest.EN_LAST_VERSION_PATH}`
+          + `/${BuildDocsLatest.API_FOLDER}`;
         fsix.mkdirpSync(apiPath);
       }
 

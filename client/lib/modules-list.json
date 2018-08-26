@@ -2,7 +2,7 @@
     "__msg1": "This file contains the modules sorted by order used by",
     "__msg2": "./gulpfile.js to join the library pieces into one single file",
     "__msg3": " and to rebuild the <script> references on test /*/index.html",
-    "__msg4": "Also used by `gulp build-docs` and `gulp build-release`",
+    "__msg4": "Also used by `gulp build-docs-latest` and `gulp build-release-latest`",
 
     "pluginModules": [
         "core-functions",

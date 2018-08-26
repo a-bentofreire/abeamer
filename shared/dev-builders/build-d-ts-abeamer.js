@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // ------------------------------------------------------------------------
 var fsix_js_1 = require("../vendor/fsix.js");
 var build_d_ts_js_1 = require("./build-d-ts.js");
-var build_docs_js_1 = require("./build-docs.js");
+var build_docs_latest_js_1 = require("./build-docs-latest.js");
 /** @module developer | This module won't be part of release version */
 /**
  * ## Description
@@ -27,7 +27,7 @@ var BuildDTsFilesABeamer;
         [{
                 uuid: 'bb85cc57-f5e3-4ae9-b498-7d13c07c8516',
                 srcFiles: libSourceFileNames,
-                docTarget: build_docs_js_1.BuildDocs.getTargets(cfg).find(function (target) { return target.id === 'end-user'; }),
+                docTarget: build_docs_latest_js_1.BuildDocsLatest.getTargets(cfg).find(function (target) { return target.id === 'end-user'; }),
                 namespace: 'ABeamer',
                 outFile: cfg.paths.TYPINGS_PATH + "/abeamer.d.ts",
                 description: "\n  //\n  // These are the class interfaces for the end-user and plugin creators\n  // Any modification on these interfaces will require an increment in the high number version\n  //",
@@ -52,7 +52,7 @@ var BuildDTsFilesABeamer;
                 uuid: 'a7d9ab44-f9b0-4108-b768-730d7afb20a4',
                 srcFiles: libSourceFileNames,
                 namespace: 'ABeamer',
-                docTarget: build_docs_js_1.BuildDocs.getTargets(cfg).find(function (target) { return target.id === 'dev'; }),
+                docTarget: build_docs_latest_js_1.BuildDocsLatest.getTargets(cfg).find(function (target) { return target.id === 'dev'; }),
                 outFile: cfg.paths.TYPINGS_PATH + "/abeamer-dev.d.ts",
                 description: "\n  //\n  // These are the class interfaces for internal usage only\n  // It won't be deployed on the release version\n  // and it shouldn't be accessed by plugin creators\n  // In theory, all of these class members should be have protected access\n  // but due a lack of 'friend class' mechanism in TypeScript, they have\n  // public access but both the interfaces as well as the members but all\n  // must start with underscore\n  //",
                 acceptId: function (id, idType) {
@@ -84,8 +84,8 @@ var BuildDTsFilesABeamer;
             var outFile = target.outFile;
             var apiPath;
             if (target.docTarget) {
-                apiPath = target.docTarget.dstPath + "/" + build_docs_js_1.BuildDocs.EN_LAST_VERSION_PATH
-                    + ("/" + build_docs_js_1.BuildDocs.API_FOLDER);
+                apiPath = target.docTarget.dstPath + "/" + build_docs_latest_js_1.BuildDocsLatest.EN_LAST_VERSION_PATH
+                    + ("/" + build_docs_latest_js_1.BuildDocsLatest.API_FOLDER);
                 fsix_js_1.fsix.mkdirpSync(apiPath);
             }
             build_d_ts_js_1.BuildDTsFiles.build(target.srcFiles, outFile, CLIENT_UUID + COPYRIGHTS + WARN_MSG + target.description

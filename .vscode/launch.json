@@ -34,7 +34,7 @@
       "name": "gulp",
       "program": "${workspaceFolder}/node_modules/gulp/bin/gulp.js",
       "args": [
-        "post-build-docs"
+        "post-build-docs-latest"
       ]
     },
     {

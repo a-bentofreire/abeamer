@@ -2,8 +2,6 @@ website/
 private/
 private-projects/
 node_modules/
-gallery
-gallery/**
 gallery-src-updated/
 gallery-src/*/*.gif
 gallery-src/*/story.json
@@ -12,13 +10,12 @@ gallery-src/remote-server/story.json
 gallery-src/**/story-frames/
 test/tests.run/
 test/log/
-docs/release/
+shared/dev-builders/output
 docs/*.*/
 docs/latest/
-shared/dev-builders/output
-release{/**,}
+gallery/
+release/
 *.js.map
 **/*.bak.*
 *.bak.md
 *.log
-package-lock.json
