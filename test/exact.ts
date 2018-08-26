@@ -16,9 +16,9 @@ import * as sysProcess from "process";
 
 import { Consts } from "../shared/lib/consts.js";
 import { RelConsts } from "../shared/rel-consts.js";
-import { DevPaths } from "../shared/dev-paths.js";
 import { DevConsts } from "../shared/lib/dev-consts.js";
 import { fsix } from "../shared/vendor/fsix.js";
+import { DevCfg } from "../shared/dev-config.js";
 
 
 /**
@@ -484,8 +484,8 @@ export namespace Exact {
 
   export function roundToTestDigits(values: number[]): void {
     values.forEach((v, i) => {
-    values[i] = Math.round(v * _TEST_DIGIT_LIMIT) /
-      _TEST_DIGIT_LIMIT;
+      values[i] = Math.round(v * _TEST_DIGIT_LIMIT) /
+        _TEST_DIGIT_LIMIT;
     });
   }
 
@@ -886,16 +886,18 @@ export namespace Exact {
   function initReplaceMacros(inMacros: ExactInMacros,
     params: ExactParams): [RegExp, string][] {
 
+    const cfg = DevCfg.getConfig(sysPath.dirname(__dirname));
+
     const macros = Object.keys(inMacros).map(key =>
       [new RegExp(`__${key.toUpperCase()}__`, 'g'),
       inMacros[key] || ''] as [RegExp, string]);
 
 
     macros.push([/__LIB_FILES__/,
-      (fsix.loadJsonSync(DevPaths.MODULES_LIST_FILE) as Shared.ModulesList)
+      (fsix.loadJsonSync(cfg.paths.MODULES_LIST_FILE) as Shared.ModulesList)
         .libModules.map(file =>
           `    <script src="../../../client/lib/js/${file}.js"></script>\n`,
-      ).join('')],
+        ).join('')],
     );
 
     macros.push([/__PLUGINS__/,

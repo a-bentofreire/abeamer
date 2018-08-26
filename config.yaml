@@ -1,0 +1,111 @@
+macros:
+  LOCAL_PORT: 9000
+
+paths:
+  CLIENT_PATH: client
+  LIB_PATH: ${CLIENT_PATH}/lib
+  JS_PATH: ${LIB_PATH}/js
+  PLUGINS_PATH: ${LIB_PATH}/plugins
+  MESSAGES_PATH: ${LIB_PATH}/messages
+  TYPINGS_PATH: ${LIB_PATH}/typings
+  SHARED_PATH: shared
+  SHARED_LIB_PATH: ${SHARED_PATH}/lib
+  GALLERY_PATH: gallery-src
+  BADGES_PATH: assets/badges
+  ICONS_PATH: assets/icons
+
+  GALLERY_RELEASE_PATH: gallery/latest
+  RELEASE_LATEST_PATH: release/latest
+
+  DOCS_PATH: docs
+
+  END_USER_DOCS_PATH: ${DOCS_PATH}/latest/end-user
+  DEV_DOCS_PATH: ${DOCS_PATH}/latest/developer
+  SOURCE_DOCS_PATH: ${DOCS_PATH}/sources
+  SOURCE_DEV_DOCS_PATH: ${DOCS_PATH}/sources-dev
+
+  MODULES_LIST_FILE: ${PROJ_PATH}/${LIB_PATH}/modules-list.json
+
+  SINGLE_LIB_PATH: ${SHARED_PATH}/dev-builders/output
+
+
+jsFiles:
+  - server/*.js
+  - cli/*.js
+  - ${SHARED_PATH}/*.js
+  - ${SHARED_PATH}/**/*.js
+  - ${MESSAGES_PATH}/*.js
+  - ${PLUGINS_PATH}/*/*.js
+  - '!${SHARED_PATH}/dev-builders{/**,}'
+  - '!${SHARED_PATH}/dev-*.js'
+  - '!${SHARED_PATH}/**/dev-*.js'
+
+release:
+  demos:
+    - 'hello-world'
+
+  root:
+    - abeamer.{sh,cmd}
+    - CHANGELOG.md
+    - LICENSE.txt
+    - .npmignore
+
+  client:
+    - '${CLIENT_PATH}/**'
+    - '!${CLIENT_PATH}/**/*.map'
+    - '!${JS_PATH}/*'
+    - '!${PLUGINS_PATH}/**'
+    - '!${MESSAGES_PATH}/*'
+    - '!${TYPINGS_PATH}/release{,/**}'
+    - '!${TYPINGS_PATH}/README.*'
+    - '!${TYPINGS_PATH}/vendor/phantomjs{,/**}'
+    - '!${TYPINGS_PATH}/vendor/README.*'
+    - '!${TYPINGS_PATH}/*-dev.d.ts'
+    - '!${TYPINGS_PATH}/abeamer.d.ts'
+    - '!${CLIENT_PATH}/**/*[a-z][a-z].ts'
+    - '!${CLIENT_PATH}/**/*.scss'
+    - '!${MODULES_LIST_FILE}'
+
+
+webLinks:
+  localServer: http://localhost:${LOCAL_PORT}
+  webDomain: https://www.abeamer.com
+
+
+docs:
+  replacePaths:
+    -
+      - !!js/regexp /"[^"]*highlight.[^"]*\.js"/
+      - '"/vendor/highlight.js"'
+    -
+      - !!js/regexp /"[^"]+jquery[^"]*\.js"/
+      - '"/vendor/jquery-3.3.1.min.js"'
+    -
+      - !!js/regexp /"[\.\/]*css\/theme(\w*)\.css"/g
+      - '"/css/mydocs/theme$1.min.css"'
+    -
+      - !!js/regexp /"[^"]+highlight.js[^"]*\.css"/
+      - '"/css/my-code-theme.min.css"'
+
+  keywords:
+    - type
+    - export
+    - interface
+    - function
+    - readonly
+
+  jsTypes:
+    - void
+    - string
+    - number
+    - boolean
+    - object
+    - any
+
+  customTypes:
+    -
+      - uint
+      - zero or positive integer
+    -
+      - int
+      - integer

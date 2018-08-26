@@ -12,9 +12,9 @@ var sysPath = require("path");
 var sysProcess = require("process");
 var consts_js_1 = require("../shared/lib/consts.js");
 var rel_consts_js_1 = require("../shared/rel-consts.js");
-var dev_paths_js_1 = require("../shared/dev-paths.js");
 var dev_consts_js_1 = require("../shared/lib/dev-consts.js");
 var fsix_js_1 = require("../shared/vendor/fsix.js");
+var dev_config_js_1 = require("../shared/dev-config.js");
 /**
  * ## Description
  *
@@ -520,12 +520,13 @@ var Exact;
      * Usage: replace text on `.js/.html/.css` files.
      */
     function initReplaceMacros(inMacros, params) {
+        var cfg = dev_config_js_1.DevCfg.getConfig(sysPath.dirname(__dirname));
         var macros = Object.keys(inMacros).map(function (key) {
             return [new RegExp("__" + key.toUpperCase() + "__", 'g'),
                 inMacros[key] || ''];
         });
         macros.push([/__LIB_FILES__/,
-            fsix_js_1.fsix.loadJsonSync(dev_paths_js_1.DevPaths.MODULES_LIST_FILE)
+            fsix_js_1.fsix.loadJsonSync(cfg.paths.MODULES_LIST_FILE)
                 .libModules.map(function (file) {
                 return "    <script src=\"../../../client/lib/js/" + file + ".js\"></script>\n";
             }).join('')]);

@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > and by restructuring the docs and gallery output paths to be the same as online,
 > now it's possible to test the docs and gallery offline using a local server and symlinks.
 - Improve command line documentation.
+- (DEV) Move build paths, urls and parts of gulp code to `config.yaml`.
+> With this change, a developer can change the release paths and execute gulp tasks
+> without changing the gulpfile. There are still parts inside the gulp file that needs to
+> be ported.
 
 ### Added
 - Add Minor cosmetic improvements on gallery README.

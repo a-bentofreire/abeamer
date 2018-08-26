@@ -7,11 +7,12 @@
 // ------------------------------------------------------------------------
 
 import * as globule from "globule";
+import * as yaml from "js-yaml";
+
 import * as sysFs from "fs";
 import * as sysPath from "path";
 import { fsix } from "../vendor/fsix.js";
-import { DevPaths } from "../dev-paths.js";
-import { DevWebLinks } from "../dev-web-links.js";
+import { DevCfg } from "../dev-config.js";
 import * as versionLib from '../version.js';
 
 /** @module developer | This module won't be part of release version */
@@ -41,8 +42,6 @@ import * as versionLib from '../version.js';
  */
 export namespace BuildDocs {
 
-  const yaml = require('js-yaml');
-
   const EMPTY = ['', '', '', '', '', '', '', '', '', ''];
 
   const MARKDOWN_FOLDER = 'docs';
@@ -53,12 +52,12 @@ export namespace BuildDocs {
 
   let badgeLine = '';
 
-  export const targets = [
+  export const getTargets = (cfg: DevCfg.DevConfig) => [
     {
       id: 'end-user',
       name: 'End User',
-      dstPath: DevPaths.END_USER_DOCS_PATH,
-      sourcePaths: [DevPaths.SOURCE_DOCS_PATH],
+      dstPath: cfg.paths.END_USER_DOCS_PATH,
+      sourcePaths: [cfg.paths.SOURCE_DOCS_PATH],
       moduleTypes: ['end-user'],
       indexFile: './README.md',
       isEndUser: true,
@@ -69,16 +68,16 @@ export namespace BuildDocs {
             badgeLine = all;
             return p1 + 'end-user-badge.gif' + p2;
           })
-          .replace(new RegExp(`${DevWebLinks.webDomain}/`, 'g'), '/');
+          .replace(new RegExp(`${cfg.webLinks.webDomain}/`, 'g'), '/');
       },
     },
     {
       id: 'dev',
       name: 'Developer',
-      dstPath: DevPaths.DEV_DOCS_PATH,
-      sourcePaths: [DevPaths.SOURCE_DOCS_PATH, DevPaths.SOURCE_DEV_DOCS_PATH],
+      dstPath: cfg.paths.DEV_DOCS_PATH,
+      sourcePaths: [cfg.paths.SOURCE_DOCS_PATH, cfg.paths.SOURCE_DEV_DOCS_PATH],
       moduleTypes: ['end-user', 'developer', 'internal'],
-      indexFile: `${DevPaths.SOURCE_DOCS_PATH}-dev/README.md`,
+      indexFile: `${cfg.paths.SOURCE_DOCS_PATH}-dev/README.md`,
       isEndUser: false,
       logFile: './build-docs-dev.log',
       processIndexPage: (data: string) => {
@@ -726,7 +725,8 @@ export namespace BuildDocs {
 
         docParser.parseFileData(preDocText + inpText);
         if (docParser.outLines.length) {
-          outText += '  \n  \n<div class=api-header>&nbsp;</div>\n#API\n' + docParser.outLines.join('\n');
+          outText += '  \n  \n<div class=api-header>&nbsp;</div>\n#API\n'
+            + docParser.outLines.join('\n');
         }
       }
 
@@ -743,7 +743,7 @@ export namespace BuildDocs {
    * and adds the file to mkdocs.
    */
   function copyMarkdownFile(srcFileName: string, dstFileName: string,
-    mkDocs: MkDocsYml, mkDocsOpts: Opts,
+    mkDocs: MkDocsYml, mkDocsOpts: Opts, cfg: DevCfg.DevConfig,
     processPage?: (data: string) => string): string {
 
     let data = fsix.readUtf8Sync(srcFileName);
@@ -758,11 +758,12 @@ export namespace BuildDocs {
    * This is the main entry point.
    * Read the module information for details.
    */
-  export function build(libModules: string[], pluginModules: string[]): void {
+  export function build(libModules: string[],
+    pluginModules: string[], cfg: DevCfg.DevConfig): void {
 
     const localWebLinks = (key: string, title: string) => {
       if (key === 'gallery') {
-        return `[${title}](/${DevPaths.GALLERY_RELEASE_PATH}/#${title})`;
+        return `[${title}](/${cfg.paths.GALLERY_RELEASE_PATH}/#${title})`;
       } else {
         return '';
       }
@@ -775,12 +776,12 @@ export namespace BuildDocs {
     // in case of documentation, it's better to visualize the more specific at the top.
     libModules.reverse();
 
-    targets.forEach(target => {
+    getTargets(cfg).forEach(target => {
 
       const baseDstPath = `${target.dstPath}/${EN_LAST_VERSION_PATH}`;
       const markdownDstPath = `${baseDstPath}/${MARKDOWN_FOLDER}`;
       fsix.mkdirpSync(markdownDstPath);
-      const mkDocsYml = new MkDocsYml(`${DevPaths.SOURCE_DOCS_PATH}/.mkdocs-template.yml`,
+      const mkDocsYml = new MkDocsYml(`${cfg.paths.SOURCE_DOCS_PATH}/.mkdocs-template.yml`,
         target.name);
 
       const log: Log = {
@@ -792,14 +793,14 @@ export namespace BuildDocs {
 
       // index.html
       copyMarkdownFile(target.indexFile,
-        `${markdownDstPath}/index.md`, mkDocsYml, {}, target.processIndexPage);
+        `${markdownDstPath}/index.md`, mkDocsYml, {}, cfg, target.processIndexPage);
 
       // copy sources
       target.sourcePaths.forEach(sourcesPathName => {
         sysFs.readdirSync(sourcesPathName).forEach(file => {
           if (file.endsWith('.md') && !file.match(/-dev|README/)) {
             copyMarkdownFile(`${sourcesPathName}/${file}`,
-              `${markdownDstPath}/${file}`, mkDocsYml, {});
+              `${markdownDstPath}/${file}`, mkDocsYml, {}, cfg);
           }
 
           if (file.endsWith('.css') || file.endsWith('.png') || file.endsWith('.ico')) {
@@ -814,9 +815,9 @@ export namespace BuildDocs {
       ['server-agent', 'server/server-agent.ts', 'Server'],
       ['exact', 'test/exact.ts', 'Testing'],
       ...libModules
-        .map(fileTitle => [fileTitle, `${DevPaths.JS_PATH}/${fileTitle}.ts`, 'Library']),
+        .map(fileTitle => [fileTitle, `${cfg.paths.JS_PATH}/${fileTitle}.ts`, 'Library']),
       ...pluginModules
-        .map(fileTitle => [fileTitle, `${DevPaths.PLUGINS_PATH}/${fileTitle}/${fileTitle}.ts`, 'Plugins']),
+        .map(fileTitle => [fileTitle, `${cfg.paths.PLUGINS_PATH}/${fileTitle}/${fileTitle}.ts`, 'Plugins']),
       ]
         .forEach(item => {
           const [fileTitle, srcFileName, folder] = item;
@@ -846,15 +847,9 @@ Not Found references: ${log.notFound.length}
   //                               buildWebLinks
   // ------------------------------------------------------------------------
 
-  export interface WordMap {
-    [word: string]: {
-      wordClass: string,
-      title?: string,
-    };
-  }
 
   export function postBuild(filePatterns: string[],
-    replacePaths: any[][], wordMap: WordMap): void {
+    replacePaths: any[][], wordMap: DevCfg.DevDocsWordMap): void {
 
     const highlightRegEx = new
       RegExp(`\\b(${Object.keys(wordMap).join('|')})\\b`, 'g');
@@ -868,7 +863,7 @@ Not Found references: ${log.notFound.length}
       content = content.replace(/(<code class="js">)((?:.|\n)+?)(<\/code>)/g,
         (all, preTag, code, postTag) => {
 
-          code = code.replace(highlightRegEx, (all, word) => {
+          code = code.replace(highlightRegEx, (all2, word) => {
             const wordInf = wordMap[word];
             return `<span class="hljs-${wordInf.wordClass}"`
               + `${wordInf.title ? ` title="${wordInf.title}"` : ''}>${word}</span>`;

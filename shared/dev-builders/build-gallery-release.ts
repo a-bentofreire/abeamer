@@ -10,8 +10,7 @@ import * as sysFs from "fs";
 import { spawn as sysSpawn } from "child_process";
 
 import { fsix } from "../vendor/fsix.js";
-import { DevWebLinks as webLinks } from "../dev-web-links.js";
-import { DevPaths } from "../dev-paths.js";
+import { DevCfg } from "../dev-config.js";
 
 /** @module developer | This module won't be part of release version */
 
@@ -54,16 +53,17 @@ export namespace BuildGalleryRelease {
    * Fills the `releaseExamples` list with every gallery example that
    * is prepared to be released.
    */
-  export function populateReleaseExamples(): void {
+  export function populateReleaseExamples(cfg: DevCfg.DevConfig): void {
 
-    const exclusions = fsix.loadJsonSync(`${DevPaths.GALLERY_PATH}/exclude-from-release.json`) as string[];
+    const exclusions = fsix
+      .loadJsonSync(`${cfg.paths.GALLERY_PATH}/exclude-from-release.json`) as string[];
 
-    sysFs.readdirSync(DevPaths.GALLERY_PATH).forEach(folder => {
+    sysFs.readdirSync(cfg.paths.GALLERY_PATH).forEach(folder => {
 
       if (exclusions.indexOf(folder) !== -1) { return; }
 
-      const srcFullPath = `${DevPaths.GALLERY_PATH}/${folder}`;
-      const dstFullPath = `${DevPaths.GALLERY_RELEASE_PATH}/${folder}`;
+      const srcFullPath = `${cfg.paths.GALLERY_PATH}/${folder}`;
+      const dstFullPath = `${cfg.paths.GALLERY_RELEASE_PATH}/${folder}`;
       const iniFileName = `${srcFullPath}/abeamer.ini`;
 
       if (sysFs.existsSync(iniFileName)) {
@@ -154,7 +154,7 @@ export namespace BuildGalleryRelease {
   /**
    * Builds the gallery-release ReadMe file
    */
-  export function buildReadMe(): void {
+  export function buildReadMe(cfg: DevCfg.DevConfig): void {
     const galleryLinks: string[] = [];
     const missingFiles: string[] = [];
     const rnd = Math.round(Math.random() * 100000000);
@@ -174,7 +174,7 @@ export namespace BuildGalleryRelease {
       const storyFramesFolder = `${ex.folder}/story-frames`;
 
       if (!ex.noGifImage) {
-        checkFile(`./${DevPaths.GALLERY_PATH}/${ex.folder}/story-frames/story.gif`);
+        checkFile(`./${cfg.paths.GALLERY_PATH}/${ex.folder}/story-frames/story.gif`);
         galleryLinks.push(`\n  `
           + `\n![Image](${storyFramesFolder}/story.gif?${rnd})${'  '}\n  `);
       }
@@ -193,9 +193,9 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
     `);
     });
 
-    const outREADME = fsix.readUtf8Sync(`${DevPaths.GALLERY_PATH}/README-rel.md`)
+    const outREADME = fsix.readUtf8Sync(`${cfg.paths.GALLERY_PATH}/README-rel.md`)
       + galleryLinks.join('');
-    sysFs.writeFileSync(`${DevPaths.GALLERY_RELEASE_PATH}/README.md`, outREADME);
+    sysFs.writeFileSync(`${cfg.paths.GALLERY_RELEASE_PATH}/README.md`, outREADME);
     if (missingFiles.length) {
       throw `Missing files:\n` + missingFiles.join('\n');
     }
@@ -229,17 +229,17 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
   //                               buildGifs
   // ------------------------------------------------------------------------
 
-  export function buildGifs(): void {
-    populateReleaseExamples();
+  export function buildGifs(cfg: DevCfg.DevConfig): void {
+    populateReleaseExamples(cfg);
     releaseExamples.forEach((example/* , index */) => {
       if (example.noGifImage) { return; }
       // if (example.folder === 'animate-attack-task') { // use to test one example only
 
       runSpawn('npm', ['run', '--', 'render', '--dp', '--url',
-        `${webLinks.localServer}/${DevPaths.GALLERY_PATH}/${example.folder}/`,
-        '--config', `./${DevPaths.GALLERY_PATH}/${example.folder}/abeamer.ini`,
+        `${cfg.webLinks.localServer}/${cfg.paths.GALLERY_PATH}/${example.folder}/`,
+        '--config', `./${cfg.paths.GALLERY_PATH}/${example.folder}/abeamer.ini`,
       ], () => {
-        runSpawn('npm', ['run', '--', 'gif', `${DevPaths.GALLERY_PATH}/${example.folder}/`],
+        runSpawn('npm', ['run', '--', 'gif', `${cfg.paths.GALLERY_PATH}/${example.folder}/`],
           () => {
             console.log(`Done example: ${example.folder}`);
           });

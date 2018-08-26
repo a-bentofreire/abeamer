@@ -6,11 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Licensed under the MIT License+uuid License. See License.txt for details
 // ------------------------------------------------------------------------
 var globule = require("globule");
+var yaml = require("js-yaml");
 var sysFs = require("fs");
 var sysPath = require("path");
 var fsix_js_1 = require("../vendor/fsix.js");
-var dev_paths_js_1 = require("../dev-paths.js");
-var dev_web_links_js_1 = require("../dev-web-links.js");
 var versionLib = require("../version.js");
 /** @module developer | This module won't be part of release version */
 /**
@@ -38,18 +37,17 @@ var versionLib = require("../version.js");
  */
 var BuildDocs;
 (function (BuildDocs) {
-    var yaml = require('js-yaml');
     var EMPTY = ['', '', '', '', '', '', '', '', '', ''];
     var MARKDOWN_FOLDER = 'docs';
     BuildDocs.API_FOLDER = 'api';
     BuildDocs.EN_LAST_VERSION_PATH = 'en';
     var badgeLine = '';
-    BuildDocs.targets = [
+    BuildDocs.getTargets = function (cfg) { return [
         {
             id: 'end-user',
             name: 'End User',
-            dstPath: dev_paths_js_1.DevPaths.END_USER_DOCS_PATH,
-            sourcePaths: [dev_paths_js_1.DevPaths.SOURCE_DOCS_PATH],
+            dstPath: cfg.paths.END_USER_DOCS_PATH,
+            sourcePaths: [cfg.paths.SOURCE_DOCS_PATH],
             moduleTypes: ['end-user'],
             indexFile: './README.md',
             isEndUser: true,
@@ -60,16 +58,16 @@ var BuildDocs;
                     badgeLine = all;
                     return p1 + 'end-user-badge.gif' + p2;
                 })
-                    .replace(new RegExp(dev_web_links_js_1.DevWebLinks.webDomain + "/", 'g'), '/');
+                    .replace(new RegExp(cfg.webLinks.webDomain + "/", 'g'), '/');
             },
         },
         {
             id: 'dev',
             name: 'Developer',
-            dstPath: dev_paths_js_1.DevPaths.DEV_DOCS_PATH,
-            sourcePaths: [dev_paths_js_1.DevPaths.SOURCE_DOCS_PATH, dev_paths_js_1.DevPaths.SOURCE_DEV_DOCS_PATH],
+            dstPath: cfg.paths.DEV_DOCS_PATH,
+            sourcePaths: [cfg.paths.SOURCE_DOCS_PATH, cfg.paths.SOURCE_DEV_DOCS_PATH],
             moduleTypes: ['end-user', 'developer', 'internal'],
-            indexFile: dev_paths_js_1.DevPaths.SOURCE_DOCS_PATH + "-dev/README.md",
+            indexFile: cfg.paths.SOURCE_DOCS_PATH + "-dev/README.md",
             isEndUser: false,
             logFile: './build-docs-dev.log',
             processIndexPage: function (data) {
@@ -81,7 +79,7 @@ var BuildDocs;
                 });
             },
         },
-    ];
+    ]; };
     // ------------------------------------------------------------------------
     //                               ReferenceBuilder
     // ------------------------------------------------------------------------
@@ -556,7 +554,8 @@ var BuildDocs;
                 var docParser = new DocParser(localWebLinks, isEndUser);
                 docParser.parseFileData(preDocText + inpText);
                 if (docParser.outLines.length) {
-                    outText += '  \n  \n<div class=api-header>&nbsp;</div>\n#API\n' + docParser.outLines.join('\n');
+                    outText += '  \n  \n<div class=api-header>&nbsp;</div>\n#API\n'
+                        + docParser.outLines.join('\n');
                 }
             }
             mkDocsYml.addSourceFile(mkDocsOpts, outFileName, inpText);
@@ -568,7 +567,7 @@ var BuildDocs;
      * Copies a markdown file from to the destination
      * and adds the file to mkdocs.
      */
-    function copyMarkdownFile(srcFileName, dstFileName, mkDocs, mkDocsOpts, processPage) {
+    function copyMarkdownFile(srcFileName, dstFileName, mkDocs, mkDocsOpts, cfg, processPage) {
         var data = fsix_js_1.fsix.readUtf8Sync(srcFileName);
         data = mkDocs.addSourceFile(mkDocsOpts, dstFileName, data);
         if (processPage) {
@@ -581,10 +580,10 @@ var BuildDocs;
      * This is the main entry point.
      * Read the module information for details.
      */
-    function build(libModules, pluginModules) {
+    function build(libModules, pluginModules, cfg) {
         var localWebLinks = function (key, title) {
             if (key === 'gallery') {
-                return "[" + title + "](/" + dev_paths_js_1.DevPaths.GALLERY_RELEASE_PATH + "/#" + title + ")";
+                return "[" + title + "](/" + cfg.paths.GALLERY_RELEASE_PATH + "/#" + title + ")";
             }
             else {
                 return '';
@@ -595,11 +594,11 @@ var BuildDocs;
         // ------------------------------------------------------------------------
         // in case of documentation, it's better to visualize the more specific at the top.
         libModules.reverse();
-        BuildDocs.targets.forEach(function (target) {
+        BuildDocs.getTargets(cfg).forEach(function (target) {
             var baseDstPath = target.dstPath + "/" + BuildDocs.EN_LAST_VERSION_PATH;
             var markdownDstPath = baseDstPath + "/" + MARKDOWN_FOLDER;
             fsix_js_1.fsix.mkdirpSync(markdownDstPath);
-            var mkDocsYml = new MkDocsYml(dev_paths_js_1.DevPaths.SOURCE_DOCS_PATH + "/.mkdocs-template.yml", target.name);
+            var mkDocsYml = new MkDocsYml(cfg.paths.SOURCE_DOCS_PATH + "/.mkdocs-template.yml", target.name);
             var log = {
                 notFound: [],
                 found: [],
@@ -607,12 +606,12 @@ var BuildDocs;
                 refs: {},
             };
             // index.html
-            copyMarkdownFile(target.indexFile, markdownDstPath + "/index.md", mkDocsYml, {}, target.processIndexPage);
+            copyMarkdownFile(target.indexFile, markdownDstPath + "/index.md", mkDocsYml, {}, cfg, target.processIndexPage);
             // copy sources
             target.sourcePaths.forEach(function (sourcesPathName) {
                 sysFs.readdirSync(sourcesPathName).forEach(function (file) {
                     if (file.endsWith('.md') && !file.match(/-dev|README/)) {
-                        copyMarkdownFile(sourcesPathName + "/" + file, markdownDstPath + "/" + file, mkDocsYml, {});
+                        copyMarkdownFile(sourcesPathName + "/" + file, markdownDstPath + "/" + file, mkDocsYml, {}, cfg);
                     }
                     if (file.endsWith('.css') || file.endsWith('.png') || file.endsWith('.ico')) {
                         sysFs.writeFileSync(markdownDstPath + "/" + file, sysFs.readFileSync(sourcesPathName + "/" + file));
@@ -623,8 +622,8 @@ var BuildDocs;
             [['abeamer-cli', 'cli/abeamer-cli.ts', ''],
                 ['server-agent', 'server/server-agent.ts', 'Server'],
                 ['exact', 'test/exact.ts', 'Testing']].concat(libModules
-                .map(function (fileTitle) { return [fileTitle, dev_paths_js_1.DevPaths.JS_PATH + "/" + fileTitle + ".ts", 'Library']; }), pluginModules
-                .map(function (fileTitle) { return [fileTitle, dev_paths_js_1.DevPaths.PLUGINS_PATH + "/" + fileTitle + "/" + fileTitle + ".ts", 'Plugins']; })).forEach(function (item) {
+                .map(function (fileTitle) { return [fileTitle, cfg.paths.JS_PATH + "/" + fileTitle + ".ts", 'Library']; }), pluginModules
+                .map(function (fileTitle) { return [fileTitle, cfg.paths.PLUGINS_PATH + "/" + fileTitle + "/" + fileTitle + ".ts", 'Plugins']; })).forEach(function (item) {
                 var fileTitle = item[0], srcFileName = item[1], folder = item[2];
                 var dstFileName = markdownDstPath + "/" + fileTitle + ".md";
                 buildMarkdownFromSourceFile(srcFileName, dstFileName, baseDstPath + "/" + BuildDocs.API_FOLDER + "/" + fileTitle + ".txt", target.moduleTypes, mkDocsYml, { folder: folder }, localWebLinks, target.isEndUser, log);
@@ -639,6 +638,9 @@ var BuildDocs;
         });
     }
     BuildDocs.build = build;
+    // ------------------------------------------------------------------------
+    //                               buildWebLinks
+    // ------------------------------------------------------------------------
     function postBuild(filePatterns, replacePaths, wordMap) {
         var highlightRegEx = new RegExp("\\b(" + Object.keys(wordMap).join('|') + ")\\b", 'g');
         globule.find(filePatterns).forEach(function (file) {
@@ -647,7 +649,7 @@ var BuildDocs;
                 content = content.replace(pathSrcDst[0], pathSrcDst[1]);
             });
             content = content.replace(/(<code class="js">)((?:.|\n)+?)(<\/code>)/g, function (all, preTag, code, postTag) {
-                code = code.replace(highlightRegEx, function (all, word) {
+                code = code.replace(highlightRegEx, function (all2, word) {
                     var wordInf = wordMap[word];
                     return "<span class=\"hljs-" + wordInf.wordClass + "\""
                         + ((wordInf.title ? " title=\"" + wordInf.title + "\"" : '') + ">" + word + "</span>");

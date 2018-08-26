@@ -14,13 +14,12 @@ import * as rimraf from "rimraf";
 import * as globule from "globule";
 
 import { fsix } from "./shared/vendor/fsix.js";
-import { DevPaths } from "./shared/dev-paths.js";
-import { DevWebLinks as webLinks, DevWebLinks } from "./shared/dev-web-links.js";
 import { BuildDTsFilesABeamer } from "./shared/dev-builders/build-d-ts-abeamer.js";
 import { BuildDocs } from "./shared/dev-builders/build-docs.js";
 import { BuildShared } from "./shared/dev-builders/build-shared.js";
 import { BuildSingleLibFile } from "./shared/dev-builders/build-single-lib-file.js";
 import { BuildGalleryRelease as BuildGalRel } from "./shared/dev-builders/build-gallery-release.js";
+import { DevCfg } from "./shared/dev-config.js";
 
 /** @module developer | This module won't be part of release version */
 
@@ -49,8 +48,6 @@ namespace Gulp {
     '// Licensed under the MIT License+uuid License. See License.txt for details\n' +
     '// ------------------------------------------------------------------------\n\n';
 
-
-  // const htmlmin = require('gulp-htmlmin');
   const gulpMinify = require('gulp-minify');
   const gulpReplace = require('gulp-replace');
   // const preprocess = require('gulp-preprocess');
@@ -61,13 +58,8 @@ namespace Gulp {
   const gulpSequence = require('gulp-sequence');
   const mergeStream = require('merge-stream');
 
-  // @TODO: Discover why if I remove `abeamer-logo`, it doesn't creates `hello-world` correctly.
-  const RELEASE_DEMOS = ['hello-world'/* , 'abeamer-logo' */];
-  // this line is not solving the problem above.
-  const releaseDemosRegEx = RELEASE_DEMOS.length > 1 ?
-    `{${RELEASE_DEMOS.join(',')}}` : RELEASE_DEMOS[0];
-
-  const modulesList = fsix.loadJsonSync(DevPaths.MODULES_LIST_FILE) as Shared.ModulesList;
+  const cfg = DevCfg.getConfig(__dirname);
+  const modulesList = fsix.loadJsonSync(cfg.paths.MODULES_LIST_FILE) as Shared.ModulesList;
   const libModules = modulesList.libModules;
   const pluginModules = modulesList.pluginModules;
 
@@ -111,20 +103,29 @@ namespace Gulp {
 
     clean-gallery-png - deletes all the gallery/story-frames/*.png
 
-    update-gallery-scripts - builds a new version of ${DevPaths.GALLERY_PATH}/*/index.html with script list updated
+    update-gallery-scripts - builds a new version of ${cfg.paths.GALLERY_PATH}/*/index.html with script list updated
       when: every time there is a new module on the library or a module change its name
-            first must update on the ${DevPaths.CLIENT_PATH}/lib/js/modules.json
+            first must update on the ${cfg.paths.CLIENT_PATH}/lib/js/modules.json
 
     update-test-list - updates test-list.json and package.json with the full list of tests
       when: every time there is a new test or a test change its name
 
     list-docs-files-as-links - outputs the console the list of document files in markdown link format
 
+    list-paths-macros - lists paths & macros
+
     README-to-online - converts all online README.md local links to online links
 
     README-to-local - converts all online README.md online links to local links
 
     `);
+  });
+
+
+  gulp.task('list-paths-macros', (cb) => {
+    console.log(`cfg.paths: ${JSON.stringify(cfg.paths, undefined, 2)}`);
+    console.log(`cfg.macros: ${JSON.stringify(cfg.macros, undefined, 2)}`);
+    cb();
   });
 
   // ------------------------------------------------------------------------
@@ -204,7 +205,7 @@ namespace Gulp {
 
   gulp.task('bump-version', (cb) => {
     const SRC_FILENAME = './package.json';
-    const BADGES_FOLDER = `./${DevPaths.BADGES_PATH}/`;
+    const BADGES_FOLDER = `./${cfg.paths.BADGES_PATH}/`;
     const WARN_MSG = `
   // This file was generated via gulp bump-version
   // It has no uuid
@@ -224,13 +225,13 @@ namespace Gulp {
     sysFs.writeFileSync('./shared/version.ts',
       WARN_MSG + VERSION_OUT + '\n');
 
-    sysFs.writeFileSync(`./${DevPaths.JS_PATH}/version.ts`,
+    sysFs.writeFileSync(`./${cfg.paths.JS_PATH}/version.ts`,
       WARN_MSG + `namespace ABeamer {\n  ${VERSION_OUT}\n}\n`);
 
     const outBadgeFileBase = `v-${version}.gif`;
     const outBadgeFileName = `${BADGES_FOLDER}${outBadgeFileBase}`;
     if (!sysFs.existsSync(outBadgeFileName)) {
-      const path = `${DevPaths.GALLERY_PATH}/animate-badges`;
+      const path = `${cfg.paths.GALLERY_PATH}/animate-badges`;
       const url = `http://localhost:9000/${path}/?var=name%3Dversion&`
         + `var=value%3D${version}&var=wait%3D2s`;
       const config = `./${path}/abeamer.ini`;
@@ -276,14 +277,13 @@ namespace Gulp {
   //                               Pre-Build Release
   // ------------------------------------------------------------------------
 
-  const SINGLE_LIB_PATH = `${DevPaths.SHARED_PATH}/dev-builders/output`;
   const SINGLE_LIB_MODES = [
     { folder: 'min', suffix: '', isDebug: false },
     { folder: 'debug.min', suffix: '-debug', isDebug: true },
   ];
 
   gulp.task('pre-rel:clean', (cb) => {
-    rimrafExcept(SINGLE_LIB_PATH, []);
+    rimrafExcept(cfg.paths.SINGLE_LIB_PATH, []);
     cb();
   });
 
@@ -295,7 +295,7 @@ namespace Gulp {
         './client/lib/typings/**',
         '!./client/lib/typings/release/**',
       ], { base: '.' })
-        .pipe(gulp.dest(`${SINGLE_LIB_PATH}/${mode.folder}`)),
+        .pipe(gulp.dest(`${cfg.paths.SINGLE_LIB_PATH}/${mode.folder}`)),
     ));
   });
 
@@ -303,9 +303,9 @@ namespace Gulp {
   gulp.task('pre-rel:build-single-file', () => {
 
     SINGLE_LIB_MODES.forEach(mode => {
-      const singleLibFile = `${SINGLE_LIB_PATH}/${mode.folder}/abeamer${mode.suffix}.ts`;
-      BuildSingleLibFile.build(libModules, DevPaths.JS_PATH,
-        `${SINGLE_LIB_PATH}/${mode.folder}`, singleLibFile,
+      const singleLibFile = `${cfg.paths.SINGLE_LIB_PATH}/${mode.folder}/abeamer${mode.suffix}.ts`;
+      BuildSingleLibFile.build(libModules, cfg.paths.JS_PATH,
+        `${cfg.paths.SINGLE_LIB_PATH}/${mode.folder}`, singleLibFile,
         'gulp `build-release`', ['_Story'], mode.isDebug);
     });
   });
@@ -318,47 +318,29 @@ namespace Gulp {
   //                               Build Release
   // ------------------------------------------------------------------------
 
-  const RELEASE_PATH = 'release/latest';
-
   gulp.task('rel:clean', (cb) => {
-    rimrafExcept(RELEASE_PATH, ['.git']);
+    rimrafExcept(cfg.paths.RELEASE_LATEST_PATH, ['.git']);
     cb();
   });
 
 
-
   gulp.task('rel:client', () => {
-    return gulp.src([
-      `${DevPaths.CLIENT_PATH}/**`,
-      `!${DevPaths.CLIENT_PATH}/**/*.map`,
-      `!${DevPaths.JS_PATH}/*`,
-      `!${DevPaths.PLUGINS_PATH}/**`,
-      `!${DevPaths.MESSAGES_PATH}/*`,
-      `!${DevPaths.TYPINGS_PATH}/release{,/**}`,
-      `!${DevPaths.TYPINGS_PATH}/README.*`,
-      `!${DevPaths.TYPINGS_PATH}/vendor/phantomjs{,/**}`,
-      `!${DevPaths.TYPINGS_PATH}/vendor/README.*`,
-      `!${DevPaths.TYPINGS_PATH}/*-dev.d.ts`,  // dev typings aren't included
-      `!${DevPaths.TYPINGS_PATH}/abeamer.d.ts`, // this typing will be processed in other task
-      `!${DevPaths.CLIENT_PATH}/**/*[a-z][a-z].ts`,
-      `!${DevPaths.CLIENT_PATH}/**/*.scss`,
-      `!${DevPaths.MODULES_LIST_FILE}`,
-    ])
-      .pipe(gulp.dest(`${RELEASE_PATH}/client`))
+    return gulp.src(DevCfg.expandArray(cfg.release.client))
+      .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/client`))
       .pipe(gulpPreserveTime());
   });
 
 
   gulp.task('rel:jquery-typings', () => {
     return gulp.src(`node_modules/@types/jquery/**`)
-      .pipe(gulp.dest(`${RELEASE_PATH}/${DevPaths.TYPINGS_PATH}/vendor/jquery`))
+      .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/${cfg.paths.TYPINGS_PATH}/vendor/jquery`))
       .pipe(gulpPreserveTime());
   });
 
   gulp.task('rel:client-js-join', () => {
 
     return gulp
-      .src(`${SINGLE_LIB_PATH}/*/abeamer*.js`)
+      .src(`${cfg.paths.SINGLE_LIB_PATH}/*/abeamer*.js`)
       .pipe(gulpMinify({
         noSource: true,
         ext: {
@@ -368,30 +350,24 @@ namespace Gulp {
       .pipe(gulpRename({ dirname: '' }))
       .pipe(gulpReplace(/^(.)/,
         CLIENT_UUID + COPYRIGHTS + '$1'))
-      .pipe(gulp.dest(`${RELEASE_PATH}/${DevPaths.JS_PATH}`));
+      .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/${cfg.paths.JS_PATH}`));
   });
 
 
   gulp.task('rel:gallery', () => {
     return gulp.src([
-      `${DevPaths.GALLERY_PATH}/${releaseDemosRegEx}/**`,
-      `!${DevPaths.GALLERY_PATH}/**/*.html`,
-      `!${DevPaths.GALLERY_PATH}/*/story-frames/*`,
-    ], { base: DevPaths.GALLERY_PATH })
-      .pipe(gulp.dest(`${RELEASE_PATH}/gallery`))
+      `${cfg.paths.GALLERY_PATH}/${cfg.release.demosStr}/**`,
+      `!${cfg.paths.GALLERY_PATH}/**/*.html`,
+      `!${cfg.paths.GALLERY_PATH}/*/story-frames/*`,
+    ], { base: cfg.paths.GALLERY_PATH })
+      .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/gallery`))
       .pipe(gulpPreserveTime());
   });
 
 
   gulp.task('rel:root', () => {
-    return gulp.src([
-      'abeamer.sh',
-      'abeamer.cmd',
-      'CHANGELOG.md',
-      'LICENSE.txt',
-      '.npmignore',
-    ])
-      .pipe(gulp.dest(RELEASE_PATH))
+    return gulp.src(DevCfg.expandArray(cfg.release.root))
+      .pipe(gulp.dest(cfg.paths.RELEASE_LATEST_PATH))
       .pipe(gulpPreserveTime());
   });
 
@@ -401,54 +377,41 @@ namespace Gulp {
       'README.md',
     ])
       .pipe(gulpReplace(/developer-badge\.gif/, 'end-user-badge.gif'))
-      .pipe(gulp.dest(RELEASE_PATH))
+      .pipe(gulp.dest(cfg.paths.RELEASE_LATEST_PATH))
       .pipe(gulpPreserveTime());
   });
 
 
   gulp.task('rel:gallery-html', () => {
     return mergeStream(
-      updateHtmlPages(`${DevPaths.GALLERY_PATH}/${releaseDemosRegEx}/*.html`,
-        `${RELEASE_PATH}/gallery`,
-        [`../../${DevPaths.JS_PATH}/abeamer.min`],
-        true, { base: DevPaths.GALLERY_PATH })
+      updateHtmlPages(`${cfg.paths.GALLERY_PATH}/${cfg.release.demosStr}/*.html`,
+        `${cfg.paths.RELEASE_LATEST_PATH}/gallery`,
+        [`../../${cfg.paths.JS_PATH}/abeamer.min`],
+        true, { base: cfg.paths.GALLERY_PATH })
         .pipe(gulpPreserveTime()));
   });
 
 
 
-  const JS_FILES = [
-    'server/*.js',
-    'cli/*.js',
-    `${DevPaths.SHARED_PATH}/*.js`,
-    `${DevPaths.SHARED_PATH}/**/*.js`,
-    `${DevPaths.MESSAGES_PATH}/*.js`,
-    `${DevPaths.PLUGINS_PATH}/*/*.js`,
-    `!${DevPaths.SHARED_PATH}/dev-builders{/**,}`,
-    `!${DevPaths.SHARED_PATH}/dev-*.js`,
-    `!${DevPaths.SHARED_PATH}/**/dev-*.js`,
-  ];
-
   gulp.task('rel:minify', () => {
     // not required to preserve timestamp since `rel:add-copyrights` does the job
-    return gulp.src(JS_FILES, { base: '.' })
+    return gulp.src(DevCfg.expandArray(cfg.jsFiles), { base: '.' })
       .pipe(gulpMinify({
         noSource: true,
         ext: {
           min: '.js',
         },
       }))
-      .pipe(gulp.dest(`${RELEASE_PATH}`));
+      .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}`));
   });
 
 
   gulp.task('rel:add-copyrights', (cb) => {
-
-    globule.find(JS_FILES).forEach(file => {
+    globule.find(DevCfg.expandArray(cfg.jsFiles)).forEach(file => {
       const srcFileContent = fsix.readUtf8Sync(file);
       const uuidMatches = srcFileContent.match(/uuid:\s*([\w\-]+)/);
       if (uuidMatches) {
-        const dstFileName = `${RELEASE_PATH}/${file}`;
+        const dstFileName = `${cfg.paths.RELEASE_LATEST_PATH}/${file}`;
         let content = fsix.readUtf8Sync(dstFileName);
         content = content.replace(/("use strict";)/, (all) =>
           `${all}\n// uuid: ${uuidMatches[1]}\n` + COPYRIGHTS,
@@ -484,7 +447,7 @@ namespace Gulp {
 
         return JSON.stringify(pkg, undefined, 2);
       }))
-      .pipe(gulp.dest(`${RELEASE_PATH}`))
+      .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}`))
       .pipe(gulpPreserveTime());
   });
 
@@ -492,7 +455,7 @@ namespace Gulp {
   // copies tsconfig.ts to each demo cleaning the unnecessary config
   gulp.task('rel:build-tsconfig.ts', () => {
     return mergeStream(
-      RELEASE_DEMOS.map(demo => {
+      cfg.release.demos.map(demo => {
         return gulp.src('./tsconfig.json')
           .pipe(gulpReplace(/^((?:.|\n)+)$/, (all, p) => {
             const tsconfig = JSON.parse(p);
@@ -500,7 +463,7 @@ namespace Gulp {
             tsconfig["tslint.exclude"] = undefined;
             return JSON.stringify(tsconfig, undefined, 2);
           }))
-          .pipe(gulp.dest(`${RELEASE_PATH}/gallery/${demo}`))
+          .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/gallery/${demo}`))
           .pipe(gulpPreserveTime());
       }));
   });
@@ -509,27 +472,27 @@ namespace Gulp {
   // creates a plugin list from modules-list.json
   // don't use gulp-file in order to preserve the time-date
   gulp.task('rel:build-plugins-list.json', () => {
-    return gulp.src(DevPaths.MODULES_LIST_FILE)
+    return gulp.src(cfg.paths.MODULES_LIST_FILE)
       .pipe(gulpReplace(/^((?:.|\n)+)$/, (all, p) => {
         return JSON.stringify(pluginModules, undefined, 2);
       }))
       .pipe(gulpRename('plugins-list.json'))
-      .pipe(gulp.dest(`${RELEASE_PATH}/${DevPaths.PLUGINS_PATH}`))
+      .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/${cfg.paths.PLUGINS_PATH}`))
       .pipe(gulpPreserveTime());
   });
 
 
   // joins abeamer.d.ts and abeamer-release.d.ts in a single file
   gulp.task('rel:build-abeamer.d.ts', () => {
-    return gulp.src(`${DevPaths.TYPINGS_PATH}/abeamer.d.ts`)
+    return gulp.src(`${cfg.paths.TYPINGS_PATH}/abeamer.d.ts`)
       .pipe(gulpReplace(/declare namespace ABeamer \{/, (all) => {
-        const releaseDTs = fsix.readUtf8Sync(`${DevPaths.TYPINGS_PATH}/release/abeamer-release.d.ts`);
+        const releaseDTs = fsix.readUtf8Sync(`${cfg.paths.TYPINGS_PATH}/release/abeamer-release.d.ts`);
         return all
           + releaseDTs
             .replace(/^(?:.|\n)*declare namespace ABeamer \{/, '')
             .replace(/}(?:\s|\n)*$/, '');
       }))
-      .pipe(gulp.dest(`${RELEASE_PATH}/${DevPaths.TYPINGS_PATH}`))
+      .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/${cfg.paths.TYPINGS_PATH}`))
       .pipe(gulpPreserveTime());
   });
 
@@ -555,8 +518,8 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   gulp.task('build-shared-lib', () => {
-    BuildShared.build(libModules, DevPaths.JS_PATH,
-      DevPaths.SHARED_LIB_PATH, 'gulp build-shared-lib');
+    BuildShared.build(libModules, cfg.paths.JS_PATH,
+      cfg.paths.SHARED_LIB_PATH, 'gulp build-shared-lib');
   });
 
   // ------------------------------------------------------------------------
@@ -564,7 +527,8 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   gulp.task('build-definition-files', () => {
-    BuildDTsFilesABeamer.build(libModules, pluginModules, CLIENT_UUID, COPYRIGHTS);
+    BuildDTsFilesABeamer.build(libModules, pluginModules,
+      CLIENT_UUID, COPYRIGHTS, cfg);
   });
 
   // ------------------------------------------------------------------------
@@ -572,38 +536,25 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   gulp.task('build-docs', () => {
-    BuildDocs.build(libModules, pluginModules);
+    BuildDocs.build(libModules, pluginModules, cfg);
   });
 
 
   gulp.task('post-build-docs', () => {
-    const replacePaths = [
-      [/"[^"]*highlight.[^"]*\.js"/, '"/vendor/highlight.js"'],
-      [/"[^"]+jquery[^"]*\.js"/, '"/vendor/jquery-3.3.1.min.js"'],
-      [/"[\.\/]*css\/theme(\w*)\.css"/g, '"/css/mydocs/theme$1.min.css"'],
-      [/"[^"]+highlight.js[^"]*\.css"/, '"/css/my-code-theme.min.css"'],
-    ];
 
-    const wordMap: BuildDocs.WordMap = {};
-    ['type', 'export', 'interface', 'function', 'readonly']
-      .forEach(word => { wordMap[word] = { wordClass: 'keyword' }; });
-
-    ['void', 'string', 'number', 'boolean', 'object', 'any']
-      .forEach(word => { wordMap[word] = { wordClass: 'type' }; });
-
-    [['uint', 'zero or positive integer'], ['int', 'integer']]
-      .forEach(wordPair => {
-        wordMap[wordPair[0]] = {
-          wordClass: 'type',
-          title: wordPair[1],
-        };
-      });
-
+    const wordMap: DevCfg.DevDocsWordMap = {};
+    cfg.docs.keywords.forEach(word => { wordMap[word] = { wordClass: 'keyword' }; });
+    cfg.docs.jsTypes.forEach(word => { wordMap[word] = { wordClass: 'type' }; });
+    cfg.docs.customTypes.forEach(wordPair => {
+      wordMap[wordPair[0]] = {
+        wordClass: 'type',
+        title: wordPair[1],
+      };
+    });
 
     BuildDocs.postBuild([
-      `${DevPaths.END_USER_DOCS_PATH}/en/site{/,/*/}*.html`,
-      `${DevPaths.DEV_DOCS_PATH}/en/site{/,/*/}*.html`],
-      replacePaths, wordMap);
+      `{${cfg.paths.END_USER_DOCS_PATH},${cfg.paths.DEV_DOCS_PATH}}/en/site{/,/*/}*.html`],
+      cfg.docs.replacePaths, wordMap);
   });
 
   // ------------------------------------------------------------------------
@@ -611,13 +562,13 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   gulp.task('gal-rel:clear', (cb) => {
-    rimrafExcept(DevPaths.GALLERY_RELEASE_PATH, ['.git']);
+    rimrafExcept(cfg.paths.GALLERY_RELEASE_PATH, ['.git']);
     cb();
   });
 
 
   (gulp as any).task('gal-rel:get-examples', ['gal-rel:clear'], (cb) => {
-    BuildGalRel.populateReleaseExamples();
+    BuildGalRel.populateReleaseExamples(cfg);
     cb();
   });
 
@@ -625,9 +576,7 @@ namespace Gulp {
   (gulp as any).task('gal-rel:copy-files', ['gal-rel:get-examples'], () => {
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       const srcList = [`${ex.srcFullPath}/**`,
-      `!${ex.srcFullPath}/*.html`,
-      `!${ex.srcFullPath}/story.json`,
-      `!${ex.srcFullPath}/story-frames/*.png`];
+      `!${ex.srcFullPath}/{*.html,story.json,story-frames/*.png}`];
       if (ex.srcFullPath.includes('remote-server')) {
         srcList.push(`!${ex.srcFullPath}/assets{/**,}`);
       }
@@ -640,13 +589,13 @@ namespace Gulp {
   (gulp as any).task('gal-rel:update-html-files', ['gal-rel:copy-files'], () => {
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       return updateHtmlPages(`${ex.srcFullPath}/*.html`, ex.dstFullPath,
-        [`../../${DevPaths.JS_PATH}/abeamer.min`], true);
+        [`../../${cfg.paths.JS_PATH}/abeamer.min`], true);
     }));
   });
 
 
   (gulp as any).task('gal-rel:online-html-files', ['gal-rel:update-html-files'], () => {
-    const onlineLink = `${webLinks.webDomain}/${DevPaths.RELEASE_LATEST_PATH}/client/lib`;
+    const onlineLink = `${cfg.webLinks.webDomain}/${cfg.paths.RELEASE_LATEST_PATH}/client/lib`;
     return mergeStream(BuildGalRel.releaseExamples.map(ex => {
       return gulp.src([`${ex.dstFullPath}/index.html`])
         .pipe(gulpReplace(/^(?:.|\n)+$/, (all: string) =>
@@ -677,7 +626,7 @@ namespace Gulp {
 
   (gulp as any).task('gal-rel:process-readme', ['gal-rel:create-zip'],
     (cb) => {
-      BuildGalRel.buildReadMe();
+      BuildGalRel.buildReadMe(cfg);
       cb();
     });
 
@@ -689,12 +638,12 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   gulp.task('clean-gallery', (cb) => {
-    rimraf.sync(`${DevPaths.GALLERY_PATH}/*/story-frames`);
+    rimraf.sync(`${cfg.paths.GALLERY_PATH}/*/story-frames`);
     cb();
   });
 
   gulp.task('clean-gallery-png', (cb) => {
-    rimraf.sync(`${DevPaths.GALLERY_PATH}/*/story-frames/*.png`);
+    rimraf.sync(`${cfg.paths.GALLERY_PATH}/*/story-frames/*.png`);
     cb();
   });
 
@@ -703,7 +652,7 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   (gulp as any).task('build-gallery-gifs', ['clean-gallery-png'], (cb) => {
-    BuildGalRel.buildGifs();
+    BuildGalRel.buildGifs(cfg);
     cb();
   });
 
@@ -712,11 +661,11 @@ namespace Gulp {
   // ------------------------------------------------------------------------
 
   gulp.task('update-gallery-scripts', () => {
-    const DST_PATH = `${DevPaths.GALLERY_PATH}-updated`;
+    const DST_PATH = `${cfg.paths.GALLERY_PATH}-updated`;
     rimraf.sync(`${DST_PATH}/**`);
     const newScriptFiles = libModules.map(srcFile =>
-      `../../${DevPaths.JS_PATH}/${srcFile}`);
-    return mergeStream(updateHtmlPages(`${DevPaths.GALLERY_PATH}/*/*.html`, DST_PATH, newScriptFiles, false));
+      `../../${cfg.paths.JS_PATH}/${srcFile}`);
+    return mergeStream(updateHtmlPages(`${cfg.paths.GALLERY_PATH}/*/*.html`, DST_PATH, newScriptFiles, false));
   });
 
   // ------------------------------------------------------------------------
@@ -772,7 +721,7 @@ namespace Gulp {
   //                               Lists ./docs Files As Links
   // ------------------------------------------------------------------------
 
-  gulp.task('list-docs-files-as-links', () => {
+  gulp.task('list-docs-files-as-links', (cb) => {
     sysFs.readdirSync(`./docs`).forEach(fileBase => {
       if (sysPath.extname(fileBase) !== '.md') { return; }
       const fileTitle = sysPath.parse(fileBase).name;
@@ -780,6 +729,7 @@ namespace Gulp {
         .replace(/\b(\w)/, (all, firstChar: string) => firstChar.toUpperCase());
       console.log(`- [${title}](${fileBase})`);
     });
+    cb();
   });
 
   // ------------------------------------------------------------------------
@@ -789,8 +739,8 @@ namespace Gulp {
   function changeReadmeLinks(toLocal: boolean): void {
     const IN_FILE = './README.md';
     const BAK_FILE = IN_FILE + '.bak.md';
-    const srcRegEx = new RegExp('\\]\\(' + (toLocal ? DevWebLinks.webDomain : '') + '/', 'g');
-    const dstLink = '](' + (toLocal ? '' : DevWebLinks.webDomain) + '/';
+    const srcRegEx = new RegExp('\\]\\(' + (toLocal ? cfg.webLinks.webDomain : '') + '/', 'g');
+    const dstLink = '](' + (toLocal ? '' : cfg.webLinks.webDomain) + '/';
 
     let content = fsix.readUtf8Sync(IN_FILE);
     sysFs.writeFileSync(BAK_FILE, content);

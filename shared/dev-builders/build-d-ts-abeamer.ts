@@ -7,7 +7,7 @@
 // ------------------------------------------------------------------------
 import { fsix } from "../vendor/fsix.js";
 import { BuildDTsFiles } from "./build-d-ts.js";
-import { DevPaths } from "../dev-paths.js";
+import { DevCfg } from "../dev-config.js";
 import { BuildDocs } from "./build-docs.js";
 
 /** @module developer | This module won't be part of release version */
@@ -25,7 +25,8 @@ export namespace BuildDTsFilesABeamer {
   export function build(libModules: string[],
     pluginModules: string[],
     CLIENT_UUID: string,
-    COPYRIGHTS: string) {
+    COPYRIGHTS: string,
+    cfg: DevCfg.DevConfig) {
 
     const WARN_MSG = `
   // This file was generated via gulp build-definition-files
@@ -34,16 +35,16 @@ export namespace BuildDTsFilesABeamer {
   `;
 
     const libSourceFileNames = [...libModules
-      .map(fileTitle => `${DevPaths.JS_PATH}/${fileTitle}.ts`),
+      .map(fileTitle => `${cfg.paths.JS_PATH}/${fileTitle}.ts`),
     ...pluginModules
-      .map(fileTitle => `${DevPaths.PLUGINS_PATH}/${fileTitle}/${fileTitle}.ts`)];
+      .map(fileTitle => `${cfg.paths.PLUGINS_PATH}/${fileTitle}/${fileTitle}.ts`)];
 
     [{
       uuid: 'bb85cc57-f5e3-4ae9-b498-7d13c07c8516',
       srcFiles: libSourceFileNames,
-      docTarget: BuildDocs.targets.find(target => target.id === 'end-user'),
+      docTarget: BuildDocs.getTargets(cfg).find(target => target.id === 'end-user'),
       namespace: 'ABeamer',
-      outFile: `${DevPaths.TYPINGS_PATH}/abeamer.d.ts`,
+      outFile: `${cfg.paths.TYPINGS_PATH}/abeamer.d.ts`,
       description: `
   //
   // These are the class interfaces for the end-user and plugin creators
@@ -70,8 +71,8 @@ export namespace BuildDTsFilesABeamer {
       uuid: 'a7d9ab44-f9b0-4108-b768-730d7afb20a4',
       srcFiles: libSourceFileNames,
       namespace: 'ABeamer',
-      docTarget: BuildDocs.targets.find(target => target.id === 'dev'),
-      outFile: `${DevPaths.TYPINGS_PATH}/abeamer-dev.d.ts`,
+      docTarget: BuildDocs.getTargets(cfg).find(target => target.id === 'dev'),
+      outFile: `${cfg.paths.TYPINGS_PATH}/abeamer-dev.d.ts`,
       description: `
   //
   // These are the class interfaces for internal usage only
@@ -101,7 +102,7 @@ export namespace BuildDTsFilesABeamer {
       srcFiles: libSourceFileNames,
       tag: 'release',
       namespace: 'ABeamer',
-      outFile: `${DevPaths.TYPINGS_PATH}/release/abeamer-release.d.ts`,
+      outFile: `${cfg.paths.TYPINGS_PATH}/release/abeamer-release.d.ts`,
       description: `
   //
   // This file contains about the compilation of all the exported types
