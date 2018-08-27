@@ -44,12 +44,12 @@ export namespace BuildSingleLibFile {
         .replace(/}\s*\n+\s*"use strict";/g, '') // removes the inter namespaces
         .replace(/namespace ABeamer\s*{/g, '')
         .replace(/export\s+(\w+)\s+_(\w+)/g, (all, tokType, id) =>
-          excludeIdList.indexOf(id) !== -1 ? `${tokType} _${id}` : all,
+          excludeIdList.indexOf(id) === -1 ? `${tokType} _${id}` : all,
         );
 
     if (!isDebug) {
       output = output.replace(/\/\/\s*#debug-start(?:.|\n)*?\/\/\s*#debug-end/g,
-        (all) => '');
+        () => '');
     }
 
     fsix.mkdirpSync(dstPath);

@@ -30,10 +30,10 @@ var BuildSingleLibFile;
                 .replace(/}\s*\n+\s*"use strict";/g, '') // removes the inter namespaces
                 .replace(/namespace ABeamer\s*{/g, '')
                 .replace(/export\s+(\w+)\s+_(\w+)/g, function (all, tokType, id) {
-                return excludeIdList.indexOf(id) !== -1 ? tokType + " _" + id : all;
+                return excludeIdList.indexOf(id) === -1 ? tokType + " _" + id : all;
             });
         if (!isDebug) {
-            output = output.replace(/\/\/\s*#debug-start(?:.|\n)*?\/\/\s*#debug-end/g, function (all) { return ''; });
+            output = output.replace(/\/\/\s*#debug-start(?:.|\n)*?\/\/\s*#debug-end/g, function () { return ''; });
         }
         fsix_js_1.fsix.mkdirpSync(dstPath);
         sysFs.writeFileSync(dstFile, output);

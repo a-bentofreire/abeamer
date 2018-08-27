@@ -312,7 +312,11 @@ namespace Gulp {
       const singleLibFile = `${mode.path}/abeamer${mode.suffix}.ts`;
       BuildSingleLibFile.build(libModules, cfg.paths.JS_PATH,
         `${mode.path}`, singleLibFile,
-        'gulp `build-release-latest`', ['_Story'], mode.isDebug);
+        'gulp `build-release-latest`', [
+          'Story', // story must always be exported
+          'vars', // @TODO: chart-tasks uses _vars. port the code to
+                  // access a variable without '_'
+        ], mode.isDebug);
     });
   });
 

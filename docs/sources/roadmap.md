@@ -25,6 +25,7 @@ and to allow reverse bypass the pipeline to allow to repeat an animation.
 
 ### Builders
 - Add abeamer library and plugins to each gallery/latest.
+- Port the code of each plugin that uses ids starting with `_` since these aren't exported.
 
 ### Documentation
 - Fix the JSDocs parser bug in the documentation generator.

@@ -31,6 +31,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > in the `package.json` file. the external gulp tasks use a gulpSequence which is much easier to
 > read the workflow.
 
+### Fixed
+- Fix the removal of export of ids starting with `_` during build process of a single file.
+> This bug was introduced just before the commit 5f4f3e6. In practice, the
+> committed code didn't remove the exports of the ids starting with `_`.
+> There was no side-effects just had no effect.
+> Also added `_vars` to the list of exclusions of this process since
+> it's still being used by chart tasks.
+
 ### Added
 - Add Minor cosmetic improvements on gallery README.
 - (DEV) Add `gulp post-build-docs` to improve documentation output.

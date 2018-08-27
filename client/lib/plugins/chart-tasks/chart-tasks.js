@@ -153,6 +153,8 @@ var ABeamer;
         jsUrls: ['plugins/chart-tasks/chart-tasks.js'],
         teleportable: true,
     });
+    // @TODO: port the code to access a variable without '_' instead of `_vars`
+    // then remove it from `gulp bs:build-single-ts`
     var _defValues = ABeamer._vars['chart'] = {
         labelsX: {
             fontFamily: 'sans-serif',

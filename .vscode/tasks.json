@@ -15,27 +15,6 @@
           "kind": "build",
           "isDefault": true
         }
-      },
-      {
-        "type": "npm",
-        "script": "g:animate-counter",
-        "problemMatcher": []
-      },
-      {
-        "type": "npm",
-        "script": "test-easings",
-        "problemMatcher": []
-      },
-      {
-        "type": "npm",
-        "script": "serve",
-        "path": "release/latest/",
-        "problemMatcher": []
-      },
-      {
-        "type": "npm",
-        "script": "build-docs-latest-and-mkdocs",
-        "problemMatcher": []
       }
     ]
   }
