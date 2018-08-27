@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > There was no side-effects just had no effect.
 > Also added `_vars` to the list of exclusions of this process since
 > it's still being used by chart tasks.
+- Fix minor design issues in 2 `gallery-src` examples.
 
 ### Added
 - Add Minor cosmetic improvements on gallery README.

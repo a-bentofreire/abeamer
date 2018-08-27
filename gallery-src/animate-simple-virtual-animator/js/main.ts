@@ -44,7 +44,7 @@ $(window).on("load", () => {
     draw(): void {
       const w = canvas.width;
       ctx.clearRect(0, 0, w, canvas.height);
-      const y = 80;
+      const y = canvas.height - 10;
 
       ctx.font = `30px sans-serif`;
       ctx.fillStyle = this.props.colors;

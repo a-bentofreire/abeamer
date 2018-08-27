@@ -47,7 +47,7 @@ $(window).on("load", function () {
         CanvasAnimator.prototype.draw = function () {
             var w = canvas.width;
             ctx.clearRect(0, 0, w, canvas.height);
-            var y = 80;
+            var y = canvas.height - 10;
             ctx.font = "30px sans-serif";
             ctx.fillStyle = this.props.colors;
             ctx.textBaseline = 'bottom';
