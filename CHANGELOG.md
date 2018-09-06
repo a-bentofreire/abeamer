@@ -46,6 +46,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > This version replaces documentation online links with local links
 > to support offline testing.
 - Add type and keyword syntax highlighting code during `post-build-docs`.
+- Add `allowExpr` parameter to `add-vars` task.
+> When `allowExpr` is true, and the value is string starting with `=`,
+> it will compute the expression, using ABeamer expression parser.
 
 
 ## [1.4.0] -

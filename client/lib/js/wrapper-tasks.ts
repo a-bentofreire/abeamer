@@ -89,7 +89,7 @@ namespace ABeamer {
    *    handler: 'add-vars',
    *    params: {
    *      vars: {
-   *        'prop1': 'changes the args.vars.prop1',
+   *        prop1: 'changes the args.vars.prop1',
    *        'obj1.prop2': 'creates an object obj1 in vars, set prop2',
    *        'over.about.blue': 'creates obj over.about.sets prop blue',
    *      },
@@ -98,12 +98,24 @@ namespace ABeamer {
    * ```
    */
   export interface AddVarsTaskParams extends AnyParams {
-    /** If false, it won't overwrite the previous value */
+    /**
+     * If false, it won't overwrite the previous value.
+     * @default true
+     */
     overwrite?: boolean;
+
+
+    /**
+     * If true and textual value starts with `=`, it will compute the expression.
+     * @default false
+     */
+    allowExpr?: boolean;
+
+
     /**
      * Object with name: value of all the variables to add to `args.vars`.
      */
-    vars: { [varName: string]: string | number | number[] };
+    vars: { [varName: string]: string | ExprString | number | number[] };
   }
 
   // #export-section-end: release
@@ -191,6 +203,7 @@ namespace ABeamer {
       case TS_INIT:
         const vars = params.vars || {};
         const overwrite = params.overwrite !== false;
+        const allowExpr = params.allowExpr === true;
         Object.keys(vars).forEach(varName => {
           const varParts = varName.split('.');
           let argsPointer = args.vars as AnyParams;
@@ -201,7 +214,11 @@ namespace ABeamer {
             objPartName = varParts.shift();
           }
           if (overwrite || argsPointer[objPartName] === undefined) {
-            argsPointer[objPartName] = vars[varName];
+            let varValue = vars[varName];
+            if (allowExpr && typeof varValue === 'string' && isExpr(varValue as string)) {
+              varValue = calcExpr(varValue as string, args);
+            }
+            argsPointer[objPartName] = varValue;
           }
         });
         return TR_EXIT;

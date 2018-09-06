@@ -1272,12 +1272,24 @@ declare namespace ABeamer {
    * ```
    */
   export interface AddVarsTaskParams extends AnyParams {
-    /** If false, it won't overwrite the previous value */
+    /**
+     * If false, it won't overwrite the previous value.
+     * @default true
+     */
     overwrite?: boolean;
+
+
+    /**
+     * If true and textual value starts with `=`, it will compute the expression.
+     * @default false
+     */
+    allowExpr?: boolean;
+
+
     /**
      * Object with name: value of all the variables to add to `args.vars`.
      */
-    vars: { [varName: string]: string | number | number[] };
+    vars: { [varName: string]: string | ExprString | number | number[] };
   }
 
 

@@ -89,6 +89,7 @@ var ABeamer;
             case ABeamer.TS_INIT:
                 var vars_1 = params.vars || {};
                 var overwrite_1 = params.overwrite !== false;
+                var allowExpr_1 = params.allowExpr === true;
                 Object.keys(vars_1).forEach(function (varName) {
                     var varParts = varName.split('.');
                     var argsPointer = args.vars;
@@ -99,7 +100,11 @@ var ABeamer;
                         objPartName = varParts.shift();
                     }
                     if (overwrite_1 || argsPointer[objPartName] === undefined) {
-                        argsPointer[objPartName] = vars_1[varName];
+                        var varValue = vars_1[varName];
+                        if (allowExpr_1 && typeof varValue === 'string' && ABeamer.isExpr(varValue)) {
+                            varValue = ABeamer.calcExpr(varValue, args);
+                        }
+                        argsPointer[objPartName] = varValue;
                     }
                 });
                 return ABeamer.TR_EXIT;
