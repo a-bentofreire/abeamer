@@ -49,6 +49,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `allowExpr` parameter to `add-vars` task.
   > When `allowExpr` is true, and the value is string starting with `=`,
   > it will compute the expression, using ABeamer expression parser.  
+- Add `datetime-functions` plugin.
+  > This plugin allows to create teleportable expressions with date/time functions.
 
 
 ## [1.4.0] -

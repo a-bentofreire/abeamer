@@ -1263,7 +1263,7 @@ declare namespace ABeamer {
    *    handler: 'add-vars',
    *    params: {
    *      vars: {
-   *        'prop1': 'changes the args.vars.prop1',
+   *        prop1: 'changes the args.vars.prop1',
    *        'obj1.prop2': 'creates an object obj1 in vars, set prop2',
    *        'over.about.blue': 'creates obj over.about.sets prop blue',
    *      },

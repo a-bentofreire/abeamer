@@ -113,9 +113,10 @@
       "**/website/**": true,
       "**/story-frames/*.png": true,
       "**/test/tests.run/**": true,
-      "**/gallery-release/**": true,
+      "**/gallery/**": true,
       "**/release/**": true,
-      "**/docs/build/**": true,
+      "**/docs/latest/**": true,
+      "**/docs/1.0/**": true,
       "**/*.bak.*": true,
     },
 }

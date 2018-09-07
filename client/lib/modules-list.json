@@ -13,7 +13,8 @@
         "shape-tasks",
         "attack-tasks",
         "chart-tasks",
-        "color-functions"
+        "color-functions",
+        "datetime-functions"
     ],
 
     "libModules": [
