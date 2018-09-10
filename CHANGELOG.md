@@ -56,6 +56,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > adding the underscore prevent warnings in case of is set to `true`,  
   > and also helps to understand better unused parameters for future cleanups.  
 - Add support for array parameters to rgb functions in `color-functions` plugin.
+- Add hsl and hsla functions to `color-functions` plugin.
 
 
 ## [1.4.0] -

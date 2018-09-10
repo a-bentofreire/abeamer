@@ -19,14 +19,26 @@
  * - `rgb` - returns the 6 characters lowercase hexadecimal of R, G, B.
  *  The input can be a numerical array or 3 numerical parameters.
  *  Each input parameter goes from [0, 255].
- *  @example rgb(50, 30, 10)
- *  @example rgb([255, 255, 0])
+ *  @example '#' + rgb(50, 30, 10)
+ *  @example '#' + rgb([255, 255, 0])
  *
  * - `rgba` - returns the 8 characters lowercase hexadecimal of R, G, B, A.
  *  The input can be a numerical array or 4 numerical parameters.
  *  R,G,B goes from [0, 255], and A goes from 0 to 1.
- *  @example rgb(50, 30, 10, 0.1)
- *  @example rgb([255, 255, 0, 0.3])
+ *  @example '#' + rgb(50, 30, 10, 0.1)
+ *  @example '#' + rgb([255, 255, 0, 0.3])
+ *
+ * - `hsl` - returns the 6 characters lowercase hexadecimal of H, S, L.
+ *  The input can be a numerical array or 3 numerical parameters.
+ *  Each input parameter goes from [0, 1].
+ *  @example '#' + hsl(0.5, 0.2, 0.6)
+ *  @example '#' + hsl([0.5, 0.2, 0.6])
+ *
+ * - `hsla` - returns the 8 characters lowercase hexadecimal of H, S, L, A.
+ *  The input can be a numerical array or 4 numerical parameters.
+ *  H, S, L, A goes from [0, 1].
+ *  @example '#' + hsl(0.5, 0.2, 0.6, 0.1)
+ *  @example '#' + hsl([0.5, 0.2, 0.6, 0.3])
  *
  */
 namespace ABeamer {
@@ -147,25 +159,50 @@ namespace ABeamer {
     return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
   }
 
+
+  function _hslaCommon(params: ExprFuncParams, req: ExFuncReq,
+    hasTransparency: boolean): void {
+
+    const color34 = _parseColorInput(params, req, hasTransparency);
+    const rgb = _hsl2Rgb(color34[0], color34[1], color34[2]);
+    req.res.paType = ExFuncParamType.String;
+    req.res.sValue = _rgbaToStr(!hasTransparency ? rgb :
+      [rgb[0], rgb[1], rgb[2], color34[3]]);
+  }
+
+
+  function _hsl(params: ExprFuncParams, req?: ExFuncReq): void {
+    _hslaCommon(params, req, false);
+  }
+
+
+  function _hsla(params: ExprFuncParams, req?: ExFuncReq): void {
+    _hslaCommon(params, req, true);
+  }
+
   // ------------------------------------------------------------------------
   //                               rgb functions
   // ------------------------------------------------------------------------
+
+  function _rgbaToStr(color34: COLOR3 | COLOR4): string {
+    return color34.map((pa, index) => {
+      let numValue = pa;
+      if (index === 3) {
+        numValue = numValue * 255;
+      }
+      numValue = Math.round(Math.max(Math.min(numValue, 255), 0));
+      const v = numValue.toString(16);
+      return v.length < 2 ? '0' + v : v;
+    }).join('');
+  }
+
 
   function _rgbaCommon(params: ExprFuncParams, req: ExFuncReq,
     hasTransparency: boolean): void {
 
     const color34 = _parseColorInput(params, req, hasTransparency);
     req.res.paType = ExFuncParamType.String;
-    req.res.sValue =
-    color34.map((pa, index) => {
-        let numValue = pa;
-        if (index === 3) {
-          numValue = numValue * 255;
-        }
-        numValue = Math.round(Math.max(Math.min(numValue, 255), 0));
-        const v = numValue.toString(16);
-        return v.length < 2 ? '0' + v : v;
-      }).join('');
+    req.res.sValue = _rgbaToStr(color34);
   }
 
 
@@ -179,7 +216,8 @@ namespace ABeamer {
   }
 
 
-  pluginManager.addFunctions([['rgb', _rgb], ['rgba', _rgba],
-    /* , ['hsl', _hsl] */]);
-
+  pluginManager.addFunctions([
+    ['rgb', _rgb], ['rgba', _rgba],
+    ['hsl', _hsl], ['hsla', _hsla],
+  ]);
 }
