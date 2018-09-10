@@ -9,7 +9,7 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
-    var d = '1s';
+    var d = '2s';
     var scene1 = story.scenes[0];
     scene1
         .addAnimations([{
@@ -36,7 +36,9 @@ $(window).on("load", function () {
                 {
                     prop: 'color',
                     // [TOPIC] Uses a list RGB colors.
-                    valueText: [
+                    valueText: 
+                    // uses an array of colors
+                    [
                         '#9400D3',
                         '#4B0082',
                         '#0000FF',

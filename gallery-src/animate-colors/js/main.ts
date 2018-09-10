@@ -14,7 +14,7 @@ $(window).on("load", () => {
   //                               Scene1
   // ------------------------------------------------------------------------
 
-  const d = '1s';
+  const d = '2s';
 
   const scene1 = story.scenes[0];
   scene1
@@ -42,20 +42,35 @@ $(window).on("load", () => {
         {
           prop: 'color',
           // [TOPIC] Uses a list RGB colors.
-          valueText: [
-            '#9400D3',
-            '#4B0082',
-            '#0000FF',
-            '#00FF00',
-            '#FFFF00',
-            '#FF7F00',
-            '#FF0000',
-          ],
+          valueText:
+            // uses an array of colors
+            [
+              '#9400D3',
+              '#4B0082',
+              '#0000FF',
+              '#00FF00',
+              '#FFFF00',
+              '#FF7F00',
+              '#FF0000',
+            ],
+
+          // alternative way: using a rgb function expression.
+          /*
+          "='#'+rgb("
+          + `floor(t*255), `
+          + `floor((1-t)*255), `
+          + `floor(abs((0.5+t/0.5)*255)))`,
+          */
+
+          // alternative way: using a hsl function expression.
+          /*
+           `='#'+hsl(t, 0.2 + (t / 0.3), 0.5)`,
+          */
         },
       ],
 
     }],
-  );
+    );
 
   story.render(story.bestPlaySpeed());
 });

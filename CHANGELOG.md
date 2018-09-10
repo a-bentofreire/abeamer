@@ -59,6 +59,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `hsl` and `hsla` functions to `color-functions` plugin.
 - Add `abs` and `sign` functions to `functions`.
 - Add `hsl2Rgb` and `rgb2Hsl` functions to `color-functions` plugin.
+- Add alternative ways to express colors to `gallery-src/animate-colors`.
+  > Originally it was designed, only to use color arrays,
+  > but this addition, the user can also test expressions with rgb/hsl functions.  
 
 
 ## [1.4.0] -
