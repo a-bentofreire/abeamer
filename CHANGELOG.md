@@ -58,6 +58,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add support for array parameters to rgb functions in `color-functions` plugin.
 - Add `hsl` and `hsla` functions to `color-functions` plugin.
 - Add `abs` and `sign` functions to `functions`.
+- Add `hsl2Rgb` and `rgb2Hsl` functions to `color-functions` plugin.
 
 
 ## [1.4.0] -

@@ -40,6 +40,19 @@
  *  @example '#' + hsl(0.5, 0.2, 0.6, 0.1)
  *  @example '#' + hsl([0.5, 0.2, 0.6, 0.3])
  *
+ * - `hsl2Rgb` - returns a numerical array representing [R, G, B].
+ *  The input can be a numerical array or 3 numerical parameters.
+ *  Each input parameter goes from [0, 1].
+ *  @example hsl2Rgb(0.5, 0.2, 0.6)
+ *  @example hsl2Rgb([0.5, 0.2, 0.6])
+ *
+ * - `rgb2Hsl` - returns a numerical array representing [H, S, L].
+ *  The input can be a numerical array or 3 numerical parameters.
+ *  Each input parameter goes from [0, 255].
+ *  @example hsl2Rgb(50, 30, 10)
+ *  @example hsl2Rgb([50, 30, 10])
+ *
+ *  @see gallery/animate-colors
  */
 namespace ABeamer {
 
@@ -94,7 +107,7 @@ namespace ABeamer {
    *  Converts RGB to HSL.
    *  credit to https://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
    */
-  function _rgb2Hsl(r: int, g: int, b: int): COLOR3 {
+  function _rgb2HslFunc(r: int, g: int, b: int): COLOR3 {
     const numR = r / 255;
     const numG = g / 255;
     const numB = b / 255;
@@ -139,7 +152,7 @@ namespace ABeamer {
    *  Converts HSL to RGB.
    *  credit to https://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
    */
-  function _hsl2Rgb(h: number, s: number, l: number): COLOR3 {
+  function _hsl2RgbFunc(h: number, s: number, l: number): COLOR3 {
     let r;
     let g;
     let b;
@@ -164,7 +177,7 @@ namespace ABeamer {
     hasTransparency: boolean): void {
 
     const color34 = _parseColorInput(params, req, hasTransparency);
-    const rgb = _hsl2Rgb(color34[0], color34[1], color34[2]);
+    const rgb = _hsl2RgbFunc(color34[0], color34[1], color34[2]);
     req.res.paType = ExFuncParamType.String;
     req.res.sValue = _rgbaToStr(!hasTransparency ? rgb :
       [rgb[0], rgb[1], rgb[2], color34[3]]);
@@ -178,6 +191,20 @@ namespace ABeamer {
 
   function _hsla(params: ExprFuncParams, req?: ExFuncReq): void {
     _hslaCommon(params, req, true);
+  }
+
+
+  function _hsl2Rgb(params: ExprFuncParams, req?: ExFuncReq): void {
+    const color34 = _parseColorInput(params, req, false);
+    req.res.paType = ExFuncParamType.Array;
+    req.res.arrayValue = _hsl2RgbFunc(color34[0], color34[1], color34[2]);
+  }
+
+
+  function _rgb2Hsl(params: ExprFuncParams, req?: ExFuncReq): void {
+    const color34 = _parseColorInput(params, req, false);
+    req.res.paType = ExFuncParamType.Array;
+    req.res.arrayValue = _rgb2HslFunc(color34[0], color34[1], color34[2]);
   }
 
   // ------------------------------------------------------------------------
@@ -219,5 +246,6 @@ namespace ABeamer {
   pluginManager.addFunctions([
     ['rgb', _rgb], ['rgba', _rgba],
     ['hsl', _hsl], ['hsla', _hsla],
+    ['hsl2Rgb', _hsl2Rgb], ['rgb2Hsl', _rgb2Hsl],
   ]);
 }

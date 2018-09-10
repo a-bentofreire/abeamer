@@ -36,6 +36,19 @@
  *  @example '#' + hsl(0.5, 0.2, 0.6, 0.1)
  *  @example '#' + hsl([0.5, 0.2, 0.6, 0.3])
  *
+ * - `hsl2Rgb` - returns a numerical array representing [R, G, B].
+ *  The input can be a numerical array or 3 numerical parameters.
+ *  Each input parameter goes from [0, 1].
+ *  @example hsl2Rgb(0.5, 0.2, 0.6)
+ *  @example hsl2Rgb([0.5, 0.2, 0.6])
+ *
+ * - `rgb2Hsl` - returns a numerical array representing [H, S, L].
+ *  The input can be a numerical array or 3 numerical parameters.
+ *  Each input parameter goes from [0, 255].
+ *  @example hsl2Rgb(50, 30, 10)
+ *  @example hsl2Rgb([50, 30, 10])
+ *
+ *  @see gallery/animate-colors
  */
 var ABeamer;
 (function (ABeamer) {
@@ -81,7 +94,7 @@ var ABeamer;
      *  Converts RGB to HSL.
      *  credit to https://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
      */
-    function _rgb2Hsl(r, g, b) {
+    function _rgb2HslFunc(r, g, b) {
         var numR = r / 255;
         var numG = g / 255;
         var numB = b / 255;
@@ -137,7 +150,7 @@ var ABeamer;
      *  Converts HSL to RGB.
      *  credit to https://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
      */
-    function _hsl2Rgb(h, s, l) {
+    function _hsl2RgbFunc(h, s, l) {
         var r;
         var g;
         var b;
@@ -155,7 +168,7 @@ var ABeamer;
     }
     function _hslaCommon(params, req, hasTransparency) {
         var color34 = _parseColorInput(params, req, hasTransparency);
-        var rgb = _hsl2Rgb(color34[0], color34[1], color34[2]);
+        var rgb = _hsl2RgbFunc(color34[0], color34[1], color34[2]);
         req.res.paType = 2 /* String */;
         req.res.sValue = _rgbaToStr(!hasTransparency ? rgb :
             [rgb[0], rgb[1], rgb[2], color34[3]]);
@@ -165,6 +178,16 @@ var ABeamer;
     }
     function _hsla(params, req) {
         _hslaCommon(params, req, true);
+    }
+    function _hsl2Rgb(params, req) {
+        var color34 = _parseColorInput(params, req, false);
+        req.res.paType = 3 /* Array */;
+        req.res.arrayValue = _hsl2RgbFunc(color34[0], color34[1], color34[2]);
+    }
+    function _rgb2Hsl(params, req) {
+        var color34 = _parseColorInput(params, req, false);
+        req.res.paType = 3 /* Array */;
+        req.res.arrayValue = _rgb2HslFunc(color34[0], color34[1], color34[2]);
     }
     // ------------------------------------------------------------------------
     //                               rgb functions
@@ -194,6 +217,7 @@ var ABeamer;
     ABeamer.pluginManager.addFunctions([
         ['rgb', _rgb], ['rgba', _rgba],
         ['hsl', _hsl], ['hsla', _hsla],
+        ['hsl2Rgb', _hsl2Rgb], ['rgb2Hsl', _rgb2Hsl],
     ]);
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=color-functions.js.map
