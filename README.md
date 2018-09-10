@@ -19,6 +19,20 @@ and then [teleport](https://www.abeamer.com/docs/latest/end-user/en/site/telepor
 the story to the company's machine to render the frame images and generate animated gifs or videos.  
 
 ## What's new
+  
+ABeamer 1.5:
+  
+- New `datetime-functions` plugin.
+- Added `hsl2Rgb`, `rgb2Hsl`, `hsl` and `hsla` functions to `color-functions` plugin.
+- Support input array parameter in `color-functions`.
+- Added `abs` and `sign` functions.
+- Added `allowExpr` parameter to `add-vars` task.
+- Fixed a bug on the reducing the release version size.
+- Improved command line documentation.
+  
+[read more >>>](https://www.abeamer.com/blog/2018/09/10/abeamer-1.5.0-released.html)  
+  
+***
 ABeamer 1.4:
   
 ![Image](https://www.abeamer.com/gallery/latest/animate-delay-teleportation/story-frames/story.gif)  ![Image](https://www.abeamer.com/gallery/latest/animate-delay-teleportation/story-frames/story-lighthouse.gif)  

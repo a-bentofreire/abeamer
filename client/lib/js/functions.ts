@@ -35,7 +35,7 @@
  *
  * - `abs` - absolute value.
  * - `sign` - sign function `v != 0 ? v / |v| : 0`.
- * 
+ *
  * - `random` - random number between [0, 1].
  * - `ceil`- always rounds up.
  * - `floor`- always rounds down.
