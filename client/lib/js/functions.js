@@ -29,11 +29,16 @@
  * - `log` - ln
  * - `log10` - base 10 logarithm.
  *
- * - `round`.
+ * - `abs` - absolute value.
+ * - `sign` - sign function `v != 0 ? v / |v| : 0`.
+ *
+ * - `random` - random number between [0, 1].
  * - `ceil`- always rounds up.
  * - `floor`- always rounds down.
  * - `sqrt` - square root.
- * - `random` - random number between [0, 1].
+ * - `round` - round to the nearest integer value.
+ * - `downRound` - similar to round, but it guaranties that if fractional
+ * part is 0.5, it will always round down.
  *
  * - `toNumber` - converts a textual parameter into a numerical parameter.
  * - `toString` - converts a numerical parameter into a textual parameter.
@@ -45,16 +50,13 @@
  *  The 2nd parameter is the start value and the 3rd parameter is the length.
  *  If the 3rd parameter is less than 0, than is considered until the end.
  *
- * - `downRound` - similar to round, but it guaranties that if fractional
- * part is 0.5, it will always round down.
- *
  * - `iff` - if the 1st numerical parameter is different from 0,
  * it returns the 2nd parameter, otherwise it returns the 3rd paramter.
- * This function doesn't supports 'lazy calculation'.
+ * This function doesn't supports [lazy evaluation](https://en.wikipedia.org/wiki/Lazy_evaluation).
  *
  * - `case` - the 1st numerical parameter is a zero index to select which
  * parameters to return.
- * This function doesn't supports 'lazy calculation'.
+ * This function doesn't supports [lazy evaluation](https://en.wikipedia.org/wiki/Lazy_evaluation).
  *
  * ## Examples
  *
@@ -124,6 +126,12 @@ var ABeamer;
     };
     ABeamer._exFunctions['log10'] = function (params, req) {
         _math1ParamFunc(params, req, Math.log10);
+    };
+    ABeamer._exFunctions['abs'] = function (params, req) {
+        _math1ParamFunc(params, req, Math.abs);
+    };
+    ABeamer._exFunctions['sign'] = function (params, req) {
+        _math1ParamFunc(params, req, function (v) { return v < 0 ? -1 : (v > 0 ? 1 : 0); });
     };
     ABeamer._exFunctions['random'] = function (_params, req) {
         req.checkParams(req, 0);
