@@ -29,7 +29,7 @@ var DevCfg;
         var changed = false;
         do {
             changed = false;
-            value = value.replace(/\${(\w+)}/g, function (all, key) {
+            value = value.replace(/\${(\w+)}/g, function (_all, key) {
                 changed = true;
                 return cfg.macros[key] || cfg.paths[key];
             });

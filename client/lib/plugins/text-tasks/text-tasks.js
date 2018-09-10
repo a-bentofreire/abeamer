@@ -63,7 +63,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     ABeamer.pluginManager.addTasks([['text-split', _textSplit]]);
     /** Implements the Text Split Task */
-    function _textSplit(anime, wkTask, params, stage, args) {
+    function _textSplit(anime, _wkTask, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_INIT:
                 var inTextArray = _textSplitter(params);
@@ -77,7 +77,7 @@ var ABeamer;
                     if (params.realign && !elAdapter.isVirtual) {
                         var $spans = $(elAdapter.htmlElement).find('span');
                         var left_1 = 0;
-                        $spans.each(function (index, domEl) {
+                        $spans.each(function (_index, domEl) {
                             domEl.style.left = left_1 + "px";
                             left_1 += domEl.clientWidth;
                         });
@@ -91,7 +91,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     ABeamer.pluginManager.addTasks([['typewriter', _typewriter]]);
     /** Implements the Typewriter Task */
-    function _typewriter(anime, wkTask, params, stage, args) {
+    function _typewriter(anime, _wkTask, params, stage, _args) {
         switch (stage) {
             case ABeamer.TS_INIT:
                 var textInter = [];
@@ -119,12 +119,12 @@ var ABeamer;
     // ------------------------------------------------------------------------
     ABeamer.pluginManager.addTasks([['decipher', _decipherTask]]);
     /** Implements the Decipher Task */
-    function _decipherTask(anime, wkTask, params, stage, args) {
+    function _decipherTask(anime, _wkTask, params, stage, _args) {
         function isInsideRange(code, ranges) {
             return ranges.findIndex(function (range) { return range[0] <= code && range[1] >= code; })
                 !== -1 ? ranges : undefined;
         }
-        function reveal(textInter, text, textLen, rangesByIndex, revealDir, revealCharIterations, i, scale) {
+        function reveal(textInter, text, _textLen, rangesByIndex, _revealDir, revealCharIterations, i, scale) {
             if (rangesByIndex[i]) {
                 scale++;
                 var textInterPos = textInter.length - 1;

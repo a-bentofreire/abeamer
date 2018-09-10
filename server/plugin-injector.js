@@ -52,7 +52,7 @@ var PluginInjector;
         }
         var urlBase = urlMatches[1];
         // inject js scripts
-        content = content.replace(/(#plugins-js-block-start.*\n)((?:.|\n)*)(\n.*#plugins-js-block-end)/, function (all, before, replaceArea, after) {
+        content = content.replace(/(#plugins-js-block-start.*\n)((?:.|\n)*)(\n.*#plugins-js-block-end)/, function (_all, before, _replaceArea, after) {
             var output = [];
             PluginInjector.plugins.forEach(function (plugin) {
                 (plugin.jsUrls || []).forEach(function (url) {
@@ -62,7 +62,7 @@ var PluginInjector;
             return before + '\n' + output.join('\n') + '\n' + after;
         });
         // inject css links
-        content = content.replace(/(#plugins-css-block-start.*\n)((?:.|\n)*)(\n.*#plugins-css-block-end)/, function (all, before, replaceArea, after) {
+        content = content.replace(/(#plugins-css-block-start.*\n)((?:.|\n)*)(\n.*#plugins-css-block-end)/, function (_all, before, _replaceArea, after) {
             var output = [];
             PluginInjector.plugins.forEach(function (plugin) {
                 (plugin.cssUrls || []).forEach(function (url) {

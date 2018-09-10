@@ -33,10 +33,10 @@ var HttpServer;
         function Server(port) {
             this.port = port;
         }
-        Server.prototype.onBeforeServe = function (req, res) {
+        Server.prototype.onBeforeServe = function (_req, _res) {
             return true;
         };
-        Server.prototype.onAfterServe = function (rp) {
+        Server.prototype.onAfterServe = function (_rp) {
             return true;
         };
         Server.prototype.sendFile = function (rp) {

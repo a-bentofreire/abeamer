@@ -118,7 +118,7 @@ var ABeamer;
     /**
      * Implementation of Info Flyover.
      */
-    function _infoFlyover(wkFlyover, params, stage, args) {
+    function _infoFlyover(_wkFlyover, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_INIT:
                 if (!params._elAdapters) {
@@ -131,7 +131,7 @@ var ABeamer;
                 var format_1 = params.format || '${storyFrameNr}';
                 var story_1 = args.story;
                 params._elAdapters.forEach(function (elAdapter) {
-                    var text = format_1.replace(/\$\{(\w+)\}/g, function (p1, macro) {
+                    var text = format_1.replace(/\$\{(\w+)\}/g, function (_all, macro) {
                         switch (macro) {
                             case 'storyFrameNr':
                                 return story_1.renderFramePos.toString();
@@ -158,7 +158,7 @@ var ABeamer;
      * Implementation of Video Sync Flyover.
      */
     ABeamer._flyoverFunctions['video-sync'] = _videoSyncFlyover;
-    function _videoSyncFlyover(wkFlyover, params, stage, args) {
+    function _videoSyncFlyover(_wkFlyover, params, stage, args) {
         // setup
         switch (stage) {
             case ABeamer.TS_INIT:

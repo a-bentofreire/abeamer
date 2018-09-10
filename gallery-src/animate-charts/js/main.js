@@ -150,7 +150,7 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Add Charts
     // ------------------------------------------------------------------------
-    $('#story').html(charts.map(function (chart, i) {
+    $('#story').html(charts.map(function () {
         return "<div class=abeamer-scene><div class=gallery></div></div>";
     }).join('\n'));
     story.addDefaultScenes();

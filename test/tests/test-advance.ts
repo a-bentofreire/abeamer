@@ -97,13 +97,13 @@ namespace Tests {
   };
 
   const testParams: Exact.Tests = {};
-  tests.forEach((test, index) => {
+  tests.forEach((test) => {
     testParams[`${test.label} t${test.elIndex} ${test.prop}`
       + ` starting on frame from ${test.startFrame}`] = func;
   });
 
 
-  testParams[`no-advance-in-the-end`] = (rd: Exact.ExactResult, done, index) => {
+  testParams[`no-advance-in-the-end`] = (rd: Exact.ExactResult, done) => {
     assert.isTrue(rd.outLines.indexOf('no-advance-in-end:') !== -1);
     done();
   };

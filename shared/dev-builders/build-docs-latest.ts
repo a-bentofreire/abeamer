@@ -139,7 +139,7 @@ export namespace BuildDocsLatest {
     /** Processes the links from Markdown content, updating its content */
     private updateLinks(fileBase: string, content: string): string {
       return content.replace(/\[([^\]]*)\]\(([\w\-\s]*)(?:#([\w\-\s]*))?\)/g,
-        (app, info, link, bookmark) => {
+        (_app, info, link, bookmark) => {
           bookmark = bookmark || '';
           link = link || '';
           if (!info) {
@@ -298,7 +298,7 @@ export namespace BuildDocsLatest {
     }
 
 
-    private _allowId(id: string, idType: DocIdType,
+    private _allowId(id: string, _idType: DocIdType,
       accessTag: string, exportTag: string | undefined): boolean {
       return (!this.isEndUser)
         || (id[0] !== '_' && accessTag === 'public'
@@ -596,7 +596,7 @@ export namespace BuildDocsLatest {
       // gets document name from the source/markdown file
       if (!opts.name) {
         content = content.replace(/^\s*[\/\*]*\s*@doc-name\s+\b([\w ]+)\s*\n/m,
-          (all, docName) => {
+          (_all, docName) => {
             opts.name = docName;
             return '';
           });
@@ -606,12 +606,12 @@ export namespace BuildDocsLatest {
       if (!opts.name && pageName.includes('-')) {
         opts.name = pageName[0].toUpperCase() + pageName.substr(1)
           .replace(/\.md$/, '')
-          .replace(/-(\w)/g, (all, p) => ' ' + p.toUpperCase());
+          .replace(/-(\w)/g, (_all, p) => ' ' + p.toUpperCase());
       }
 
       // gets the folder name from the source/markdown file
       content.replace(/^\s*[\/\*]+\s*@doc-folder\s+\b([\w ]+)\s*\n/m,
-        (all, folder) => {
+        (_all, folder) => {
           opts.folder = folder;
           return '';
         });
@@ -657,7 +657,7 @@ export namespace BuildDocsLatest {
     text = text.replace(/^\s*@(type|memberof|readonly)\b(.*)$/mg, '');
 
     text = text.replace(/@see\b\s*((https?:\/\/)?(\w+\/)?([^#\s]*)?(#\S*)?\b)/g, (
-      all, link: string,
+      _all, link: string,
       http: string, folder: string, title: string, bookmark: string) => {
 
       if (http) {
@@ -743,7 +743,7 @@ export namespace BuildDocsLatest {
    * and adds the file to mkdocs.
    */
   function copyMarkdownFile(srcFileName: string, dstFileName: string,
-    mkDocs: MkDocsYml, mkDocsOpts: Opts, cfg: DevCfg.DevConfig,
+    mkDocs: MkDocsYml, mkDocsOpts: Opts, _cfg: DevCfg.DevConfig,
     processPage?: (data: string) => string): string {
 
     let data = fsix.readUtf8Sync(srcFileName);
@@ -861,9 +861,9 @@ Not Found references: ${log.notFound.length}
       });
 
       content = content.replace(/(<code class="js">)((?:.|\n)+?)(<\/code>)/g,
-        (all, preTag, code, postTag) => {
+        (_all, preTag, code, postTag) => {
 
-          code = code.replace(highlightRegEx, (all2, word) => {
+          code = code.replace(highlightRegEx, (_all2, word) => {
             const wordInf = wordMap[word];
             return `<span class="hljs-${wordInf.wordClass}"`
               + `${wordInf.title ? ` title="${wordInf.title}"` : ''}>${word}</span>`;

@@ -182,7 +182,7 @@ $(window).on("load", () => {
   const chartCount = !firstOnly ? charts.length : 1;
 
   const widths = [];
-  charts.forEach((chart, i) => {
+  charts.forEach((chart) => {
     widths.push(chart.chartWidth || 280);
   });
 

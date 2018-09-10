@@ -663,7 +663,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     function _waitForImageLoad(elImg, args) {
         if (!elImg.complete) {
-            args.waitMan.addWaitFunc(function (_args, params, onDone) {
+            args.waitMan.addWaitFunc(function (_args, _params, onDone) {
                 if (!elImg.complete) {
                     elImg.addEventListener('load', function () {
                         onDone();
@@ -676,7 +676,7 @@ var ABeamer;
         }
     }
     function _waitForMediaSync(elMedia, args, pos) {
-        args.waitMan.addWaitFunc(function (_args, params, onDone) {
+        args.waitMan.addWaitFunc(function (_args, _params, onDone) {
             // @TODO: Find a way to sync video.
             // this code doesn't work on chrome.
             if (pos !== undefined) {
@@ -748,7 +748,7 @@ var ABeamer;
      * Discovers the vendor prefix and vendor prefixed CSS properties
      * by using `window.getComputedStyle`.
      */
-    function _initBrowser(args) {
+    function _initBrowser(_args) {
         if (ABeamer.browser.vendorPrefix) {
             return;
         }

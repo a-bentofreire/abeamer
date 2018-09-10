@@ -180,7 +180,7 @@ namespace ABeamer {
     }
 
 
-    _render(frameNr: int, frameCount: int, isLeaveAdapted: boolean,
+    _render(frameNr: int, _frameCount: int, isLeaveAdapted: boolean,
       args: ABeamerArgs): void {
 
       const params = this._params;

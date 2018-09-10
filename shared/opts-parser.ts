@@ -185,7 +185,7 @@ export namespace OptsParser {
       if (isOption(name)) {
         const optName = name.substr(2)
           // converts part1-part2-part3 => part1Part2Part3
-          .replace(/-(\w)/g, (all, firstLetter: string) => firstLetter.toUpperCase());
+          .replace(/-(\w)/g, (_all, firstLetter: string) => firstLetter.toUpperCase());
 
         const opt = argOpts[optName];
         if (opt === undefined) {
@@ -249,7 +249,7 @@ export namespace OptsParser {
    * dash + lowercase.
    */
   function _getDashKey(key: string): string {
-    return key.replace(/([A-Z])/g, (all, p: string) =>
+    return key.replace(/([A-Z])/g, (_all, p: string) =>
       '-' + p.toLowerCase());
   }
 

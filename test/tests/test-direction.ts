@@ -66,7 +66,7 @@ namespace Tests {
 
   Exact.runTestSuite(__filename, {
     fps,
-    css: tests.map((test, index) =>
+    css: tests.map((_test, index) =>
       `#t${index} {left: ${min}px}`).join('\n'),
 
     animes:

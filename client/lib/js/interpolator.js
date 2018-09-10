@@ -95,7 +95,7 @@ var ABeamer;
         function _PropInterpolator() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        _PropInterpolator.prototype.attachSelector = function (elementAdpt, elActRg, isVerbose, args) {
+        _PropInterpolator.prototype.attachSelector = function (elementAdpt, elActRg, _isVerbose, args) {
             var self = this;
             var realPropName = this.realPropName;
             var actRg = elActRg.actionRg;

@@ -46,14 +46,14 @@ namespace Tests {
   };
 
   const testParams: Exact.Tests = {};
-  tests.forEach((test, index) => {
+  tests.forEach((test) => {
     testParams[
       `$t${test.element} on scene${test.scene} moves for ${test.duration}`
     ] = func;
   });
 
 
-  const animes = tests.map((test, index) => {
+  const animes = tests.map((test) => {
     return [`@@scene:${test.scene}`, {
       selector: `#t${test.element}`,
       duration: test.duration,

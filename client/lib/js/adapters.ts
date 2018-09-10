@@ -1017,7 +1017,7 @@ namespace ABeamer {
     args: ABeamerArgs): void {
 
     if (!elImg.complete) {
-      args.waitMan.addWaitFunc((_args, params, onDone) => {
+      args.waitMan.addWaitFunc((_args, _params, onDone) => {
         if (!elImg.complete) {
           elImg.addEventListener('load', () => {
             onDone();
@@ -1033,7 +1033,7 @@ namespace ABeamer {
   function _waitForMediaSync(elMedia: HTMLMediaElement, args: ABeamerArgs,
     pos: number): void {
 
-    args.waitMan.addWaitFunc((_args, params, onDone) => {
+    args.waitMan.addWaitFunc((_args, _params, onDone) => {
 
       // @TODO: Find a way to sync video.
       // this code doesn't work on chrome.
@@ -1124,7 +1124,7 @@ namespace ABeamer {
    * Discovers the vendor prefix and vendor prefixed CSS properties
    * by using `window.getComputedStyle`.
    */
-  export function _initBrowser(args: ABeamerArgs): void {
+  export function _initBrowser(_args: ABeamerArgs): void {
 
     if (browser.vendorPrefix) { return; }
     const isMsIE = navigator.userAgent.search(/Trident/) !== -1;

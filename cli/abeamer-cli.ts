@@ -369,7 +369,7 @@ The commands are:
       if (logLevel >= Consts.LL_SILENT) { console.error(data.toString()); }
     });
 
-    ls.on('close', (code) => {
+    ls.on('close', (_code) => {
       callback();
     });
   }
@@ -417,7 +417,7 @@ ${isWin ? 'set' : 'export'} ${envKey}=<absolute-path-to-${appName}>`);
 
       if (!envValue) {
         fsix.runExternal(`${appName} ${versionParam}`,
-          (error, stdout, stderr) => {
+          (_error, stdout, stderr) => {
             displayResult(stderr === '' && stdout.match(matchRegEx));
           });
       } else {
@@ -519,7 +519,7 @@ npm i puppeteer`);
             const plugins = fsix.loadJsonSync(`${ROOT_PATH}/client/lib/plugins/plugins-list.json`);
             let pre = '';
             let post = '';
-            text.replace(/^(.*)js\/abeamer\.min\.js(.*)$/m, (app, _pre, _post) => {
+            text.replace(/^(.*)js\/abeamer\.min\.js(.*)$/m, (_app, _pre, _post) => {
               pre = _pre;
               post = _post;
               return '';

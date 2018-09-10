@@ -137,7 +137,7 @@ namespace ABeamer {
   pluginManager.addTasks([['text-split', _textSplit]]);
 
   /** Implements the Text Split Task */
-  function _textSplit(anime: Animation, wkTask: WorkTask,
+  function _textSplit(anime: Animation, _wkTask: WorkTask,
     params: TextSplitTaskParams, stage: uint, args?: ABeamerArgs): TaskResult {
 
     switch (stage) {
@@ -154,7 +154,7 @@ namespace ABeamer {
           if (params.realign && !elAdapter.isVirtual) {
             const $spans = $((elAdapter as _DOMElementAdapter).htmlElement).find('span');
             let left = 0;
-            $spans.each((index: uint, domEl: HTMLElement) => {
+            $spans.each((_index: uint, domEl: HTMLElement) => {
               domEl.style.left = `${left}px`;
               left += domEl.clientWidth;
             });
@@ -171,8 +171,8 @@ namespace ABeamer {
   pluginManager.addTasks([['typewriter', _typewriter]]);
 
   /** Implements the Typewriter Task */
-  function _typewriter(anime: Animation, wkTask: WorkTask,
-    params: TypewriterTaskParams, stage: uint, args?: ABeamerArgs): TaskResult {
+  function _typewriter(anime: Animation, _wkTask: WorkTask,
+    params: TypewriterTaskParams, stage: uint, _args?: ABeamerArgs): TaskResult {
 
     switch (stage) {
       case TS_INIT:
@@ -206,8 +206,8 @@ namespace ABeamer {
   pluginManager.addTasks([['decipher', _decipherTask]]);
 
   /** Implements the Decipher Task */
-  function _decipherTask(anime: Animation, wkTask: WorkTask,
-    params: DecipherTaskParams, stage: uint, args?: ABeamerArgs): TaskResult {
+  function _decipherTask(anime: Animation, _wkTask: WorkTask,
+    params: DecipherTaskParams, stage: uint, _args?: ABeamerArgs): TaskResult {
 
     function isInsideRange(code: uint, ranges: [number, number][]): [number, number][] {
       return ranges.findIndex(range => range[0] <= code && range[1] >= code)
@@ -215,9 +215,9 @@ namespace ABeamer {
     }
 
 
-    function reveal(textInter: string[][], text: string, textLen: uint,
+    function reveal(textInter: string[][], text: string, _textLen: uint,
       rangesByIndex: [number, number][][],
-      revealDir: RevealDir, revealCharIterations: uint,
+      _revealDir: RevealDir, revealCharIterations: uint,
       i: uint, scale: uint) {
 
       if (rangesByIndex[i]) {

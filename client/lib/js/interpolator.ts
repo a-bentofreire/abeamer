@@ -110,7 +110,7 @@ namespace ABeamer {
 
     attachSelector(elementAdpt: _ElementAdapter,
       elActRg: _ElActionRg,
-      isVerbose: boolean,
+      _isVerbose: boolean,
       args: ABeamerArgs): void {
 
       const self = this;

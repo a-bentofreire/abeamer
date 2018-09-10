@@ -51,7 +51,7 @@ var BuildGalleryLatest;
                 };
                 var prevNr_1 = 0;
                 var lastDescLine_1 = '';
-                fsix_js_1.fsix.readUtf8Sync(iniFileName).replace(/[\$@]abeamer-([a-z\-]+)(\d*)\s*:\s*"?([^";]+)"?/g, function (all, id, nr, value) {
+                fsix_js_1.fsix.readUtf8Sync(iniFileName).replace(/[\$@]abeamer-([a-z\-]+)(\d*)\s*:\s*"?([^";]+)"?/g, function (_all, id, nr, value) {
                     switch (id) {
                         case 'description':
                             nr = parseInt(nr || '1');

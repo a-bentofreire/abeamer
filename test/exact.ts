@@ -49,12 +49,12 @@ export namespace Exact {
   const DEFAULT_TEST_WIDTH = 640;
   const DEFAULT_TEST_HEIGHT = 480;
 
-  const DEFAULT_TIMEOUT = 20 * 1000;
+  const _DEFAULT_TIMEOUT = 20 * 1000;
 
   const DEFAULT_TEST_GEN_FRAMES_WIDTH = 100;
   const DEFAULT_TEST_GEN_FRAMES_HEIGHT = 100;
 
-  const DEFAULT_EXPECTED_PATH = './expected/frames';
+  const _DEFAULT_EXPECTED_PATH = './expected/frames';
 
   export let _TEST_DIGIT_LIMIT: int = 1000; // same as interpolator.js
 
@@ -617,9 +617,9 @@ export namespace Exact {
 
 
     isActions(
-      expected: [string, string, string][],
+      _expected: [string, string, string][],
       toAssert: boolean = true,
-      toLogIfFails: boolean = true) {
+      _toLogIfFails: boolean = true) {
 
       return this.actions.findIndex((action, index) => {
         const expectedIt = action[index];

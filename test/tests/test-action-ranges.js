@@ -54,14 +54,14 @@ var Tests;
         done();
     };
     var testParams = {};
-    tests.forEach(function (test, index) {
+    tests.forEach(function (test) {
         testParams[test.label + "t" + test.elIndex + " " + test.propName
             + (" goes from " + test.min + " to " + test.max)] = func;
     });
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: fps,
         css: "#t0,#t1 {left: " + absMin + "px; top: " + absMin + "px;}",
-        animes: tests.map(function (test, index) {
+        animes: tests.map(function (test) {
             return {
                 selector: "#t" + test.elIndex,
                 duration: seconds + "s",

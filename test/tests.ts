@@ -36,7 +36,7 @@ namespace Tests {
     const sm = require('happner-serial-mocha');
     const logFolder = `${__dirname}/log`;
     sm.runTasks(activeTestFiles, null, logFolder)
-      .then((results) => {
+      .then((_results) => {
         // Do what you want with data
         console.log(`The log report files are on ${logFolder}`);
       })

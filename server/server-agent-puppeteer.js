@@ -70,8 +70,8 @@ var ServerAgent;
         function PuppeteerServerAgent() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        PuppeteerServerAgent.prototype.exitServer = function (retValue) {
-            if (retValue === void 0) { retValue = 0; }
+        PuppeteerServerAgent.prototype.exitServer = function (_retValue) {
+            if (_retValue === void 0) { _retValue = 0; }
             _super.prototype.exitServer.call(this);
             if (browser) {
                 browser.close();

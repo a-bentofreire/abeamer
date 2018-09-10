@@ -87,7 +87,7 @@ namespace ABeamer {
   pluginManager.addTasks([['color-attack', _colorAttack]]);
 
   /** Implements the Color Attack Task */
-  function _colorAttack(anime: Animation, wkTask: WorkTask,
+  function _colorAttack(anime: Animation, _wkTask: WorkTask,
     params: ColorAttackTaskParams, stage: uint, args?: ABeamerArgs): TaskResult {
 
     switch (stage) {

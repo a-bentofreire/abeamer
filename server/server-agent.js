@@ -108,8 +108,8 @@ var ServerAgent;
                 return viewport;
             };
         }
-        BaseServer.prototype.exitServer = function (retValue) {
-            if (retValue === void 0) { retValue = 0; }
+        BaseServer.prototype.exitServer = function (_retValue) {
+            if (_retValue === void 0) { _retValue = 0; }
             if (this.logLevel) {
                 console.log("Terminating Server");
             }
@@ -183,7 +183,7 @@ var ServerAgent;
             // very basic .ini variables parser
             // @TODO: place this code in a external module so it can be used by the library and the cli
             cfgText.split(/\n/).forEach(function (line) {
-                return line.replace(/^\s*[\$@]abeamer-([\w+-]+)\s*:\s*"?([^\n"]+)"?\s*;\s*$/, function (m, p1, p2) {
+                return line.replace(/^\s*[\$@]abeamer-([\w+-]+)\s*:\s*"?([^\n"]+)"?\s*;\s*$/, function (_all, p1, p2) {
                     if (_this.isVerbose) {
                         console.log("config: " + p1 + "=[" + p2 + "]");
                     }

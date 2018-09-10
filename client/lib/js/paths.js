@@ -92,7 +92,7 @@ var ABeamer;
         return PathName[num];
     }
     ABeamer._pathNumToStr = _pathNumToStr;
-    function _expressionPath(t, params, stage, args) {
+    function _expressionPath(t, params, _stage, args) {
         ABeamer._vars.t = t;
         var v = ABeamer.calcExpr(params._expression, args);
         return Array.isArray(v) ? v : [parseFloat(v)];
@@ -100,7 +100,7 @@ var ABeamer;
     ABeamer._expressionPath = _expressionPath;
     ABeamer._pathFunctions['line'] = _linePath;
     /** Implements the Line Path */
-    function _linePath(t, params, stage, args) {
+    function _linePath(t, params, _stage, args) {
         if (!params._isPrepared) {
             params._x0 = ABeamer.ExprOrNumToNum(params.x0, 0, args);
             params._y0 = ABeamer.ExprOrNumToNum(params.y0, 0, args);
@@ -111,7 +111,7 @@ var ABeamer;
     }
     ABeamer._pathFunctions['rect'] = _rectPath;
     /** Implements the Rect Path */
-    function _rectPath(t, params, stage, args) {
+    function _rectPath(t, params, _stage, args) {
         if (!params._isPrepared) {
             params._isPrepared = true;
             params._x0 = ABeamer.ExprOrNumToNum(params.x0, 0, args);
@@ -145,7 +145,7 @@ var ABeamer;
         return [params._x1, params._y1];
     }
     /** Common Implementation of the Circle and Ellipse Path */
-    function _interpolateEllipse(t, params, radiusX, radiusY, stage, args) {
+    function _interpolateEllipse(t, params, radiusX, radiusY, _stage, args) {
         if (!params._isPrepared) {
             params._isPrepared = true;
             params._centerX = ABeamer.ExprOrNumToNum(params.centerX, 0, args);

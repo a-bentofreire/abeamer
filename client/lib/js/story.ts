@@ -557,7 +557,7 @@ namespace ABeamer {
 
       this.logLevel = createParams.logLevel || LL_SILENT;
       if (urlParams) {
-        urlParams.replace(new RegExp(_SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), (m, p1) => {
+        urlParams.replace(new RegExp(_SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), (_all, p1) => {
           this.logLevel = parseInt(p1); // don't use _logLevel
           return '';
         });
@@ -579,7 +579,7 @@ namespace ABeamer {
 
         let res = cfgValue || self.storyAdapter.getProp(propName, args) as uint;
         if (urlParams) {
-          urlParams.replace(new RegExp(srvPropPrefix + '(\\d+)'), (m, p1) => {
+          urlParams.replace(new RegExp(srvPropPrefix + '(\\d+)'), (_all, p1) => {
             const qsValue = parseInt(p1);
             res = qsValue || res;
             return '';
@@ -608,12 +608,12 @@ namespace ABeamer {
 
       if (urlParams) {
 
-        urlParams.replace(new RegExp(_SRV_CNT.TELEPORT_SUFFIX + '(\\w+)'), (m, p1) => {
+        urlParams.replace(new RegExp(_SRV_CNT.TELEPORT_SUFFIX + '(\\w+)'), (_all, p1) => {
           this._isTeleporting = p1 === 'true';
           return '';
         });
 
-        urlParams.replace(new RegExp(_SRV_CNT.SERVER_SUFFIX + '(\\w+)'), (m, p1) => {
+        urlParams.replace(new RegExp(_SRV_CNT.SERVER_SUFFIX + '(\\w+)'), (_all, p1) => {
           this.hasServer = true;
           this.storyAdapter.setProp('class', 'has-server', args);
           this.serverName = p1;
@@ -621,14 +621,14 @@ namespace ABeamer {
           return '';
         });
 
-        urlParams.replace(new RegExp(_SRV_CNT.RENDER_VAR_SUFFIX + '([^&]+)', 'g'), (m, p1) => {
+        urlParams.replace(new RegExp(_SRV_CNT.RENDER_VAR_SUFFIX + '([^&]+)', 'g'), (_all, p1) => {
           p1 = decodeURIComponent(p1);
           // tslint:disable-next-line:prefer-const
           let [, key, value] = p1.match(/^([^=]+)=(.*)$/) || ['', '', ''];
           if (!key) {
             throw `var ${p1} requires the key field`;
           }
-          key = key.replace(/-(\w)/g, (all, p: string) => p.toUpperCase());
+          key = key.replace(/-(\w)/g, (_all2, p: string) => p.toUpperCase());
           args.vars[key] = value;
           return '';
         });
@@ -713,7 +713,7 @@ namespace ABeamer {
      */
     addDefaultScenes(): void {
       const story = this;
-      $('.abeamer-scene').each((index, htmlElement) => {
+      $('.abeamer-scene').each((_index, htmlElement) => {
         story.addScene($(htmlElement));
       });
       if (this._scenes.length) { this.gotoScene(this._scenes[0]); }
@@ -1376,7 +1376,7 @@ namespace ABeamer {
     /**
      * This method is called by the server to communicate with the client.
      */
-    _internalGetServerMsg(cmd: string, value: string) {
+    _internalGetServerMsg(cmd: string, _value: string) {
       switch (cmd) {
         case _SRV_CNT.MSG_SERVER_READY:
           this._isServerReady = true;
@@ -1443,7 +1443,7 @@ namespace ABeamer {
         // @TODO: find a way to avoid duplicating this code
         (data as string).split(/\n/).forEach(line =>
           line.replace(/^\s*[\$@]abeamer-([\w+\-]+)\s*:\s*"?([^\n]+)"?\s*;\s*$/,
-            (m, p1, p2) => {
+            (_all, p1, p2) => {
               cfgRoot[p1] = p2;
               return '';
             }));

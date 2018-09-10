@@ -110,7 +110,7 @@ declare namespace ABeamer {
   export function parseRoundFunc(handler: RoundHandlerFunc): RoundFunc;
 
   export function parseHandler<T, TO>(handler: T, defaultHandler: T,
-    mapper: any, args: ABeamerArgs): TO;
+    _mapper: any, args: ABeamerArgs): TO;
 
   export function parseEnum<T>(value: T | string, mapper: any,
     defValue?: T | string | undefined): T;

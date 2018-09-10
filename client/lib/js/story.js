@@ -132,7 +132,7 @@ var ABeamer;
             var self = this;
             this.logLevel = createParams.logLevel || ABeamer.LL_SILENT;
             if (urlParams) {
-                urlParams.replace(new RegExp(ABeamer._SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), function (m, p1) {
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), function (_all, p1) {
                     _this.logLevel = parseInt(p1); // don't use _logLevel
                     return '';
                 });
@@ -147,7 +147,7 @@ var ABeamer;
             function setDim(srvPropPrefix, cfgValue, propName) {
                 var res = cfgValue || self.storyAdapter.getProp(propName, args);
                 if (urlParams) {
-                    urlParams.replace(new RegExp(srvPropPrefix + '(\\d+)'), function (m, p1) {
+                    urlParams.replace(new RegExp(srvPropPrefix + '(\\d+)'), function (_all, p1) {
                         var qsValue = parseInt(p1);
                         res = qsValue || res;
                         return '';
@@ -168,25 +168,25 @@ var ABeamer;
             this.fps = cfg.fps;
             this._isTeleporting = createParams.toTeleport || false;
             if (urlParams) {
-                urlParams.replace(new RegExp(ABeamer._SRV_CNT.TELEPORT_SUFFIX + '(\\w+)'), function (m, p1) {
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.TELEPORT_SUFFIX + '(\\w+)'), function (_all, p1) {
                     _this._isTeleporting = p1 === 'true';
                     return '';
                 });
-                urlParams.replace(new RegExp(ABeamer._SRV_CNT.SERVER_SUFFIX + '(\\w+)'), function (m, p1) {
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.SERVER_SUFFIX + '(\\w+)'), function (_all, p1) {
                     _this.hasServer = true;
                     _this.storyAdapter.setProp('class', 'has-server', args);
                     _this.serverName = p1;
                     _this.serverFeatures = ABeamer._setServer(_this.serverName);
                     return '';
                 });
-                urlParams.replace(new RegExp(ABeamer._SRV_CNT.RENDER_VAR_SUFFIX + '([^&]+)', 'g'), function (m, p1) {
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.RENDER_VAR_SUFFIX + '([^&]+)', 'g'), function (_all, p1) {
                     p1 = decodeURIComponent(p1);
                     // tslint:disable-next-line:prefer-const
                     var _a = p1.match(/^([^=]+)=(.*)$/) || ['', '', ''], key = _a[1], value = _a[2];
                     if (!key) {
                         throw "var " + p1 + " requires the key field";
                     }
-                    key = key.replace(/-(\w)/g, function (all, p) { return p.toUpperCase(); });
+                    key = key.replace(/-(\w)/g, function (_all2, p) { return p.toUpperCase(); });
                     args.vars[key] = value;
                     return '';
                 });
@@ -453,7 +453,7 @@ var ABeamer;
          */
         _Story.prototype.addDefaultScenes = function () {
             var story = this;
-            $('.abeamer-scene').each(function (index, htmlElement) {
+            $('.abeamer-scene').each(function (_index, htmlElement) {
                 story.addScene($(htmlElement));
             });
             if (this._scenes.length) {
@@ -1032,7 +1032,7 @@ var ABeamer;
         /**
          * This method is called by the server to communicate with the client.
          */
-        _Story.prototype._internalGetServerMsg = function (cmd, value) {
+        _Story.prototype._internalGetServerMsg = function (cmd, _value) {
             switch (cmd) {
                 case ABeamer._SRV_CNT.MSG_SERVER_READY:
                     this._isServerReady = true;
@@ -1088,7 +1088,7 @@ var ABeamer;
                 // @HINT: this code is a copy of  server.ts / parseIniCfgContent
                 // @TODO: find a way to avoid duplicating this code
                 data.split(/\n/).forEach(function (line) {
-                    return line.replace(/^\s*[\$@]abeamer-([\w+\-]+)\s*:\s*"?([^\n]+)"?\s*;\s*$/, function (m, p1, p2) {
+                    return line.replace(/^\s*[\$@]abeamer-([\w+\-]+)\s*:\s*"?([^\n]+)"?\s*;\s*$/, function (_all, p1, p2) {
                         cfgRoot[p1] = p2;
                         return '';
                     });

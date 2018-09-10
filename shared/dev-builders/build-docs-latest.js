@@ -112,7 +112,7 @@ var BuildDocsLatest;
         /** Processes the links from Markdown content, updating its content */
         ReferenceBuilder.prototype.updateLinks = function (fileBase, content) {
             var _this = this;
-            return content.replace(/\[([^\]]*)\]\(([\w\-\s]*)(?:#([\w\-\s]*))?\)/g, function (app, info, link, bookmark) {
+            return content.replace(/\[([^\]]*)\]\(([\w\-\s]*)(?:#([\w\-\s]*))?\)/g, function (_app, info, link, bookmark) {
                 var _a;
                 bookmark = bookmark || '';
                 link = link || '';
@@ -234,7 +234,7 @@ var BuildDocsLatest;
                 securityLineCount++;
             } while (true);
         };
-        DocParser.prototype._allowId = function (id, idType, accessTag, exportTag) {
+        DocParser.prototype._allowId = function (id, _idType, accessTag, exportTag) {
             return (!this.isEndUser)
                 || (id[0] !== '_' && accessTag === 'public'
                     && (this.isInsideClassOrInterface || exportTag !== undefined));
@@ -454,7 +454,7 @@ var BuildDocsLatest;
             var pageName = sysPath.posix.basename(fileName);
             // gets document name from the source/markdown file
             if (!opts.name) {
-                content = content.replace(/^\s*[\/\*]*\s*@doc-name\s+\b([\w ]+)\s*\n/m, function (all, docName) {
+                content = content.replace(/^\s*[\/\*]*\s*@doc-name\s+\b([\w ]+)\s*\n/m, function (_all, docName) {
                     opts.name = docName;
                     return '';
                 });
@@ -463,10 +463,10 @@ var BuildDocsLatest;
             if (!opts.name && pageName.includes('-')) {
                 opts.name = pageName[0].toUpperCase() + pageName.substr(1)
                     .replace(/\.md$/, '')
-                    .replace(/-(\w)/g, function (all, p) { return ' ' + p.toUpperCase(); });
+                    .replace(/-(\w)/g, function (_all, p) { return ' ' + p.toUpperCase(); });
             }
             // gets the folder name from the source/markdown file
-            content.replace(/^\s*[\/\*]+\s*@doc-folder\s+\b([\w ]+)\s*\n/m, function (all, folder) {
+            content.replace(/^\s*[\/\*]+\s*@doc-folder\s+\b([\w ]+)\s*\n/m, function (_all, folder) {
                 opts.folder = folder;
                 return '';
             });
@@ -503,7 +503,7 @@ var BuildDocsLatest;
         text = text.replace(/^\s*@(param)\s+(\w+)\s*/mg, '**$1**: `$2` ');
         text = text.replace(/^\s*@(returns)\b\s*/mg, '**$1**: ');
         text = text.replace(/^\s*@(type|memberof|readonly)\b(.*)$/mg, '');
-        text = text.replace(/@see\b\s*((https?:\/\/)?(\w+\/)?([^#\s]*)?(#\S*)?\b)/g, function (all, link, http, folder, title, bookmark) {
+        text = text.replace(/@see\b\s*((https?:\/\/)?(\w+\/)?([^#\s]*)?(#\S*)?\b)/g, function (_all, link, http, folder, title, bookmark) {
             if (http) {
                 title = link;
             }
@@ -567,7 +567,7 @@ var BuildDocsLatest;
      * Copies a markdown file from to the destination
      * and adds the file to mkdocs.
      */
-    function copyMarkdownFile(srcFileName, dstFileName, mkDocs, mkDocsOpts, cfg, processPage) {
+    function copyMarkdownFile(srcFileName, dstFileName, mkDocs, mkDocsOpts, _cfg, processPage) {
         var data = fsix_js_1.fsix.readUtf8Sync(srcFileName);
         data = mkDocs.addSourceFile(mkDocsOpts, dstFileName, data);
         if (processPage) {
@@ -648,8 +648,8 @@ var BuildDocsLatest;
             replacePaths.forEach(function (pathSrcDst) {
                 content = content.replace(pathSrcDst[0], pathSrcDst[1]);
             });
-            content = content.replace(/(<code class="js">)((?:.|\n)+?)(<\/code>)/g, function (all, preTag, code, postTag) {
-                code = code.replace(highlightRegEx, function (all2, word) {
+            content = content.replace(/(<code class="js">)((?:.|\n)+?)(<\/code>)/g, function (_all, preTag, code, postTag) {
+                code = code.replace(highlightRegEx, function (_all2, word) {
                     var wordInf = wordMap[word];
                     return "<span class=\"hljs-" + wordInf.wordClass + "\""
                         + ((wordInf.title ? " title=\"" + wordInf.title + "\"" : '') + ">" + word + "</span>");

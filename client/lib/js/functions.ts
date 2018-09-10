@@ -201,7 +201,7 @@ namespace ABeamer {
   };
 
 
-  _exFunctions['random'] = (params: ExprFuncParams, req?: ExFuncReq) => {
+  _exFunctions['random'] = (_params: ExprFuncParams, req?: ExFuncReq) => {
     req.checkParams(req, 0);
     req.res.paType = ExFuncParamType.Number;
     req.res.numValue = Math.random();
@@ -234,7 +234,7 @@ namespace ABeamer {
 
 
   _exFunctions['capitalize'] = (params: ExprFuncParams, req?: ExFuncReq) => {
-    _str1ParamFunc(params, req, (s) => s.replace(/\b(\w)/, (all, p) => p.toUpperCase()));
+    _str1ParamFunc(params, req, (s) => s.replace(/\b(\w)/, (_all, p) => p.toUpperCase()));
   };
 
 

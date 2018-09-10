@@ -52,12 +52,12 @@ var Tests;
         done();
     };
     var testParams = {};
-    tests.forEach(function (test, index) {
+    tests.forEach(function (test) {
         testParams[!test.isStill
             ? test.name + " - t0 moves for " + test.duration + " at " + (test.position || '')
             : test.name + " - t0 DOESN'T moves for " + test.duration] = func;
     });
-    var animes = tests.map(function (test, index) {
+    var animes = tests.map(function (test) {
         return !test.isStill ?
             {
                 selector: "#t0",

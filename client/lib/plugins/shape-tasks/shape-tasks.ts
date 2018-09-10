@@ -124,7 +124,7 @@ namespace ABeamer {
   pluginManager.addTasks([['shape', _shapeTask]]);
 
   /** Implements the Shape Task */
-  function _shapeTask(anime: Animation, wkTask: WorkTask,
+  function _shapeTask(anime: Animation, _wkTask: WorkTask,
     params: BaseShapeTaskParams, stage: uint, args?: ABeamerArgs): TaskResult {
 
     function buildSvg(inTextHtml: string[], shapeTag: string,

@@ -173,7 +173,7 @@ namespace ABeamer {
   }
 
 
-  export function _expressionPath(t: number, params: PathParams, stage: uint,
+  export function _expressionPath(t: number, params: PathParams, _stage: uint,
     args?: ABeamerArgs): number[] {
 
     _vars.t = t;
@@ -198,7 +198,7 @@ namespace ABeamer {
 
   /** Implements the Line Path */
   function _linePath(t: number, params: _WorkLinePathParams,
-    stage: uint, args?: ABeamerArgs): number[] {
+    _stage: uint, args?: ABeamerArgs): number[] {
 
     if (!params._isPrepared) {
       params._x0 = ExprOrNumToNum(params.x0, 0, args);
@@ -230,7 +230,7 @@ namespace ABeamer {
 
   /** Implements the Rect Path */
   function _rectPath(t: number, params: _WorkRectPathParams,
-    stage: uint, args?: ABeamerArgs): number[] {
+    _stage: uint, args?: ABeamerArgs): number[] {
 
     if (!params._isPrepared) {
       params._isPrepared = true;
@@ -273,7 +273,7 @@ namespace ABeamer {
 
   /** Common Implementation of the Circle and Ellipse Path */
   function _interpolateEllipse(t: number, params: _CirclePathParams,
-    radiusX: number | string, radiusY: number | string, stage: uint,
+    radiusX: number | string, radiusY: number | string, _stage: uint,
     args?: ABeamerArgs): number[] {
 
     if (!params._isPrepared) {

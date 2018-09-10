@@ -109,7 +109,7 @@ var OptsParser;
             if (OptsParser.isOption(name_1)) {
                 var optName = name_1.substr(2)
                     // converts part1-part2-part3 => part1Part2Part3
-                    .replace(/-(\w)/g, function (all, firstLetter) { return firstLetter.toUpperCase(); });
+                    .replace(/-(\w)/g, function (_all, firstLetter) { return firstLetter.toUpperCase(); });
                 var opt = OptsParser.argOpts[optName];
                 if (opt === undefined) {
                     throw "Unknown option " + optName;
@@ -166,7 +166,7 @@ var OptsParser;
      * dash + lowercase.
      */
     function _getDashKey(key) {
-        return key.replace(/([A-Z])/g, function (all, p) {
+        return key.replace(/([A-Z])/g, function (_all, p) {
             return '-' + p.toLowerCase();
         });
     }

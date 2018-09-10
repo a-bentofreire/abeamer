@@ -65,7 +65,7 @@ var Tests;
         });
         exact_js_1.Exact.runTestSuite(__filename.replace(/\.js/, "-" + fps + "fps.js"), {
             fps: fps,
-            css: tests.map(function (test, index) {
+            css: tests.map(function (_test, index) {
                 return "#t" + index + " {position: absolute; left: " + min + "px}";
             }).join('\n'),
             animes: tests.map(function (test, index) { return getTestAnimation(test, index); }),

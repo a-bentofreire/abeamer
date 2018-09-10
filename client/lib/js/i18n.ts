@@ -86,7 +86,7 @@ namespace ABeamer {
 
   export function i8nMsg(msg: string, params?: I8nParams): string {
     if (params) {
-      msg = msg.replace(/%(\w+)%/g, (all, p) => params[p].toString());
+      msg = msg.replace(/%(\w+)%/g, (_all, p) => params[p].toString());
     }
     return msg;
   }

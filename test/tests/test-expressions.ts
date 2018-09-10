@@ -121,7 +121,7 @@ namespace Tests {
   };
 
   const testParams: Exact.Tests = {};
-  tests.forEach((test, index) => {
+  tests.forEach((test) => {
     testParams[`${test.label}"${test.name}" ~> "${test.expected}"`] = func;
   });
 
@@ -131,7 +131,7 @@ namespace Tests {
     css: '',
 
     animes:
-      tests.map((test, index) => {
+      tests.map((_test, index) => {
         return {
           selector: `#t${index}`,
           props: [{

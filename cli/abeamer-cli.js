@@ -283,7 +283,7 @@ var Cli;
                 console.error(data.toString());
             }
         });
-        ls.on('close', function (code) {
+        ls.on('close', function (_code) {
             callback();
         });
     }
@@ -312,7 +312,7 @@ var Cli;
             }
             var envValue = sysProcess.env[envKey];
             if (!envValue) {
-                fsix_js_1.fsix.runExternal(appName + " " + versionParam, function (error, stdout, stderr) {
+                fsix_js_1.fsix.runExternal(appName + " " + versionParam, function (_error, stdout, stderr) {
                     displayResult(stderr === '' && stdout.match(matchRegEx));
                 });
             }
@@ -389,7 +389,7 @@ var Cli;
                         var plugins_1 = fsix_js_1.fsix.loadJsonSync(ROOT_PATH + "/client/lib/plugins/plugins-list.json");
                         var pre_1 = '';
                         var post_1 = '';
-                        text.replace(/^(.*)js\/abeamer\.min\.js(.*)$/m, function (app, _pre, _post) {
+                        text.replace(/^(.*)js\/abeamer\.min\.js(.*)$/m, function (_app, _pre, _post) {
                             pre_1 = _pre;
                             post_1 = _post;
                             return '';

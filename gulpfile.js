@@ -99,7 +99,7 @@ var Gulp;
      */
     function updateHtmlPages(srcPath, destPath, newScriptFiles, setReleaseLinks, srcOptions) {
         return gulp.src(srcPath, srcOptions)
-            .pipe(gulpReplace(/<body>((?:.|\n)+)<\/body>/, function (all, p) {
+            .pipe(gulpReplace(/<body>((?:.|\n)+)<\/body>/, function (_all, p) {
             var lines = p.split('\n');
             var outLines = [];
             var state = 0;
@@ -155,7 +155,7 @@ var Gulp;
             // build animated badges
             var renderCmdLine = "node ./cli/abeamer-cli.js render --dp --url '" + url + "' --config " + config;
             console.log(renderCmdLine);
-            fsix_js_1.fsix.runExternal(renderCmdLine, function (error, stdout, stderr) {
+            fsix_js_1.fsix.runExternal(renderCmdLine, function (_error, _stdout, stderr) {
                 if (stderr) {
                     console.error(stderr);
                     console.error('Animated Gif Badge Creation Failed');
@@ -164,13 +164,13 @@ var Gulp;
                 else {
                     var gifCmdLine = "node ./cli/abeamer-cli.js gif ./" + path_1 + "/ --loop 8 --gif " + outBadgeFileName;
                     console.log(gifCmdLine);
-                    fsix_js_1.fsix.runExternal(gifCmdLine, function (_error, _stdout, _stderr) {
-                        if (stderr) {
-                            console.error(stderr);
+                    fsix_js_1.fsix.runExternal(gifCmdLine, function (_error2, stdout2, stderr2) {
+                        if (stderr2) {
+                            console.error(stderr2);
                             console.error('Animated Gif Badge Creation Failed');
                         }
                         else {
-                            console.log(stdout);
+                            console.log(stdout2);
                             console.error('Animated Gif Badge Created!');
                         }
                     });
@@ -319,7 +319,7 @@ var Gulp;
     // copies package.json cleaning the unnecessary config
     gulp.task('rel:build-package.json', function () {
         return gulp.src('./package.json')
-            .pipe(gulpReplace(/^((?:.|\n)+)$/, function (all, p) {
+            .pipe(gulpReplace(/^((?:.|\n)+)$/, function (_all, p) {
             var pkg = JSON.parse(p);
             // removes all dependencies
             pkg.devDependencies = {};
@@ -341,7 +341,7 @@ var Gulp;
     gulp.task('rel:build-tsconfig.ts', function () {
         return mergeStream(cfg.release.demos.map(function (demo) {
             return gulp.src('./tsconfig.json')
-                .pipe(gulpReplace(/^((?:.|\n)+)$/, function (all, p) {
+                .pipe(gulpReplace(/^((?:.|\n)+)$/, function (_all, p) {
                 var tsconfig = JSON.parse(p);
                 tsconfig.exclude = [];
                 tsconfig["tslint.exclude"] = undefined;
@@ -355,7 +355,7 @@ var Gulp;
     // don't use gulp-file in order to preserve the time-date
     gulp.task('rel:build-plugins-list.json', function () {
         return gulp.src(cfg.paths.MODULES_LIST_FILE)
-            .pipe(gulpReplace(/^((?:.|\n)+)$/, function (all, p) {
+            .pipe(gulpReplace(/^((?:.|\n)+)$/, function () {
             return JSON.stringify(pluginModules, undefined, 2);
         }))
             .pipe(gulpRename('plugins-list.json'))
@@ -502,7 +502,7 @@ var Gulp;
     gulp.task('update-test-list', function () {
         var tests = [];
         sysFs.readdirSync("./test/tests").forEach(function (file) {
-            file.replace(/(test-.*)\.ts/, function (m, testName) {
+            file.replace(/(test-.*)\.ts/, function (_all, testName) {
                 tests.push(testName);
                 return '';
             });
@@ -540,7 +540,7 @@ var Gulp;
             }
             var fileTitle = sysPath.parse(fileBase).name;
             var title = fileTitle.replace(/-/g, ' ')
-                .replace(/\b(\w)/, function (all, firstChar) { return firstChar.toUpperCase(); });
+                .replace(/\b(\w)/, function (_all, firstChar) { return firstChar.toUpperCase(); });
             console.log("- [" + title + "](" + fileBase + ")");
         });
         cb();

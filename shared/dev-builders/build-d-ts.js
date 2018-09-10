@@ -97,7 +97,7 @@ var BuildDTsFiles;
                 }
                 var jsDocs = jsDocsLines.join('\n');
                 // process jsDocs macros
-                jsDocs = jsDocs.replace(/(.*)#end-user (.*)\b\s*\n/g, function (text, pre, macro) {
+                jsDocs = jsDocs.replace(/(.*)#end-user (.*)\b\s*\n/g, function (_all, pre, macro) {
                     if (macro === '@readonly') {
                         line = line.replace(/^(\s*)(\w)/, '$1readonly $2');
                     }

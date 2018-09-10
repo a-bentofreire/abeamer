@@ -410,7 +410,7 @@ namespace ABeamer {
    * Adds or removes vendor prefixes from the teleported story.
    */
   function _handleVendorPrefixes(text: string): string {
-    return text.replace(/([\w\-]+)\s*:([^;]*;)/g, (all, propName, propValue) => {
+    return text.replace(/([\w\-]+)\s*:([^;]*;)/g, (_all, propName, propValue) => {
       const propNames = _propNameToVendorProps(propName);
       return propNames.map(name => `${name}: ${propValue}`).join(' ');
     });

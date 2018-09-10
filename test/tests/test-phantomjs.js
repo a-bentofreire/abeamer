@@ -15,20 +15,20 @@ var Tests;
     var tests = [
         {},
     ];
-    var func = function (rd, done, index) {
+    var func = function (rd, done) {
         rd.actions.isIdPropActions('t0', 'left', exact_js_1.Exact.simulatePixelAction(exact_js_1.Exact.interpolateMinMax(min, max, rd.fps)));
         done();
     };
     var testParams = {};
-    tests.forEach(function (test, index) {
+    tests.forEach(function (_test, index) {
         testParams["t" + index + " left goes from " + min + " to " + max] = func;
     });
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: 4,
-        css: tests.map(function (test, index) {
+        css: tests.map(function (_test, index) {
             return "#t" + index + " {position: absolute; left: " + min + "px}";
         }).join('\n'),
-        animes: tests.map(function (test, index) {
+        animes: tests.map(function (_test, index) {
             return {
                 selector: "#t" + index,
                 duration: '1s',

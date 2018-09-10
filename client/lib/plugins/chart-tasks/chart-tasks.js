@@ -302,7 +302,7 @@ var ABeamer;
             this.graphX0 = 0;
             this.graphY1 = 0;
         }
-        _WkChart.prototype._drawChart = function (params) {
+        _WkChart.prototype._drawChart = function (_params) {
             this._drawLegend();
         };
         _WkChart.prototype._fillArrayArrayParam = function (param, defValue, strMapper) {
@@ -317,7 +317,7 @@ var ABeamer;
             this.data.forEach(function (series, seriesI) {
                 var resItem = [];
                 if (!isParamArray) {
-                    resItem = series.map(function (v) { return param; });
+                    resItem = series.map(function (_v) { return param; });
                 }
                 else {
                     var subParam_1 = param[seriesI];
@@ -326,10 +326,10 @@ var ABeamer;
                         subParam_1 = strMapper[subParam_1];
                     }
                     if (!isSubParamArray) {
-                        resItem = series.map(function (v) { return subParam_1; });
+                        resItem = series.map(function (_v) { return subParam_1; });
                     }
                     else {
-                        resItem = series.map(function (v, i) {
+                        resItem = series.map(function (_v, i) {
                             var itemParam = subParam_1[i];
                             if (strMapper && typeof itemParam === 'string') {
                                 itemParam = strMapper[itemParam];
@@ -718,7 +718,7 @@ var ABeamer;
                         x: x,
                         xLabel: x,
                         xLabelWidth: usedPointWidth,
-                        series: this_2.data.map(function (series, seriesI) {
+                        series: this_2.data.map(function (_series, seriesI) {
                             if (_this.chartTypes[seriesI] === ChartTypes.bar) {
                                 var xBarThis = xBar;
                                 xBar += barWidth_1 + seriesSpacing_1;
@@ -739,7 +739,7 @@ var ABeamer;
         /** Initializes all the Axis Chart parameters. */
         _WkAxisChart.prototype._initChart = function (params) {
             var _this = this;
-            this.chartTypes = this.data.map(function (series, seriesIndex) {
+            this.chartTypes = this.data.map(function (_series, seriesIndex) {
                 if (_this.chartType !== ChartTypes.mixed) {
                     return _this.chartType;
                 }
@@ -997,7 +997,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     ABeamer.pluginManager.addTasks([['chart', _chartTask]]);
     /** Implements the Chart Task */
-    function _chartTask(anime, wkTask, params, stage, args) {
+    function _chartTask(anime, _wkTask, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_INIT:
                 var cType_1 = params.chartType;

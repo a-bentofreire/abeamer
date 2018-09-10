@@ -716,7 +716,7 @@ namespace ABeamer {
 
     constructor(protected args: ABeamerArgs) { }
 
-    _drawChart(params: BaseChartTaskParams): void {
+    _drawChart(_params: BaseChartTaskParams): void {
       this._drawLegend();
     }
 
@@ -738,7 +738,7 @@ namespace ABeamer {
       this.data.forEach((series, seriesI) => {
         let resItem = [];
         if (!isParamArray) {
-          resItem = series.map(v => param);
+          resItem = series.map(_v => param);
         } else {
 
           let subParam = param[seriesI];
@@ -748,9 +748,9 @@ namespace ABeamer {
           }
 
           if (!isSubParamArray) {
-            resItem = series.map(v => subParam);
+            resItem = series.map(_v => subParam);
           } else {
-            resItem = series.map((v, i) => {
+            resItem = series.map((_v, i) => {
               let itemParam = subParam[i];
               if (strMapper && typeof itemParam === 'string') {
                 itemParam = strMapper[itemParam];
@@ -1249,7 +1249,7 @@ namespace ABeamer {
             x,
             xLabel: x,
             xLabelWidth: usedPointWidth,
-            series: this.data.map((series, seriesI) => {
+            series: this.data.map((_series, seriesI) => {
               if (this.chartTypes[seriesI] === ChartTypes.bar) {
                 const xBarThis = xBar;
                 xBar += barWidth + seriesSpacing;
@@ -1268,7 +1268,7 @@ namespace ABeamer {
     /** Initializes all the Axis Chart parameters. */
     _initChart(params: AxisChartTaskParams): void {
 
-      this.chartTypes = this.data.map((series, seriesIndex) => {
+      this.chartTypes = this.data.map((_series, seriesIndex) => {
         if (this.chartType !== ChartTypes.mixed) {
           return this.chartType;
         }
@@ -1572,7 +1572,7 @@ namespace ABeamer {
 
 
   /** Implements the Chart Task */
-  function _chartTask(anime: Animation, wkTask: WorkTask,
+  function _chartTask(anime: Animation, _wkTask: WorkTask,
     params: BaseChartTaskParams, stage: uint, args: ABeamerArgs): TaskResult {
 
     switch (stage) {

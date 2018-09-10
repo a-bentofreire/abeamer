@@ -155,7 +155,7 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     var chartCount = !firstOnly ? charts.length : 1;
     var widths = [];
-    charts.forEach(function (chart, i) {
+    charts.forEach(function (chart) {
         widths.push(chart.chartWidth || 280);
     });
     scene1

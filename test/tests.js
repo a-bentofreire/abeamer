@@ -23,7 +23,7 @@ var Tests;
         var sm = require('happner-serial-mocha');
         var logFolder_1 = __dirname + "/log";
         sm.runTasks(activeTestFiles, null, logFolder_1)
-            .then(function (results) {
+            .then(function (_results) {
             // Do what you want with data
             console.log("The log report files are on " + logFolder_1);
         })

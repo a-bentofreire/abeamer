@@ -145,7 +145,7 @@ export namespace HttpServerEx {
       const DIR_PREFIX = '?dir';
       if (this.allowDirListing && rp.search === DIR_PREFIX) {
 
-        sysFs.readdir(rp.path, (err, files: string[]) => {
+        sysFs.readdir(rp.path, (_err, files: string[]) => {
 
           const slashedPath = rp.path + (rp.path.endsWith('/') ? '' : '/');
           const filesInfo = files.map(file => {

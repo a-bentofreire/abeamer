@@ -128,7 +128,7 @@ namespace ABeamer {
   _taskFunctions['scene-transition'] = _SceneTransitionTask;
 
   /** Implements the Scene Transition Task */
-  function _SceneTransitionTask(anime: Animation, wkTask: WorkTask,
+  function _SceneTransitionTask(_anime: Animation, _wkTask: WorkTask,
     params: SceneTransitionTaskParams,
     stage: uint, args?: ABeamerArgs): TaskResult {
 
@@ -161,7 +161,7 @@ namespace ABeamer {
   _taskFunctions['add-stills'] = _addStillsTask;
 
   /** Implements the Add Stills Task */
-  function _addStillsTask(anime: Animation, wkTask: WorkTask,
+  function _addStillsTask(_anime: Animation, _wkTask: WorkTask,
     params: AddStillsTaskParams,
     stage: uint, args?: ABeamerArgs): TaskResult {
 
@@ -179,7 +179,7 @@ namespace ABeamer {
   _taskFunctions['add-flyover'] = _addFlyover;
 
   /** Implements the Add Flyover Task */
-  function _addFlyover(anime: Animation, wkTask: WorkTask,
+  function _addFlyover(_anime: Animation, _wkTask: WorkTask,
     params: AddFlyoverTaskParams, stage: uint, args?: ABeamerArgs): TaskResult {
 
     switch (stage) {
@@ -196,7 +196,7 @@ namespace ABeamer {
   _taskFunctions['add-vars'] = _addVarsTask;
 
   /** Implements the Add Vars Task */
-  function _addVarsTask(anime: Animation, wkTask: WorkTask,
+  function _addVarsTask(_anime: Animation, _wkTask: WorkTask,
     params: AddVarsTaskParams, stage: uint, args?: ABeamerArgs): TaskResult {
 
     switch (stage) {

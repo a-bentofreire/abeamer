@@ -83,13 +83,13 @@ var Tests;
         done();
     };
     var testParams = {};
-    tests.forEach(function (test, index) {
+    tests.forEach(function (test) {
         testParams[test.label + "\"" + test.name + "\" ~> \"" + test.expected + "\""] = func;
     });
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: 2,
         css: '',
-        animes: tests.map(function (test, index) {
+        animes: tests.map(function (_test, index) {
             return {
                 selector: "#t" + index,
                 props: [{

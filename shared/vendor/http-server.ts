@@ -49,13 +49,13 @@ export namespace HttpServer {
 
     constructor(public port: uint) {}
 
-    protected onBeforeServe(req: sysHttp.IncomingMessage,
-      res: sysHttp.ServerResponse): boolean {
+    protected onBeforeServe(_req: sysHttp.IncomingMessage,
+      _res: sysHttp.ServerResponse): boolean {
       return true;
     }
 
 
-    protected onAfterServe(rp: Response): boolean {
+    protected onAfterServe(_rp: Response): boolean {
       return true;
     }
 

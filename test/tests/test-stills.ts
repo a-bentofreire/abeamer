@@ -75,7 +75,7 @@ namespace Tests {
   };
 
   const testParams: Exact.Tests = {};
-  tests.forEach((test, index) => {
+  tests.forEach((test) => {
     testParams[!test.isStill
       ? `${test.name} - t0 moves for ${test.duration} at ${test.position || ''}`
       : `${test.name} - t0 DOESN'T moves for ${test.duration}`
@@ -83,7 +83,7 @@ namespace Tests {
   });
 
 
-  const animes = tests.map((test, index) => {
+  const animes = tests.map((test) => {
     return !test.isStill ?
       {
         selector: `#t0`,

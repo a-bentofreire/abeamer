@@ -39,7 +39,7 @@ var ABeamer;
     });
     ABeamer.pluginManager.addTasks([['color-attack', _colorAttack]]);
     /** Implements the Color Attack Task */
-    function _colorAttack(anime, wkTask, params, stage, args) {
+    function _colorAttack(anime, _wkTask, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_INIT:
                 var attack = params.attack;

@@ -30,10 +30,10 @@ var Tests;
         done();
     };
     var testParams = {};
-    tests.forEach(function (test, index) {
+    tests.forEach(function (test) {
         testParams["$t" + test.element + " on scene" + test.scene + " moves for " + test.duration] = func;
     });
-    var animes = tests.map(function (test, index) {
+    var animes = tests.map(function (test) {
         return ["@@scene:" + test.scene, {
                 selector: "#t" + test.element,
                 duration: test.duration,

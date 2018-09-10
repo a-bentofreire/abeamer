@@ -50,7 +50,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > When `allowExpr` is true, and the value is string starting with `=`,
   > it will compute the expression, using ABeamer expression parser.  
 - Add `datetime-functions` plugin.
-  > This plugin allows to create teleportable expressions with date/time functions.
+  > This plugin allows to create teleportable expressions with date/time functions.  
+- (DEV) Add `_` to the start of the id of unused function parameters. 
+  > Although the tsconfig.json has `"noUnusedParameters": false`,  
+  > adding the underscore prevent warnings in case of is set to `true`,  
+  > and also helps to understand better unused parameters for future cleanups.  
 
 
 ## [1.4.0] -

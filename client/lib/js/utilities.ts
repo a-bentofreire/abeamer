@@ -68,7 +68,7 @@ namespace ABeamer {
 
 
   export function parseHandler<T, TO>(handler: T, defaultHandler: T,
-    mapper: any, args: ABeamerArgs): TO {
+    _mapper: any, args: ABeamerArgs): TO {
 
     if (handler === undefined) {
       if (!defaultHandler) { return undefined; }

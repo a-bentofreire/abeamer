@@ -101,7 +101,7 @@ export namespace DevCfg {
     let changed = false;
     do {
       changed = false;
-      value = value.replace(/\${(\w+)}/g, (all, key) => {
+      value = value.replace(/\${(\w+)}/g, (_all, key) => {
         changed = true;
         return cfg.macros[key] || cfg.paths[key];
       });

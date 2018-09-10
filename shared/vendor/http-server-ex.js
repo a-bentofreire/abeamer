@@ -107,7 +107,7 @@ var HttpServerEx;
         ServerEx.prototype.handleDirectory = function (rp) {
             var DIR_PREFIX = '?dir';
             if (this.allowDirListing && rp.search === DIR_PREFIX) {
-                sysFs.readdir(rp.path, function (err, files) {
+                sysFs.readdir(rp.path, function (_err, files) {
                     var slashedPath = rp.path + (rp.path.endsWith('/') ? '' : '/');
                     var filesInfo = files.map(function (file) {
                         var fileName = "" + slashedPath + file;

@@ -80,7 +80,7 @@ namespace Tests {
   };
 
   const testParams: Exact.Tests = {};
-  tests.forEach((test, index) => {
+  tests.forEach((test) => {
     testParams[`${test.label}t${test.elIndex} ${test.propName}`
       + ` goes from ${test.min} to ${test.max}`] = func;
   });
@@ -91,7 +91,7 @@ namespace Tests {
     css: `#t0,#t1 {left: ${absMin}px; top: ${absMin}px;}`,
 
     animes:
-      tests.map((test, index) => {
+      tests.map((test) => {
         return {
           selector: `#t${test.elIndex}`,
           duration: `${seconds}s`,

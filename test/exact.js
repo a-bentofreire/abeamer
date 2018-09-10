@@ -39,10 +39,10 @@ var Exact;
     var ASSETS_PATH = 'assets';
     var DEFAULT_TEST_WIDTH = 640;
     var DEFAULT_TEST_HEIGHT = 480;
-    var DEFAULT_TIMEOUT = 20 * 1000;
+    var _DEFAULT_TIMEOUT = 20 * 1000;
     var DEFAULT_TEST_GEN_FRAMES_WIDTH = 100;
     var DEFAULT_TEST_GEN_FRAMES_HEIGHT = 100;
-    var DEFAULT_EXPECTED_PATH = './expected/frames';
+    var _DEFAULT_EXPECTED_PATH = './expected/frames';
     Exact._TEST_DIGIT_LIMIT = 1000; // same as interpolator.js
     var TestBuilder = /** @class */ (function () {
         function TestBuilder() {
@@ -326,9 +326,9 @@ var Exact;
                 }
             });
         };
-        Actions.prototype.isActions = function (expected, toAssert, toLogIfFails) {
+        Actions.prototype.isActions = function (_expected, toAssert, _toLogIfFails) {
             if (toAssert === void 0) { toAssert = true; }
-            if (toLogIfFails === void 0) { toLogIfFails = true; }
+            if (_toLogIfFails === void 0) { _toLogIfFails = true; }
             return this.actions.findIndex(function (action, index) {
                 var expectedIt = action[index];
                 var res = action[0] === expectedIt[0]

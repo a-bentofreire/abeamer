@@ -351,7 +351,7 @@ var ABeamer;
      * Adds or removes vendor prefixes from the teleported story.
      */
     function _handleVendorPrefixes(text) {
-        return text.replace(/([\w\-]+)\s*:([^;]*;)/g, function (all, propName, propValue) {
+        return text.replace(/([\w\-]+)\s*:([^;]*;)/g, function (_all, propName, propValue) {
             var propNames = ABeamer._propNameToVendorProps(propName);
             return propNames.map(function (name) { return name + ": " + propValue; }).join(' ');
         });

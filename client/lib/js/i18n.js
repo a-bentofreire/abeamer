@@ -62,7 +62,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     function i8nMsg(msg, params) {
         if (params) {
-            msg = msg.replace(/%(\w+)%/g, function (all, p) { return params[p].toString(); });
+            msg = msg.replace(/%(\w+)%/g, function (_all, p) { return params[p].toString(); });
         }
         return msg;
     }

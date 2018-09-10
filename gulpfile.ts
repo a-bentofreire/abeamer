@@ -167,7 +167,7 @@ namespace Gulp {
     srcOptions?: any): NodeJS.ReadWriteStream {
 
     return gulp.src(srcPath, srcOptions)
-      .pipe(gulpReplace(/<body>((?:.|\n)+)<\/body>/, (all, p: string) => {
+      .pipe(gulpReplace(/<body>((?:.|\n)+)<\/body>/, (_all, p: string) => {
         const lines = p.split('\n');
         const outLines = [];
         let state = 0;
@@ -241,7 +241,7 @@ namespace Gulp {
       // build animated badges
       const renderCmdLine = `node ./cli/abeamer-cli.js render --dp --url '${url}' --config ${config}`;
       console.log(renderCmdLine);
-      fsix.runExternal(renderCmdLine, (error, stdout, stderr) => {
+      fsix.runExternal(renderCmdLine, (_error, _stdout, stderr) => {
         if (stderr) {
           console.error(stderr);
           console.error('Animated Gif Badge Creation Failed');
@@ -249,12 +249,12 @@ namespace Gulp {
         } else {
           const gifCmdLine = `node ./cli/abeamer-cli.js gif ./${path}/ --loop 8 --gif ${outBadgeFileName}`;
           console.log(gifCmdLine);
-          fsix.runExternal(gifCmdLine, (_error, _stdout, _stderr) => {
-            if (stderr) {
-              console.error(stderr);
+          fsix.runExternal(gifCmdLine, (_error2, stdout2, stderr2) => {
+            if (stderr2) {
+              console.error(stderr2);
               console.error('Animated Gif Badge Creation Failed');
             } else {
-              console.log(stdout);
+              console.log(stdout2);
               console.error('Animated Gif Badge Created!');
             }
           });
@@ -457,7 +457,7 @@ namespace Gulp {
   // copies package.json cleaning the unnecessary config
   gulp.task('rel:build-package.json', () => {
     return gulp.src('./package.json')
-      .pipe(gulpReplace(/^((?:.|\n)+)$/, (all, p) => {
+      .pipe(gulpReplace(/^((?:.|\n)+)$/, (_all, p) => {
         const pkg = JSON.parse(p);
 
         // removes all dependencies
@@ -486,7 +486,7 @@ namespace Gulp {
     return mergeStream(
       cfg.release.demos.map(demo => {
         return gulp.src('./tsconfig.json')
-          .pipe(gulpReplace(/^((?:.|\n)+)$/, (all, p) => {
+          .pipe(gulpReplace(/^((?:.|\n)+)$/, (_all, p) => {
             const tsconfig = JSON.parse(p);
             tsconfig.exclude = [];
             tsconfig["tslint.exclude"] = undefined;
@@ -502,7 +502,7 @@ namespace Gulp {
   // don't use gulp-file in order to preserve the time-date
   gulp.task('rel:build-plugins-list.json', () => {
     return gulp.src(cfg.paths.MODULES_LIST_FILE)
-      .pipe(gulpReplace(/^((?:.|\n)+)$/, (all, p) => {
+      .pipe(gulpReplace(/^((?:.|\n)+)$/, () => {
         return JSON.stringify(pluginModules, undefined, 2);
       }))
       .pipe(gulpRename('plugins-list.json'))
@@ -715,7 +715,7 @@ namespace Gulp {
     const tests = [];
 
     sysFs.readdirSync(`./test/tests`).forEach(file => {
-      file.replace(/(test-.*)\.ts/, (m, testName) => {
+      file.replace(/(test-.*)\.ts/, (_all, testName) => {
         tests.push(testName);
         return '';
       });
@@ -765,7 +765,7 @@ namespace Gulp {
       if (sysPath.extname(fileBase) !== '.md') { return; }
       const fileTitle = sysPath.parse(fileBase).name;
       const title = fileTitle.replace(/-/g, ' ')
-        .replace(/\b(\w)/, (all, firstChar: string) => firstChar.toUpperCase());
+        .replace(/\b(\w)/, (_all, firstChar: string) => firstChar.toUpperCase());
       console.log(`- [${title}](${fileBase})`);
     });
     cb();

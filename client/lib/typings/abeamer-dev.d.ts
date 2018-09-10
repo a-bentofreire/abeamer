@@ -187,7 +187,7 @@ declare namespace ABeamer {
     /**
      * This method is called by the server to communicate with the client.
      */
-    _internalGetServerMsg(cmd: string, value: string);
+    _internalGetServerMsg(cmd: string, _value: string);
 
 
   }

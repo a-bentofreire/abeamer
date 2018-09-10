@@ -62,7 +62,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     ABeamer.pluginManager.addTasks([['shape', _shapeTask]]);
     /** Implements the Shape Task */
-    function _shapeTask(anime, wkTask, params, stage, args) {
+    function _shapeTask(anime, _wkTask, params, stage, args) {
         function buildSvg(inTextHtml, shapeTag, width, height, attrs, x0, y0) {
             if (x0 === void 0) { x0 = 0; }
             if (y0 === void 0) { y0 = 0; }

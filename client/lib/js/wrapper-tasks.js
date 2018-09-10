@@ -35,7 +35,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     ABeamer._taskFunctions['scene-transition'] = _SceneTransitionTask;
     /** Implements the Scene Transition Task */
-    function _SceneTransitionTask(anime, wkTask, params, stage, args) {
+    function _SceneTransitionTask(_anime, _wkTask, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_TELEPORT:
                 var handler = params.handler;
@@ -60,7 +60,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     ABeamer._taskFunctions['add-stills'] = _addStillsTask;
     /** Implements the Add Stills Task */
-    function _addStillsTask(anime, wkTask, params, stage, args) {
+    function _addStillsTask(_anime, _wkTask, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_INIT:
                 args.scene.addStills(params.duration);
@@ -72,7 +72,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     ABeamer._taskFunctions['add-flyover'] = _addFlyover;
     /** Implements the Add Flyover Task */
-    function _addFlyover(anime, wkTask, params, stage, args) {
+    function _addFlyover(_anime, _wkTask, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_INIT:
                 args.story.addFlyover(params.handler, params.params);
@@ -84,7 +84,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     ABeamer._taskFunctions['add-vars'] = _addVarsTask;
     /** Implements the Add Vars Task */
-    function _addVarsTask(anime, wkTask, params, stage, args) {
+    function _addVarsTask(_anime, _wkTask, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_INIT:
                 var vars_1 = params.vars || {};

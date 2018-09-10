@@ -125,7 +125,7 @@ var ABeamer;
     ABeamer._exFunctions['log10'] = function (params, req) {
         _math1ParamFunc(params, req, Math.log10);
     };
-    ABeamer._exFunctions['random'] = function (params, req) {
+    ABeamer._exFunctions['random'] = function (_params, req) {
         req.checkParams(req, 0);
         req.res.paType = 1 /* Number */;
         req.res.numValue = Math.random();
@@ -148,7 +148,7 @@ var ABeamer;
         _str1ParamFunc(params, req, function (s) { return s.toUpperCase(); });
     };
     ABeamer._exFunctions['capitalize'] = function (params, req) {
-        _str1ParamFunc(params, req, function (s) { return s.replace(/\b(\w)/, function (all, p) { return p.toUpperCase(); }); });
+        _str1ParamFunc(params, req, function (s) { return s.replace(/\b(\w)/, function (_all, p) { return p.toUpperCase(); }); });
     };
     ABeamer._exFunctions['substr'] = function (params, req) {
         req.checkParams(req, 3, [2 /* String */, 1 /* Number */, 1 /* Number */]);

@@ -352,7 +352,7 @@ var ABeamer;
                 } while ((ch !== "'" || prevCh === '\\') && ch !== undefined);
                 startPos++;
                 setToken(7 /* Value */);
-                p.token.sValue = p.token.sValue.replace(/\\([n'])/g, function (all, meta) {
+                p.token.sValue = p.token.sValue.replace(/\\([n'])/g, function (_all, meta) {
                     switch (meta) {
                         case 'n': return '\n';
                         case "'": return "'";
@@ -404,7 +404,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Execute Array
     // ------------------------------------------------------------------------
-    function _execArray(p, funcToken) {
+    function _execArray(_p, funcToken) {
         var res = {
             paType: 3 /* Array */,
             sValue: undefined,
@@ -618,7 +618,7 @@ var ABeamer;
     //                               Error Handling
     // ------------------------------------------------------------------------
     /** Throws a localized error */
-    function err(p, msg, value) {
+    function err(p, msg, _value) {
         ABeamer.throwI8n(ABeamer.Msgs.ExpHasErrors, { e: p.expr, err: msg || '' });
     }
     /**

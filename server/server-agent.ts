@@ -119,7 +119,7 @@ export namespace ServerAgent {
     }
 
 
-    exitServer(retValue = 0) {
+    exitServer(_retValue = 0) {
       if (this.logLevel) { console.log(`Terminating Server`); }
     }
 
@@ -219,7 +219,7 @@ export namespace ServerAgent {
       // @TODO: place this code in a external module so it can be used by the library and the cli
       cfgText.split(/\n/).forEach(line =>
         line.replace(/^\s*[\$@]abeamer-([\w+-]+)\s*:\s*"?([^\n"]+)"?\s*;\s*$/,
-          (m, p1, p2) => {
+          (_all, p1, p2) => {
             if (this.isVerbose) { console.log(`config: ${p1}=[${p2}]`); }
             cfg[p1] = p2;
             return '';

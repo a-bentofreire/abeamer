@@ -109,7 +109,7 @@ export namespace BuildDTsFiles {
         let jsDocs = jsDocsLines.join('\n');
 
         // process jsDocs macros
-        jsDocs = jsDocs.replace(/(.*)#end-user (.*)\b\s*\n/g, (text, pre, macro) => {
+        jsDocs = jsDocs.replace(/(.*)#end-user (.*)\b\s*\n/g, (_all, pre, macro) => {
           if (macro === '@readonly') {
             line = line.replace(/^(\s*)(\w)/, '$1readonly $2');
           }

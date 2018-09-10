@@ -62,7 +62,7 @@ var Tests;
     });
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: fps,
-        css: tests.map(function (test, index) {
+        css: tests.map(function (_test, index) {
             return "#t" + index + " {left: " + min + "px}";
         }).join('\n'),
         animes: tests.map(function (test, index) {

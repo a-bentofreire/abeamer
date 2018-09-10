@@ -17,8 +17,7 @@ namespace Tests {
   const maxFps = 10;
 
 
-  interface Test extends Exact.TestParams {
-  }
+  type Test = Exact.TestParams;
 
 
   function getAnimationProps(test: Test): ABeamer.AnimationProp[] {
@@ -87,7 +86,7 @@ namespace Tests {
 
     Exact.runTestSuite(__filename.replace(/\.js/, `-${fps}fps.js`), {
       fps,
-      css: tests.map((test, index) =>
+      css: tests.map((_test, index) =>
         `#t${index} {position: absolute; left: ${min}px}`).join('\n'),
       animes: tests.map((test, index) => getTestAnimation(test, index)),
       html: Exact.genTestHtml(tests.length),

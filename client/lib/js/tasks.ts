@@ -293,7 +293,7 @@ namespace ABeamer {
   _taskFunctions['factory'] = _factory;
 
   /** Implements the Factory Task */
-  function _factory(anime: Animation, wkTask: WorkTask,
+  function _factory(anime: Animation, _wkTask: WorkTask,
     params: FactoryTaskParams, stage: uint, args: ABeamerArgs): TaskResult {
 
     switch (stage) {

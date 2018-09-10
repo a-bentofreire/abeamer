@@ -28,7 +28,7 @@ namespace ServerAgent {
 
   class PuppeteerServerAgent extends baseServerAgent.BaseServer {
 
-    exitServer(retValue = 0) {
+    exitServer(_retValue = 0) {
       super.exitServer();
       if (browser) { browser.close(); }
     }

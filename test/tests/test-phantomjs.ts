@@ -20,7 +20,7 @@ namespace Tests {
         {},
     ];
 
-    const func = (rd: Exact.ExactResult, done, index) => {
+    const func = (rd: Exact.ExactResult, done) => {
 
         rd.actions.isIdPropActions('t0', 'left',
             Exact.simulatePixelAction(
@@ -30,17 +30,17 @@ namespace Tests {
     };
 
     const testParams: Exact.Tests = {};
-    tests.forEach((test, index) => {
+    tests.forEach((_test, index) => {
         testParams[`t${index} left goes from ${min} to ${max}`] = func;
     });
 
 
     Exact.runTestSuite(__filename, {
         fps: 4,
-        css: tests.map((test, index) =>
+        css: tests.map((_test, index) =>
             `#t${index} {position: absolute; left: ${min}px}`).join('\n'),
         animes:
-            tests.map((test, index) => {
+            tests.map((_test, index) => {
                 return {
                     selector: `#t${index}`,
                     duration: '1s',

@@ -64,7 +64,7 @@ namespace ABeamer {
 
     let valueIndex = 0;
     return format.replace(/%(0*)((?:[1-9])?)([dfx])(?:\^([rfcd]))?/g,
-      (match, hasZeros, strNumDigits, specifier, roundFunc) => {
+      (_all, hasZeros, strNumDigits, specifier, roundFunc) => {
         let out;
         let strNumber;
 

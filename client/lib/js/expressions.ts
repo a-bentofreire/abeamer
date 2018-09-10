@@ -512,7 +512,7 @@ namespace ABeamer {
         } while ((ch !== "'" || prevCh === '\\') && ch !== undefined);
         startPos++;
         setToken(TokenType.Value);
-        p.token.sValue = p.token.sValue.replace(/\\([n'])/g, (all, meta) => {
+        p.token.sValue = p.token.sValue.replace(/\\([n'])/g, (_all, meta) => {
           switch (meta) {
             case 'n': return '\n';
             case "'": return "'";
@@ -574,7 +574,7 @@ namespace ABeamer {
   //                               Execute Array
   // ------------------------------------------------------------------------
 
-  function _execArray(p: ParseParams, funcToken: Token): Token {
+  function _execArray(_p: ParseParams, funcToken: Token): Token {
 
     const res: Token = {
       paType: ExFuncParamType.Array,
@@ -826,7 +826,7 @@ namespace ABeamer {
   // ------------------------------------------------------------------------
 
   /** Throws a localized error */
-  function err(p: ParseParams, msg?: string, value?: Token): void {
+  function err(p: ParseParams, msg?: string, _value?: Token): void {
     throwI8n(Msgs.ExpHasErrors, { e: p.expr, err: msg || '' });
   }
 

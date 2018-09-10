@@ -57,7 +57,7 @@ var Tests;
             test: {
                 name: 'Test bypass 1s, and then renders t0 for 2s',
             },
-            runTest: function (rd, render, opts) {
+            runTest: function (rd, _render, opts) {
                 var startFrame = exact_js_1.Exact.calcFrameCount(opts.renderPos, fps);
                 var renderFrameCount = exact_js_1.Exact.calcFrameCount(opts.renderCount, fps);
                 // read the warning on the top of the file
@@ -73,7 +73,7 @@ var Tests;
             test: {
                 name: 'Test render 2nd scene, skipping 2frames. moves t2',
             },
-            runTest: function (rd, render, opts) {
+            runTest: function (rd, _render, opts) {
                 var startFrame = exact_js_1.Exact.calcFrameCount(opts.renderPos, fps);
                 var renderFrameCount = t3_inter.length - startFrame;
                 testBypass(rd, 't3', 0, 3, 1);
@@ -90,7 +90,7 @@ var Tests;
             test: {
                 name: 'Test go back to scene 1, rewind 1s, and render 2s',
             },
-            runTest: function (rd, render, opts) {
+            runTest: function (rd, _render, opts) {
                 // tests rewind.
                 testBypass(rd, 't0', 12, 4, -1);
                 var startFrame = exact_js_1.Exact.calcFrameCount(opts.renderPos, fps);
@@ -109,10 +109,10 @@ var Tests;
         done();
     };
     var testParams = {};
-    renders.forEach(function (render, index) {
+    renders.forEach(function (render) {
         testParams[render.test.name] = func;
     });
-    var animes = tests.map(function (test, index) {
+    var animes = tests.map(function (test) {
         return ["@@scene:" + test.sceneNr, {
                 selector: "#t" + test.element,
                 duration: test.duration,

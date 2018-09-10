@@ -117,7 +117,7 @@ var ABeamer;
             params.state = ABeamer.TRS_SETUP;
             this._transitionFunc(params, args);
         };
-        _TransitionInterpolator.prototype._render = function (frameNr, frameCount, isLeaveAdapted, args) {
+        _TransitionInterpolator.prototype._render = function (frameNr, _frameCount, isLeaveAdapted, args) {
             var params = this._params;
             if (isLeaveAdapted) {
                 var frameI = frameNr - this._firstOutTransitionFrame;

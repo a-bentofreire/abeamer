@@ -54,7 +54,7 @@ var ABeamer;
         return f ? values.map(function (value) { return f(value); }) : values;
     }
     ABeamer._applyRoundFunc = _applyRoundFunc;
-    function parseHandler(handler, defaultHandler, mapper, args) {
+    function parseHandler(handler, defaultHandler, _mapper, args) {
         if (handler === undefined) {
             if (!defaultHandler) {
                 return undefined;

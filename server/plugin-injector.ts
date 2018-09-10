@@ -88,7 +88,7 @@ export namespace PluginInjector {
     const urlBase = urlMatches[1];
     // inject js scripts
     content = content.replace(/(#plugins-js-block-start.*\n)((?:.|\n)*)(\n.*#plugins-js-block-end)/,
-      (all, before, replaceArea, after) => {
+      (_all, before, _replaceArea, after) => {
         const output = [];
         plugins.forEach(plugin => {
           (plugin.jsUrls || []).forEach(url => {
@@ -100,7 +100,7 @@ export namespace PluginInjector {
 
     // inject css links
     content = content.replace(/(#plugins-css-block-start.*\n)((?:.|\n)*)(\n.*#plugins-css-block-end)/,
-      (all, before, replaceArea, after) => {
+      (_all, before, _replaceArea, after) => {
         const output = [];
         plugins.forEach(plugin => {
           (plugin.cssUrls || []).forEach(url => {

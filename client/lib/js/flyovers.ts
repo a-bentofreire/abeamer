@@ -247,7 +247,7 @@ namespace ABeamer {
   /**
    * Implementation of Info Flyover.
    */
-  function _infoFlyover(wkFlyover: WorkFlyover,
+  function _infoFlyover(_wkFlyover: WorkFlyover,
     params: _InfoFlyoverParams, stage?: uint, args?: ABeamerArgs): void {
 
     switch (stage) {
@@ -264,7 +264,7 @@ namespace ABeamer {
         const story = args.story;
 
         params._elAdapters.forEach(elAdapter => {
-          const text = format.replace(/\$\{(\w+)\}/g, (p1, macro) => {
+          const text = format.replace(/\$\{(\w+)\}/g, (_all, macro) => {
 
             switch (macro) {
               case 'storyFrameNr':
@@ -316,7 +316,7 @@ namespace ABeamer {
    */
   _flyoverFunctions['video-sync'] = _videoSyncFlyover;
 
-  function _videoSyncFlyover(wkFlyover: WorkFlyover,
+  function _videoSyncFlyover(_wkFlyover: WorkFlyover,
     params: _VideoSyncFlyoverParams, stage?: uint, args?: ABeamerArgs): void {
 
     // setup

@@ -176,7 +176,7 @@ var ABeamer;
     }
     ABeamer._taskFunctions['factory'] = _factory;
     /** Implements the Factory Task */
-    function _factory(anime, wkTask, params, stage, args) {
+    function _factory(anime, _wkTask, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_INIT:
                 var tag_1 = params.tag || 'div';

@@ -66,7 +66,7 @@ var ABeamer;
             values[_i - 1] = arguments[_i];
         }
         var valueIndex = 0;
-        return format.replace(/%(0*)((?:[1-9])?)([dfx])(?:\^([rfcd]))?/g, function (match, hasZeros, strNumDigits, specifier, roundFunc) {
+        return format.replace(/%(0*)((?:[1-9])?)([dfx])(?:\^([rfcd]))?/g, function (_all, hasZeros, strNumDigits, specifier, roundFunc) {
             var out;
             var strNumber;
             var value = values[valueIndex++];

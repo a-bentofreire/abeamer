@@ -87,7 +87,7 @@ export namespace BuildGalleryLatest {
         let prevNr = 0;
         let lastDescLine = '';
         fsix.readUtf8Sync(iniFileName).replace(/[\$@]abeamer-([a-z\-]+)(\d*)\s*:\s*"?([^";]+)"?/g,
-          (all, id, nr, value: string) => {
+          (_all, id, nr, value: string) => {
             switch (id) {
               case 'description':
                 nr = parseInt(nr || '1');

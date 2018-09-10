@@ -91,7 +91,7 @@ namespace Tests {
       test: {
         name: 'Test bypass 1s, and then renders t0 for 2s',
       },
-      runTest: (rd: Exact.ExactResult, render, opts) => {
+      runTest: (rd: Exact.ExactResult, _render, opts) => {
         const startFrame = Exact.calcFrameCount(opts.renderPos, fps);
         const renderFrameCount = Exact.calcFrameCount(opts.renderCount, fps);
         // read the warning on the top of the file
@@ -108,7 +108,7 @@ namespace Tests {
       test: {
         name: 'Test render 2nd scene, skipping 2frames. moves t2',
       },
-      runTest: (rd: Exact.ExactResult, render, opts) => {
+      runTest: (rd: Exact.ExactResult, _render, opts) => {
         const startFrame = Exact.calcFrameCount(opts.renderPos, fps);
         const renderFrameCount = t3_inter.length - startFrame;
         testBypass(rd, 't3', 0, 3, 1);
@@ -127,7 +127,7 @@ namespace Tests {
         name: 'Test go back to scene 1, rewind 1s, and render 2s',
       },
 
-      runTest: (rd: Exact.ExactResult, render, opts) => {
+      runTest: (rd: Exact.ExactResult, _render, opts) => {
         // tests rewind.
         testBypass(rd, 't0', 12, 4, -1);
         const startFrame = Exact.calcFrameCount(opts.renderPos, fps);
@@ -151,12 +151,12 @@ namespace Tests {
   };
 
   const testParams: Exact.Tests = {};
-  renders.forEach((render, index) => {
+  renders.forEach((render) => {
     testParams[render.test.name] = func;
   });
 
 
-  const animes = tests.map((test, index) => {
+  const animes = tests.map((test) => {
     return [`@@scene:${test.sceneNr}`, {
       selector: `#t${test.element}`,
       duration: test.duration,
