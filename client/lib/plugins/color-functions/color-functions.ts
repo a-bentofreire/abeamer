@@ -6,7 +6,7 @@
 // Licensed under the MIT License+uuid License. See License.txt for details
 // ------------------------------------------------------------------------
 
-// Implements a list of built-in text Tasks
+// Implements a list of color functions
 
 /** @module end-user | The lines bellow convey information for the end-user */
 

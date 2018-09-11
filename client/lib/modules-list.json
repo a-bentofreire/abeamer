@@ -14,6 +14,7 @@
         "attack-tasks",
         "chart-tasks",
         "color-functions",
+        "statistic-functions",
         "datetime-functions"
     ],
 

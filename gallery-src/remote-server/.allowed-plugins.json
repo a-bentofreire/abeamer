@@ -1,70 +1,76 @@
 {
-    "_warn-msg1": "This file contains the list of authorized plugins",
-    "_warn-msg2": "This file is used by abeamer cli --allowed-plugins",
-    "_warn-msg3": "For security reasons:",
-    "_warn-msg4": "1. The filename should start with a dot",
-    "_warn-msg5": "2. It should be placed outside the project file access",
-    "_warn-msg6": "3. Only the urls defined in this file are allowed",
+  "_warn-msg1": "This file contains the list of authorized plugins",
+  "_warn-msg2": "This file is used by abeamer cli --allowed-plugins",
+  "_warn-msg3": "For security reasons:",
+  "_warn-msg4": "1. The filename should start with a dot",
+  "_warn-msg5": "2. It should be placed outside the project file access",
+  "_warn-msg6": "3. Only the urls defined in this file are allowed",
 
-    "plugins": [{
-            "id": "abeamer.text-tasks",
-            "uuid": "8b547eff-a0de-446a-9753-fb8b39d8031a",
-            "jsUrls": ["plugins/text-tasks/text-tasks.js"],
-            "cssUrls": []
-        },
-        {
-            "id": "abeamer.shape-tasks",
-            "uuid": "3e5d5813-348a-4eb1-a8b5-9c87c3988923",
-            "jsUrls": ["plugins/shape-tasks/shape-tasks.js"],
-            "cssUrls": []
-        },
-        {
-            "id": "abeamer.attack-tasks",
-            "uuid": "e98cfe21-ec23-4545-88eb-829a0e9add39",
-            "jsUrls": ["plugins/attack-tasks/attack-tasks.js"],
-            "cssUrls": []
-        },
-        {
-            "id": "abeamer.chart-tasks",
-            "uuid": "73631f28-df71-4b4d-88e1-c99a858e0fd3",
-            "jsUrls": ["plugins/chart-tasks/chart-tasks.js"],
-            "cssUrls": []
-        },
-        {
-            "id": "abeamer.color-functions",
-            "uuid": "ce739c9f-13ba-4742-b1c3-dec56624be7d",
-            "jsUrls": ["plugins/color-functions/color-functions.js"],
-            "cssUrls": []
-        },
-        {
-          "id": "abeamer.datetime-functions",
-          "uuid": "782cbaf4-1f1e-426c-bfbd-89c2f6ab4bbb",
-          "jsUrls": ["plugins/datetime-functions/datetime-functions.js"],
-          "cssUrls": []
-        },
-        {
-            "id": "abeamer.core-functions",
-            "uuid": "3e5d5813-348a-4eb1-a8b5-9c87c3988923",
-            "jsUrls": ["plugins/core-functions/core-functions.js"],
-            "cssUrls": []
-        },
-        {
-            "id": "abeamer.core-oscillators",
-            "uuid": "bb845fdf-7493-4000-8b04-6ec2a386ea21",
-            "jsUrls": ["plugins/core-oscillators/core-oscillators.js"],
-            "cssUrls": []
-        },
-        {
-            "id": "abeamer.core-paths",
-            "uuid": "1f43711e-d3e7-49bb-a26f-156f05597682",
-            "jsUrls": ["plugins/core-paths/core-paths.js"],
-            "cssUrls": []
-        },
-        {
-            "id": "abeamer.core-transitions",
-            "uuid": "b948c9cc-60e7-4106-bb88-f038b6fa9cf4",
-            "jsUrls": ["plugins/core-transitions/core-transitions.js"],
-            "cssUrls": []
-        }
-    ]
+  "plugins": [{
+      "id": "abeamer.text-tasks",
+      "uuid": "8b547eff-a0de-446a-9753-fb8b39d8031a",
+      "jsUrls": ["plugins/text-tasks/text-tasks.js"],
+      "cssUrls": []
+    },
+    {
+      "id": "abeamer.shape-tasks",
+      "uuid": "3e5d5813-348a-4eb1-a8b5-9c87c3988923",
+      "jsUrls": ["plugins/shape-tasks/shape-tasks.js"],
+      "cssUrls": []
+    },
+    {
+      "id": "abeamer.attack-tasks",
+      "uuid": "e98cfe21-ec23-4545-88eb-829a0e9add39",
+      "jsUrls": ["plugins/attack-tasks/attack-tasks.js"],
+      "cssUrls": []
+    },
+    {
+      "id": "abeamer.chart-tasks",
+      "uuid": "73631f28-df71-4b4d-88e1-c99a858e0fd3",
+      "jsUrls": ["plugins/chart-tasks/chart-tasks.js"],
+      "cssUrls": []
+    },
+    {
+      "id": "abeamer.color-functions",
+      "uuid": "ce739c9f-13ba-4742-b1c3-dec56624be7d",
+      "jsUrls": ["plugins/color-functions/color-functions.js"],
+      "cssUrls": []
+    },
+    {
+      "id": "abeamer.statistic-functions",
+      "uuid": "65d49e17-e471-4f91-9643-8c6f13ec8d79",
+      "jsUrls": ["plugins/statistic-functions/statistic-functions.js"],
+      "cssUrls": []
+    },
+    {
+      "id": "abeamer.datetime-functions",
+      "uuid": "782cbaf4-1f1e-426c-bfbd-89c2f6ab4bbb",
+      "jsUrls": ["plugins/datetime-functions/datetime-functions.js"],
+      "cssUrls": []
+    },
+    {
+      "id": "abeamer.core-functions",
+      "uuid": "3e5d5813-348a-4eb1-a8b5-9c87c3988923",
+      "jsUrls": ["plugins/core-functions/core-functions.js"],
+      "cssUrls": []
+    },
+    {
+      "id": "abeamer.core-oscillators",
+      "uuid": "bb845fdf-7493-4000-8b04-6ec2a386ea21",
+      "jsUrls": ["plugins/core-oscillators/core-oscillators.js"],
+      "cssUrls": []
+    },
+    {
+      "id": "abeamer.core-paths",
+      "uuid": "1f43711e-d3e7-49bb-a26f-156f05597682",
+      "jsUrls": ["plugins/core-paths/core-paths.js"],
+      "cssUrls": []
+    },
+    {
+      "id": "abeamer.core-transitions",
+      "uuid": "b948c9cc-60e7-4106-bb88-f038b6fa9cf4",
+      "jsUrls": ["plugins/core-transitions/core-transitions.js"],
+      "cssUrls": []
+    }
+  ]
 }

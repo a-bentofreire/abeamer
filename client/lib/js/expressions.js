@@ -651,6 +651,10 @@ var ABeamer;
      *     - if it's an array, it will exec the `func` on each index, and set output to an array.
      *     - if it's 1 numerical parameter, it will execute the `func` and set output a number.
      *
+     * - `paramCount=undefined; arrayLength=undefined;`
+     *    - it calls the `func` with an array, the result value type
+     *    is the same as the one returned by the `func`.
+     *
      */
     function arrayInputHelper(params, req, paramCount, arrayLength, func) {
         var inpArray;
@@ -666,6 +670,7 @@ var ABeamer;
                 });
                 req.res.paType = 3 /* Array */;
                 req.res.arrayValue = inpArray;
+                return;
             }
         }
         else {
@@ -682,7 +687,17 @@ var ABeamer;
             if (paramCount === 1) {
                 req.res.paType = 1 /* Number */;
                 req.res.numValue = func(inpArray[0]);
+                return;
             }
+        }
+        var resValue = func(inpArray);
+        if (typeof resValue === 'number') {
+            req.res.paType = 1 /* Number */;
+            req.res.numValue = resValue;
+        }
+        else {
+            req.res.paType = 3 /* Array */;
+            req.res.arrayValue = resValue;
         }
     }
     ABeamer.arrayInputHelper = arrayInputHelper;

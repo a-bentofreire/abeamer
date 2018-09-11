@@ -865,6 +865,10 @@ namespace ABeamer {
    *     - if it's an array, it will exec the `func` on each index, and set output to an array.
    *     - if it's 1 numerical parameter, it will execute the `func` and set output a number.
    *
+   * - `paramCount=undefined; arrayLength=undefined;`
+   *    - it calls the `func` with an array, the result value type 
+   *    is the same as the one returned by the `func`.
+   *
    */
   export function arrayInputHelper(params: ExprFuncParams,
     req: ExFuncReq,
@@ -886,8 +890,8 @@ namespace ABeamer {
         });
         req.res.paType = ExFuncParamType.Array;
         req.res.arrayValue = inpArray;
+        return;
       }
-
     } else {
       // if the input is a list of numerical parameters
       if (paramCount >= 0 && params.length !== paramCount) {
@@ -905,7 +909,17 @@ namespace ABeamer {
       if (paramCount === 1) {
         req.res.paType = ExFuncParamType.Number;
         req.res.numValue = func(inpArray[0]);
+        return;
       }
+    }
+
+    const resValue = func(inpArray);
+    if (typeof resValue === 'number') {
+      req.res.paType = ExFuncParamType.Number;
+      req.res.numValue = resValue;
+    } else {
+      req.res.paType = ExFuncParamType.Array;
+      req.res.arrayValue = resValue;
     }
   }
 

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add support for arrays in the 1 parameter numerical functions.
   > With this addition, those functions can process individual elements inside an array,
   > and set the result to an array.
+- Add new `statistic-functions` plugin with 8 fundamental functions.
 
 
 ## [1.5.0] -
