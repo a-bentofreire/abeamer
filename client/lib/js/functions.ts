@@ -62,12 +62,21 @@
  * parameters to return.
  * This function doesn't supports [lazy evaluation](https://en.wikipedia.org/wiki/Lazy_evaluation).
  *
+ * - `get` - returns the numerical N-value of a 0-base array.
+ *
+ * - `slice` - returns a subarray starting from `start` to `end-1` of a 0-base array.
+ *
  * ## Examples
  *
  * @example = substr('ABeamer', 4, 4)
  * @example = round(12.4)
+ * @example = get([10,30,15],1)
+ * it returns `30`
+ * @example = slice([10,30,15,40],1, 3)
+ * it returns `[30, 15]`
  *
  * ## Arrays
+ *
  * Since ABeamer 1.6 that single numerical argument functions also support arrays.
  * The operation is perform for each element, and it returns an array.
  * The array functions can be composed.
@@ -278,5 +287,30 @@ namespace ABeamer {
     req.res.paType = res.paType;
     req.res.sValue = res.sValue;
     req.res.numValue = res.numValue;
+  };
+
+
+  _exFunctions['get'] = (params: ExprFuncParams, req?: ExFuncReq) => {
+    req.checkParams(req, 2, [ExFuncParamType.Array, ExFuncParamType.Number]);
+    const index = Math.round(params[1].numValue);
+    const arr = params[0].arrayValue;
+    if (index < 0 || index >= arr.length) {
+      throwErr('Invalid indexing');
+    }
+    req.res.paType = ExFuncParamType.Number;
+    req.res.numValue = arr[index];
+  };
+
+
+  _exFunctions['slice'] = (params: ExprFuncParams, req?: ExFuncReq) => {
+    req.checkParams(req, 3, [ExFuncParamType.Array, ExFuncParamType.Number, ExFuncParamType.Number]);
+    const start = Math.round(params[1].numValue);
+    const end = Math.round(params[2].numValue);
+    const arr = params[0].arrayValue;
+    if (start < 0 || start >= arr.length || end < 0 || end >= arr.length) {
+      throwErr('Invalid indexing');
+    }
+    req.res.paType = ExFuncParamType.Array;
+    req.res.arrayValue = arr.slice(start, end);
   };
 }
