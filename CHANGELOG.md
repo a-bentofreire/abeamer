@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [1.5.0] -
+### Added
+- Add support for arrays in the 1 parameter numerical functions.
+  > With this addition, those functions can process individual elements inside an array,
+  > and set the result to an array.
+
+
+## [1.5.0] -
 ### Changed
 - (DEV) Port documents build to mkdocs 1.0.1.
 - Improve the gallery example descriptions.

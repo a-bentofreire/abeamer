@@ -640,6 +640,53 @@ var ABeamer;
         }
     }
     // ------------------------------------------------------------------------
+    //                               Function Tools
+    // ------------------------------------------------------------------------
+    /**
+     * Provides services for functions where the input can be N numerical parameters,
+     * or an array of numerical values.
+     *
+     * Supported cases:
+     * - `paramCount=1; arrayLength=undefined;`
+     *     - if it's an array, it will exec the `func` on each index, and set output to an array.
+     *     - if it's 1 numerical parameter, it will execute the `func` and set output a number.
+     *
+     */
+    function arrayInputHelper(params, req, paramCount, arrayLength, func) {
+        var inpArray;
+        if (params.length === 1 && params[0].paType === 3 /* Array */) {
+            // if the input value is a numerical array
+            inpArray = params[0].arrayValue;
+            if (arrayLength && inpArray.length !== arrayLength) {
+                err(req, ABeamer.i8nMsg(ABeamer.Msgs.WrongNrParams, { p: req.token.sValue }));
+            }
+            if (paramCount !== arrayLength) {
+                inpArray.forEach(function (el, index) {
+                    inpArray[index] = func(el);
+                });
+                req.res.paType = 3 /* Array */;
+                req.res.arrayValue = inpArray;
+            }
+        }
+        else {
+            // if the input is a list of numerical parameters
+            if (paramCount >= 0 && params.length !== paramCount) {
+                err(req, ABeamer.i8nMsg(ABeamer.Msgs.WrongNrParams, { p: req.token.sValue }));
+            }
+            inpArray = params.map(function (param, index) {
+                if (param.paType !== 1 /* Number */) {
+                    err(req, ABeamer.i8nMsg(ABeamer.Msgs.WrongParamType, { p: req.token.sValue, i: index }));
+                }
+                return param.numValue;
+            });
+            if (paramCount === 1) {
+                req.res.paType = 1 /* Number */;
+                req.res.numValue = func(inpArray[0]);
+            }
+        }
+    }
+    ABeamer.arrayInputHelper = arrayInputHelper;
+    // ------------------------------------------------------------------------
     //                               Tools
     // ------------------------------------------------------------------------
     /** Compares operators priority. */

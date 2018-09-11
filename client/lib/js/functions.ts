@@ -67,6 +67,13 @@
  * @example = substr('ABeamer', 4, 4)
  * @example = round(12.4)
  *
+ * ## Arrays
+ * Since ABeamer 1.6 that single numerical argument functions also support arrays.
+ * The operation is perform for each element, and it returns an array.
+ * The array functions can be composed.
+ *
+ * @example = round(sqrt([12.4, 75, 10]))
+ *
  */
 namespace ABeamer {
 
@@ -129,9 +136,7 @@ namespace ABeamer {
   function _math1ParamFunc(params: ExprFuncParams, req: ExFuncReq,
     f: (param1: number) => number) {
 
-    req.checkParams(req, 1, [ExFuncParamType.Number]);
-    req.res.paType = ExFuncParamType.Number;
-    req.res.numValue = f(params[0].numValue);
+    arrayInputHelper(params, req, 1, undefined, f);
   }
 
 

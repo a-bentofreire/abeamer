@@ -852,6 +852,62 @@ namespace ABeamer {
       });
     }
   }
+  // ------------------------------------------------------------------------
+  //                               Function Tools
+  // ------------------------------------------------------------------------
+
+  /**
+   * Provides services for functions where the input can be N numerical parameters,
+   * or an array of numerical values.
+   *
+   * Supported cases:
+   * - `paramCount=1; arrayLength=undefined;`
+   *     - if it's an array, it will exec the `func` on each index, and set output to an array.
+   *     - if it's 1 numerical parameter, it will execute the `func` and set output a number.
+   *
+   */
+  export function arrayInputHelper(params: ExprFuncParams,
+    req: ExFuncReq,
+    paramCount: uint | undefined, arrayLength: uint | undefined,
+    func: (inpArray: any) => any): void {
+
+    let inpArray: number[];
+
+    if (params.length === 1 && params[0].paType === ExFuncParamType.Array) {
+      // if the input value is a numerical array
+      inpArray = params[0].arrayValue;
+      if (arrayLength && inpArray.length !== arrayLength) {
+        err(req as ParseParams, i8nMsg(Msgs.WrongNrParams, { p: (req as ParseParams).token.sValue }));
+      }
+
+      if (paramCount !== arrayLength) {
+        inpArray.forEach((el, index) => {
+          inpArray[index] = func(el);
+        });
+        req.res.paType = ExFuncParamType.Array;
+        req.res.arrayValue = inpArray;
+      }
+
+    } else {
+      // if the input is a list of numerical parameters
+      if (paramCount >= 0 && params.length !== paramCount) {
+        err(req as ParseParams, i8nMsg(Msgs.WrongNrParams,
+          { p: (req as ParseParams).token.sValue }));
+      }
+      inpArray = params.map((param, index) => {
+        if (param.paType !== ExFuncParamType.Number) {
+          err(req as ParseParams, i8nMsg(Msgs.WrongParamType,
+            { p: (req as ParseParams).token.sValue, i: index }));
+        }
+        return param.numValue;
+      });
+
+      if (paramCount === 1) {
+        req.res.paType = ExFuncParamType.Number;
+        req.res.numValue = func(inpArray[0]);
+      }
+    }
+  }
 
   // ------------------------------------------------------------------------
   //                               Tools

@@ -277,6 +277,11 @@ declare namespace ABeamer {
 
   export function isExpr(text: string): boolean;
 
+  export function arrayInputHelper(params: ExprFuncParams,
+    req: ExFuncReq,
+    paramCount: uint | undefined, arrayLength: uint | undefined,
+    func: (inpArray: any) => any): void;
+
   export function calcExpr(expr: string, args: ABeamerArgs): ExprResult;
 
   export function ifExprCalc(expr: string,
