@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > With this change, `_vars` will no longer be used by any plugin, 
   > allowing to remove `export` from `_vars`.
 
+### Removed
+- Remove `_vars` from external access.
+ > This won't be considered a breaking change, since the use of `_vars` was
+ > already discouraged from being used.
+
 
 ## [1.5.0] -
 ### Changed

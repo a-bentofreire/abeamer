@@ -53,7 +53,7 @@ var ABeamer;
             this._elementAdapters = scene.getElementAdapters(selector);
         }
         _pEls.prototype.getSelector = function () {
-            return ABeamer._vars.isTeleporting ? this._selector : this;
+            return _vars.isTeleporting ? this._selector : this;
         };
         /**
          * Wrapper for `scene.addAnimation` with `visible = false`,

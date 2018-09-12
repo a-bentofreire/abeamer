@@ -216,7 +216,6 @@ var Gulp;
             var singleLibFile = mode.path + "/abeamer" + mode.suffix + ".ts";
             build_single_lib_file_js_1.BuildSingleLibFile.build(libModules, cfg.paths.JS_PATH, "" + mode.path, singleLibFile, 'gulp `build-release-latest`', [
                 'Story',
-                'vars',
             ], mode.isDebug);
         });
     });

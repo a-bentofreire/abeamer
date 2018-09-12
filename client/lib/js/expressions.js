@@ -81,7 +81,7 @@ var ABeamer;
      * Code outside the core library should access this const.
      * It should use instead `getVars()`.
      */
-    ABeamer._vars = {
+    var _vars = {
         e: Math.E,
         pi: Math.PI,
         deg2rad: Math.PI / 180,
@@ -95,7 +95,7 @@ var ABeamer;
      * Use `args.vars` instead.
      */
     function getVars() {
-        return ABeamer._vars;
+        return _vars;
     }
     ABeamer.getVars = getVars;
     /**

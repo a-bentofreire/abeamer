@@ -314,8 +314,6 @@ namespace Gulp {
         `${mode.path}`, singleLibFile,
         'gulp `build-release-latest`', [
           'Story', // story must always be exported
-          'vars', // @TODO: chart-tasks uses _vars. port the code to
-                  // access a variable without '_'
         ], mode.isDebug);
     });
   });

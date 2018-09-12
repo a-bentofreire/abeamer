@@ -269,6 +269,8 @@ declare namespace ABeamer {
   export type ExprString = string;
 
 
+  export function getVars(): Vars;
+
   export function isCharacter(ch: string | undefined, pos: uint = 0): boolean;
 
   export function isDigit(ch: string): boolean;

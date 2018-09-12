@@ -110,7 +110,7 @@ var ABeamer;
         ABeamer._easingFunctions[name] = function (t) { return $.easing[name](0, t, 0, 1, 1); };
     });
     function _expressionEasing(t, params, args) {
-        ABeamer._vars.t = t;
+        _vars.t = t;
         return parseFloat(ABeamer.calcExpr(params._expression, args));
     }
     ABeamer._expressionEasing = _expressionEasing;
