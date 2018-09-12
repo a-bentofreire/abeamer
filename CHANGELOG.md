@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  > This addition solves slimerjs `--config` option conflict with abeamer `--config`.
  - Add support for default `INFO_PER_SERVER`.
  > This allows to add more servers without changing `INFO_PER_SERVER`.
+ - Add initial support for `slimerjs` server.
 
 ### Changed
 - Use `getVars` function instead of `_vars`.

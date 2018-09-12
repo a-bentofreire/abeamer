@@ -96,9 +96,14 @@ var http_server_ex_js_1 = require("../shared/vendor/http-server-ex.js");
  * abeamer render --url http://localhost:9000/foo/index.html --teleport
  * ```
  * ---------------------
- * - Same as the first render, but with verbose logging.
+ * - Same as the first render command, but with verbose logging.
  * ```shell
  * abeamer render --ll 3 --dp foo
+ * ```
+ * ---------------------
+ * - Same as the first render command, but uses slimerjs as the server.
+ * ```shell
+ * abeamer render --server slimerjs foo
  * ```
  * ---------------------
  * - Create an animated gif from the previous generated image sequence on `foo/story-frames/story.gif`.
@@ -485,6 +490,12 @@ var Cli;
         // if use hasn't provided the folder name nor config file
         if (!cmdParam && !argOpts.config.value && !argOpts.url.value) {
             outArgs.push('.');
+        }
+        // adding this suffix, it solves the conflict of slimerjs `--config`.
+        // the `opt-parser.ts` will remove this extra suffix during parsing the name
+        var configArgIndex = outArgs.indexOf('--config');
+        if (configArgIndex !== -1) {
+            outArgs[configArgIndex] = outArgs[configArgIndex] + '__2';
         }
         outArgs.splice(0, 0, fsix_js_1.fsix.toPosixSlash(__dirname) + "/../server/server-agent-" + serverName + ".js");
         var cmdLine = rel_consts_js_1.RelConsts.NODE_SERVERS.indexOf(serverName) === -1

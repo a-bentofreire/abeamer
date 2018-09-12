@@ -46,6 +46,7 @@
     "@types/node": "^9.6.31",
     "@types/puppeteer": "^1.6.3",
     "@types/rimraf": "^2.0.2",
+    "@types/slimerjs": "^0.10.2",
     "chai": "^4.1.2",
     "font-awesome": "^4.7.0",
     "globule": "^1.2.1",
@@ -64,7 +65,6 @@
     "merge-stream": "^1.0.1",
     "mocha": "^5.2.0",
     "mocha-image-compare": "^1.0.3",
-    "phantom": "^4.0.12",
     "puppeteer": "^1.8.0",
     "rimraf": "^2.6.2",
     "typescript": "^2.9.2"
