@@ -84,8 +84,8 @@ namespace Server {
   const server = new (PhantomjsServerAgent as any)('phantomjs',
     phantomSystem.args.slice(),
     phantomSystem.os.name, phantomFs.workingDirectory,
-    phantomFs.isDirectory,
     phantomFs.exists,
+    phantomFs.isDirectory,
     phantomFs.remove,
     phantomFs.makeTree,
 
@@ -104,7 +104,7 @@ namespace Server {
 
     (path1: string, path2: string) => {
       path1 = path1.replace(/\/$/, '');
-      return path1 + path2;
+      return path1 + '/' + path2;
     }) as PhantomjsServerAgent;
   server.start();
 }

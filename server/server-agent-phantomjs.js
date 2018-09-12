@@ -77,7 +77,7 @@ var Server;
         };
         return PhantomjsServerAgent;
     }(baseServerAgent.BaseServer));
-    var server = new PhantomjsServerAgent('phantomjs', phantomSystem.args.slice(), phantomSystem.os.name, phantomFs.workingDirectory, phantomFs.isDirectory, phantomFs.exists, phantomFs.remove, phantomFs.makeTree, function (fileName) {
+    var server = new PhantomjsServerAgent('phantomjs', phantomSystem.args.slice(), phantomSystem.os.name, phantomFs.workingDirectory, phantomFs.exists, phantomFs.isDirectory, phantomFs.remove, phantomFs.makeTree, function (fileName) {
         var fileHandle = phantomFs.open(fileName, { mode: 'r', charset: 'utf-8' });
         var data = fileHandle.read();
         fileHandle.close();
@@ -88,7 +88,7 @@ var Server;
         fileHandle.close();
     }, function (path1, path2) {
         path1 = path1.replace(/\/$/, '');
-        return path1 + path2;
+        return path1 + '/' + path2;
     });
     server.start();
 })(Server || (Server = {}));
