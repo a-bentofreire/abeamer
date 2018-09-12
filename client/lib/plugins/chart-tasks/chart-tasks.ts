@@ -443,9 +443,7 @@ namespace ABeamer {
   });
 
 
-  // @TODO: port the code to access a variable without '_' instead of `_vars`
-  // then remove it from `gulp bs:build-single-ts`
-  const _defValues = _vars['chart'] = {
+  const _defValues = getVars()['chart'] = {
     labelsX: {
       fontFamily: 'sans-serif',
       fontColor: 'black',

@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add new `format-functions` plugin to convert numbers to string according to locale.
 - Add `getVars` global function to allow plugins to add init vars.
 
+### Changed
+- Use `getVars` function instead of `_vars`.
+  > With this change, `_vars` will no longer be used by any plugin, 
+  > allowing to remove `export` from `_vars`.
+
 
 ## [1.5.0] -
 ### Changed
