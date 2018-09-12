@@ -49,7 +49,7 @@ namespace ABeamer {
 
 
   const INFO_PER_SERVER: InfoPerServer = {
-    phantomjs: {
+    _default: {
       map: {},
       features: {
         hasLogging: true,
@@ -69,7 +69,7 @@ namespace ABeamer {
    * Used by `Story.Create` method to assign the server property mapping.
    */
   export function _setServer(serverName: string): ServerFeatures {
-    const serverInfo = INFO_PER_SERVER[serverName];
+    const serverInfo = INFO_PER_SERVER[serverName] || INFO_PER_SERVER._default;
     _addServerDOMPropMaps(serverInfo.map);
     return serverInfo.features;
   }

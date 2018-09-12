@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `getVars` global function to allow plugins to add init vars.
 - Add support for cli options ending with `__\d+`.
  > This addition solves slimerjs `--config` option conflict with abeamer `--config`.
+ - Add support for default `INFO_PER_SERVER`.
+ > This allows to add more servers without changing `INFO_PER_SERVER`.
 
 ### Changed
 - Use `getVars` function instead of `_vars`.
