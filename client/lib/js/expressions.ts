@@ -150,13 +150,29 @@ namespace ABeamer {
   //                               Implementation
   // ------------------------------------------------------------------------
 
-  /** Initializes the default global expression variables */
+  /**
+   * Initializes the default global expression variables.
+   * Code outside the core library should access this const.
+   * It should use instead `getVars()`.
+   */
   export const _vars: Vars = {
     e: Math.E,
     pi: Math.PI,
     deg2rad: Math.PI / 180,
     rad2deg: 180 / Math.PI,
   };
+
+
+  /**
+   * Returns the global expression variables.
+   * Plugins who want to add init variables, should use this function.
+   * The usage of _vars is discourage to be used outside the scope adding init vars 
+   * for plugins.
+   * Use `args.vars` instead.
+   */
+  export function getVars(): Vars {
+    return _vars;
+  }
 
 
   /**
@@ -866,7 +882,7 @@ namespace ABeamer {
    *     - if it's 1 numerical parameter, it will execute the `func` and set output a number.
    *
    * - `paramCount=undefined; arrayLength=undefined;`
-   *    - it calls the `func` with an array, the result value type 
+   *    - it calls the `func` with an array, the result value type
    *    is the same as the one returned by the `func`.
    *
    */

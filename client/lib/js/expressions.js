@@ -76,13 +76,28 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Implementation
     // ------------------------------------------------------------------------
-    /** Initializes the default global expression variables */
+    /**
+     * Initializes the default global expression variables.
+     * Code outside the core library should access this const.
+     * It should use instead `getVars()`.
+     */
     ABeamer._vars = {
         e: Math.E,
         pi: Math.PI,
         deg2rad: Math.PI / 180,
         rad2deg: 180 / Math.PI,
     };
+    /**
+     * Returns the global expression variables.
+     * Plugins who want to add init variables, should use this function.
+     * The usage of _vars is discourage to be used outside the scope adding init vars
+     * for plugins.
+     * Use `args.vars` instead.
+     */
+    function getVars() {
+        return ABeamer._vars;
+    }
+    ABeamer.getVars = getVars;
     /**
      * Defines the code range for characters.
      * By default only includes the latin alphabet

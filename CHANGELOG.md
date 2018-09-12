@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.5.0] -
+## [1.6.0] -
 ### Added
 - Add support for arrays in the 1 parameter numerical functions.
   > With this addition, those functions can process individual elements inside an array,
@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add new `statistic-functions` plugin with 8 fundamental functions.
 - Add `get` and `slice` functions for array data extraction to `functions`.
 - Add new `format-functions` plugin to convert numbers to string according to locale.
+- Add `getVars` global function to allow plugins to add init vars.
+
 
 ## [1.5.0] -
 ### Changed
