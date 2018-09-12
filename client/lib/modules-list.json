@@ -15,6 +15,7 @@
         "chart-tasks",
         "color-functions",
         "statistic-functions",
+        "format-functions",
         "datetime-functions"
     ],
 

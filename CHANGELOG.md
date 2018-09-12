@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > and set the result to an array.
 - Add new `statistic-functions` plugin with 8 fundamental functions.
 - Add `get` and `slice` functions for array data extraction to `functions`.
-
+- Add new `format-functions` plugin to convert numbers to string according to locale.
 
 ## [1.5.0] -
 ### Changed

@@ -43,6 +43,12 @@
       "cssUrls": []
     },
     {
+      "id": "abeamer.format-functions",
+      "uuid": "c386e3e7-9dec-48a3-996d-ab55e591cd5d",
+      "jsUrls": ["plugins/format-functions/format-functions.js"],
+      "cssUrls": []
+    },
+    {
       "id": "abeamer.datetime-functions",
       "uuid": "782cbaf4-1f1e-426c-bfbd-89c2f6ab4bbb",
       "jsUrls": ["plugins/datetime-functions/datetime-functions.js"],
