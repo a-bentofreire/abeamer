@@ -203,12 +203,12 @@ var ABeamer;
         };
         _PropInterpolator.prototype.interpolate = function (t, story, isVerbose) {
             var args = story._args;
-            _vars.v0 = this.numStartValue;
-            _vars.v1 = this.numEndValue;
-            _vars.vd = this.variation;
+            ABeamer._vars.v0 = this.numStartValue;
+            ABeamer._vars.v1 = this.numEndValue;
+            ABeamer._vars.vd = this.variation;
             // processes easing
             var tAfterEasing = this.easing ? this.easing.func(t, this.easing.params, args) : t;
-            _vars.vot = tAfterEasing;
+            ABeamer._vars.vot = tAfterEasing;
             // processes oscillator
             var tAfterOscillator = this.oscillator
                 ? this.oscillator.func(tAfterEasing, this.oscillator.params, args) : tAfterEasing;
@@ -229,7 +229,7 @@ var ABeamer;
             var values;
             var dimCount = 1;
             if (this.path) {
-                _vars.vpt = v;
+                ABeamer._vars.vpt = v;
                 values = this.path.func(v, this.path.params, ABeamer.FS_RUN, args);
                 dimCount = values.length;
                 // #debug-start
@@ -259,7 +259,7 @@ var ABeamer;
                         value = (this.roundFunc ? v : Math.round(v)).toString() + 'px';
                         break;
                     case ABeamer.PT_VALUE_TEXT_EXPR:
-                        _vars.t = value;
+                        ABeamer._vars.t = value;
                         value = ABeamer.calcExpr(this.animProp.valueText, args).toString();
                         break;
                     case ABeamer.PT_VALUE_TEXT_LIST:

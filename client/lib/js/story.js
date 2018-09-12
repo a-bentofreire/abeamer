@@ -78,7 +78,7 @@ var ABeamer;
             this._args = {
                 renderNr: 0,
                 stage: ABeamer.AS_UNKNOWN,
-                vars: _vars,
+                vars: ABeamer._vars,
             };
             /**
              * Default unit used when input time values are used in numeric forms.
@@ -143,7 +143,7 @@ var ABeamer;
             this.storyAdapter = createParams.storyAdapter || new ABeamer._DOMSceneAdapter('.abeamer-story');
             cfg.fps = cfg.fps || this.storyAdapter.getProp('fps', args);
             ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(cfg.fps), ABeamer.Msgs.MustNatPositive, { p: 'fps' });
-            _vars.fps = cfg.fps;
+            ABeamer._vars.fps = cfg.fps;
             function setDim(srvPropPrefix, cfgValue, propName) {
                 var res = cfgValue || self.storyAdapter.getProp(propName, args);
                 if (urlParams) {
@@ -158,9 +158,9 @@ var ABeamer;
                 return res;
             }
             this._width = cfg.width = setDim(ABeamer._SRV_CNT.WIDTH_SUFFIX, cfg.width, 'frame-width');
-            _vars.frameWidth = cfg.width;
+            ABeamer._vars.frameWidth = cfg.width;
             this._height = cfg.height = setDim(ABeamer._SRV_CNT.HEIGHT_SUFFIX, cfg.height, 'frame-height');
-            _vars.frameHeight = cfg.height;
+            ABeamer._vars.frameHeight = cfg.height;
             // setting clip-path is used because of slide transitions that display outside
             // the story boundaries
             this.storyAdapter.setProp('clip-path', "polygon(0 0, 0 " + cfg.height + "px, " + cfg.width + "px " + cfg.height + "px, " + cfg.width + "px 0px)", args);

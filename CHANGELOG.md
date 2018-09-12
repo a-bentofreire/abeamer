@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > allowing to remove `export` from `_vars`.
 
 ### Removed
-- Remove `_vars` from external access.
+- Remove `_vars` from release version.
  > This won't be considered a breaking change, since the use of `_vars` was
  > already discouraged from being used.
 

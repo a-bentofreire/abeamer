@@ -93,7 +93,7 @@ var ABeamer;
     }
     ABeamer._pathNumToStr = _pathNumToStr;
     function _expressionPath(t, params, _stage, args) {
-        _vars.t = t;
+        ABeamer._vars.t = t;
         var v = ABeamer.calcExpr(params._expression, args);
         return Array.isArray(v) ? v : [parseFloat(v)];
     }

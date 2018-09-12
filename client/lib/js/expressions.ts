@@ -155,7 +155,7 @@ namespace ABeamer {
    * Code outside the core library should access this const.
    * It should use instead `getVars()`.
    */
-  const _vars: Vars = {
+  export const _vars: Vars = {
     e: Math.E,
     pi: Math.PI,
     deg2rad: Math.PI / 180,
@@ -166,7 +166,7 @@ namespace ABeamer {
   /**
    * Returns the global expression variables.
    * Plugins who want to add init variables, should use this function.
-   * The usage of _vars is discourage to be used outside the scope adding init vars 
+   * The usage of _vars is discourage to be used outside the scope adding init vars
    * for plugins.
    * Use `args.vars` instead.
    */

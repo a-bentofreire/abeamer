@@ -375,7 +375,7 @@ var ABeamer;
                     } // bypass missing selectors
                     var propInterpolators = ai.propInterpolators;
                     var elementAdapters = ai.elAdapters;
-                    _vars.elCount = elementAdapters.length;
+                    ABeamer._vars.elCount = elementAdapters.length;
                     if (animeAdvanceValue_1) {
                         ai.positionFrame += animeAdvanceValue_1;
                     }
@@ -383,7 +383,7 @@ var ABeamer;
                         advanceInTheEnd = ai.advance !== false;
                     }
                     elementAdapters.forEach(function (elementAdpt, elIndex) {
-                        _vars.elIndex = elIndex;
+                        ABeamer._vars.elIndex = elIndex;
                         var wkTasks = wkAnimesTasks_1[animeIndex];
                         if (wkTasks) {
                             ABeamer._runTasks(wkTasks, anime, animeIndex, args);
