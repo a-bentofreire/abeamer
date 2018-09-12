@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `get` and `slice` functions for array data extraction to `functions`.
 - Add new `format-functions` plugin to convert numbers to string according to locale.
 - Add `getVars` global function to allow plugins to add init vars.
+- Add support for cli options ending with `__\d+`.
+ > This addition solves slimerjs `--config` option conflict with abeamer `--config`.
 
 ### Changed
 - Use `getVars` function instead of `_vars`.

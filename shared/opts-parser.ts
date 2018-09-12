@@ -185,7 +185,9 @@ export namespace OptsParser {
       if (isOption(name)) {
         const optName = name.substr(2)
           // converts part1-part2-part3 => part1Part2Part3
-          .replace(/-(\w)/g, (_all, firstLetter: string) => firstLetter.toUpperCase());
+          .replace(/-(\w)/g, (_all, firstLetter: string) => firstLetter.toUpperCase())
+          // removes the suffix to solve the `--config` option conflict on slimerjs
+          .replace(/__\d+$/, '');
 
         const opt = argOpts[optName];
         if (opt === undefined) {
@@ -273,3 +275,4 @@ export namespace OptsParser {
       }).join('\n'));
   }
 }
+ 

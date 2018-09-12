@@ -109,7 +109,9 @@ var OptsParser;
             if (OptsParser.isOption(name_1)) {
                 var optName = name_1.substr(2)
                     // converts part1-part2-part3 => part1Part2Part3
-                    .replace(/-(\w)/g, function (_all, firstLetter) { return firstLetter.toUpperCase(); });
+                    .replace(/-(\w)/g, function (_all, firstLetter) { return firstLetter.toUpperCase(); })
+                    // removes the suffix to solve the `--config` option conflict on slimerjs
+                    .replace(/__\d+$/, '');
                 var opt = OptsParser.argOpts[optName];
                 if (opt === undefined) {
                     throw "Unknown option " + optName;
