@@ -25,7 +25,6 @@ and to allow reverse bypass the pipeline to allow to repeat an animation.
 
 ### Builders
 - Add abeamer library and plugins to each gallery/latest.
-- Port the code of each plugin that uses ids starting with `_` since these aren't exported.
 
 ### Documentation
 - Fix the JSDocs parser bug in the documentation generator.
@@ -86,9 +85,9 @@ as `t` iterator increases.
 - Implement Color band attack task.
 
 ### Functions
-- Implement Time functions plugin.
-- Implement Formatter functions plugin.
-- Add more functions to Color plugin.
+- Add more functions to `datetime-functions` plugin.
+- Add more functions to `format-functions` plugin.
+- Add more functions to `color-functions` plugin.
 
 ### Text tasks
 - Improve the typewriter to allow to add and remove text.

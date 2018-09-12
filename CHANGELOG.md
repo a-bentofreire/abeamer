@@ -24,6 +24,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  > This won't be considered a breaking change, since the use of `_vars` was
  > already discouraged from being used.
 
+### Changed
+- Update ROADMAP.
+
 
 ## [1.5.0] -
 ### Changed
