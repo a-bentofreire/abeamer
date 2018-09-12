@@ -111,6 +111,11 @@ import { HttpServerEx } from "../shared/vendor/http-server-ex.js";
  * abeamer render --server slimerjs foo
  * ```
  * ---------------------
+ * - Same as the previous render command, but sets the server executable.
+ * ```shell
+ * abeamer render --server slimerjs --server-exec ./slimerjs-path/src/slimerjs-node foo
+ * ```
+ * ---------------------
  * - Create an animated gif from the previous generated image sequence on `foo/story-frames/story.gif`.
  *  Requires that imagemagick `convert` to be on the search path, or set `IM_CONVERT_BIN=<absolute-path-to-executable>`.
  * ```shell
@@ -651,8 +656,8 @@ To modify the fps, edit the [js/main.ts] file.
 
     outArgs.splice(0, 0, `${fsix.toPosixSlash(__dirname)}/../server/server-agent-${serverName}.js`);
 
-    const cmdLine = RelConsts.NODE_SERVERS.indexOf(serverName) === -1
-      ? serverName : 'node';
+    const cmdLine = argOpts.serverExec.value as string ||
+      (RelConsts.NODE_SERVERS.indexOf(serverName) === -1 ? serverName : 'node');
 
     runSpawn(cmdLine, outArgs, () => {
       if (logLevel > Consts.LL_SILENT) { console.log(`Server finished`); }

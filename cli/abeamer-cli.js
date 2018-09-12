@@ -106,6 +106,11 @@ var http_server_ex_js_1 = require("../shared/vendor/http-server-ex.js");
  * abeamer render --server slimerjs foo
  * ```
  * ---------------------
+ * - Same as the previous render command, but sets the server executable.
+ * ```shell
+ * abeamer render --server slimerjs --server-exec ./slimerjs-path/src/slimerjs-node foo
+ * ```
+ * ---------------------
  * - Create an animated gif from the previous generated image sequence on `foo/story-frames/story.gif`.
  *  Requires that imagemagick `convert` to be on the search path, or set `IM_CONVERT_BIN=<absolute-path-to-executable>`.
  * ```shell
@@ -498,8 +503,8 @@ var Cli;
             outArgs[configArgIndex] = outArgs[configArgIndex] + '__2';
         }
         outArgs.splice(0, 0, fsix_js_1.fsix.toPosixSlash(__dirname) + "/../server/server-agent-" + serverName + ".js");
-        var cmdLine = rel_consts_js_1.RelConsts.NODE_SERVERS.indexOf(serverName) === -1
-            ? serverName : 'node';
+        var cmdLine = argOpts.serverExec.value ||
+            (rel_consts_js_1.RelConsts.NODE_SERVERS.indexOf(serverName) === -1 ? serverName : 'node');
         runSpawn(cmdLine, outArgs, function () {
             if (logLevel > consts_js_1.Consts.LL_SILENT) {
                 console.log("Server finished");

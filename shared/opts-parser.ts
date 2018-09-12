@@ -104,6 +104,11 @@ export namespace OptsParser {
         `name of the server. default is ${RelConsts.DEFAULT_SERVER}`,
     },
 
+    serverExec: {
+      param: 'string', desc:
+        `name of the server executable. default puppeteer=node. slimerjs=slimerjs`,
+    },
+
     fps: {
       param: 'int', desc:
         `overrides frames per second defined on project`,

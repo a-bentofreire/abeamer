@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Add support for default `INFO_PER_SERVER`.
  > This allows to add more servers without changing `INFO_PER_SERVER`.
  - Add initial support for `slimerjs` server.
+ - Add `--server-exec` option to command line.
 
 ### Changed
 - Use `getVars` function instead of `_vars`.
