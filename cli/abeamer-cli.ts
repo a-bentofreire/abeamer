@@ -119,33 +119,43 @@ import { HttpServerEx } from "../shared/vendor/http-server-ex.js";
  * - Create an animated gif from the previous generated image sequence on `foo/story-frames/story.gif`.
  *  Requires that imagemagick `convert` to be on the search path, or set `IM_CONVERT_BIN=<absolute-path-to-executable>`.
  * ```shell
- * abeamer gif foo/
+ * abeamer gif foo
  * ```
  * ---------------------
  * - Create an animated gif from the previous generated image sequence on `hello.gif`.
  * ```shell
- * abeamer gif foo/ --gif hello.gif
+ * abeamer gif foo --gif hello.gif
  * ```
  * ---------------------
  * - Create an animated gif without looping.
  * ```shell
- * abeamer gif foo/ --loop 1
+ * abeamer gif foo --loop 1
+ * ```
+ * ---------------------
+ * - Create an animated gif with a 25% scale frame size of the PNG sequence frame size.
+ * ```shell
+ * abeamer gif --gif-pre --scale 25% foo
  * ```
  * ---------------------
  * - Create a movie from the previous generated image sequence on `foo/story-frames/movie.mp4`.
  * Requires that `ffmpeg` to be on the search path, or set `FFMPEG_BIN=<absolute-path-to-executable>`.
  * ```shell
- * abeamer movie foo/
+ * abeamer movie foo
  * ```
  * ---------------------
  * - Create the movie `foo/story.webm`.
  * ```shell
- * abeamer movie foo/ --movie foo/story.webm
+ * abeamer movie foo --movie foo/story.webm
  * ```
  * ---------------------
  * - Create a movie from the previous generated image sequence using `foo/bkg-movie.mp4` as a background.
  * ```shell
  * abeamer movie foo/ --bkg-movie foo/bkg-movie.mp4
+ * ```
+ * ---------------------
+ * - Create the movie a 50% scale frame size of the PNG sequence frame size.
+ * ```shell
+ * abeamer movie foo --scale 50%
  * ```
  */
 namespace Cli {
@@ -719,6 +729,12 @@ To modify the fps, edit the [js/main.ts] file.
     const cmdLine = sysProcess.env['IM_CONVERT_BIN'] || 'convert';
 
     let args = ['-delay', `1x${report.fps}`];
+
+    const scale = OptsParser.computeScale(report.width, report.height);
+    if (scale) {
+      args.push('-scale', scale.join('x'));
+    }
+
     const loop = argOpts['loop'].value as string || '0';
     args.push('-loop', loop);
     if (toOptimize) {
@@ -759,11 +775,25 @@ To modify the fps, edit the [js/main.ts] file.
     const bkgMovieFileName = argOpts['bkgMovie'].value as string;
     const cmdLine = sysProcess.env['FFMPEG_BIN'] || 'ffmpeg';
 
-    let args = ['-r', report.fps.toString(), '-f', 'image2',
-      '-s', `${report.width}x${report.height}`,
+    const scale = OptsParser.computeScale(report.width, report.height);
+
+    let args = [
+      '-r', report.fps.toString(),
+      '-f', 'image2',
+    ];
+
+    if (!scale) {
+      args.push('-s', `${report.width}x${report.height}`);
+    }
+
+    args.push(
       '-i', report.framespattern,
       '-y', // overwrites automatically
-    ];
+    );
+
+    if (scale) {
+      args.push('-vf', `scale=${scale.join('x')}`);
+    }
 
     /* spell-checker: disable */
     if (bkgMovieFileName) {
@@ -781,6 +811,7 @@ To modify the fps, edit the [js/main.ts] file.
     if (codec) {
       args.push('-vcodec', codec);
     }
+
     args.push(movieFileName);
 
     if (argOpts['moviePre'].multipleValue) {

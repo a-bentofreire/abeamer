@@ -114,33 +114,43 @@ var http_server_ex_js_1 = require("../shared/vendor/http-server-ex.js");
  * - Create an animated gif from the previous generated image sequence on `foo/story-frames/story.gif`.
  *  Requires that imagemagick `convert` to be on the search path, or set `IM_CONVERT_BIN=<absolute-path-to-executable>`.
  * ```shell
- * abeamer gif foo/
+ * abeamer gif foo
  * ```
  * ---------------------
  * - Create an animated gif from the previous generated image sequence on `hello.gif`.
  * ```shell
- * abeamer gif foo/ --gif hello.gif
+ * abeamer gif foo --gif hello.gif
  * ```
  * ---------------------
  * - Create an animated gif without looping.
  * ```shell
- * abeamer gif foo/ --loop 1
+ * abeamer gif foo --loop 1
+ * ```
+ * ---------------------
+ * - Create an animated gif with a 25% scale frame size of the PNG sequence frame size.
+ * ```shell
+ * abeamer gif --gif-pre --scale 25% foo
  * ```
  * ---------------------
  * - Create a movie from the previous generated image sequence on `foo/story-frames/movie.mp4`.
  * Requires that `ffmpeg` to be on the search path, or set `FFMPEG_BIN=<absolute-path-to-executable>`.
  * ```shell
- * abeamer movie foo/
+ * abeamer movie foo
  * ```
  * ---------------------
  * - Create the movie `foo/story.webm`.
  * ```shell
- * abeamer movie foo/ --movie foo/story.webm
+ * abeamer movie foo --movie foo/story.webm
  * ```
  * ---------------------
  * - Create a movie from the previous generated image sequence using `foo/bkg-movie.mp4` as a background.
  * ```shell
  * abeamer movie foo/ --bkg-movie foo/bkg-movie.mp4
+ * ```
+ * ---------------------
+ * - Create the movie a 50% scale frame size of the PNG sequence frame size.
+ * ```shell
+ * abeamer movie foo --scale 50%
  * ```
  */
 var Cli;
@@ -546,6 +556,10 @@ var Cli;
         var toOptimize = true;
         var cmdLine = sysProcess.env['IM_CONVERT_BIN'] || 'convert';
         var args = ['-delay', "1x" + report.fps];
+        var scale = opts_parser_js_1.OptsParser.computeScale(report.width, report.height);
+        if (scale) {
+            args.push('-scale', scale.join('x'));
+        }
         var loop = argOpts['loop'].value || '0';
         args.push('-loop', loop);
         if (toOptimize) {
@@ -580,11 +594,18 @@ var Cli;
             || report.dirname + "/" + DEFAULT_MOVIE_NAME;
         var bkgMovieFileName = argOpts['bkgMovie'].value;
         var cmdLine = sysProcess.env['FFMPEG_BIN'] || 'ffmpeg';
-        var args = ['-r', report.fps.toString(), '-f', 'image2',
-            '-s', report.width + "x" + report.height,
-            '-i', report.framespattern,
-            '-y',
+        var scale = opts_parser_js_1.OptsParser.computeScale(report.width, report.height);
+        var args = [
+            '-r', report.fps.toString(),
+            '-f', 'image2',
         ];
+        if (!scale) {
+            args.push('-s', report.width + "x" + report.height);
+        }
+        args.push('-i', report.framespattern, '-y');
+        if (scale) {
+            args.push('-vf', "scale=" + scale.join('x'));
+        }
         /* spell-checker: disable */
         if (bkgMovieFileName) {
             args.push('-vf', "movie=" + bkgMovieFileName + ",hue=s=1[bg];[in]setpts=PTS,scale=-1:-1"

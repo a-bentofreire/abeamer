@@ -58,6 +58,9 @@ var OptsParser;
         maxHeight: {
             param: 'int', desc: "maximum frame output height. default is " + OptsParser.DEFAULT_MAX_HEIGHT,
         },
+        scale: {
+            param: 'string', desc: "scales to gif or movie movie generators.\n          e.g.\n             --scale 25%\n             --scale 200,400\n             --scale 40%,30%\n          ",
+        },
         noframes: {
             desc: "doesn't render the frames to file nor generates the report.\n           use it only for debugging"
         },
@@ -85,7 +88,7 @@ var OptsParser;
         teleport: { desc: "makes the web browser run on teleport mode, and generates the story on the exit" },
         dp: { desc: "deletes previous frames" },
         config: {
-            param: 'string', desc: "loads the config from a ini or json file\n           see https://github.com/a-bentofreire/abeamer/docs/config-file.md",
+            param: 'string', desc: "loads the config from a ini or json file\n           see https://www.abeamer.com/docs/latest/end-user/en/site/config-file/",
         },
         var: {
             param: 'object', desc: "allows to pass multiple variables to client web library.\n         accessible as story.args.vars or in expressions.\n         if the variable name has dashes, it will be converted to camelCase\n           e.g --var name=end-user --var value=1.2.3",
@@ -163,6 +166,30 @@ var OptsParser;
         } while (true);
     }
     OptsParser.iterateArgOpts = iterateArgOpts;
+    // ------------------------------------------------------------------------
+    //                               Compute Scale
+    // ------------------------------------------------------------------------
+    function computeScale(width, height) {
+        function computeScaleItem(item, dim) {
+            var scale = 1;
+            if (item.endsWith('%')) {
+                scale = dim / 100;
+                item = item.substr(0, item.length - 1);
+            }
+            var value = parseInt(item, 10) * scale;
+            return Math.round(value).toString();
+        }
+        var sScale = (OptsParser.argOpts.scale.value || '').trim();
+        if (!sScale) {
+            return undefined;
+        }
+        var scaleItems = sScale.split(/\s*,\s*/);
+        return [
+            computeScaleItem(scaleItems[0], width),
+            computeScaleItem(scaleItems[1] || scaleItems[0], height)
+        ];
+    }
+    OptsParser.computeScale = computeScale;
     // ------------------------------------------------------------------------
     //                               Print Usage
     // ------------------------------------------------------------------------

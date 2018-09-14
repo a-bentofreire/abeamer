@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  > This allows to add more servers without changing `INFO_PER_SERVER`.
  - Add initial support for `slimerjs` server.
  - Add `--server-exec` option to command line.
+ - Add `--scale` support for abeamer cli `gif` and `movie` command.
 
 ### Changed
 - Use `getVars` function instead of `_vars`.

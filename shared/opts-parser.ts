@@ -94,6 +94,15 @@ export namespace OptsParser {
         `maximum frame output height. default is ${DEFAULT_MAX_HEIGHT}`,
     },
 
+    scale: {
+      param: 'string', desc: `scales to gif or movie movie generators.
+          e.g.
+             --scale 25%
+             --scale 200,400
+             --scale 40%,30%
+          `,
+    },
+
     noframes: {
       desc:
         `doesn't render the frames to file nor generates the report.
@@ -141,7 +150,7 @@ export namespace OptsParser {
     config: {
       param: 'string', desc:
         `loads the config from a ini or json file
-           see https://github.com/a-bentofreire/abeamer/docs/config-file.md`,
+           see https://www.abeamer.com/docs/latest/end-user/en/site/config-file/`,
     },
 
     var: {
@@ -245,6 +254,32 @@ export namespace OptsParser {
         callback('@param', name);
       }
     } while (true);
+  }
+
+  // ------------------------------------------------------------------------
+  //                               Compute Scale
+  // ------------------------------------------------------------------------
+
+  export function computeScale(width: int, height: int): string[] {
+
+    function computeScaleItem(item: string, dim: int): string {
+      let scale = 1;
+      if (item.endsWith('%')) {
+        scale = dim / 100;
+        item = item.substr(0, item.length - 1);
+      }
+      const value = parseInt(item, 10) * scale;
+      return Math.round(value).toString();
+    }
+
+    const sScale = (argOpts.scale.value as string || '').trim();
+    if (!sScale) {
+      return undefined;
+    }
+    const scaleItems = sScale.split(/\s*,\s*/);
+    return [
+      computeScaleItem(scaleItems[0], width),
+      computeScaleItem(scaleItems[1] || scaleItems[0], height)];
   }
 
   // ------------------------------------------------------------------------
