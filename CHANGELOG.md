@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.6.0] -
 ### Added
 - Add support for arrays in the 1 parameter numerical functions.
-  > With this addition, those functions can process individual elements inside an array,
+  > With this addition, those functions can process individual elements inside an array,  
   > and set the result to an array.
 - Add new `statistic-functions` plugin with 8 fundamental functions.
 - Add `get` and `slice` functions for array data extraction to `functions`.
@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  > This addition solves slimerjs `--config` option conflict with abeamer `--config`.
  - Add support for default `INFO_PER_SERVER`.
  > This allows to add more servers without changing `INFO_PER_SERVER`.
- - Add initial support for `slimerjs` server.
+ - Add initial support for `slimerjs` server. (alpha version).
  - Add `--server-exec` option to command line.
  - Add `--scale` support for abeamer cli `gif` and `movie` command.
  - Add `--no-default-browser-check` to puppeteer server agent.

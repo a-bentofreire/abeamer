@@ -107,6 +107,7 @@ import { HttpServerEx } from "../shared/vendor/http-server-ex.js";
  * ```
  * ---------------------
  * - Same as the first render command, but uses slimerjs as the server.
+ * NOTE: slimerjs is on alpha version!
  * ```shell
  * abeamer render --server slimerjs foo
  * ```

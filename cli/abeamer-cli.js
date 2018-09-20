@@ -102,6 +102,7 @@ var http_server_ex_js_1 = require("../shared/vendor/http-server-ex.js");
  * ```
  * ---------------------
  * - Same as the first render command, but uses slimerjs as the server.
+ * NOTE: slimerjs is on alpha version!
  * ```shell
  * abeamer render --server slimerjs foo
  * ```
