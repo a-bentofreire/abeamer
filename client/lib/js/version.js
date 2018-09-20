@@ -4,6 +4,6 @@
 // @WARN: Don't edit this file. See the ./package.json
 var ABeamer;
 (function (ABeamer) {
-    ABeamer.VERSION = "1.5.0";
+    ABeamer.VERSION = "1.6.0";
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=version.js.map
