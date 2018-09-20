@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Add initial support for `slimerjs` server.
  - Add `--server-exec` option to command line.
  - Add `--scale` support for abeamer cli `gif` and `movie` command.
+ - Add `--no-default-browser-check` to puppeteer server agent.
+ > This change reduce chrome's the initialization phase.
 
 ### Changed
 - Use `getVars` function instead of `_vars`.

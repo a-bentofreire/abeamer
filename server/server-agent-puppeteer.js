@@ -133,6 +133,7 @@ var ServerAgent;
                                     '--ignore-autoplay-restrictions',
                                     '--autoplay-policy=no-user-gesture-required',
                                     '--safebrowsing-disable-auto-update',
+                                    '--no-default-browser-check',
                                 ],
                             }
                                 : undefined)];
