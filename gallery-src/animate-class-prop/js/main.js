@@ -1,8 +1,7 @@
 "use strict";
-// uuid: 83f4f3c3-c981-4c4f-a42a-5e1e380722ae
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 $(window).on("load", function () {
     var story = ABeamer.createStory(/*FPS:*/ 20);

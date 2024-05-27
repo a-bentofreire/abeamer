@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 03041456-df2c-4ae0-bbe2-56c597f03155
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // Adapts the easing functions from jquery.easing.min.js to ABeamer interface

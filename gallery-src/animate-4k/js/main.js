@@ -1,8 +1,7 @@
 "use strict";
-// uuid: f84d57af-708e-4353-8189-15ccc7c3e81b
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 $(window).on("load", function () {
     // only 1 frame per second, since it's only a test, no need to have many large images.

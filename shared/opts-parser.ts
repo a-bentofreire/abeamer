@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 2460e386-36d9-49ec-afd6-30963ab2e387
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // The code shared by the server and cli
@@ -41,7 +39,7 @@ export namespace OptsParser {
     url: {
       param: 'string', desc:
         `url of the page containing the animation
-              e.g. http://www.abeamer.com/
+              e.g. http://abeamer.a-bentofreire.com/
               e.g. file:///home/abeamer/Documents/test/`},
 
     file: {
@@ -150,7 +148,7 @@ export namespace OptsParser {
     config: {
       param: 'string', desc:
         `loads the config from a ini or json file
-           see https://www.abeamer.com/docs/latest/end-user/en/site/config-file/`,
+           see https://abeamer.a-bentofreire.com/docs/latest/end-user/en/site/config-file/`,
     },
 
     var: {

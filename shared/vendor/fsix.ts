@@ -1,9 +1,7 @@
 "use strict";
-// uuid: b7d8fdeb-a71e-4bf8-923a-747011b52862
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // Common filesystem functions implemented by nodejs

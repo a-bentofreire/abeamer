@@ -1,4 +1,4 @@
-Copyright (c) 2018 Alexandre Bento Freire
+Copyright (c) 2018-2024 Alexandre Bento Freire
 
 The images inside this folder can only be used for the purpose of demonstrating
 ABeamer features.

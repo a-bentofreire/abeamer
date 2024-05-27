@@ -1,4 +1,4 @@
-<!--- @uuid: b8ee79d3-c12e-4a65-ba4a-7b9568e78d34 -->
+<!--- @ -->
 <!--- @author: Alexandre Bento Freire -->
 # Description
 

@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 4293b25a-0b5f-4af9-8dd7-a351ff686908
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 import * as sysFs from "fs";

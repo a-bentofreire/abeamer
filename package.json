@@ -1,9 +1,8 @@
 {
   "name": "abeamer",
-  "uuid": "f709f52e-de91-4010-bca1-4cfb921fd995",
   "displayName": "abeamer",
-  "description": "Animation for the cloud",
-  "version": "1.6.0",
+  "description": "frame-by-frame Web Animation framework",
+  "version": "1.6.1",
   "publisher": "a-bentofreire",
   "keywords": [
     "animation",
@@ -19,14 +18,14 @@
     "email": "abeamer@a-bentofreire.com",
     "url": "https://github.com/a-bentofreire"
   },
-  "license": "MIT+uuid",
+  "license": "MIT",
   "engines": {
     "node": "*"
   },
   "bin": {
     "abeamer": "cli/abeamer-cli.js"
   },
-  "homepage": "https://www.abeamer.com",
+  "homepage": "https://abeamer.a-bentofreire.com",
   "bugs": "https://github.com/a-bentofreire/abeamer/issues",
   "repository": {
     "type": "git",

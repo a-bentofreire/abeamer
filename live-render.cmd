@@ -1,11 +1,11 @@
 
 @ECHO OFF
 setlocal enabledelayedexpansion
-REM  uuid: 03b04b7c-0db1-49df-9db5-c493f5b79529
+REM  
 
 REM  ------------------------------------------------------------------------
-REM  Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-REM  Licensed under the MIT License+uuid License. See License.txt for details
+REM  Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+REM  Licensed under the MIT License.
 REM  ------------------------------------------------------------------------
 
 REM  this script is designed only for testing abeamer cli in a bash enviroment

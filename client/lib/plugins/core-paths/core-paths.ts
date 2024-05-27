@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 8ce8472c-5474-46f5-9bf5-afd50a5ac7a6
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // Implements a list of core paths

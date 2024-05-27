@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 1c95b803-a2d8-463e-a8cd-743d6fc16d25
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // Implements a list of built-in attack Tasks

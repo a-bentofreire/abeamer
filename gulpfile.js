@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// uuid: 95a216ec-8c6f-4254-9a44-fe8795b3ee4f
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 var sysFs = require("fs");
 var sysPath = require("path");
@@ -36,11 +35,11 @@ var Gulp;
     sysProcess.chdir(__dirname);
     /** List of files and folders to typical preserve on `rm -rf` */
     // const PRESERVE_FILES = ['README.md', 'README-dev.md', '.git', '.gitignore'];
-    var CLIENT_UUID = '// uuid: 3b50413d-12c3-4a6c-9877-e6ead77f58c5\n\n';
+    var CLIENT_UUID = '// \n\n';
     var COPYRIGHTS = '' +
         '// ------------------------------------------------------------------------\n' +
-        '// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.\n' +
-        '// Licensed under the MIT License+uuid License. See License.txt for details\n' +
+        '// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.\n' +
+        '// Licensed under the MIT License.\n' +
         '// ------------------------------------------------------------------------\n\n';
     var gulpMinify = require('gulp-minify');
     var gulpReplace = require('gulp-replace');

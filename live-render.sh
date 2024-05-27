@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# uuid: f8c543c1-230b-4b3e-b072-9c2f662887e4
+# 
 
 # ------------------------------------------------------------------------
-# Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-# Licensed under the MIT License+uuid License. See License.txt for details
+# Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+# Licensed under the MIT License.
 # ------------------------------------------------------------------------
 
 # this script is designed only for testing abeamer cli in a bash enviroment

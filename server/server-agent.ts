@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 39a65561-5c80-4732-a181-ced25c411e52
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // Base server class for other servers agents

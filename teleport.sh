@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# uuid: 8ba7d233-bc55-4042-bf35-ac6f45b52b5c
+# 
 
 # ------------------------------------------------------------------------
-# Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-# Licensed under the MIT License+uuid License. See License.txt for details
+# Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+# Licensed under the MIT License.
 # ------------------------------------------------------------------------
 
 # this script is designed only for testing teleport in a bash enviroment

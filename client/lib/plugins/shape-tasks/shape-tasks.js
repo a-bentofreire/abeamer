@@ -1,8 +1,7 @@
 "use strict";
-// uuid: 4b9e44d3-3db7-45f8-b991-534a03125b29
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 // Implements a list of built-in shape Tasks
 /** @module end-user | The lines bellow convey information for the end-user */

@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 95a216ec-8c6f-4254-9a44-fe8795b3ee4f
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 import * as sysFs from "fs";
@@ -41,12 +39,12 @@ namespace Gulp {
 
   /** List of files and folders to typical preserve on `rm -rf` */
   // const PRESERVE_FILES = ['README.md', 'README-dev.md', '.git', '.gitignore'];
-  const CLIENT_UUID = '// uuid: 3b50413d-12c3-4a6c-9877-e6ead77f58c5\n\n';
+  const CLIENT_UUID = '// \n\n';
   const COPYRIGHTS = '' +
 
     '// ------------------------------------------------------------------------\n' +
-    '// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.\n' +
-    '// Licensed under the MIT License+uuid License. See License.txt for details\n' +
+    '// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.\n' +
+    '// Licensed under the MIT License.\n' +
     '// ------------------------------------------------------------------------\n\n';
 
   const gulpMinify = require('gulp-minify');

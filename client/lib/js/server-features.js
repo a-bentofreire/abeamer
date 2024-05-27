@@ -1,8 +1,7 @@
 "use strict";
-// uuid: c923dc86-0c1b-413d-aa1f-1a6a2666d8db
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 // This file includes the list of all CSS properties that aren't pixel properties,
 // mapping them to the correct property type

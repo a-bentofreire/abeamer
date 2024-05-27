@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// uuid: b88b17e7-5918-44f7-82f7-f0e80c242a82
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 // @TODO: implement inject plugins
 var sysFs = require("fs");
@@ -223,7 +222,7 @@ var Cli;
     //                               Print Usage
     // ------------------------------------------------------------------------
     function printUsage() {
-        console.log("abeamer [command] [options] [project-name|report-name]\nThe commands are:\n    " + CMD_CHECK + " checks if the all requirements are installed and configured\n    " + CMD_CREATE + " creates a project with project-name\n    " + CMD_SERVE + "  starts a live server. Use it in case you need to load the config from JSON file\n    " + CMD_RENDER + " runs your project in the context of the headless browser.\n    " + CMD_GIF + "    creates an animated gif from the project-name or report-name\n    " + CMD_MOVIE + "  creates a movie from the project-name or report-name\n\n    e.g.\n      echo \"checks if chrome, puppeteer, imagemagick, ffmpeg are installed and configured\"\n      abeamer " + CMD_CHECK + "\n\n      echo \"create folder foo and copy necessary files\"\n      abeamer " + CMD_CREATE + " --width 640 --height 480 --fps 25 foo\n\n      cd foo\n\n      echo \"start a live server\"\n      echo \"only required if you need to load your configuration from json file\"\n      abeamer " + CMD_SERVE + "\n\n      echo \"generates the png files and a report on story-frames folder\"\n      abeamer " + CMD_RENDER + "\n\n      echo \"creates story.gif file on story-frames folder\"\n      abeamer " + CMD_GIF + "\n\n      echo \"creates story.mp4 file on story-frames folder\"\n      abeamer " + CMD_MOVIE + "\n\n      For more information, read:\n      https://www.abeamer.com/docs/latest/end-user/en/site/abeamer-cli/\n\n");
+        console.log("abeamer [command] [options] [project-name|report-name]\nThe commands are:\n    " + CMD_CHECK + " checks if the all requirements are installed and configured\n    " + CMD_CREATE + " creates a project with project-name\n    " + CMD_SERVE + "  starts a live server. Use it in case you need to load the config from JSON file\n    " + CMD_RENDER + " runs your project in the context of the headless browser.\n    " + CMD_GIF + "    creates an animated gif from the project-name or report-name\n    " + CMD_MOVIE + "  creates a movie from the project-name or report-name\n\n    e.g.\n      echo \"checks if chrome, puppeteer, imagemagick, ffmpeg are installed and configured\"\n      abeamer " + CMD_CHECK + "\n\n      echo \"create folder foo and copy necessary files\"\n      abeamer " + CMD_CREATE + " --width 640 --height 480 --fps 25 foo\n\n      cd foo\n\n      echo \"start a live server\"\n      echo \"only required if you need to load your configuration from json file\"\n      abeamer " + CMD_SERVE + "\n\n      echo \"generates the png files and a report on story-frames folder\"\n      abeamer " + CMD_RENDER + "\n\n      echo \"creates story.gif file on story-frames folder\"\n      abeamer " + CMD_GIF + "\n\n      echo \"creates story.mp4 file on story-frames folder\"\n      abeamer " + CMD_MOVIE + "\n\n      For more information, read:\n      https://abeamer.a-bentofreire.com/docs/latest/end-user/en/site/abeamer-cli/\n\n");
         opts_parser_js_1.OptsParser.printUsage();
     }
     // ------------------------------------------------------------------------

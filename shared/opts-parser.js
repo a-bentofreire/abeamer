@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// uuid: 2460e386-36d9-49ec-afd6-30963ab2e387
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 // The code shared by the server and cli
 var rel_consts_js_1 = require("../shared/rel-consts.js");
@@ -29,7 +28,7 @@ var OptsParser;
         ll: { param: 'int', desc: "log level. 0 has no verbosity" },
         version: { desc: "version" },
         url: {
-            param: 'string', desc: "url of the page containing the animation\n              e.g. http://www.abeamer.com/\n              e.g. file:///home/abeamer/Documents/test/"
+            param: 'string', desc: "url of the page containing the animation\n              e.g. http://abeamer.a-bentofreire.com/\n              e.g. file:///home/abeamer/Documents/test/"
         },
         file: {
             param: 'string', desc: "for running local files with relative paths\n           if --out isn't defined it sets to " + OptsParser.DEFAULT_OUT_PATTERN + "\n              e.g --file gallery/hello-world/"
@@ -88,7 +87,7 @@ var OptsParser;
         teleport: { desc: "makes the web browser run on teleport mode, and generates the story on the exit" },
         dp: { desc: "deletes previous frames" },
         config: {
-            param: 'string', desc: "loads the config from a ini or json file\n           see https://www.abeamer.com/docs/latest/end-user/en/site/config-file/",
+            param: 'string', desc: "loads the config from a ini or json file\n           see https://abeamer.a-bentofreire.com/docs/latest/end-user/en/site/config-file/",
         },
         var: {
             param: 'object', desc: "allows to pass multiple variables to client web library.\n         accessible as story.args.vars or in expressions.\n         if the variable name has dashes, it will be converted to camelCase\n           e.g --var name=end-user --var value=1.2.3",

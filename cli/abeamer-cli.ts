@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 "use strict";
-// uuid: b88b17e7-5918-44f7-82f7-f0e80c242a82
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // @TODO: implement inject plugins
@@ -294,7 +292,7 @@ The commands are:
       abeamer ${CMD_MOVIE}
 
       For more information, read:
-      https://www.abeamer.com/docs/latest/end-user/en/site/abeamer-cli/
+      https://abeamer.a-bentofreire.com/docs/latest/end-user/en/site/abeamer-cli/
 
 `);
     OptsParser.printUsage();

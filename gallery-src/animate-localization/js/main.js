@@ -1,8 +1,7 @@
 "use strict";
-// uuid: 86788cd0-9f7a-49b8-bf77-896d82a242d5
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 $(window).on("load", function () {
     ABeamer.pluginManager.addLocalization({

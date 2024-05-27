@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 2460e386-36d9-49ec-afd6-30963ab2e387
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // This file is executed within the context of phantomjs/slimerjs

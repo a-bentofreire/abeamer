@@ -1,9 +1,7 @@
 "use strict";
-// uuid: da361f3a-5280-4386-9ffa-2753fb2be3f8
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 import { fsix } from "../vendor/fsix.js";
 import { BuildDTsFiles } from "./build-d-ts.js";

@@ -1,8 +1,7 @@
 "use strict";
-// uuid: fc2751eb-9f3b-4862-adc4-17280fd8d238
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 // Implements a list of core oscillators
 /** @module end-user | The lines bellow convey information for the end-user */

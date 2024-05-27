@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 80f29bf8-71a6-48c0-9c24-89cb070ef6f8
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // Parses and computes a simulation of CSS animation-direction

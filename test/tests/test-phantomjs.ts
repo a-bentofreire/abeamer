@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 2223352b-51ad-4dbf-bf05-a9697db0edde
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // @TODO: Determine why the test execution never ends, failing this test

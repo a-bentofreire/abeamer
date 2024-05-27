@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 6afa85f5-8c90-4646-a858-d2fc1a59461f
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // Implements a list of built-in text Tasks

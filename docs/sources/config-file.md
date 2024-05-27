@@ -1,4 +1,4 @@
-<!--- @uuid: 6baa24cc-521b-46f9-9847-88f86a3c7932 -->
+<!--- @ -->
 <!--- @author: Alexandre Bento Freire -->
 ## Synopsis
 

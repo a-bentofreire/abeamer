@@ -1,9 +1,7 @@
 "use strict";
-// uuid: ed166757-f4d6-4dfd-bc0c-f2682d3e783b
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // Implements a list of core functions

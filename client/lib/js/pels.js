@@ -1,8 +1,7 @@
 "use strict";
-// uuid: 7c94ca82-c471-468f-9226-51c72caac4bb
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 // Implements pEls classes
 // @doc-name pEls

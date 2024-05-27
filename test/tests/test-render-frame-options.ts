@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 7d689445-8980-4852-88ae-7b54b75960e4
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // @WARN: This test should be review if ABeamer is capable of linking

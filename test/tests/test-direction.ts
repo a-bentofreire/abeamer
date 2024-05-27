@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 95763d7e-2066-423d-b64f-787450ec7e0d
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 import { Exact } from "../exact.js";

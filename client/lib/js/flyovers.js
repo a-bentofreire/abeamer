@@ -1,8 +1,7 @@
 "use strict";
-// uuid: b306bb72-7626-4cf7-b4ae-756f342649ff
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 // Implementation of Flyovers
 /** @module end-user | The lines bellow convey information for the end-user */

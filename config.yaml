@@ -67,7 +67,7 @@ release:
 
 webLinks:
   localServer: http://localhost:${LOCAL_PORT}
-  webDomain: https://www.abeamer.com
+  webDomain: https://abeamer.a-bentofreire.com
 
 
 docs:
@@ -77,7 +77,7 @@ docs:
       - '"/vendor/highlight.js"'
     -
       - !!js/regexp /"[^"]+jquery[^"]*\.js"/
-      - '"/vendor/jquery-3.3.1.min.js"'
+      - '"/vendor/jquery-3.7.1.min.js"'
     -
       - !!js/regexp /"[\.\/]*css\/theme(\w*)\.css"/g
       - '"/css/mydocs/theme$1.min.css"'

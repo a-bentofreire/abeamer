@@ -1,5 +1,5 @@
 
-Read a detailed description about the roadmap updates on the blog [post](https://www.abeamer.com/blog/2018/07/04/website-published-roadmap-updates.html#roadmap-updates).
+Read a detailed description about the roadmap updates on the blog [post](https://abeamer.a-bentofreire.com/blog/2018/07/04/website-published-roadmap-updates.html#roadmap-updates).
 
 ## General
 

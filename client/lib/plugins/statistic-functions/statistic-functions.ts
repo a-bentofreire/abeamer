@@ -1,9 +1,7 @@
 "use strict";
-// uuid: 4042dd08-a6a5-433a-91d0-686f97081e8a
-
 // ------------------------------------------------------------------------
-// Copyright (c) 2018 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License+uuid License. See License.txt for details
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
 // ------------------------------------------------------------------------
 
 // Implements a list of statistical functions

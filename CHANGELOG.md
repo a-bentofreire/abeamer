@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] -
+### Changed
+- Use MIT License.
+- Use jquery-3.7.1
+
 ## [1.6.0] -
 ### Added
 - Add support for arrays in the 1 parameter numerical functions.
@@ -116,7 +121,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `story.startTeleporting` to delay the teleportation initial snapshot.
   > This new method allows to teleport any HTML/CSS code injected
   > after the story has been created and before this method was invoked.
-  > Read more on https://www.abeamer.com/blog/2018/08/20/how-to-delay-the-teleportation-in-abeamer.html
+  > Read more on https://abeamer.a-bentofreire.com/blog/2018/08/20/how-to-delay-the-teleportation-in-abeamer.html
 
 ### Changed
 - Move gallery, badges, icons file paths to be compatible with the website.
@@ -142,7 +147,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Fix font rendering bug in `animate-transitions` example.
   > The problem was due a bug in Chrome as described in:
-  > http://www.abeamer.com/blog/2018/08/15/abeamer-1.3.0-released.html
+  > http://abeamer.a-bentofreire.com/blog/2018/08/15/abeamer-1.3.0-released.html
 
 ## [1.2.0] -
 ### Fixed
@@ -150,18 +155,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Remove `docs` and `gallery-release` visual customization.
-  > Since the website, blog, release, and gallery-release are all hosted by the www.abeamer.com
+  > Since the website, blog, release, and gallery-release are all hosted by the abeamer.a-bentofreire.com
   > website, this is now in responsibility to do all the customization.  
 - Change the release version from release to `release/latest`.
   > This change will allow a local webserver have access to the same
-  > url subpart as it is on the www.abeamer.com site.  
+  > url subpart as it is on the abeamer.a-bentofreire.com site.  
   > Simplifying the process of testing and deploying release versions.  
 - Add minify to all js files during the `build-release` phase.
 
 ### Changed
-- Move documentation from github repo to https://www.abeamer.com/docs.
+- Move documentation from github repo to https://abeamer.a-bentofreire.com/docs.
 - Update links and generators to move docs, gallery and release to abeamer website.
-  > The github repos are replaced with folders on https://www.abeamer.com.  
+  > The github repos are replaced with folders on https://abeamer.a-bentofreire.com.  
   >
   > - docs/build/(target)/versions/latest/en ----> docs/release/latest/(target)/en
   > - git repo abeamer-release ----> release/latest
@@ -173,7 +178,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Add parameter `--gif-background` to `abeamer gif` CLI.
 - (DEV) `gulp build-gallery-release` generate index.html.
-  > Since www.abeamer.com doesn't support markdown render, it's required to generate the index.html
+  > Since abeamer.a-bentofreire.com doesn't support markdown render, it's required to generate the index.html
 - Add `messages/messages-en.js` to be the version 2.x holder of the english messages.
   > The messages in i18n.ts file will be moved to messages/messages-en.ts file on version 2.x.  
   > Users are encouraged to include the messages/messages-en.js on their index.html

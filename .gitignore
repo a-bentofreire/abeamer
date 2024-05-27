@@ -1,6 +1,4 @@
-website/
-private/
-private-projects/
+.private/
 node_modules/
 gallery-src-updated/
 gallery-src/*/*.gif
