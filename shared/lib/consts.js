@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Consts = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -41,5 +42,5 @@ var Consts;
     Consts.AS_ADD_ANIMATION = 1;
     Consts.AS_RENDERING = 2;
     Consts.AS_STORY = 3;
-})(Consts = exports.Consts || (exports.Consts = {}));
+})(Consts || (exports.Consts = Consts = {}));
 //# sourceMappingURL=consts.js.map

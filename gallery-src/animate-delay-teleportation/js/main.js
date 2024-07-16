@@ -14,7 +14,7 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     var d = story.args.vars.duration || '3s';
     var json = story.args.vars.json || 'acme';
-    $.getJSON(json + ".json", function (data) {
+    $.getJSON("".concat(json, ".json"), function (data) {
         $('#name').text(data.name);
         // By setting this as the starting point, it allows to inject html code,
         // to be stored in the story to be teleported.

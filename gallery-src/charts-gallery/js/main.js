@@ -169,7 +169,7 @@ $(window).on("load", function () {
                         attrs: [
                             {
                                 name: 'width',
-                                value: "=case(i, " + widths.join(',') + ")",
+                                value: "=case(i, ".concat(widths.join(','), ")"),
                             },
                             {
                                 name: 'height',
@@ -187,10 +187,10 @@ $(window).on("load", function () {
         if (i >= chartCount || (viewOnly !== undefined && i !== viewOnly)) {
             return;
         }
-        chart.animeSelector = "chart-" + i + "-anime";
+        chart.animeSelector = "chart-".concat(i, "-anime");
         scene1
             .addAnimations([{
-                selector: "canvas:nth-child(" + (i + 1) + ")",
+                selector: "canvas:nth-child(".concat(i + 1, ")"),
                 tasks: [{
                         handler: 'chart',
                         params: chart,
@@ -199,8 +199,8 @@ $(window).on("load", function () {
     });
     scene1
         .addAnimations(charts.map(function (chart, i) { return chart.props ? {
-        selector: "%chart-" + i + "-anime",
-        duration: duration + "s",
+        selector: "%chart-".concat(i, "-anime"),
+        duration: "".concat(duration, "s"),
         props: chart.props,
     } : undefined; }).filter(function (anime) { return anime !== undefined; }));
     story.render(story.bestPlaySpeed());

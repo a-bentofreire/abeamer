@@ -55,7 +55,7 @@ via [teleporting](teleporter.md) then you don't need to install nodejs.
 ### Can I download just the animation library?
 
 Yes, you can.  
-Download from [here](https://abeamer.a-bentofreire.com/downloads.html).  
+Download from [here](https://abeamer.devtoix.com/downloads.html).  
 
 ### I can't install puppeteer.   
 

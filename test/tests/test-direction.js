@@ -51,23 +51,23 @@ var Tests;
                     break;
             }
         }
-        rd.actions.isIdPropActions("t" + index, 'left', exact_js_1.Exact.simulatePixelAction(fullCycle));
+        rd.actions.isIdPropActions("t".concat(index), 'left', exact_js_1.Exact.simulatePixelAction(fullCycle));
         done();
     };
     var testParams = {};
     tests.forEach(function (test, index) {
-        testParams["t" + index + " left uses direction " + test.name + " " + test.iterCount + " "
-            + ("cycles goes from " + min + " to " + max)] = func;
+        testParams["t".concat(index, " left uses direction ").concat(test.name, " ").concat(test.iterCount, " ")
+            + "cycles goes from ".concat(min, " to ").concat(max)] = func;
     });
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: fps,
         css: tests.map(function (_test, index) {
-            return "#t" + index + " {left: " + min + "px}";
+            return "#t".concat(index, " {left: ").concat(min, "px}");
         }).join('\n'),
         animes: tests.map(function (test, index) {
             return {
-                selector: "#t" + index,
-                duration: seconds + "s",
+                selector: "#t".concat(index),
+                duration: "".concat(seconds, "s"),
                 props: [{
                         prop: 'left',
                         iterationCount: test.iterCount,

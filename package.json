@@ -2,7 +2,7 @@
   "name": "abeamer",
   "displayName": "abeamer",
   "description": "frame-by-frame Web Animation framework",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "publisher": "a-bentofreire",
   "keywords": [
     "animation",
@@ -25,11 +25,11 @@
   "bin": {
     "abeamer": "cli/abeamer-cli.js"
   },
-  "homepage": "https://abeamer.a-bentofreire.com",
+  "homepage": "https://abeamer.devtoix.com",
   "bugs": "https://github.com/a-bentofreire/abeamer/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/a-bentofreire/abeamer"
+    "url": "git+https://github.com/a-bentofreire/abeamer.git"
   },
   "main": "abeamer.js",
   "dependencies": {},

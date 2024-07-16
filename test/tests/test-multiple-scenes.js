@@ -24,17 +24,17 @@ var Tests;
     ];
     var func = function (rd, done, index) {
         var test = tests[index];
-        rd.actions.isIdPropActions("t" + test.element, 'left', exact_js_1.Exact.simulatePixelAction(exact_js_1.Exact.interpolateMinMax(min, test.max, test.frameCount)));
+        rd.actions.isIdPropActions("t".concat(test.element), 'left', exact_js_1.Exact.simulatePixelAction(exact_js_1.Exact.interpolateMinMax(min, test.max, test.frameCount)));
         // @TODO: test if went to a different scene
         done();
     };
     var testParams = {};
     tests.forEach(function (test) {
-        testParams["$t" + test.element + " on scene" + test.scene + " moves for " + test.duration] = func;
+        testParams["$t".concat(test.element, " on scene").concat(test.scene, " moves for ").concat(test.duration)] = func;
     });
     var animes = tests.map(function (test) {
-        return ["@@scene:" + test.scene, {
-                selector: "#t" + test.element,
+        return ["@@scene:".concat(test.scene), {
+                selector: "#t".concat(test.element),
                 duration: test.duration,
                 props: [{
                         prop: 'left',
@@ -44,7 +44,7 @@ var Tests;
     });
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: fps,
-        css: ".abslf {left: " + min + "px}",
+        css: ".abslf {left: ".concat(min, "px}"),
         animes: animes,
         html: exact_js_1.Exact.genTestHtml(7, { sceneMarkers: [2, 4, 6] }),
     }, {

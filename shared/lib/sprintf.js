@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Sprintf = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -112,5 +113,5 @@ var Sprintf;
         });
     }
     Sprintf.sprintf = sprintf;
-})(Sprintf = exports.Sprintf || (exports.Sprintf = {}));
+})(Sprintf || (exports.Sprintf = Sprintf = {}));
 //# sourceMappingURL=sprintf.js.map

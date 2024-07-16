@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DevConsts = void 0;
 // This file was generated gulp build-shared-lib
 // It has no uuid
 //
@@ -239,5 +240,5 @@ var DevConsts;
     DevConsts.PT_VALUE_TEXT_LIST = 4;
     DevConsts.PT_VALUE_TEXT_FUNC = 5;
     DevConsts.PT_VALUE_TEXT_EXPR = 6;
-})(DevConsts = exports.DevConsts || (exports.DevConsts = {}));
+})(DevConsts || (exports.DevConsts = DevConsts = {}));
 //# sourceMappingURL=dev-consts.js.map

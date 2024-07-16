@@ -60,8 +60,7 @@ $(window).on("load", function () {
                     },
                 },
             ],
-        },
-    ]);
+        },]);
     story.render(story.bestPlaySpeed());
 });
 //# sourceMappingURL=main.js.map

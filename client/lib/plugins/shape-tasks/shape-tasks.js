@@ -65,14 +65,14 @@ var ABeamer;
         function buildSvg(inTextHtml, shapeTag, width, height, attrs, x0, y0) {
             if (x0 === void 0) { x0 = 0; }
             if (y0 === void 0) { y0 = 0; }
-            inTextHtml.push(" width=\"" + width + "\"");
-            inTextHtml.push(" height=\"" + height + "\"");
-            inTextHtml.push(" viewBox=\"" + x0 + " " + y0 + " " + width + " " + height + "\"");
-            inTextHtml.push(" ><" + shapeTag);
+            inTextHtml.push(" width=\"".concat(width, "\""));
+            inTextHtml.push(" height=\"".concat(height, "\""));
+            inTextHtml.push(" viewBox=\"".concat(x0, " ").concat(y0, " ").concat(width, " ").concat(height, "\""));
+            inTextHtml.push(" ><".concat(shapeTag));
             attrs.forEach(function (attr) {
                 var name = attr[0], value = attr[1];
                 if (value !== undefined) {
-                    inTextHtml.push(" " + name + "=\"" + value + "\"");
+                    inTextHtml.push(" ".concat(name, "=\"").concat(value, "\""));
                 }
             });
         }
@@ -104,24 +104,24 @@ var ABeamer;
                 speechShift = -speechShift - speechWidth;
                 speechStart = w - speechStart - speechWidth;
             }
-            path.push("M" + rx + " 0 H" + (w - rx));
+            path.push("M".concat(rx, " 0 H").concat(w - rx));
             if (isRound) {
-                path.push("A " + rx + " " + ry + " 0 0 1 " + w + " " + ry);
+                path.push("A ".concat(rx, " ").concat(ry, " 0 0 1 ").concat(w, " ").concat(ry));
             }
-            path.push("V" + (h - ry));
+            path.push("V".concat(h - ry));
             if (isRound) {
-                path.push("A " + rx + " " + ry + " 0 0 1 " + (w - rx) + " " + h);
+                path.push("A ".concat(rx, " ").concat(ry, " 0 0 1 ").concat(w - rx, " ").concat(h));
             }
-            path.push("h" + -speechStart);
-            path.push("l" + speechShift + " " + speechHeight);
-            path.push("l" + (-speechWidth - speechShift) + " " + -speechHeight);
-            path.push("H" + rx);
+            path.push("h".concat(-speechStart));
+            path.push("l".concat(speechShift, " ").concat(speechHeight));
+            path.push("l".concat(-speechWidth - speechShift, " ").concat(-speechHeight));
+            path.push("H".concat(rx));
             if (isRound) {
-                path.push("A " + rx + " " + ry + " 0 0 1 0 " + (h - ry));
+                path.push("A ".concat(rx, " ").concat(ry, " 0 0 1 0 ").concat(h - ry));
             }
-            path.push("V" + ry);
+            path.push("V".concat(ry));
             if (isRound) {
-                path.push("A " + rx + " " + ry + " 0 0 1 " + rx + " 0");
+                path.push("A ".concat(rx, " ").concat(ry, " 0 0 1 ").concat(rx, " 0"));
             }
             buildSvg(inTextHtml, 'path', w + 2 * sw, h + speechHeight + 2 * sw, [['d', path.join(' ')]], x0, -sw);
         }
@@ -175,13 +175,13 @@ var ABeamer;
                         return ABeamer.TR_EXIT;
                 }
                 if (params.fill) {
-                    inTextHtml_1.push(" fill=\"" + params.fill + "\"");
+                    inTextHtml_1.push(" fill=\"".concat(params.fill, "\""));
                 }
                 if (params.stroke) {
-                    inTextHtml_1.push(" stroke=\"" + params.stroke + "\"");
+                    inTextHtml_1.push(" stroke=\"".concat(params.stroke, "\""));
                 }
                 if (sw) {
-                    inTextHtml_1.push(" stroke-width=\"" + sw + "\"");
+                    inTextHtml_1.push(" stroke-width=\"".concat(sw, "\""));
                 }
                 inTextHtml_1.push('/></svg >');
                 var elAdapters = args.scene.getElementAdapters(anime.selector);

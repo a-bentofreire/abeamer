@@ -51,11 +51,11 @@ $(window).on("load", function () {
             },
         }, {
             enabled: true,
-            label: "path: " + pathExpr,
+            label: "path: ".concat(pathExpr),
             path: { handler: pathExpr },
         }, , {
             enabled: true,
-            label: "easing:" + expr,
+            label: "easing:".concat(expr),
             easing: expr,
         }];
     var h = story.height;
@@ -73,13 +73,13 @@ $(window).on("load", function () {
             ? [{
                     prop: 'left',
                     easing: test.easingX,
-                    valueStart: margin + "px",
+                    valueStart: "".concat(margin, "px"),
                     value: x1,
                 }, {
                     prop: 'top',
                     easing: test.easing,
                     oscillator: test.oscillator,
-                    valueStart: h / 2 + "px",
+                    valueStart: "".concat(h / 2, "px"),
                     value: h / 8,
                 }]
             : [{
@@ -89,7 +89,7 @@ $(window).on("load", function () {
         scene1
             .addAnimations([{
                 selector: '#dot',
-                duration: d + "s",
+                duration: "".concat(d, "s"),
                 enabled: test.enabled,
                 tasks: [{
                         handler: 'add-vars',

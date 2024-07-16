@@ -37,7 +37,7 @@ var Tests;
     var t3_inter = [].concat(exact_js_1.Exact.simulatePixelAction(exact_js_1.Exact.interpolateMinMax(min, tests[2].max, tests[2].frameCount)), exact_js_1.Exact.simulatePixelAction(exact_js_1.Exact.interpolateMinMax(tests[2].max, tests[3].max, tests[3].frameCount)));
     function testBypass(rd, element, fromFrame, count, dir) {
         while (count > 0) {
-            var s = "bypass:id=_[" + element + "]_ prop=_[left]_ frame=_[" + fromFrame + "]_";
+            var s = "bypass:id=_[".concat(element, "]_ prop=_[left]_ frame=_[").concat(fromFrame, "]_");
             exact_js_1.Exact.AssertHasLine(rd, s);
             fromFrame += dir;
             count--;
@@ -45,7 +45,7 @@ var Tests;
     }
     function testAction(rd, element, inter, fromFrame, count, dir) {
         while (count > 0) {
-            var s = "action:id=_[" + element + "]_ prop=_[left]_ value=_[" + inter[fromFrame] + "]_";
+            var s = "action:id=_[".concat(element, "]_ prop=_[left]_ value=_[").concat(inter[fromFrame], "]_");
             exact_js_1.Exact.AssertHasLine(rd, s);
             fromFrame += dir;
             count--;
@@ -112,8 +112,8 @@ var Tests;
         testParams[render.test.name] = func;
     });
     var animes = tests.map(function (test) {
-        return ["@@scene:" + test.sceneNr, {
-                selector: "#t" + test.element,
+        return ["@@scene:".concat(test.sceneNr), {
+                selector: "#t".concat(test.element),
                 duration: test.duration,
                 props: [{
                         prop: 'left',
@@ -123,7 +123,7 @@ var Tests;
     });
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: fps,
-        css: ".abslf {left: " + min + "px}",
+        css: ".abslf {left: ".concat(min, "px}"),
         animes: animes,
         html: exact_js_1.Exact.genTestHtml(7, { sceneMarkers: [2, 4, 6] }),
     }, {

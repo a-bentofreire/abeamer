@@ -1,9 +1,14 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -33,13 +38,13 @@ $(window).on("load", function () {
         }
         Player.prototype.setProp = function (name, value) {
             this[name] = value;
-            console.log("Set [" + this.id + "] [" + name + "]=[" + value + "]");
+            console.log("Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]"));
             if (name === 'left' || name === 'top') {
                 drawGame();
             }
         };
         Player.prototype.getProp = function (name) {
-            console.log("Get [" + this.id + "] [" + name + "]=[" + this[name] + "]");
+            console.log("Get [".concat(this.id, "] [").concat(name, "]=[").concat(this[name], "]"));
             return this[name];
         };
         Player.prototype.draw = function () {
@@ -112,13 +117,13 @@ $(window).on("load", function () {
         __extends(PureVirtual, _super);
         function PureVirtual(id, left) {
             var _this = _super.call(this, id, left, 0) || this;
-            _this.info = document.getElementById("info-" + id);
+            _this.info = document.getElementById("info-".concat(id));
             return _this;
         }
         PureVirtual.prototype.setProp = function (name, value) {
             this[name] = value;
-            console.log("Set [" + this.id + "] [" + name + "]=[" + value + "]");
-            this.info.textContent = "Set [" + this.id + "] [" + name + "]=[" + value + "]";
+            console.log("Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]"));
+            this.info.textContent = "Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]");
         };
         return PureVirtual;
     }(Player));
@@ -132,11 +137,11 @@ $(window).on("load", function () {
         }
         myVirtualScene.prototype.setProp = function (name, value) {
             this[name] = value;
-            console.log("Set [" + this.id + "] [" + name + "]=[" + value + "]");
-            infoScene.textContent = "Set [" + this.id + "] [" + name + "]=[" + value + "]";
+            console.log("Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]"));
+            infoScene.textContent = "Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]");
         };
         myVirtualScene.prototype.getProp = function (name) {
-            console.log("Get [" + this.id + "] [" + name + "]=[" + this[name] + "]");
+            console.log("Get [".concat(this.id, "] [").concat(name, "]=[").concat(this[name], "]"));
             return this[name];
         };
         myVirtualScene.prototype.query = function (selector, iterator) {

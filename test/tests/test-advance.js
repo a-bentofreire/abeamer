@@ -72,13 +72,13 @@ var Tests;
     ];
     var func = function (rd, done, index) {
         var test = tests[index];
-        rd.actions.isIdPropRanges("t" + test.elIndex, test.prop, [[test.startFrame, test.duration || totalD]]);
+        rd.actions.isIdPropRanges("t".concat(test.elIndex), test.prop, [[test.startFrame, test.duration || totalD]]);
         done();
     };
     var testParams = {};
     tests.forEach(function (test) {
-        testParams[test.label + " t" + test.elIndex + " " + test.prop
-            + (" starting on frame from " + test.startFrame)] = func;
+        testParams["".concat(test.label, " t").concat(test.elIndex, " ").concat(test.prop)
+            + " starting on frame from ".concat(test.startFrame)] = func;
     });
     testParams["no-advance-in-the-end"] = function (rd, done) {
         chai_1.assert.isTrue(rd.outLines.indexOf('no-advance-in-end:') !== -1);

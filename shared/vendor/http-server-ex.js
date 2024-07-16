@@ -1,15 +1,21 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HttpServerEx = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -83,7 +89,7 @@ var HttpServerEx;
                 return false;
             }
             if (this.isVerbose) {
-                console.log(req.method + " " + req.url);
+                console.log("".concat(req.method, " ").concat(req.url));
             }
             if (this.exitFile && req.url.indexOf(this.exitFile) !== -1) {
                 if (this.isVerbose) {
@@ -109,7 +115,7 @@ var HttpServerEx;
                 sysFs.readdir(rp.path, function (_err, files) {
                     var slashedPath = rp.path + (rp.path.endsWith('/') ? '' : '/');
                     var filesInfo = files.map(function (file) {
-                        var fileName = "" + slashedPath + file;
+                        var fileName = "".concat(slashedPath).concat(file);
                         var url = fileName.substr(1);
                         var isDir = sysFs.statSync(fileName).isDirectory();
                         return {
@@ -126,8 +132,8 @@ var HttpServerEx;
                     if (slashedPath !== './') {
                         filesInfo.unshift({
                             file: '..',
-                            fileName: slashedPath + "..",
-                            url: slashedPath.substr(1) + "../",
+                            fileName: "".concat(slashedPath, ".."),
+                            url: "".concat(slashedPath.substr(1), "../"),
                             isDir: true,
                         });
                     }
@@ -137,14 +143,14 @@ var HttpServerEx;
                             var defaultLinks = [];
                             if (isDir) {
                                 http_server_js_1.HttpServer.DEFAULT_FILES.forEach(function (defFile) {
-                                    var defFileName = fileInf.fileName + "/" + defFile;
+                                    var defFileName = "".concat(fileInf.fileName, "/").concat(defFile);
                                     if (sysFs.existsSync(defFileName)) {
-                                        defaultLinks.push("&nbsp;(<a href=\"" + fileInf.url + "/" + defFile + "\">" + defFile + "</a>)");
+                                        defaultLinks.push("&nbsp;(<a href=\"".concat(fileInf.url, "/").concat(defFile, "\">").concat(defFile, "</a>)"));
                                     }
                                 });
                             }
-                            return !isDir ? "<div><a href=\"" + fileInf.url + "\">" + fileInf.file + "</a></div>" :
-                                "<div>[<a href=\"" + fileInf.url + DIR_PREFIX + "\">" + fileInf.file + "</a>]" + defaultLinks.join('') + "</div>";
+                            return !isDir ? "<div><a href=\"".concat(fileInf.url, "\">").concat(fileInf.file, "</a></div>") :
+                                "<div>[<a href=\"".concat(fileInf.url).concat(DIR_PREFIX, "\">").concat(fileInf.file, "</a>]").concat(defaultLinks.join(''), "</div>");
                         }).join('\n')
                         + '\n</body>\n</html>';
                     rp.res.setHeader('Content-type', 'text/html');
@@ -159,5 +165,5 @@ var HttpServerEx;
         return ServerEx;
     }(http_server_js_1.HttpServer.Server));
     HttpServerEx.ServerEx = ServerEx;
-})(HttpServerEx = exports.HttpServerEx || (exports.HttpServerEx = {}));
+})(HttpServerEx || (exports.HttpServerEx = HttpServerEx = {}));
 //# sourceMappingURL=http-server-ex.js.map

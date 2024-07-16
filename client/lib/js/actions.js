@@ -65,7 +65,7 @@ var ABeamer;
             actionRg.propType = lastActionRg.propType;
             if (lastActionRg.endFrame >= startFrame) {
                 ABeamer.throwErr("overlapping property animations is not supported." +
-                    (lastActionRg.endFrame + " must be higher than " + startFrame));
+                    "".concat(lastActionRg.endFrame, " must be higher than ").concat(startFrame));
             }
         }
         return res;

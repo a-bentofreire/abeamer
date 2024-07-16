@@ -162,7 +162,7 @@ var ABeamer;
             ABeamer._vars.frameHeight = cfg.height;
             // setting clip-path is used because of slide transitions that display outside
             // the story boundaries
-            this.storyAdapter.setProp('clip-path', "polygon(0 0, 0 " + cfg.height + "px, " + cfg.width + "px " + cfg.height + "px, " + cfg.width + "px 0px)", args);
+            this.storyAdapter.setProp('clip-path', "polygon(0 0, 0 ".concat(cfg.height, "px, ").concat(cfg.width, "px ").concat(cfg.height, "px, ").concat(cfg.width, "px 0px)"), args);
             args.story = this;
             this.fps = cfg.fps;
             this._isTeleporting = createParams.toTeleport || false;
@@ -183,7 +183,7 @@ var ABeamer;
                     // tslint:disable-next-line:prefer-const
                     var _a = p1.match(/^([^=]+)=(.*)$/) || ['', '', ''], key = _a[1], value = _a[2];
                     if (!key) {
-                        throw "var " + p1 + " requires the key field";
+                        throw "var ".concat(p1, " requires the key field");
                     }
                     key = key.replace(/-(\w)/g, function (_all2, p) { return p.toUpperCase(); });
                     args.vars[key] = value;
@@ -230,7 +230,7 @@ var ABeamer;
             get: function () {
                 return this._metadata;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "width", {
@@ -242,7 +242,7 @@ var ABeamer;
             get: function () {
                 return this._width;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "height", {
@@ -254,7 +254,7 @@ var ABeamer;
             get: function () {
                 return this._height;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "frameCount", {
@@ -267,7 +267,7 @@ var ABeamer;
                 this._calcFrameCount();
                 return this._frameCount;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "renderDir", {
@@ -278,7 +278,7 @@ var ABeamer;
              * #end-user @readonly
              */
             get: function () { return this._renderDir; },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "renderFrameEnd", {
@@ -290,7 +290,7 @@ var ABeamer;
              * #end-user @readonly
              */
             get: function () { return this._renderFrameEnd; },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "renderFramePos", {
@@ -302,7 +302,7 @@ var ABeamer;
              * #end-user @readonly
              */
             get: function () { return this._renderFramePos; },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "renderFrameCount", {
@@ -314,7 +314,7 @@ var ABeamer;
              * #end-user @readonly
              */
             get: function () { return this._renderFrameCount; },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "isRendering", {
@@ -325,7 +325,7 @@ var ABeamer;
              * #end-user @readonly
              */
             get: function () { return this._isRendering; },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "isTeleporting", {
@@ -335,7 +335,7 @@ var ABeamer;
              * #end-user @readonly
              */
             get: function () { return this._isTeleporting; },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "args", {
@@ -347,7 +347,7 @@ var ABeamer;
              * #end-user @readonly
              */
             get: function () { return this._args; },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "strictMode", {
@@ -358,7 +358,7 @@ var ABeamer;
                 this._strictMode = newStrictMode;
                 this._args.isStrict = newStrictMode;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "logLevel", {
@@ -368,12 +368,12 @@ var ABeamer;
                 this._isVerbose = newLogLevel >= ABeamer.LL_VERBOSE;
                 this._args.isVerbose = this._isVerbose;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "isVerbose", {
             get: function () { return this._isVerbose; },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "scenes", {
@@ -383,7 +383,7 @@ var ABeamer;
              * #end-user @readonly
              */
             get: function () { return this._scenes; },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "curScene", {
@@ -395,7 +395,7 @@ var ABeamer;
              * #end-user @readonly
              */
             get: function () { return this._curScene; },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Story.prototype, "virtualAnimators", {
@@ -408,7 +408,7 @@ var ABeamer;
                 console.log("virtualAnimators has been deprecated, use addVirtualAnimator");
                 return this._virtualAnimators;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         // ------------------------------------------------------------------------
@@ -979,7 +979,7 @@ var ABeamer;
          * @param params list of [name, value]
          */
         _Story.prototype.logFrmt = function (tag, params, logType) {
-            var msg = tag + ":" + params.map(function (param) { return param[0] + "=_[" + param[1] + "]_"; })
+            var msg = "".concat(tag, ":") + params.map(function (param) { return "".concat(param[0], "=_[").concat(param[1], "]_"); })
                 .join(' ');
             switch (logType) {
                 case ABeamer.LT_WARN:

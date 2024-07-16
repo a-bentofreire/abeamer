@@ -30,7 +30,7 @@ $(window).on("load", function () {
                 {
                     prop: 'html',
                     duration: '1f',
-                    valueText: ["What's up!" + IMG],
+                    valueText: ["What's up!".concat(IMG)],
                 },
             ],
         }])
@@ -121,7 +121,7 @@ $(window).on("load", function () {
                 {
                     prop: 'html',
                     duration: '5f',
-                    valueText: ["What's left" + IMG, "What's left" + IMG + IMG, "What's left" + IMG + IMG + IMG],
+                    valueText: ["What's left".concat(IMG), "What's left".concat(IMG).concat(IMG), "What's left".concat(IMG).concat(IMG).concat(IMG)],
                 },
             ],
         }])

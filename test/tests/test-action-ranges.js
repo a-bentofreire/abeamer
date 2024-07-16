@@ -36,7 +36,7 @@ var Tests;
             name: test.toString(),
             min: elProp.relMin,
             max: test.max,
-            label: test.label ? "(" + test.label + ") - " : '',
+            label: test.label ? "(".concat(test.label, ") - ") : '',
             startFrame: elProp.startFrame,
             frameCount: fps * seconds,
         };
@@ -49,21 +49,21 @@ var Tests;
         var expected = exact_js_1.Exact.interpolateMinMax(test.min, test.max, 2 * rd.fps);
         exact_js_1.Exact.roundToTestDigits(expected);
         var expectedPA = exact_js_1.Exact.simulateAction(expected, test.propType);
-        rd.actions.isIdPropActions("t" + test.elIndex, test.propName, expectedPA, true, true, test.startFrame, test.frameCount);
+        rd.actions.isIdPropActions("t".concat(test.elIndex), test.propName, expectedPA, true, true, test.startFrame, test.frameCount);
         done();
     };
     var testParams = {};
     tests.forEach(function (test) {
-        testParams[test.label + "t" + test.elIndex + " " + test.propName
-            + (" goes from " + test.min + " to " + test.max)] = func;
+        testParams["".concat(test.label, "t").concat(test.elIndex, " ").concat(test.propName)
+            + " goes from ".concat(test.min, " to ").concat(test.max)] = func;
     });
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: fps,
-        css: "#t0,#t1 {left: " + absMin + "px; top: " + absMin + "px;}",
+        css: "#t0,#t1 {left: ".concat(absMin, "px; top: ").concat(absMin, "px;}"),
         animes: tests.map(function (test) {
             return {
-                selector: "#t" + test.elIndex,
-                duration: seconds + "s",
+                selector: "#t".concat(test.elIndex),
+                duration: "".concat(seconds, "s"),
                 props: [{
                         prop: test.propName,
                         value: test.max,

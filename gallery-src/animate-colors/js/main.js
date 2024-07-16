@@ -46,6 +46,17 @@ $(window).on("load", function () {
                         '#FF7F00',
                         '#FF0000',
                     ],
+                    // alternative way: using a rgb function expression.
+                    /*
+                    "='#'+rgb("
+                    + `floor(t*255), `
+                    + `floor((1-t)*255), `
+                    + `floor(abs((0.5+t/0.5)*255)))`,
+                    */
+                    // alternative way: using a hsl function expression.
+                    /*
+                     `='#'+hsl(t, 0.2 + (t / 0.3), 0.5)`,
+                    */
                 },
             ],
         }]);

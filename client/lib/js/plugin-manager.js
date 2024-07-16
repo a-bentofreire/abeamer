@@ -133,7 +133,7 @@ var ABeamer;
                     var aType = functionality[0], map = functionality[1];
                     var funcIndex = typeof aType === 'string' ? Functionalities[aType] : aType;
                     if (funcIndex === undefined) {
-                        throw "Unknown functionality " + aType;
+                        throw "Unknown functionality ".concat(aType);
                     }
                     var container = _FunctionalitiesContainers[funcIndex];
                     map.forEach(function (srcDst) {

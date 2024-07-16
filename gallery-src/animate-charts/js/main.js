@@ -167,7 +167,7 @@ $(window).on("load", function () {
                             attrs: [
                                 {
                                     name: 'width',
-                                    value: "" + (chart.chartWidth || 280),
+                                    value: "".concat(chart.chartWidth || 280),
                                 },
                                 {
                                     name: 'height',
@@ -178,7 +178,7 @@ $(window).on("load", function () {
                     },
                 ],
             }]);
-        chart.animeSelector = "chart-" + i + "-anime";
+        chart.animeSelector = "chart-".concat(i, "-anime");
         scene
             .addAnimations([{
                 selector: "canvas",
@@ -189,8 +189,8 @@ $(window).on("load", function () {
             }]);
         if (chart.props) {
             scene.addAnimations([{
-                    selector: "%chart-" + i + "-anime",
-                    duration: duration + "s",
+                    selector: "%chart-".concat(i, "-anime"),
+                    duration: "".concat(duration, "s"),
                     props: chart.props,
                 }]);
         }

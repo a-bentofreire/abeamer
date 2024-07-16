@@ -1,9 +1,14 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -84,7 +89,7 @@ var ABeamer;
                 break;
         }
         if (!func) {
-            ABeamer.throwI8n("Unknown: " + handler);
+            ABeamer.throwI8n("Unknown: ".concat(handler));
         }
         return {
             handler: handler,
@@ -113,7 +118,7 @@ var ABeamer;
             if (!story._strictMode) {
                 if (this.framesPerCycle < 0 && (parent && !this.framesPerCycle)) {
                     if (story._logLevel >= ABeamer.LL_ERROR) {
-                        story.logMsg(nameTag + " has invalid duration frames: " + this.framesPerCycle);
+                        story.logMsg("".concat(nameTag, " has invalid duration frames: ").concat(this.framesPerCycle));
                     }
                     return false;
                 }
@@ -121,20 +126,20 @@ var ABeamer;
             else {
                 if ((parent && !ABeamer.isPositiveNatural(this.framesPerCycle)) ||
                     (!parent && !ABeamer.isNotNegativeNatural(this.framesPerCycle))) {
-                    ABeamer.throwErr(nameTag + " has invalid duration frames: " + this.framesPerCycle);
+                    ABeamer.throwErr("".concat(nameTag, " has invalid duration frames: ").concat(this.framesPerCycle));
                 }
             }
             this.positionFrame = ABeamer.parseTimeHandler(acp.position, args, refOrDef, refOrDef);
             this.advance = acp.advance;
             if (!story._strictMode) {
                 if (this.positionFrame < 0) {
-                    story.logMsg(nameTag + " has invalid position: " + this.positionFrame);
+                    story.logMsg("".concat(nameTag, " has invalid position: ").concat(this.positionFrame));
                     return false;
                 }
             }
             else {
                 if (!ABeamer.isNotNegativeNatural(this.positionFrame)) {
-                    ABeamer.throwErr(nameTag + " has invalid position: " + this.positionFrame);
+                    ABeamer.throwErr("".concat(nameTag, " has invalid position: ").concat(this.positionFrame));
                 }
             }
             if (acp.easing) {

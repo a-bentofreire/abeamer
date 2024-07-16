@@ -23,8 +23,7 @@ var Tests;
                 // tslint:disable-next-line:no-eval
                 || (eval(expr.substr(1))).toString(),
         });
-        jsMacros.push(["\"f" + i + "\"",
-            "function (t) {\n          if (t === 0) {\n            var actual = ABeamer.calcExpr(\"" + expr + "\", story._args);\n          }\n      return t;\n    }"]);
+        jsMacros.push(["\"f".concat(i, "\""), "function (t) {\n          if (t === 0) {\n            var actual = ABeamer.calcExpr(\"".concat(expr, "\", story._args);\n          }\n      return t;\n    }")]);
     }
     // @TODO: Implement array testing
     // add('=[56.4, 6, 7]', 'simple array', '56.4,6,7');
@@ -78,23 +77,23 @@ var Tests;
         }
         var expected = typeof test.expected !== 'function' ? test.expected
             : test.expected(actual);
-        chai_1.assert.isTrue(expected === actual, "Expected: [" + expected + "], Actual: [" + actual + "]");
+        chai_1.assert.isTrue(expected === actual, "Expected: [".concat(expected, "], Actual: [").concat(actual, "]"));
         done();
     };
     var testParams = {};
     tests.forEach(function (test) {
-        testParams[test.label + "\"" + test.name + "\" ~> \"" + test.expected + "\""] = func;
+        testParams["".concat(test.label, "\"").concat(test.name, "\" ~> \"").concat(test.expected, "\"")] = func;
     });
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: 2,
         css: '',
         animes: tests.map(function (_test, index) {
             return {
-                selector: "#t" + index,
+                selector: "#t".concat(index),
                 props: [{
                         prop: 'left',
                         duration: '2f',
-                        easing: "f" + index,
+                        easing: "f".concat(index),
                         value: 5,
                     }],
             };

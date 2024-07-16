@@ -103,8 +103,8 @@ var ABeamer;
      * and 1 textual output.
      */
     function _str1ParamFunc(params, req, f) {
-        req.checkParams(req, 1, [2 /* String */]);
-        req.res.paType = 2 /* String */;
+        req.checkParams(req, 1, [2 /* ExFuncParamType.String */]);
+        req.res.paType = 2 /* ExFuncParamType.String */;
         req.res.sValue = f(params[0].sValue);
     }
     ABeamer._exFunctions['sin'] = function (params, req) {
@@ -148,18 +148,18 @@ var ABeamer;
     };
     ABeamer._exFunctions['random'] = function (_params, req) {
         req.checkParams(req, 0);
-        req.res.paType = 1 /* Number */;
+        req.res.paType = 1 /* ExFuncParamType.Number */;
         req.res.numValue = Math.random();
     };
     ABeamer._exFunctions['toNumber'] = function (params, req) {
-        req.checkParams(req, 1, [2 /* String */]);
-        req.res.paType = 1 /* Number */;
+        req.checkParams(req, 1, [2 /* ExFuncParamType.String */]);
+        req.res.paType = 1 /* ExFuncParamType.Number */;
         req.res.numValue = parseFloat(params[0].sValue);
     };
     // @ts-ignore   TypeScript bug :-(
     ABeamer._exFunctions['toString'] = function (params, req) {
-        req.checkParams(req, 1, [1 /* Number */]);
-        req.res.paType = 2 /* String */;
+        req.checkParams(req, 1, [1 /* ExFuncParamType.Number */]);
+        req.res.paType = 2 /* ExFuncParamType.String */;
         req.res.sValue = params[0].numValue.toString();
     };
     ABeamer._exFunctions['uppercase'] = function (params, req) {
@@ -172,12 +172,12 @@ var ABeamer;
         _str1ParamFunc(params, req, function (s) { return s.replace(/\b(\w)/, function (_all, p) { return p.toUpperCase(); }); });
     };
     ABeamer._exFunctions['substr'] = function (params, req) {
-        req.checkParams(req, 3, [2 /* String */, 1 /* Number */, 1 /* Number */]);
-        req.res.paType = 2 /* String */;
+        req.checkParams(req, 3, [2 /* ExFuncParamType.String */, 1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */]);
+        req.res.paType = 2 /* ExFuncParamType.String */;
         req.res.sValue = params[0].sValue.substr(params[1].numValue, params[2].numValue < 0 ? undefined : params[2].numValue);
     };
     ABeamer._exFunctions['iff'] = function (params, req) {
-        req.checkParams(req, 3, [1 /* Number */, 0 /* Any */, 0 /* Any */]);
+        req.checkParams(req, 3, [1 /* ExFuncParamType.Number */, 0 /* ExFuncParamType.Any */, 0 /* ExFuncParamType.Any */]);
         var res = params[params[0].numValue ? 1 : 2];
         req.res.paType = res.paType;
         req.res.sValue = res.sValue;
@@ -191,24 +191,24 @@ var ABeamer;
         req.res.numValue = res.numValue;
     };
     ABeamer._exFunctions['get'] = function (params, req) {
-        req.checkParams(req, 2, [3 /* Array */, 1 /* Number */]);
+        req.checkParams(req, 2, [3 /* ExFuncParamType.Array */, 1 /* ExFuncParamType.Number */]);
         var index = Math.round(params[1].numValue);
         var arr = params[0].arrayValue;
         if (index < 0 || index >= arr.length) {
             ABeamer.throwErr('Invalid indexing');
         }
-        req.res.paType = 1 /* Number */;
+        req.res.paType = 1 /* ExFuncParamType.Number */;
         req.res.numValue = arr[index];
     };
     ABeamer._exFunctions['slice'] = function (params, req) {
-        req.checkParams(req, 3, [3 /* Array */, 1 /* Number */, 1 /* Number */]);
+        req.checkParams(req, 3, [3 /* ExFuncParamType.Array */, 1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */]);
         var start = Math.round(params[1].numValue);
         var end = Math.round(params[2].numValue);
         var arr = params[0].arrayValue;
         if (start < 0 || start >= arr.length || end < 0 || end >= arr.length) {
             ABeamer.throwErr('Invalid indexing');
         }
-        req.res.paType = 3 /* Array */;
+        req.res.paType = 3 /* ExFuncParamType.Array */;
         req.res.arrayValue = arr.slice(start, end);
     };
 })(ABeamer || (ABeamer = {}));

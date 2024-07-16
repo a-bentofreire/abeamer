@@ -18,18 +18,18 @@ var Tests;
         '#FFFF00',
         '#FF7F00',
         '#FF0000',
+        // @HINT: Required due the fact chrome returns rgb values instead of #hhhhhh
     ].map(function (color) { return exact_js_1.Exact.hexToRgb(color); });
     var namedColors = ['red', 'green', 'blue', 'yellow', 'black'];
     var func1Name = '__Func_colorList';
     var jsMacros = [
-        ["\"" + func1Name + "\"",
-            "function (t) {\n        var c = " + JSON.stringify(namedColors) + ";\n      return c[Math.floor(c.length * Math.min(Math.max(0, t), 0.999))];\n    }",
+        ["\"".concat(func1Name, "\""), "function (t) {\n        var c = ".concat(JSON.stringify(namedColors), ";\n      return c[Math.floor(c.length * Math.min(Math.max(0, t), 0.999))];\n    }"),
         ],
     ];
     var transfMin = 2.2;
     var transfMax = 34.2;
     var transfMacroName = '_VALUE_';
-    var transformStr = "rotateY(30deg) rotateX(" + transfMacroName + "deg)";
+    var transformStr = "rotateY(30deg) rotateX(".concat(transfMacroName, "deg)");
     var transfCycle = exact_js_1.Exact.interpolateMinMax(transfMin, transfMax, seconds * fps).
         map(function (t) { return transformStr.replace(transfMacroName, exact_js_1.Exact.roundTestDigit(t).toString()); });
     // console.log(transfCycle);
@@ -37,14 +37,14 @@ var Tests;
         {
             name: 'valueText:string',
             prop: 'color',
-            css: "color: " + colors[0],
+            css: "color: ".concat(colors[0]),
             valueText: colors,
             expected: exact_js_1.Exact.interpolateList(colors, cycle),
         },
         {
             name: 'valueText:function',
             prop: 'color',
-            css: "color: " + colors[0],
+            css: "color: ".concat(colors[0]),
             valueText: func1Name,
             expected: exact_js_1.Exact.interpolateList(namedColors, cycle),
         },
@@ -60,22 +60,22 @@ var Tests;
     ];
     var func = function (rd, done, index) {
         var test = tests[index];
-        rd.actions.isIdPropActions("t" + index, test.prop, test.expected);
+        rd.actions.isIdPropActions("t".concat(index), test.prop, test.expected);
         done();
     };
     var testParams = {};
     tests.forEach(function (test, index) {
-        testParams["t" + index + " " + test.prop + " uses " + test.name] = func;
+        testParams["t".concat(index, " ").concat(test.prop, " uses ").concat(test.name)] = func;
     });
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: fps,
         css: tests.map(function (test, index) {
-            return "#t" + index + " {" + test.css + "}";
+            return "#t".concat(index, " {").concat(test.css, "}");
         }).join('\n'),
         animes: tests.map(function (test, index) {
             return {
-                selector: "#t" + index,
-                duration: seconds + "s",
+                selector: "#t".concat(index),
+                duration: "".concat(seconds, "s"),
                 props: [{
                         prop: test.prop,
                         value: test.value,
@@ -88,7 +88,9 @@ var Tests;
         html: exact_js_1.Exact.genTestHtml(tests.length),
     }, {
         jsMacros: jsMacros,
-        tests: testParams,
+        tests: testParams, /* ,
+        toLogStdOut: true,
+        toLogActions: true */
     });
 })(Tests || (Tests = {}));
 //# sourceMappingURL=test-props.js.map

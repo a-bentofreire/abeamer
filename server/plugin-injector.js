@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PluginInjector = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -14,13 +15,13 @@ var PluginInjector;
     var allowedPlugins = [];
     function loadAllowedPlugins(fileName, existsSync, readUtf8Sync) {
         if (!existsSync(fileName)) {
-            throw fileName + " doesn't exists";
+            throw "".concat(fileName, " doesn't exists");
         }
         allowedPlugins = JSON.parse(readUtf8Sync(fileName)).plugins;
     }
     PluginInjector.loadAllowedPlugins = loadAllowedPlugins;
     function processUrl(urlBase, url) {
-        return url.search(/^http/) !== -1 ? url : urlBase + "/" + url;
+        return url.search(/^http/) !== -1 ? url : "".concat(urlBase, "/").concat(url);
     }
     PluginInjector.processUrl = processUrl;
     function inject(existsSync, readUtf8Sync, writeFileSync) {
@@ -29,16 +30,16 @@ var PluginInjector;
             return;
         }
         if (!PluginInjector.injectPage || !existsSync(PluginInjector.injectPage)) {
-            throw PluginInjector.injectPage + " doesn't exists";
+            throw "".concat(PluginInjector.injectPage, " doesn't exists");
         }
         // check if the plugins are allowed and replace the urls with safe urls.
         PluginInjector.plugins.forEach(function (plugin) {
             if (!plugin.uuid || !plugin.author) {
-                throw "Invalid plugin uuid: " + plugin.uuid + " author: " + plugin.author;
+                throw "Invalid plugin uuid: ".concat(plugin.uuid, " author: ").concat(plugin.author);
             }
             var match = allowedPlugins.find(function (allowedPlugin) { return allowedPlugin.uuid === plugin.uuid; });
             if (!match) {
-                throw "Forbidden plugin uuid: " + plugin.uuid + " author: " + plugin.author;
+                throw "Forbidden plugin uuid: ".concat(plugin.uuid, " author: ").concat(plugin.author);
             }
             plugin.jsUrls = match.jsUrls;
             plugin.cssUrls = match.cssUrls;
@@ -55,7 +56,7 @@ var PluginInjector;
             var output = [];
             PluginInjector.plugins.forEach(function (plugin) {
                 (plugin.jsUrls || []).forEach(function (url) {
-                    output.push("    <script src=\"" + processUrl(urlBase, url) + "\"></script>");
+                    output.push("    <script src=\"".concat(processUrl(urlBase, url), "\"></script>"));
                 });
             });
             return before + '\n' + output.join('\n') + '\n' + after;
@@ -65,7 +66,7 @@ var PluginInjector;
             var output = [];
             PluginInjector.plugins.forEach(function (plugin) {
                 (plugin.cssUrls || []).forEach(function (url) {
-                    output.push("    <link href=\"" + processUrl(urlBase, url) + "\" rel=\"stylesheet\">");
+                    output.push("    <link href=\"".concat(processUrl(urlBase, url), "\" rel=\"stylesheet\">"));
                 });
             });
             return before + '\n' + output.join('\n') + '\n' + after;
@@ -73,5 +74,5 @@ var PluginInjector;
         writeFileSync(PluginInjector.injectPage, content);
     }
     PluginInjector.inject = inject;
-})(PluginInjector = exports.PluginInjector || (exports.PluginInjector = {}));
+})(PluginInjector || (exports.PluginInjector = PluginInjector = {}));
 //# sourceMappingURL=plugin-injector.js.map

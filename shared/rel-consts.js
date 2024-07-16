@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.RelConsts = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -13,5 +14,5 @@ var RelConsts;
     RelConsts.DEFAULT_SERVER = 'puppeteer';
     RelConsts.NODE_SERVERS = ['puppeteer'];
     RelConsts.SUPPORTED_SERVERS = ['phantomjs', 'slimerjs', 'puppeteer'];
-})(RelConsts = exports.RelConsts || (exports.RelConsts = {}));
+})(RelConsts || (exports.RelConsts = RelConsts = {}));
 //# sourceMappingURL=rel-consts.js.map

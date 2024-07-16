@@ -72,8 +72,7 @@ $(window).on("load", function () {
                     value: 1,
                 },
             ],
-        },
-    ]);
+        },]);
     story.render(story.bestPlaySpeed());
 });
 //# sourceMappingURL=main.js.map

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.fsix = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -38,12 +39,12 @@ var fsix;
     }
     fsix.mkdirpSync = mkdirpSync;
     function runExternal(cmd, callback) {
-        child_process_1.exec(cmd, function (error, stdout, stderr) {
+        (0, child_process_1.exec)(cmd, function (error, stdout, stderr) {
             if (callback) {
                 callback(error, stdout, stderr);
             }
         });
     }
     fsix.runExternal = runExternal;
-})(fsix = exports.fsix || (exports.fsix = {}));
+})(fsix || (exports.fsix = fsix = {}));
 //# sourceMappingURL=fsix.js.map

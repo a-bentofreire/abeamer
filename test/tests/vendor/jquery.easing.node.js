@@ -9,6 +9,7 @@
  * https://raw.github.com/danro/jquery-easing/master/LICENSE
  * ======================================================== */
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Easings = void 0;
 // @WARN: This file is an adaption from client/lib/js/vendor/jquery-easing/jquery.easing.js
 // modified to run on nodejs
 var Easings;
@@ -199,7 +200,7 @@ var Easings;
         }
     };
     //);
-})(Easings = exports.Easings || (exports.Easings = {}));
+})(Easings || (exports.Easings = Easings = {}));
 /*
  *
  * TERMS OF USE - EASING EQUATIONS

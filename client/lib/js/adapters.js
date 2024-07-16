@@ -1,9 +1,14 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -608,7 +613,7 @@ var ABeamer;
         if ((isString !== false) && (isString || typeof elementOrStr === 'string')) {
             if ((isVirtual === false) ||
                 (isVirtual === undefined && !ABeamer._isIdVirtual(elementOrStr))) {
-                ABeamer.throwErr("selector " + elementOrStr + " must be virtual");
+                ABeamer.throwErr("selector ".concat(elementOrStr, " must be virtual"));
             }
             element = _getVirtualElement(story, elementOrStr);
             isVirtual = true;
@@ -646,7 +651,7 @@ var ABeamer;
                 if (!elSelector.length) {
                     return;
                 }
-                (elSelector).forEach(function (element) {
+                elSelector.forEach(function (element) {
                     _addElementAdapter(story, element, elementAdapters);
                 });
             }

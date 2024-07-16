@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BuildDTsFiles = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -115,7 +116,7 @@ var BuildDTsFiles;
         };
         LinesParser.prototype.parseProperties = function (dataSpaces) {
             var line = this.peek();
-            var matches = line.match(new RegExp("^" + dataSpaces + "(readonly )?(\\w+)(\\?)?\\s*:(.*)$"));
+            var matches = line.match(new RegExp("^".concat(dataSpaces, "(readonly )?(\\w+)(\\?)?\\s*:(.*)$")));
             if (matches) {
                 var readonly = matches[1], varName = matches[2], optional = matches[3], typeInfo = matches[4];
                 var outVarName = this.acceptId(varName, IdTypes.VarName);
@@ -123,14 +124,14 @@ var BuildDTsFiles;
                     return;
                 }
                 var outTypeInfo = typeInfo.replace(/ = .*/, ';');
-                var outLine = "" + dataSpaces + (readonly || '') + varName + (optional || '') + ":" + outTypeInfo;
+                var outLine = "".concat(dataSpaces).concat(readonly || '').concat(varName).concat(optional || '', ":").concat(outTypeInfo);
                 this.addWithJsDocs(outLine, '\n');
             }
         };
         LinesParser.prototype.parseFunctions = function () {
             var line = this.peek();
             var spaces = '  ';
-            var matches = line.match(new RegExp("^" + spaces + "export function\\s*(\\w+)(.*)\\s*$"));
+            var matches = line.match(new RegExp("^".concat(spaces, "export function\\s*(\\w+)(.*)\\s*$")));
             if (matches) {
                 var functionName = matches[1], paramsData = matches[2];
                 this.get();
@@ -144,13 +145,13 @@ var BuildDTsFiles;
                     params += '\n' + nextLine;
                 }
                 params = params.replace(/\s*\{$/, ';\n');
-                var outLine = spaces + "export function " + outFunctionName + params;
+                var outLine = "".concat(spaces, "export function ").concat(outFunctionName).concat(params);
                 this.addWithJsDocs(outLine, '\n');
             }
         };
         LinesParser.prototype.parseMethods = function (dataSpaces) {
             var line = this.peek();
-            var matches = line.match(new RegExp("^" + dataSpaces + "(abstract )?(get )?(\\w+)\\("));
+            var matches = line.match(new RegExp("^".concat(dataSpaces, "(abstract )?(get )?(\\w+)\\(")));
             if (matches) {
                 var abstractKeyWord = matches[1], getterKeyword = matches[2], functionName = matches[3];
                 var isGetter = getterKeyword !== undefined;
@@ -207,9 +208,9 @@ var BuildDTsFiles;
                 if (!outClassName) {
                     return;
                 }
-                console.log("Adding Class \"" + outClassName + "\"");
-                var outParentWords = parentClass ? this.acceptId("extends " + parentClass + " ", IdTypes.ExtendsWords) : '';
-                var outLine = spaces + "export interface " + outClassName + " " + outParentWords + "{";
+                console.log("Adding Class \"".concat(outClassName, "\""));
+                var outParentWords = parentClass ? this.acceptId("extends ".concat(parentClass, " "), IdTypes.ExtendsWords) : '';
+                var outLine = "".concat(spaces, "export interface ").concat(outClassName, " ").concat(outParentWords, "{");
                 // this.docParser.addId(outClassName.replace(/\s+extends.*$/, ''), DocIdType.InterfaceName);
                 this.addWithJsDocs(outLine, '');
                 this.get();
@@ -246,7 +247,7 @@ var BuildDTsFiles;
             var line = this.peek();
             var matches = line.match(/^\s*\/\/\s*#export-section-start\s*:\s*([\w\-]+)\s*$/);
             if (matches && matches[1] === this.tag) {
-                console.log("Exporting section " + this.tag + " from \"" + this.fileName + "\"");
+                console.log("Exporting section ".concat(this.tag, " from \"").concat(this.fileName, "\""));
                 this.get();
                 while (this.peek().indexOf('#export-section-end') === -1) {
                     this.addOutLine(this.get());
@@ -270,7 +271,7 @@ var BuildDTsFiles;
     function build(fileList, outputFileName, preText, postText, acceptId, tag, docsPath) {
         var outLines = [];
         fileList.forEach(function (fileName) {
-            console.log("Parsing " + fileName);
+            console.log("Parsing ".concat(fileName));
             var parser = new LinesParser(fsix_js_1.fsix.readUtf8Sync(fileName).split('\n'), acceptId, tag, fileName);
             while (!parser.finished()) {
                 parser.parseLine();
@@ -278,12 +279,12 @@ var BuildDTsFiles;
             }
             if (docsPath !== undefined && parser.outLines.length) {
                 var docFileTitle = sysPath.posix.basename(fileName).replace(/\.\w+$/, '');
-                sysFs.writeFileSync(docsPath + "/" + docFileTitle + ".txt", parser.outLines.join('\n'));
+                sysFs.writeFileSync("".concat(docsPath, "/").concat(docFileTitle, ".txt"), parser.outLines.join('\n'));
             }
             outLines = outLines.concat(parser.outLines);
         });
         sysFs.writeFileSync(outputFileName, (preText || '') + outLines.join('\n') + (postText || ''));
     }
     BuildDTsFiles.build = build;
-})(BuildDTsFiles = exports.BuildDTsFiles || (exports.BuildDTsFiles = {}));
+})(BuildDTsFiles || (exports.BuildDTsFiles = BuildDTsFiles = {}));
 //# sourceMappingURL=build-d-ts.js.map

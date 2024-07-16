@@ -39,7 +39,7 @@ export namespace OptsParser {
     url: {
       param: 'string', desc:
         `url of the page containing the animation
-              e.g. http://abeamer.a-bentofreire.com/
+              e.g. http://abeamer.devtoix.com/
               e.g. file:///home/abeamer/Documents/test/`},
 
     file: {
@@ -148,7 +148,7 @@ export namespace OptsParser {
     config: {
       param: 'string', desc:
         `loads the config from a ini or json file
-           see https://abeamer.a-bentofreire.com/docs/latest/end-user/en/site/config-file/`,
+           see https://abeamer.devtoix.com/docs/latest/end-user/en/site/config-file/`,
     },
 
     var: {

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BuildShared = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -22,14 +23,14 @@ var fsix_js_1 = require("../vendor/fsix.js");
 var BuildShared;
 (function (BuildShared) {
     function build(libSourceFileTitles, srcPath, dstPath, generateMsg) {
-        var WARN_MSG = "\n// This file was generated via " + generateMsg + "\n// It shares the uuid\n//\n// @WARN: Don't edit this file.\n/** @see ";
+        var WARN_MSG = "\n// This file was generated via ".concat(generateMsg, "\n// It shares the uuid\n//\n// @WARN: Don't edit this file.\n/** @see ");
         var sharedConsts = [];
         function parseSharedConsts(fileTitle, content) {
             var found = false;
             var lastIdPart = '';
             function addConst(line) {
                 if (!found) {
-                    sharedConsts.push("\n  // -------------\n  // " + fileTitle + "\n  // -------------\n");
+                    sharedConsts.push("\n  // -------------\n  // ".concat(fileTitle, "\n  // -------------\n"));
                     found = true;
                 }
                 // adds extra line if a different constant group
@@ -48,22 +49,22 @@ var BuildShared;
             });
         }
         libSourceFileTitles.forEach(function (fileTitle) {
-            var srcFileName = srcPath + "/" + fileTitle + ".ts";
+            var srcFileName = "".concat(srcPath, "/").concat(fileTitle, ".ts");
             var content = fsix_js_1.fsix.readUtf8Sync(srcFileName);
             parseSharedConsts(fileTitle, content);
             if (content.match(/@module shared/)) {
                 var outNameSpace = fileTitle[0].toUpperCase() + fileTitle.substr(1)
                     .replace(/-(\w)/g, function (all, p1) { return p1.toUpperCase(); });
-                content = content.replace(/namespace \w+/, "export namespace " + outNameSpace);
-                content = content.replace(/[^\n]+@module shared[^\n]+/, "\n" + WARN_MSG + srcFileName + " */\n");
-                var dstFileName = dstPath + "/" + fileTitle + ".ts";
-                console.log("writing " + dstFileName);
+                content = content.replace(/namespace \w+/, "export namespace ".concat(outNameSpace));
+                content = content.replace(/[^\n]+@module shared[^\n]+/, "\n".concat(WARN_MSG).concat(srcFileName, " */\n"));
+                var dstFileName = "".concat(dstPath, "/").concat(fileTitle, ".ts");
+                console.log("writing ".concat(dstFileName));
                 sysFs.writeFileSync(dstFileName, content);
             }
         });
         // generates the dev consts file
-        sysFs.writeFileSync(dstPath + "/dev-consts.ts", "\"use strict\";\n// This file was generated " + generateMsg + "\n// It has no uuid\n//\n// @WARN: Don't edit this file.\n\nexport namespace DevConsts {\n" + sharedConsts.join('\n') + "\n}\n");
+        sysFs.writeFileSync("".concat(dstPath, "/dev-consts.ts"), "\"use strict\";\n// This file was generated ".concat(generateMsg, "\n// It has no uuid\n//\n// @WARN: Don't edit this file.\n\nexport namespace DevConsts {\n").concat(sharedConsts.join('\n'), "\n}\n"));
     }
     BuildShared.build = build;
-})(BuildShared = exports.BuildShared || (exports.BuildShared = {}));
+})(BuildShared || (exports.BuildShared = BuildShared = {}));
 //# sourceMappingURL=build-shared.js.map

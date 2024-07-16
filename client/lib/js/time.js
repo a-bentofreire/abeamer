@@ -91,7 +91,7 @@ var ABeamer;
                 .match(/^([+\-])?([\d\.]+)([\w%]+)$/) || ['', '', '', ''], sShift = _a[1], sValue = _a[2], suffix = _a[3];
             defaultUnit = TimeUnit[suffix];
             if (defaultUnit === undefined) {
-                throw "Unknown time of " + timeOrFrame;
+                throw "Unknown time of ".concat(timeOrFrame);
             }
             timeOrFrame = parseFloat(sValue);
             shift = sShift;

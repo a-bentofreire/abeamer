@@ -67,7 +67,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     function _parseColorInput(params, req, hasTransparency) {
         if (params.length === 1) {
-            req.checkParams(req, 1, [3 /* Array */]);
+            req.checkParams(req, 1, [3 /* ExFuncParamType.Array */]);
             var res = params[0].arrayValue;
             var resLen = res.length;
             if (resLen !== (hasTransparency ? 4 : 3)) {
@@ -76,13 +76,13 @@ var ABeamer;
             return res;
         }
         else if (hasTransparency) {
-            req.checkParams(req, 4, [1 /* Number */,
-                1 /* Number */, 1 /* Number */, 1 /* Number */]);
+            req.checkParams(req, 4, [1 /* ExFuncParamType.Number */,
+                1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */]);
             return params.map(function (p) { return p.numValue; });
         }
         else {
-            req.checkParams(req, 3, [1 /* Number */,
-                1 /* Number */, 1 /* Number */]);
+            req.checkParams(req, 3, [1 /* ExFuncParamType.Number */,
+                1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */]);
             return params.map(function (p) { return p.numValue; });
         }
     }
@@ -168,7 +168,7 @@ var ABeamer;
     function _hslaCommon(params, req, hasTransparency) {
         var color34 = _parseColorInput(params, req, hasTransparency);
         var rgb = _hsl2RgbFunc(color34[0], color34[1], color34[2]);
-        req.res.paType = 2 /* String */;
+        req.res.paType = 2 /* ExFuncParamType.String */;
         req.res.sValue = _rgbaToStr(!hasTransparency ? rgb :
             [rgb[0], rgb[1], rgb[2], color34[3]]);
     }
@@ -180,12 +180,12 @@ var ABeamer;
     }
     function _hsl2Rgb(params, req) {
         var color34 = _parseColorInput(params, req, false);
-        req.res.paType = 3 /* Array */;
+        req.res.paType = 3 /* ExFuncParamType.Array */;
         req.res.arrayValue = _hsl2RgbFunc(color34[0], color34[1], color34[2]);
     }
     function _rgb2Hsl(params, req) {
         var color34 = _parseColorInput(params, req, false);
-        req.res.paType = 3 /* Array */;
+        req.res.paType = 3 /* ExFuncParamType.Array */;
         req.res.arrayValue = _rgb2HslFunc(color34[0], color34[1], color34[2]);
     }
     // ------------------------------------------------------------------------
@@ -204,7 +204,7 @@ var ABeamer;
     }
     function _rgbaCommon(params, req, hasTransparency) {
         var color34 = _parseColorInput(params, req, hasTransparency);
-        req.res.paType = 2 /* String */;
+        req.res.paType = 2 /* ExFuncParamType.String */;
         req.res.sValue = _rgbaToStr(color34);
     }
     function _rgb(params, req) {

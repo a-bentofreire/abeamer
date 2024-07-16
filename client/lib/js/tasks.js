@@ -190,12 +190,12 @@ var ABeamer;
                         var parts = ['<' + tag_1];
                         (params.attrs || []).forEach(function (param) {
                             var value = _formatValue(param.value, param.isFormatted, i, args);
-                            parts.push(" " + param.name + "=\"" + value + "\"");
+                            parts.push(" ".concat(param.name, "=\"").concat(value, "\""));
                         });
                         parts.push('>');
                         parts.push(_formatValue(params.content || '', params.isContentFormatted, i, args));
                         if (needsClosing_1) {
-                            parts.push("</" + tag_1 + ">");
+                            parts.push("</".concat(tag_1, ">"));
                         }
                         inTextHtml.push(parts.join(''));
                     };

@@ -30,22 +30,22 @@ $(window).on("load", function () {
     easings.forEach(function (easing, index) {
         scene1
             .addAnimations([{
-                selector: "#gallery>div:nth-child(" + (index + 1) + ")>.dot",
+                selector: "#gallery>div:nth-child(".concat(index + 1, ")>.dot"),
                 advance: false,
-                duration: d + "s",
+                duration: "".concat(d, "s"),
                 props: [{
                         prop: 'left',
-                        valueStart: margin + "px",
+                        valueStart: "".concat(margin, "px"),
                         value: x1,
                     }, {
                         prop: 'top',
                         easing: easing,
-                        valueStart: h - margin + "px",
+                        valueStart: "".concat(h - margin, "px"),
                         value: margin,
                     }],
             },
             {
-                selector: "#gallery>div:nth-child(" + (index + 1) + ")>.label",
+                selector: "#gallery>div:nth-child(".concat(index + 1, ")>.label"),
                 duration: 1,
                 advance: false,
                 props: [{

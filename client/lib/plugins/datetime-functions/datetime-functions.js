@@ -86,44 +86,44 @@ var ABeamer;
     //                               Functions
     // ------------------------------------------------------------------------
     function _timeCommon(params, req, f) {
-        req.checkParams(req, 1, [1 /* Number */]);
-        req.res.paType = 1 /* Number */;
+        req.checkParams(req, 1, [1 /* ExFuncParamType.Number */]);
+        req.res.paType = 1 /* ExFuncParamType.Number */;
         f(req.res, new Date(params[0].numValue));
     }
     function _now(_params, req) {
         req.checkParams(req, 0);
-        req.res.paType = 1 /* Number */;
+        req.res.paType = 1 /* ExFuncParamType.Number */;
         req.res.numValue = new Date().valueOf();
     }
     function _date(params, req) {
         var paramCount = params.length;
         var dt;
-        if (paramCount === 1 && params[0].paType === 2 /* String */) {
+        if (paramCount === 1 && params[0].paType === 2 /* ExFuncParamType.String */) {
             dt = new Date(params[0].sValue);
         }
         else if (paramCount === 3) {
-            req.checkParams(req, 3, [1 /* Number */, 1 /* Number */, 1 /* Number */]);
+            req.checkParams(req, 3, [1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */]);
             dt = new Date(params[0].numValue, params[1].numValue - 1, params[2].numValue);
         }
         else if (paramCount === 6) {
-            req.checkParams(req, 6, [1 /* Number */, 1 /* Number */, 1 /* Number */,
-                1 /* Number */, 1 /* Number */, 1 /* Number */]);
+            req.checkParams(req, 6, [1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */,
+                1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */]);
             dt = new Date(params[0].numValue, params[1].numValue - 1, params[2].numValue, params[3].numValue, params[4].numValue, params[5].numValue);
         }
         else {
-            req.checkParams(req, 1, [2 /* String */]);
+            req.checkParams(req, 1, [2 /* ExFuncParamType.String */]);
         }
-        req.res.paType = 1 /* Number */;
+        req.res.paType = 1 /* ExFuncParamType.Number */;
         req.res.numValue = dt.valueOf();
     }
     function _formatDateTime(params, req) {
         var hasLocale = params.length === 3;
-        req.checkParams(req, hasLocale ? 3 : 2, hasLocale ? [2 /* String */, 1 /* Number */, 2 /* String */] :
-            [2 /* String */, 1 /* Number */]);
+        req.checkParams(req, hasLocale ? 3 : 2, hasLocale ? [2 /* ExFuncParamType.String */, 1 /* ExFuncParamType.Number */, 2 /* ExFuncParamType.String */] :
+            [2 /* ExFuncParamType.String */, 1 /* ExFuncParamType.Number */]);
         var frmt = params[0].sValue;
         var dt = new Date(params[1].numValue);
         var locale = hasLocale ? params[2].sValue : 'en-us';
-        req.res.paType = 2 /* String */;
+        req.res.paType = 2 /* ExFuncParamType.String */;
         req.res.sValue = frmt.replace(/(\w)(\1*)/g, function (p) {
             function pad(v) {
                 var s = v.toString();

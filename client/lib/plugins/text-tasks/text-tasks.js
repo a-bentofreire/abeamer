@@ -68,8 +68,8 @@ var ABeamer;
                 var inTextArray = _textSplitter(params);
                 var elAdapters = args.scene.getElementAdapters(anime.selector);
                 var inTextHtml_1 = inTextArray.map(function (item, index) {
-                    return "<span data-index=\"" + index + "\" data=\"" + item.replace(/[\n"']/g, '') + "\">"
-                        + (item.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>') + "</span>");
+                    return "<span data-index=\"".concat(index, "\" data=\"").concat(item.replace(/[\n"']/g, ''), "\">")
+                        + "".concat(item.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>'), "</span>");
                 });
                 elAdapters.forEach(function (elAdapter) {
                     elAdapter.setProp('html', inTextHtml_1.join(''), args);
@@ -77,7 +77,7 @@ var ABeamer;
                         var $spans = $(elAdapter.htmlElement).find('span');
                         var left_1 = 0;
                         $spans.each(function (_index, domEl) {
-                            domEl.style.left = left_1 + "px";
+                            domEl.style.left = "".concat(left_1, "px");
                             left_1 += domEl.clientWidth;
                         });
                     }

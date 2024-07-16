@@ -46,12 +46,12 @@ var ABeamer;
     //                               format functions
     // ------------------------------------------------------------------------
     function _formatCommon(params, req, maxParam, f) {
-        req.checkParams(req, Math.min(Math.max(1, params.length), maxParam), [1 /* Number */, 2 /* String */, 2 /* String */]
+        req.checkParams(req, Math.min(Math.max(1, params.length), maxParam), [1 /* ExFuncParamType.Number */, 2 /* ExFuncParamType.String */, 2 /* ExFuncParamType.String */]
             .slice(0, params.length));
         var v = params[0].numValue;
         var locale = params.length > 1 ? params[1].sValue : undefined;
         var currency = params.length > 2 ? params[2].sValue : 'USD';
-        req.res.paType = 2 /* String */;
+        req.res.paType = 2 /* ExFuncParamType.String */;
         req.res.sValue = f(v, locale, currency);
     }
     function _numToStr(params, req) {
@@ -68,7 +68,8 @@ var ABeamer;
         _formatCommon(params, req, 3, function (v, locale, currency) {
             return new Intl.NumberFormat(locale, {
                 useGrouping: true,
-                style: 'currency', currency: currency,
+                style: 'currency',
+                currency: currency,
             }).format(v);
         });
     }

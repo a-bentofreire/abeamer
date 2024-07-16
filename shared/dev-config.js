@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DevCfg = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -17,7 +18,7 @@ var DevCfg;
             cfg = yaml.load(fsix_js_1.fsix.readUtf8Sync('./config.yaml'), yaml.DEFAULT_FULL_SCHEMA);
             cfg.paths.PROJ_PATH = fsix_js_1.fsix.toPosixSlash(projPath);
             cfg.release.demosStr = cfg.release.demos.length > 1 ?
-                "{" + cfg.release.demos.join(',') + "}" : cfg.release.demos[0];
+                "{".concat(cfg.release.demos.join(','), "}") : cfg.release.demos[0];
             expandMap(cfg.webLinks);
             expandMap(cfg.paths);
         }
@@ -50,5 +51,5 @@ var DevCfg;
         return arr;
     }
     DevCfg.expandArray = expandArray;
-})(DevCfg = exports.DevCfg || (exports.DevCfg = {}));
+})(DevCfg || (exports.DevCfg = DevCfg = {}));
 //# sourceMappingURL=dev-config.js.map

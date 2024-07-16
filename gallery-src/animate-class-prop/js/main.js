@@ -21,12 +21,12 @@ $(window).on("load", function () {
                 },
                 {
                     prop: 'class',
-                    position: "+" + step + "s",
+                    position: "+".concat(step, "s"),
                     valueText: ['+step2'],
                 },
                 {
                     prop: 'class',
-                    position: "+" + step * 2 + "s",
+                    position: "+".concat(step * 2, "s"),
                     valueText: ['-step2 +step3'],
                 }
             ],

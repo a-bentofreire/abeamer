@@ -22,11 +22,11 @@ $(window).on("load", function () {
                         animeSelector: 'plot1-anime',
                         data: [
                             {
-                                expr: "=" + f1,
+                                expr: "=".concat(f1),
                                 nrPoints: 50,
                             },
                             {
-                                expr: "=" + f2,
+                                expr: "=".concat(f2),
                             }
                         ],
                         strokeColors: ['#dd5252', 'blue'],
@@ -44,7 +44,7 @@ $(window).on("load", function () {
         }])
         .addAnimations([{
             selector: "%plot1-anime",
-            duration: duration + "s",
+            duration: "".concat(duration, "s"),
             props: [{
                     prop: 'sweep',
                     value: 1,

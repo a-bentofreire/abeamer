@@ -1,5 +1,14 @@
 #!/usr/bin/env node
 "use strict";
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
@@ -180,13 +189,13 @@ var Cli;
     var isWin = sysProcess.platform === 'win32';
     var argOpts = opts_parser_js_1.OptsParser.argOpts;
     argOpts['port'] = {
-        param: 'int', desc: "port for serve command. default is " + DEFAULT_PORT,
+        param: 'int', desc: "port for serve command. default is ".concat(DEFAULT_PORT),
     };
     argOpts['gif'] = {
-        param: 'string', desc: "output gif filename. default is " + DEFAULT_GIF_NAME,
+        param: 'string', desc: "output gif filename. default is ".concat(DEFAULT_GIF_NAME),
     };
     argOpts['movie'] = {
-        param: 'string', desc: "output movie filename. default is " + DEFAULT_MOVIE_NAME,
+        param: 'string', desc: "output movie filename. default is ".concat(DEFAULT_MOVIE_NAME),
     };
     argOpts['bkgMovie'] = {
         param: 'string', desc: "movie filename to be used as background to blend with transparent images",
@@ -216,13 +225,13 @@ var Cli;
         param: 'array', allowOption: true, desc: "arguments to be passed to gif generator(convert) after the arguments passed by abeamer",
     };
     argOpts['gifBackground'] = {
-        param: 'string', desc: "background color used to replace the alpha channel in gif generation.\nif this is value is set to \"" + MANUAL_BACKGROUND + "\" , no parameters relating are passed to the gif generator.\ndefault is " + MANUAL_BACKGROUND,
+        param: 'string', desc: "background color used to replace the alpha channel in gif generation.\nif this is value is set to \"".concat(MANUAL_BACKGROUND, "\" , no parameters relating are passed to the gif generator.\ndefault is ").concat(MANUAL_BACKGROUND),
     };
     // ------------------------------------------------------------------------
     //                               Print Usage
     // ------------------------------------------------------------------------
     function printUsage() {
-        console.log("abeamer [command] [options] [project-name|report-name]\nThe commands are:\n    " + CMD_CHECK + " checks if the all requirements are installed and configured\n    " + CMD_CREATE + " creates a project with project-name\n    " + CMD_SERVE + "  starts a live server. Use it in case you need to load the config from JSON file\n    " + CMD_RENDER + " runs your project in the context of the headless browser.\n    " + CMD_GIF + "    creates an animated gif from the project-name or report-name\n    " + CMD_MOVIE + "  creates a movie from the project-name or report-name\n\n    e.g.\n      echo \"checks if chrome, puppeteer, imagemagick, ffmpeg are installed and configured\"\n      abeamer " + CMD_CHECK + "\n\n      echo \"create folder foo and copy necessary files\"\n      abeamer " + CMD_CREATE + " --width 640 --height 480 --fps 25 foo\n\n      cd foo\n\n      echo \"start a live server\"\n      echo \"only required if you need to load your configuration from json file\"\n      abeamer " + CMD_SERVE + "\n\n      echo \"generates the png files and a report on story-frames folder\"\n      abeamer " + CMD_RENDER + "\n\n      echo \"creates story.gif file on story-frames folder\"\n      abeamer " + CMD_GIF + "\n\n      echo \"creates story.mp4 file on story-frames folder\"\n      abeamer " + CMD_MOVIE + "\n\n      For more information, read:\n      https://abeamer.a-bentofreire.com/docs/latest/end-user/en/site/abeamer-cli/\n\n");
+        console.log("abeamer [command] [options] [project-name|report-name]\nThe commands are:\n    ".concat(CMD_CHECK, " checks if the all requirements are installed and configured\n    ").concat(CMD_CREATE, " creates a project with project-name\n    ").concat(CMD_SERVE, "  starts a live server. Use it in case you need to load the config from JSON file\n    ").concat(CMD_RENDER, " runs your project in the context of the headless browser.\n    ").concat(CMD_GIF, "    creates an animated gif from the project-name or report-name\n    ").concat(CMD_MOVIE, "  creates a movie from the project-name or report-name\n\n    e.g.\n      echo \"checks if chrome, puppeteer, imagemagick, ffmpeg are installed and configured\"\n      abeamer ").concat(CMD_CHECK, "\n\n      echo \"create folder foo and copy necessary files\"\n      abeamer ").concat(CMD_CREATE, " --width 640 --height 480 --fps 25 foo\n\n      cd foo\n\n      echo \"start a live server\"\n      echo \"only required if you need to load your configuration from json file\"\n      abeamer ").concat(CMD_SERVE, "\n\n      echo \"generates the png files and a report on story-frames folder\"\n      abeamer ").concat(CMD_RENDER, "\n\n      echo \"creates story.gif file on story-frames folder\"\n      abeamer ").concat(CMD_GIF, "\n\n      echo \"creates story.mp4 file on story-frames folder\"\n      abeamer ").concat(CMD_MOVIE, "\n\n      For more information, read:\n      https://abeamer.devtoix.com/docs/latest/end-user/en/site/abeamer-cli/\n\n"));
         opts_parser_js_1.OptsParser.printUsage();
     }
     // ------------------------------------------------------------------------
@@ -266,8 +275,8 @@ var Cli;
                     logLevel = value;
                     isVerbose = logLevel >= consts_js_1.Consts.LL_VERBOSE;
                     if (isVerbose) {
-                        console.log("Args: [" + args.join('],[') + "]");
-                        console.log("Current Path: " + sysProcess.cwd());
+                        console.log("Args: [".concat(args.join('],['), "]"));
+                        console.log("Current Path: ".concat(sysProcess.cwd()));
                     }
                     break;
             }
@@ -289,10 +298,10 @@ var Cli;
     // ------------------------------------------------------------------------
     function runSpawn(cmdLine, args, callback) {
         if (isVerbose) {
-            console.log("spawn cmdLine: " + cmdLine);
-            console.log("args: " + args.join(' '));
+            console.log("spawn cmdLine: ".concat(cmdLine));
+            console.log("args: ".concat(args.join(' ')));
         }
-        var ls = child_process_1.spawn(cmdLine, args);
+        var ls = (0, child_process_1.spawn)(cmdLine, args);
         ls.stdout.on('data', function (data) {
             if (logLevel >= consts_js_1.Consts.LL_SILENT) {
                 console.log(data.toString());
@@ -315,7 +324,7 @@ var Cli;
         var TOTAL_CHECK_COUNT = 5;
         function displayCheck(what, passed, failedMsg) {
             checkCount++;
-            console.log(checkCount + ". Check: " + what + " --> " + (passed ? 'OK' : 'Failed'));
+            console.log("".concat(checkCount, ". Check: ").concat(what, " --> ").concat(passed ? 'OK' : 'Failed'));
             if (!passed) {
                 console.log('  TODO:' + failedMsg + '\n');
             }
@@ -324,15 +333,15 @@ var Cli;
             }
         }
         function addToStartUp(passed, key, value, failedMsg) {
-            displayCheck(key + "=" + value, passed, "\n    " + failedMsg + "\n    Add to the shell startup script:\n" + (isWin ? 'SET' : 'export') + " " + key + "=" + value);
+            displayCheck("".concat(key, "=").concat(value), passed, "\n    ".concat(failedMsg, "\n    Add to the shell startup script:\n").concat(isWin ? 'SET' : 'export', " ").concat(key, "=").concat(value));
         }
         function checkProgramIsValid(envKey, appName, versionParam, matchRegEx, requireMsg) {
             function displayResult(passed) {
-                displayCheck(appName, passed, "\n    ABeamer requires " + requireMsg + "\n    Either add the executable to the system path, or add to the shell startup script:\n" + (isWin ? 'set' : 'export') + " " + envKey + "=<absolute-path-to-" + appName + ">");
+                displayCheck(appName, passed, "\n    ABeamer requires ".concat(requireMsg, "\n    Either add the executable to the system path, or add to the shell startup script:\n").concat(isWin ? 'set' : 'export', " ").concat(envKey, "=<absolute-path-to-").concat(appName, ">"));
             }
             var envValue = sysProcess.env[envKey];
             if (!envValue) {
-                fsix_js_1.fsix.runExternal(appName + " " + versionParam, function (_error, stdout, stderr) {
+                fsix_js_1.fsix.runExternal("".concat(appName, " ").concat(versionParam), function (_error, stdout, stderr) {
                     displayResult(stderr === '' && stdout.match(matchRegEx));
                 });
             }
@@ -369,10 +378,10 @@ var Cli;
         }
         if (projName[0] === '-' || projName.search(/[\"\'\?\*\+]/) !== -1
             || projName.search(/^[\.\/]+$/) !== -1) {
-            throw "Error: " + projName + " is not valid project name";
+            throw "Error: ".concat(projName, " is not valid project name");
         }
         if (sysFs.existsSync(projName)) {
-            throw "Error: Project " + projName + " already exists";
+            throw "Error: Project ".concat(projName, " already exists");
         }
         if (projName.includes('/')) {
             var dirname = sysPath.posix.dirname(projName);
@@ -394,19 +403,19 @@ var Cli;
                     if (noTypescript) {
                         text = text.replace(/^.*sourceMappingURL=.*$/m, '');
                     }
-                    text = text.replace(/createStory\([^)]*\)/, "createStory(/*FPS:*/" + fps + ")");
+                    text = text.replace(/createStory\([^)]*\)/, "createStory(/*FPS:*/".concat(fps, ")"));
                     break;
                 case 'abeamer.ini':
-                    text = text.replace(/width:\s*\d+/, "width: " + width)
-                        .replace(/height:\s*\d+/, "height: " + height);
+                    text = text.replace(/width:\s*\d+/, "width: ".concat(width))
+                        .replace(/height:\s*\d+/, "height: ".concat(height));
                     break;
                 case 'main.min.css':
-                    text = text.replace(/.abeamer-scene{width:\d+px;height:\d+px}/, ".abeamer-scene{width:" + width + "px;height:" + height + "px}");
+                    text = text.replace(/.abeamer-scene{width:\d+px;height:\d+px}/, ".abeamer-scene{width:".concat(width, "px;height:").concat(height, "px}"));
                     break;
                 case 'index.html':
                     // inserts the plugins.
                     if (!noPlugins) {
-                        var plugins_1 = fsix_js_1.fsix.loadJsonSync(ROOT_PATH + "/client/lib/plugins/plugins-list.json");
+                        var plugins_1 = fsix_js_1.fsix.loadJsonSync("".concat(ROOT_PATH, "/client/lib/plugins/plugins-list.json"));
                         var pre_1 = '';
                         var post_1 = '';
                         text.replace(/^(.*)js\/abeamer\.min\.js(.*)$/m, function (_app, _pre, _post) {
@@ -416,7 +425,7 @@ var Cli;
                         });
                         text = text.replace(/^(.*js\/main\.js.*)$/m, function (all) {
                             return "\n          <!-- remove the unnecessary plugins -->\n"
-                                + plugins_1.map(function (plugin) { return pre_1 + "plugins/" + plugin + "/" + plugin + ".js" + post_1; }).join('\n')
+                                + plugins_1.map(function (plugin) { return "".concat(pre_1, "plugins/").concat(plugin, "/").concat(plugin, ".js").concat(post_1); }).join('\n')
                                 + '\n\n' + all;
                         });
                     }
@@ -429,7 +438,7 @@ var Cli;
             }
             return true;
         });
-        copyTree(LIB_PATH, projName + "/abeamer", undefined, function (fileBase) {
+        copyTree(LIB_PATH, "".concat(projName, "/abeamer"), undefined, function (fileBase) {
             if (noTypescript && fileBase.match(/(?:typings|\.ts)$/)) {
                 return false;
             }
@@ -439,7 +448,7 @@ var Cli;
             return !fileBase.match(/plugins-list\.json$/);
         });
         if (logLevel > consts_js_1.Consts.LL_SILENT) {
-            console.log("Project " + projName + " created.\n- frame-width: " + width + "px\n- frame-height: " + height + "px\n- fps: " + fps + "\nTo modify the the frame dimensions, edit [abeamer.ini] and recompile the [css/main.scss] file.\nTo modify the fps, edit the [js/main.ts] file.\n");
+            console.log("Project ".concat(projName, " created.\n- frame-width: ").concat(width, "px\n- frame-height: ").concat(height, "px\n- fps: ").concat(fps, "\nTo modify the the frame dimensions, edit [abeamer.ini] and recompile the [css/main.scss] file.\nTo modify the fps, edit the [js/main.ts] file.\n"));
         }
     }
     /**
@@ -449,19 +458,19 @@ var Cli;
      */
     function copyTree(srcPath, dstPath, onCopyText, allowCopy) {
         if (isVerbose) {
-            console.log("Copying Directory " + srcPath + " to " + dstPath);
+            console.log("Copying Directory ".concat(srcPath, " to ").concat(dstPath));
         }
         fsix_js_1.fsix.mkdirpSync(dstPath);
         sysFs.readdirSync(srcPath).forEach(function (fileBase) {
             if (allowCopy && !allowCopy(fileBase)) {
                 return;
             }
-            var srcFileName = srcPath + "/" + fileBase;
-            var dstFileName = dstPath + "/" + fileBase;
+            var srcFileName = "".concat(srcPath, "/").concat(fileBase);
+            var dstFileName = "".concat(dstPath, "/").concat(fileBase);
             var stats = sysFs.statSync(srcFileName);
             if (stats.isFile()) {
                 if (isVerbose) {
-                    console.log("Copying " + srcFileName + " to " + dstFileName);
+                    console.log("Copying ".concat(srcFileName, " to ").concat(dstFileName));
                 }
                 var data = fsix_js_1.fsix.readUtf8Sync(srcFileName);
                 if (onCopyText) {
@@ -487,9 +496,9 @@ var Cli;
             if (hasMarked) {
                 console.log("Using markdown compiler");
             }
-            console.log("Serving on http://localhost:" + port + "/");
+            console.log("Serving on http://localhost:".concat(port, "/"));
             if (allowDirListing) {
-                console.log("Directory listing on http://localhost:" + port + "/?dir");
+                console.log("Directory listing on http://localhost:".concat(port, "/?dir"));
             }
         }
     }
@@ -500,7 +509,7 @@ var Cli;
         var serverName = (opts_parser_js_1.OptsParser.argOpts.server.value
             || rel_consts_js_1.RelConsts.DEFAULT_SERVER).toLowerCase();
         if (rel_consts_js_1.RelConsts.SUPPORTED_SERVERS.indexOf(serverName) === -1) {
-            throw "Unknown " + serverName;
+            throw "Unknown ".concat(serverName);
         }
         // if use hasn't provided the folder name nor config file
         if (!cmdParam && !argOpts.config.value && !argOpts.url.value) {
@@ -512,7 +521,7 @@ var Cli;
         if (configArgIndex !== -1) {
             outArgs[configArgIndex] = outArgs[configArgIndex] + '__2';
         }
-        outArgs.splice(0, 0, fsix_js_1.fsix.toPosixSlash(__dirname) + "/../server/server-agent-" + serverName + ".js");
+        outArgs.splice(0, 0, "".concat(fsix_js_1.fsix.toPosixSlash(__dirname), "/../server/server-agent-").concat(serverName, ".js"));
         var cmdLine = argOpts.serverExec.value ||
             (rel_consts_js_1.RelConsts.NODE_SERVERS.indexOf(serverName) === -1 ? serverName : 'node');
         runSpawn(cmdLine, outArgs, function () {
@@ -529,16 +538,16 @@ var Cli;
             reportFileName = realReportFileName;
         }
         if (isVerbose) {
-            console.log("reportFileName: " + reportFileName);
-            console.log("realReportFileName: " + realReportFileName);
+            console.log("reportFileName: ".concat(reportFileName));
+            console.log("realReportFileName: ".concat(realReportFileName));
         }
         if (!sysFs.existsSync(reportFileName)) {
-            throw "Report file " + reportFileName + " doesn't exist";
+            throw "Report file ".concat(reportFileName, " doesn't exist");
         }
         var report = fsix_js_1.fsix.loadJsonSync(reportFileName);
         report.dirname = sysPath.dirname(reportFileName);
         if (isVerbose) {
-            console.log("report path: " + report.dirname);
+            console.log("report path: ".concat(report.dirname));
         }
         // handle relative paths
         if (report.framespattern.substr(0, 2) === './') {
@@ -552,10 +561,10 @@ var Cli;
     function commandGif() {
         var report = getReport();
         var gifFileName = argOpts['gif'].value
-            || report.dirname + "/" + DEFAULT_GIF_NAME;
+            || "".concat(report.dirname, "/").concat(DEFAULT_GIF_NAME);
         var toOptimize = true;
         var cmdLine = sysProcess.env['IM_CONVERT_BIN'] || 'convert';
-        var args = ['-delay', "1x" + report.fps];
+        var args = ['-delay', "1x".concat(report.fps)];
         var scale = opts_parser_js_1.OptsParser.computeScale(report.width, report.height);
         if (scale) {
             args.push('-scale', scale.join('x'));
@@ -571,17 +580,17 @@ var Cli;
         }
         args.push(report.framespattern.replace(/\%\d*d/, '*'), gifFileName);
         if (argOpts['gifPre'].multipleValue) {
-            args = argOpts['gifPre'].multipleValue.concat(args);
+            args = __spreadArray(__spreadArray([], argOpts['gifPre'].multipleValue, true), args, true);
         }
         if (argOpts['gifPost'].multipleValue) {
-            args = args.concat(argOpts['gifPost'].multipleValue);
+            args = __spreadArray(__spreadArray([], args, true), argOpts['gifPost'].multipleValue, true);
         }
         if (isVerbose) {
-            console.log("\n" + cmdLine + " " + args.join(' ') + "\n");
+            console.log("\n".concat(cmdLine, " ").concat(args.join(' '), "\n"));
         }
         runSpawn(cmdLine, args, function () {
             if (logLevel > consts_js_1.Consts.LL_SILENT) {
-                console.log("Created gif " + gifFileName);
+                console.log("Created gif ".concat(gifFileName));
             }
         });
     }
@@ -591,7 +600,7 @@ var Cli;
     function commandMovie() {
         var report = getReport();
         var movieFileName = argOpts['movie'].value
-            || report.dirname + "/" + DEFAULT_MOVIE_NAME;
+            || "".concat(report.dirname, "/").concat(DEFAULT_MOVIE_NAME);
         var bkgMovieFileName = argOpts['bkgMovie'].value;
         var cmdLine = sysProcess.env['FFMPEG_BIN'] || 'ffmpeg';
         var scale = opts_parser_js_1.OptsParser.computeScale(report.width, report.height);
@@ -600,15 +609,15 @@ var Cli;
             '-f', 'image2',
         ];
         if (!scale) {
-            args.push('-s', report.width + "x" + report.height);
+            args.push('-s', "".concat(report.width, "x").concat(report.height));
         }
         args.push('-i', report.framespattern, '-y');
         if (scale) {
-            args.push('-vf', "scale=" + scale.join('x'));
+            args.push('-vf', "scale=".concat(scale.join('x')));
         }
         /* spell-checker: disable */
         if (bkgMovieFileName) {
-            args.push('-vf', "movie=" + bkgMovieFileName + ",hue=s=1[bg];[in]setpts=PTS,scale=-1:-1"
+            args.push('-vf', "movie=".concat(bkgMovieFileName, ",hue=s=1[bg];[in]setpts=PTS,scale=-1:-1")
                 + ",pad=iw:ih:0:0:color=yellow[m]; [bg][m]overlay=shortest=1:x=0:y=0");
         }
         var ext = sysPath.extname(movieFileName);
@@ -626,18 +635,18 @@ var Cli;
         }
         args.push(movieFileName);
         if (argOpts['moviePre'].multipleValue) {
-            args = argOpts['moviePre'].multipleValue.concat(args);
+            args = __spreadArray(__spreadArray([], argOpts['moviePre'].multipleValue, true), args, true);
         }
         if (argOpts['moviePost'].multipleValue) {
-            args = args.concat(argOpts['moviePost'].multipleValue);
+            args = __spreadArray(__spreadArray([], args, true), argOpts['moviePost'].multipleValue, true);
         }
         if (isVerbose) {
-            console.log("\next: " + ext + "\n");
-            console.log("cmdLine:[" + cmdLine + " " + args.join(' ') + "]\n\n");
+            console.log("\next: ".concat(ext, "\n"));
+            console.log("cmdLine:[".concat(cmdLine, " ").concat(args.join(' '), "]\n\n"));
         }
         runSpawn(cmdLine, args, function () {
             if (logLevel > consts_js_1.Consts.LL_SILENT) {
-                console.log("Created movie " + movieFileName);
+                console.log("Created movie ".concat(movieFileName));
             }
         });
     }
@@ -651,7 +660,7 @@ var Cli;
                 break;
             case DO_RUN_COMMAND:
                 if (isVerbose) {
-                    console.log("Run Command: " + cmdName);
+                    console.log("Run Command: ".concat(cmdName));
                 }
                 switch (cmdName) {
                     case CMD_CHECK:
@@ -673,7 +682,7 @@ var Cli;
                         commandMovie();
                         break;
                     default:
-                        throw "Unknown command " + cmdName;
+                        throw "Unknown command ".concat(cmdName);
                 }
                 break;
         }

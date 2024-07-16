@@ -53,8 +53,8 @@ var Tests;
     var testParams = {};
     tests.forEach(function (test) {
         testParams[!test.isStill
-            ? test.name + " - t0 moves for " + test.duration + " at " + (test.position || '')
-            : test.name + " - t0 DOESN'T moves for " + test.duration] = func;
+            ? "".concat(test.name, " - t0 moves for ").concat(test.duration, " at ").concat(test.position || '')
+            : "".concat(test.name, " - t0 DOESN'T moves for ").concat(test.duration)] = func;
     });
     var animes = tests.map(function (test) {
         return !test.isStill ?
@@ -67,11 +67,11 @@ var Tests;
                         value: test.max,
                     }],
             }
-            : ['@@no-wrap-add-animation', "scene1.addStills(\"" + test.duration + "\");"];
+            : ['@@no-wrap-add-animation', "scene1.addStills(\"".concat(test.duration, "\");")];
     });
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: fps,
-        css: "#t0 {left: " + min + "px}",
+        css: "#t0 {left: ".concat(min, "px}"),
         animes: animes,
         html: exact_js_1.Exact.genTestHtml(1),
     }, {

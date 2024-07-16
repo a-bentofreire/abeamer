@@ -1,9 +1,14 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -47,7 +52,7 @@ var Server;
             /** Sends Messages to the client */
             function sendClientMsg(cmd, value) {
                 if (value === void 0) { value = ''; }
-                var script = "function(){_abeamer._internalGetServerMsg.call(_abeamer, '" + cmd + "', '" + value + "'); }";
+                var script = "function(){_abeamer._internalGetServerMsg.call(_abeamer, '".concat(cmd, "', '").concat(value, "'); }");
                 page.evaluateJavaScript(script);
             }
             /** Receives Client Messages */
@@ -67,7 +72,7 @@ var Server;
             page.viewportSize = this.getViewport();
             page.open(this.getPageUrl(), function (status) {
                 if (_this.logLevel) {
-                    console.log("Page Loaded: " + status);
+                    console.log("Page Loaded: ".concat(status));
                 }
                 if (status.indexOf('fail') !== -1) {
                     _this.exitServer();

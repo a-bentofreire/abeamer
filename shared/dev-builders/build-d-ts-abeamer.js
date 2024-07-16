@@ -1,5 +1,15 @@
 "use strict";
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BuildDTsFilesABeamer = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -20,15 +30,15 @@ var BuildDTsFilesABeamer;
 (function (BuildDTsFilesABeamer) {
     function build(libModules, pluginModules, CLIENT_UUID, COPYRIGHTS, cfg) {
         var WARN_MSG = "\n  // This file was generated via gulp build-definition-files\n  //\n  // @WARN: Don't edit this file.\n  ";
-        var libSourceFileNames = libModules
-            .map(function (fileTitle) { return cfg.paths.JS_PATH + "/" + fileTitle + ".ts"; }).concat(pluginModules
-            .map(function (fileTitle) { return cfg.paths.PLUGINS_PATH + "/" + fileTitle + "/" + fileTitle + ".ts"; }));
+        var libSourceFileNames = __spreadArray(__spreadArray([], libModules
+            .map(function (fileTitle) { return "".concat(cfg.paths.JS_PATH, "/").concat(fileTitle, ".ts"); }), true), pluginModules
+            .map(function (fileTitle) { return "".concat(cfg.paths.PLUGINS_PATH, "/").concat(fileTitle, "/").concat(fileTitle, ".ts"); }), true);
         [{
                 uuid: 'bb85cc57-f5e3-4ae9-b498-7d13c07c8516',
                 srcFiles: libSourceFileNames,
                 docTarget: build_docs_latest_js_1.BuildDocsLatest.getTargets(cfg).find(function (target) { return target.id === 'end-user'; }),
                 namespace: 'ABeamer',
-                outFile: cfg.paths.TYPINGS_PATH + "/abeamer.d.ts",
+                outFile: "".concat(cfg.paths.TYPINGS_PATH, "/abeamer.d.ts"),
                 description: "\n  //\n  // These are the class interfaces for the end-user and plugin creators\n  // Any modification on these interfaces will require an increment in the high number version\n  //",
                 acceptId: function (id, idType) {
                     switch (idType) {
@@ -52,7 +62,7 @@ var BuildDTsFilesABeamer;
                 srcFiles: libSourceFileNames,
                 namespace: 'ABeamer',
                 docTarget: build_docs_latest_js_1.BuildDocsLatest.getTargets(cfg).find(function (target) { return target.id === 'dev'; }),
-                outFile: cfg.paths.TYPINGS_PATH + "/abeamer-dev.d.ts",
+                outFile: "".concat(cfg.paths.TYPINGS_PATH, "/abeamer-dev.d.ts"),
                 description: "\n  //\n  // These are the class interfaces for internal usage only\n  // It won't be deployed on the release version\n  // and it shouldn't be accessed by plugin creators\n  // In theory, all of these class members should be have protected access\n  // but due a lack of 'friend class' mechanism in TypeScript, they have\n  // public access but both the interfaces as well as the members but all\n  // must start with underscore\n  //",
                 acceptId: function (id, idType) {
                     switch (idType) {
@@ -73,7 +83,7 @@ var BuildDTsFilesABeamer;
                 srcFiles: libSourceFileNames,
                 tag: 'release',
                 namespace: 'ABeamer',
-                outFile: cfg.paths.TYPINGS_PATH + "/release/abeamer-release.d.ts",
+                outFile: "".concat(cfg.paths.TYPINGS_PATH, "/release/abeamer-release.d.ts"),
                 description: "\n  //\n  // This file contains about the compilation of all the exported types\n  // targeted for the end-user\n  // The source data is all information in each source code file defined between\n  //      #export-section-start: release\n  // and  #export-section-end: release\n  //\n  // This way the user will have access to all the public information in one file\n  // It won't be used during the development phase.\n  // And it's excluded in tsconfig\n  //",
                 acceptId: function (id, idType) {
                     return (idType === build_d_ts_js_1.BuildDTsFiles.IdTypes.FunctionName && id[0] === '_') ? '' : id;
@@ -83,15 +93,15 @@ var BuildDTsFilesABeamer;
             var outFile = target.outFile;
             var apiPath;
             if (target.docTarget) {
-                apiPath = target.docTarget.dstPath + "/" + build_docs_latest_js_1.BuildDocsLatest.EN_LAST_VERSION_PATH
-                    + ("/" + build_docs_latest_js_1.BuildDocsLatest.API_FOLDER);
+                apiPath = "".concat(target.docTarget.dstPath, "/").concat(build_docs_latest_js_1.BuildDocsLatest.EN_LAST_VERSION_PATH)
+                    + "/".concat(build_docs_latest_js_1.BuildDocsLatest.API_FOLDER);
                 fsix_js_1.fsix.mkdirpSync(apiPath);
             }
             build_d_ts_js_1.BuildDTsFiles.build(target.srcFiles, outFile, CLIENT_UUID + COPYRIGHTS + WARN_MSG + target.description
-                + ("\n\ndeclare namespace " + target.namespace + " {\n\n"), '\n}\n', target.acceptId, target.tag, apiPath);
-            console.log("Build " + outFile);
+                + "\n\ndeclare namespace ".concat(target.namespace, " {\n\n"), '\n}\n', target.acceptId, target.tag, apiPath);
+            console.log("Build ".concat(outFile));
         });
     }
     BuildDTsFilesABeamer.build = build;
-})(BuildDTsFilesABeamer = exports.BuildDTsFilesABeamer || (exports.BuildDTsFilesABeamer = {}));
+})(BuildDTsFilesABeamer || (exports.BuildDTsFilesABeamer = BuildDTsFilesABeamer = {}));
 //# sourceMappingURL=build-d-ts-abeamer.js.map

@@ -24,13 +24,13 @@ var Tests;
         'generates the story-frames': function (rd, done) {
             var total = builder.tests[0].frameCount;
             for (var i = 0; i < total; i++) {
-                var file = sprintf_js_1.Sprintf.sprintf(rd.outFolder + "/story-frames/frame%05d.png", i);
+                var file = sprintf_js_1.Sprintf.sprintf("".concat(rd.outFolder, "/story-frames/frame%05d.png"), i);
                 chai_1.assert.isTrue(sysFs.existsSync(file));
             }
             done();
         },
         'generates the report': function (rd, done) {
-            var reportFile = rd.outFolder + "/story-frames/frame-report.json";
+            var reportFile = "".concat(rd.outFolder, "/story-frames/frame-report.json");
             chai_1.assert.isTrue(sysFs.existsSync(reportFile));
             var report = fsix_js_1.fsix.loadJsonSync(reportFile);
             chai_1.assert.equal(report.width, 100, "width must be 100");

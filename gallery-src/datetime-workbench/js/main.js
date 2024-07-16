@@ -14,40 +14,40 @@ $(window).on("load", function () {
     var formats = ['YYYY-MM-DD HH:mm:ss', 'ddd, MMM D (YY) hA'];
     // add as many scenes as labels
     $('#story').html(dates.map(function (_label, sceneIndex) {
-        return "<div class=\"abeamer-scene\" id=scene" + sceneIndex + "></div>";
+        return "<div class=\"abeamer-scene\" id=scene".concat(sceneIndex, "></div>");
     }).join('\n'));
     var animations = [];
     var vars = {};
     dates.forEach(function (date, sceneIndex) {
-        var injectHtml = ["<div class=label>" + date.label + "</div>"];
+        var injectHtml = ["<div class=label>".concat(date.label, "</div>")];
         var tests = dateTimeFuncs.map(function (sel) {
             return {
                 sel: sel,
                 label: sel + ': ',
                 classes: '',
-                expr: "=" + sel.toLowerCase() + "(" + date.var + ")",
+                expr: "=".concat(sel.toLowerCase(), "(").concat(date.var, ")"),
             };
         });
         formats.forEach(function (format, index) {
             tests.push({
-                sel: "format" + index,
+                sel: "format".concat(index),
                 classes: 'format',
                 label: format,
-                expr: "=formatDateTime('" + format + "', " + date.var + ")",
+                expr: "=formatDateTime('".concat(format, "', ").concat(date.var, ")"),
             });
         });
         vars[date.var] = date.expr;
         animations.push(tests.map(function (rec) {
-            injectHtml.push("<span class=\"" + rec.classes + "\">" + rec.label + "<span id=" + rec.sel + "></span></span>");
+            injectHtml.push("<span class=\"".concat(rec.classes, "\">").concat(rec.label, "<span id=").concat(rec.sel, "></span></span>"));
             return {
-                selector: "#" + rec.sel,
+                selector: "#".concat(rec.sel),
                 props: [{
                         prop: 'text',
                         valueText: rec.expr,
                     }],
             };
         }));
-        $("#scene" + sceneIndex).html(injectHtml.join('\n'));
+        $("#scene".concat(sceneIndex)).html(injectHtml.join('\n'));
     });
     var story = ABeamer.createStory(/*FPS:*/ 10);
     // ------------------------------------------------------------------------
@@ -70,11 +70,11 @@ $(window).on("load", function () {
         scene = story.scenes[sceneIndex];
         scene
             .addAnimations(animations[sceneIndex])
-            .addStills(wait + "s");
+            .addStills("".concat(wait, "s"));
         if (sceneIndex < dates.length - 1) {
             scene.transition = {
                 handler: ABeamer.StdTransitions.slideLeft,
-                duration: wait / 2 + "s",
+                duration: "".concat(wait / 2, "s"),
             };
         }
     });

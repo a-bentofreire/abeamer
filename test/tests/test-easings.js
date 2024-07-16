@@ -13,7 +13,7 @@ var Tests;
     builder.max = 200;
     builder.elDuration = '2s';
     builder.addTests(Object.keys(jquery_easing_node_js_1.Easings.EasingFunctions).map(function (easingName) { return ({
-        preLabel: "easing " + easingName + ": ",
+        preLabel: "easing ".concat(easingName, ": "),
         easingName: easingName,
         easingFunc: function (t) { return (jquery_easing_node_js_1.Easings.EasingFunctions[easingName])(0, t, 0, 1, 1); },
     }); }));

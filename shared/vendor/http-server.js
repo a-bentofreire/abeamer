@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HttpServer = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -42,7 +43,7 @@ var HttpServer;
             sysFs.readFile(rp.path, function (err, data) {
                 if (err) {
                     rp.res.statusCode = 500;
-                    rp.res.end("Error getting the file: " + err + ".");
+                    rp.res.end("Error getting the file: ".concat(err, "."));
                 }
                 else {
                     // if the file is found, set Content-type and send data
@@ -57,7 +58,7 @@ var HttpServer;
             });
             if (!foundFile) {
                 rp.res.statusCode = 404;
-                rp.res.end("File " + rp.path + " not found!");
+                rp.res.end("File ".concat(rp.path, " not found!"));
                 return false;
             }
             rp.path = sysPath.join(rp.path, foundFile);
@@ -70,7 +71,7 @@ var HttpServer;
             }
             var parsedUrl = sysUrl.parse(req.url);
             var rp = {
-                path: "." + decodeURI(parsedUrl.pathname),
+                path: ".".concat(decodeURI(parsedUrl.pathname)),
                 search: parsedUrl.search,
                 res: res,
             };
@@ -79,7 +80,7 @@ var HttpServer;
                 if (!exist) {
                     // if the file is not found, return 404
                     res.statusCode = 404;
-                    res.end("File " + rp.path + " not found!");
+                    res.end("File ".concat(rp.path, " not found!"));
                     return;
                 }
                 if (sysFs.statSync(rp.path).isDirectory() && !_this.handleDirectory(rp)) {
@@ -100,5 +101,5 @@ var HttpServer;
         return Server;
     }());
     HttpServer.Server = Server;
-})(HttpServer = exports.HttpServer || (exports.HttpServer = {}));
+})(HttpServer || (exports.HttpServer = HttpServer = {}));
 //# sourceMappingURL=http-server.js.map

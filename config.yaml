@@ -67,7 +67,7 @@ release:
 
 webLinks:
   localServer: http://localhost:${LOCAL_PORT}
-  webDomain: https://abeamer.a-bentofreire.com
+  webDomain: https://abeamer.devtoix.com
 
 
 docs:

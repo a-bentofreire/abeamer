@@ -1,5 +1,15 @@
 "use strict";
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BuildDocsLatest = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -57,7 +67,7 @@ var BuildDocsLatest;
                     badgeLine = all;
                     return p1 + 'end-user-badge.gif' + p2;
                 })
-                    .replace(new RegExp(cfg.webLinks.webDomain + "/", 'g'), '/');
+                    .replace(new RegExp("".concat(cfg.webLinks.webDomain, "/"), 'g'), '/');
             },
         },
         {
@@ -66,7 +76,7 @@ var BuildDocsLatest;
             dstPath: cfg.paths.DOCS_LATEST_DEVELOPER_PATH,
             sourcePaths: [cfg.paths.DOCS_SOURCE_PATH, cfg.paths.DOCS_SOURCE_DEV_PATH],
             moduleTypes: ['end-user', 'developer', 'internal'],
-            indexFile: cfg.paths.DOCS_SOURCE_PATH + "-dev/README.md",
+            indexFile: "".concat(cfg.paths.DOCS_SOURCE_PATH, "-dev/README.md"),
             isEndUser: false,
             logFile: './build-docs-latest-dev.log',
             processIndexPage: function (data) {
@@ -98,13 +108,13 @@ var BuildDocsLatest;
         /** Stage 0. Generate references from the filename and headers */
         ReferenceBuilder.prototype.buildRefs = function (fileBase, content) {
             var _this = this;
-            this.refs[textToRef(fileBase)] = fileBase + ".md";
+            this.refs[textToRef(fileBase)] = "".concat(fileBase, ".md");
             content.replace(/^#+\s*(.+)\s*$/mg, function (all, text) {
                 var ref = textToRef(text);
-                var fullRef = fileBase + ".md#" + ref;
+                var fullRef = "".concat(fileBase, ".md#").concat(ref);
                 _this.refs[ref] = fullRef;
                 _this.refs[fullRef] = fullRef;
-                _this.refs[fileBase + "#" + ref] = fullRef;
+                _this.refs["".concat(fileBase, "#").concat(ref)] = fullRef;
                 return all;
             });
         };
@@ -129,13 +139,13 @@ var BuildDocsLatest;
                     tracedLink = _this.refs[refLink];
                 }
                 if (!tracedLink) {
-                    _this.log.notFound.push(link + "#" + bookmark + " in " + fileBase);
+                    _this.log.notFound.push("".concat(link, "#").concat(bookmark, " in ").concat(fileBase));
                 }
                 else {
-                    _this.log.found.push(link + "#" + bookmark + " in " + fileBase + " = " + tracedLink);
+                    _this.log.found.push("".concat(link, "#").concat(bookmark, " in ").concat(fileBase, " = ").concat(tracedLink));
                     _a = tracedLink.split('#'), link = _a[0], bookmark = _a[1];
                 }
-                return "[" + info + "](" + link + (bookmark ? '#' + bookmark : '') + ")";
+                return "[".concat(info, "](").concat(link).concat(bookmark ? '#' + bookmark : '', ")");
             });
         };
         /** Main entry point. Reads the files and calls appropriate action. */
@@ -145,7 +155,7 @@ var BuildDocsLatest;
                 .filter(function (file) { return file.endsWith('.md'); }).map(function (file) { return file.replace(/\.md$/, ''); });
             [0, 1].forEach(function (stage) {
                 fileBases.forEach(function (fileBase) {
-                    var fileName = path + "/" + fileBase + ".md";
+                    var fileName = "".concat(path, "/").concat(fileBase, ".md");
                     var content = fsix_js_1.fsix.readUtf8Sync(fileName);
                     if (stage === 0) {
                         _this.buildRefs(fileBase, content);
@@ -179,11 +189,11 @@ var BuildDocsLatest;
         "setter",
         "constructor",
     ];
-    var IdTypeAreFunctions = [3 /* FunctionName */, 6 /* MethodName */];
+    var IdTypeAreFunctions = [3 /* DocIdType.FunctionName */, 6 /* DocIdType.MethodName */];
     var IdTypeAreSections = [
-        0 /* EnumName */, 2 /* ConstName */, 1 /* TypeName */,
-        4 /* InterfaceName */,
-        5 /* ClassName */, 3 /* FunctionName */,
+        0 /* DocIdType.EnumName */, 2 /* DocIdType.ConstName */, 1 /* DocIdType.TypeName */,
+        4 /* DocIdType.InterfaceName */,
+        5 /* DocIdType.ClassName */, 3 /* DocIdType.FunctionName */,
     ];
     var DocParser = /** @class */ (function () {
         function DocParser(localWebLinks, isEndUser) {
@@ -220,7 +230,7 @@ var BuildDocsLatest;
             var securityLineCount = 0;
             do {
                 if (securityLineCount > 150) {
-                    console.log("too many lines " + (scanForComma ? 'YES' : 'NO') + ":\n" + line1 + "\n" + line);
+                    console.log("too many lines ".concat(scanForComma ? 'YES' : 'NO', ":\n").concat(line1, "\n").concat(line));
                     return 'ERROR';
                 }
                 var matches = line.match(scanForComma ?
@@ -264,16 +274,16 @@ var BuildDocsLatest;
             if (!this._allowId(id, idType, accessTag, exportTag)) {
                 return false;
             }
-            this.outLines.push("##" + (IdTypeAreSections.indexOf(idType) !== -1 ? '' : '#') + " "
-                + ("" + (this.classOrInterfaceName ? this.classOrInterfaceName + '.' : ''))
-                + ("" + id + (IdTypeAreFunctions.indexOf(idType) !== -1 ? '()' : '') + "\n"));
+            this.outLines.push("##".concat(IdTypeAreSections.indexOf(idType) !== -1 ? '' : '#', " ")
+                + "".concat(this.classOrInterfaceName ? this.classOrInterfaceName + '.' : '')
+                + "".concat(id).concat(IdTypeAreFunctions.indexOf(idType) !== -1 ? '()' : '', "\n"));
             if (this.classOrInterfaceName) {
                 this.links.push(this.classOrInterfaceName);
             }
             this.outLines.push(badges
-                .map(function (badge) { return "<span class=\"code-badge badge-" + badge + "\">" + badge + "</span>"; })
+                .map(function (badge) { return "<span class=\"code-badge badge-".concat(badge, "\">").concat(badge, "</span>"); })
                 .join(' ')
-                + '  ' + this.links.map(function (link) { return "[[" + link + "](" + link + ")]"; }).join(' ')
+                + '  ' + this.links.map(function (link) { return "[[".concat(link, "](").concat(link, ")]"); }).join(' ')
                 + '  ');
             this.links = [];
             this.outLines.push('```js\n' + line.trimLeft() + '\n```\n');
@@ -316,22 +326,22 @@ var BuildDocsLatest;
             var _a = this.getLine(true)
                 .match(/^(\s*)(protected\s+|private\s+|public\s+)?(abstract\s+)?(readonly\s+)?(get\s+)?(set\s+)?(\w+)(\s*\()?/) || EMPTY, spaces = _a[1], accessTag = _a[2], abstractTag = _a[3], readonlyTag = _a[4], getterTag = _a[5], setterTag = _a[6], id = _a[7], parenthesisTag = _a[8];
             if (spaces === this.innerSpaces) {
-                var idType = 7 /* PropertyName */;
+                var idType = 7 /* DocIdType.PropertyName */;
                 if (parenthesisTag) {
                     if (getterTag) {
-                        idType = 8 /* GetterName */;
+                        idType = 8 /* DocIdType.GetterName */;
                     }
                     else if (setterTag) {
-                        idType = 9 /* SetterName */;
+                        idType = 9 /* DocIdType.SetterName */;
                     }
                     else if (id === 'constructor') {
-                        idType = 10 /* ConstructorName */;
+                        idType = 10 /* DocIdType.ConstructorName */;
                     }
                     else {
-                        idType = 6 /* MethodName */;
+                        idType = 6 /* DocIdType.MethodName */;
                     }
                 }
-                this.addId(id, idType, this._processDefContent(this.getLine(), idType === 7 /* PropertyName */ || this.isInterface
+                this.addId(id, idType, this._processDefContent(this.getLine(), idType === 7 /* DocIdType.PropertyName */ || this.isInterface
                     || abstractTag !== undefined), [abstractTag, readonlyTag], accessTag);
             }
         };
@@ -343,7 +353,7 @@ var BuildDocsLatest;
                 var line = this.getLine();
                 line = line.replace(/\s*\{?\s*\}?\s*$/, '{ }');
                 var idType = idTypeTag[0] === 'i'
-                    ? 4 /* InterfaceName */ : 5 /* ClassName */;
+                    ? 4 /* DocIdType.InterfaceName */ : 5 /* DocIdType.ClassName */;
                 this.disabledClassOrInterface = this.isEndUser
                     && (!exportTag || !this._allowId(id, idType, 'public', exportTag));
                 if (!this.disabledClassOrInterface) {
@@ -370,7 +380,7 @@ var BuildDocsLatest;
                 .match(/^(\s*)(export\s+)?function\s+(\w+)\b/) || EMPTY, spaces = _a[1], exportTag = _a[2], id = _a[3];
             if (spaces === this.outerSpaces) {
                 var line = this.getLine();
-                this.addId(id, 3 /* FunctionName */, this._processDefContent(line, false), [], undefined, exportTag);
+                this.addId(id, 3 /* DocIdType.FunctionName */, this._processDefContent(line, false), [], undefined, exportTag);
                 while (true) {
                     line = this.getLine();
                     var _b = line.match(/^(\s*)\}\s*$/) || EMPTY, endSpaces = _b[1];
@@ -384,21 +394,21 @@ var BuildDocsLatest;
             var _a = this.getLine(true)
                 .match(/^(\s*)(export\s+)?type\s+(\w+)\b/) || EMPTY, spaces = _a[1], exportTag = _a[2], id = _a[3];
             if (spaces === this.outerSpaces) {
-                this.addId(id, 1 /* TypeName */, this._processDefContent(this.getLine(), true), [], undefined, exportTag);
+                this.addId(id, 1 /* DocIdType.TypeName */, this._processDefContent(this.getLine(), true), [], undefined, exportTag);
             }
         };
         DocParser.prototype.parseEnum = function () {
             var _a = this.getLine(true)
                 .match(/^(\s*)(export\s+)?(const\s+)?enum\s+(\w+)\b/) || EMPTY, spaces = _a[1], constTag = _a[2], exportTag = _a[3], id = _a[4];
             if (spaces === this.outerSpaces) {
-                this.addId(id, 0 /* EnumName */, this._processDefContent(this.getLine(), false), [constTag], undefined, exportTag);
+                this.addId(id, 0 /* DocIdType.EnumName */, this._processDefContent(this.getLine(), false), [constTag], undefined, exportTag);
             }
         };
         DocParser.prototype.parseConst = function () {
             var _a = this.getLine(true)
                 .match(/^(\s*)(export\s+)?const\s+(\w+)\b/) || EMPTY, spaces = _a[1], exportTag = _a[2], id = _a[3];
             if (spaces === this.outerSpaces) {
-                this.addId(id, 2 /* ConstName */, this._processDefContent(this.getLine(), true), [exportTag]);
+                this.addId(id, 2 /* DocIdType.ConstName */, this._processDefContent(this.getLine(), true), [exportTag]);
             }
         };
         DocParser.prototype.parseFileData = function (text) {
@@ -509,7 +519,7 @@ var BuildDocsLatest;
             else {
                 if (folder) {
                     var key = folder.substr(0, folder.length - 1);
-                    return "_see_: " + localWebLinks(key, title) + ".  ";
+                    return "_see_: ".concat(localWebLinks(key, title), ".  ");
                 }
                 else {
                     link = (folder || '')
@@ -520,7 +530,7 @@ var BuildDocsLatest;
                     title = title || bookmark.substr(1);
                 }
             }
-            return "_see_: [" + (title || link) + "](" + link + ").  ";
+            return "_see_: [".concat(title || link, "](").concat(link, ").  ");
         });
         return text;
     }
@@ -582,7 +592,7 @@ var BuildDocsLatest;
     function build(libModules, pluginModules, cfg) {
         var localWebLinks = function (key, title) {
             if (key === 'gallery') {
-                return "[" + title + "](/" + cfg.paths.GALLERY_LATEST_PATH + "/#" + title + ")";
+                return "[".concat(title, "](/").concat(cfg.paths.GALLERY_LATEST_PATH, "/#").concat(title, ")");
             }
             else {
                 return '';
@@ -594,10 +604,10 @@ var BuildDocsLatest;
         // in case of documentation, it's better to visualize the more specific at the top.
         libModules.reverse();
         BuildDocsLatest.getTargets(cfg).forEach(function (target) {
-            var baseDstPath = target.dstPath + "/" + BuildDocsLatest.EN_LAST_VERSION_PATH;
-            var markdownDstPath = baseDstPath + "/" + MARKDOWN_FOLDER;
+            var baseDstPath = "".concat(target.dstPath, "/").concat(BuildDocsLatest.EN_LAST_VERSION_PATH);
+            var markdownDstPath = "".concat(baseDstPath, "/").concat(MARKDOWN_FOLDER);
             fsix_js_1.fsix.mkdirpSync(markdownDstPath);
-            var mkDocsYml = new MkDocsYml(cfg.paths.DOCS_SOURCE_PATH + "/.mkdocs-template.yml", target.name);
+            var mkDocsYml = new MkDocsYml("".concat(cfg.paths.DOCS_SOURCE_PATH, "/.mkdocs-template.yml"), target.name);
             var log = {
                 notFound: [],
                 found: [],
@@ -605,35 +615,35 @@ var BuildDocsLatest;
                 refs: {},
             };
             // index.html
-            copyMarkdownFile(target.indexFile, markdownDstPath + "/index.md", mkDocsYml, {}, cfg, target.processIndexPage);
+            copyMarkdownFile(target.indexFile, "".concat(markdownDstPath, "/index.md"), mkDocsYml, {}, cfg, target.processIndexPage);
             // copy sources
             target.sourcePaths.forEach(function (sourcesPathName) {
                 sysFs.readdirSync(sourcesPathName).forEach(function (file) {
                     if (file.endsWith('.md') && !file.match(/-dev|README/)) {
-                        copyMarkdownFile(sourcesPathName + "/" + file, markdownDstPath + "/" + file, mkDocsYml, {}, cfg);
+                        copyMarkdownFile("".concat(sourcesPathName, "/").concat(file), "".concat(markdownDstPath, "/").concat(file), mkDocsYml, {}, cfg);
                     }
                     if (file.endsWith('.css') || file.endsWith('.png') || file.endsWith('.ico')) {
-                        sysFs.writeFileSync(markdownDstPath + "/" + file, sysFs.readFileSync(sourcesPathName + "/" + file));
+                        sysFs.writeFileSync("".concat(markdownDstPath, "/").concat(file), sysFs.readFileSync("".concat(sourcesPathName, "/").concat(file)));
                     }
                 });
             });
             // builds markdown files
-            [['abeamer-cli', 'cli/abeamer-cli.ts', ''],
+            __spreadArray(__spreadArray([['abeamer-cli', 'cli/abeamer-cli.ts', ''],
                 ['server-agent', 'server/server-agent.ts', 'Server'],
-                ['exact', 'test/exact.ts', 'Testing']].concat(libModules
-                .map(function (fileTitle) { return [fileTitle, cfg.paths.JS_PATH + "/" + fileTitle + ".ts", 'Library']; }), pluginModules
-                .map(function (fileTitle) { return [fileTitle, cfg.paths.PLUGINS_PATH + "/" + fileTitle + "/" + fileTitle + ".ts", 'Plugins']; })).forEach(function (item) {
+                ['exact', 'test/exact.ts', 'Testing']], libModules
+                .map(function (fileTitle) { return [fileTitle, "".concat(cfg.paths.JS_PATH, "/").concat(fileTitle, ".ts"), 'Library']; }), true), pluginModules
+                .map(function (fileTitle) { return [fileTitle, "".concat(cfg.paths.PLUGINS_PATH, "/").concat(fileTitle, "/").concat(fileTitle, ".ts"), 'Plugins']; }), true).forEach(function (item) {
                 var fileTitle = item[0], srcFileName = item[1], folder = item[2];
-                var dstFileName = markdownDstPath + "/" + fileTitle + ".md";
-                buildMarkdownFromSourceFile(srcFileName, dstFileName, baseDstPath + "/" + BuildDocsLatest.API_FOLDER + "/" + fileTitle + ".txt", target.moduleTypes, mkDocsYml, { folder: folder }, localWebLinks, target.isEndUser, log);
+                var dstFileName = "".concat(markdownDstPath, "/").concat(fileTitle, ".md");
+                buildMarkdownFromSourceFile(srcFileName, dstFileName, "".concat(baseDstPath, "/").concat(BuildDocsLatest.API_FOLDER, "/").concat(fileTitle, ".txt"), target.moduleTypes, mkDocsYml, { folder: folder }, localWebLinks, target.isEndUser, log);
             });
             // writes mkdocs to be used by mkdocs command-line program
-            mkDocsYml.save(baseDstPath + "/mkdocs.yml");
+            mkDocsYml.save("".concat(baseDstPath, "/mkdocs.yml"));
             // process all the links
             new ReferenceBuilder(log).build(markdownDstPath);
             // save log
             fsix_js_1.fsix.writeJsonSync(target.logFile, log);
-            console.log("\nGenerated: " + log.generated.length + " files.\nNot Found references: " + log.notFound.length + "\n");
+            console.log("\nGenerated: ".concat(log.generated.length, " files.\nNot Found references: ").concat(log.notFound.length, "\n"));
         });
     }
     BuildDocsLatest.build = build;
@@ -641,7 +651,7 @@ var BuildDocsLatest;
     //                               buildWebLinks
     // ------------------------------------------------------------------------
     function postBuild(filePatterns, replacePaths, wordMap) {
-        var highlightRegEx = new RegExp("\\b(" + Object.keys(wordMap).join('|') + ")\\b", 'g');
+        var highlightRegEx = new RegExp("\\b(".concat(Object.keys(wordMap).join('|'), ")\\b"), 'g');
         globule.find(filePatterns).forEach(function (file) {
             var content = fsix_js_1.fsix.readUtf8Sync(file);
             replacePaths.forEach(function (pathSrcDst) {
@@ -650,8 +660,8 @@ var BuildDocsLatest;
             content = content.replace(/(<code class="js">)((?:.|\n)+?)(<\/code>)/g, function (_all, preTag, code, postTag) {
                 code = code.replace(highlightRegEx, function (_all2, word) {
                     var wordInf = wordMap[word];
-                    return "<span class=\"hljs-" + wordInf.wordClass + "\""
-                        + ((wordInf.title ? " title=\"" + wordInf.title + "\"" : '') + ">" + word + "</span>");
+                    return "<span class=\"hljs-".concat(wordInf.wordClass, "\"")
+                        + "".concat(wordInf.title ? " title=\"".concat(wordInf.title, "\"") : '', ">").concat(word, "</span>");
                 });
                 return preTag + code + postTag;
             });
@@ -659,5 +669,5 @@ var BuildDocsLatest;
         });
     }
     BuildDocsLatest.postBuild = postBuild;
-})(BuildDocsLatest = exports.BuildDocsLatest || (exports.BuildDocsLatest = {}));
+})(BuildDocsLatest || (exports.BuildDocsLatest = BuildDocsLatest = {}));
 //# sourceMappingURL=build-docs-latest.js.map

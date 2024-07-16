@@ -20,16 +20,16 @@ var Tests;
     };
     var testParams = {};
     tests.forEach(function (_test, index) {
-        testParams["t" + index + " left goes from " + min + " to " + max] = func;
+        testParams["t".concat(index, " left goes from ").concat(min, " to ").concat(max)] = func;
     });
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: 4,
         css: tests.map(function (_test, index) {
-            return "#t" + index + " {position: absolute; left: " + min + "px}";
+            return "#t".concat(index, " {position: absolute; left: ").concat(min, "px}");
         }).join('\n'),
         animes: tests.map(function (_test, index) {
             return {
-                selector: "#t" + index,
+                selector: "#t".concat(index),
                 duration: '1s',
                 props: [{
                         prop: 'left',

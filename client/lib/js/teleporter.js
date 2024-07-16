@@ -190,7 +190,7 @@ var ABeamer;
             if (isTeleport) {
                 ABeamer.pluginManager._plugins.forEach(function (plugin) {
                     if (!plugin.teleportable) {
-                        ABeamer.throwErr("Plugin " + plugin.id + " doesn't supports teleporting");
+                        ABeamer.throwErr("Plugin ".concat(plugin.id, " doesn't supports teleporting"));
                     }
                 });
                 this._active = true;
@@ -218,7 +218,7 @@ var ABeamer;
             get: function () {
                 return this._active;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         _Teleporter.prototype._getStoryToTeleportAsConfig = function () {
@@ -352,7 +352,7 @@ var ABeamer;
     function _handleVendorPrefixes(text) {
         return text.replace(/([\w\-]+)\s*:([^;]*;)/g, function (_all, propName, propValue) {
             var propNames = ABeamer._propNameToVendorProps(propName);
-            return propNames.map(function (name) { return name + ": " + propValue; }).join(' ');
+            return propNames.map(function (name) { return "".concat(name, ": ").concat(propValue); }).join(' ');
         });
     }
     /**
@@ -366,7 +366,7 @@ var ABeamer;
                 return all;
             }
             var newLink = pageRoot + path + link;
-            return "url(\"" + newLink + "\")";
+            return "url(\"".concat(newLink, "\")");
         });
     }
 })(ABeamer || (ABeamer = {}));

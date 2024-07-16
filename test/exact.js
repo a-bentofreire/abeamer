@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Exact = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -56,12 +57,12 @@ var Exact;
             this.testFunc = defaultTestFunc;
         }
         TestBuilder.prototype.getTestLabel = function (test) {
-            return "" + (test.preLabel || '') + test.elName + " "
-                + (test.prop + " goes from " + test.min + " to " + test.max + (test.postLabel || ''));
+            return "".concat(test.preLabel || '').concat(test.elName, " ")
+                + "".concat(test.prop, " goes from ").concat(test.min, " to ").concat(test.max).concat(test.postLabel || '');
         };
         TestBuilder.prototype.getTestAnime = function (test) {
             return {
-                selector: "#" + test.elName,
+                selector: "#".concat(test.elName),
                 duration: test.elDuration,
                 props: [{
                         duration: test.duration,
@@ -91,7 +92,7 @@ var Exact;
                 if (test.isPosAbsolute === undefined) {
                     test.isPosAbsolute = _this.isPosAbsolute;
                 }
-                test.elName = "t" + test.elIndex;
+                test.elName = "t".concat(test.elIndex);
                 test.min = test.min || _this.min;
                 test.max = test.max || _this.max;
                 test.prop = test.prop || _this.prop;
@@ -108,8 +109,8 @@ var Exact;
             return {
                 fps: this.fps,
                 css: this.tests.map(function (test) {
-                    return "#" + test.elName + " {" + (test.isPosAbsolute ? 'position: absolute; ' : '')
-                        + (test.prop + ": " + test.min + "px}");
+                    return "#".concat(test.elName, " {").concat(test.isPosAbsolute ? 'position: absolute; ' : '')
+                        + "".concat(test.prop, ": ").concat(test.min, "px}");
                 }).join('\n'),
                 animes: this.tests.map(function (test) {
                     return _this.getTestAnime(test);
@@ -131,7 +132,7 @@ var Exact;
     Exact.obj2String = function (obj) { return JSON.stringify(obj, undefined, 2); };
     function hexToRgb(hex) {
         var _hh2Int = function (delta) { return parseInt(hex.substr(delta, 2), 16); };
-        return "rgb(" + _hh2Int(1) + ", " + _hh2Int(3) + ", " + _hh2Int(5) + ")";
+        return "rgb(".concat(_hh2Int(1), ", ").concat(_hh2Int(3), ", ").concat(_hh2Int(5), ")");
     }
     Exact.hexToRgb = hexToRgb;
     Exact.roundTestDigit = function (v) {
@@ -146,7 +147,7 @@ var Exact;
         }
         var _a = duration.match(/^([\d\.]+)(s|ms|f|%)$/) || ['', '', ''], all = _a[0], sValue = _a[1], unit = _a[2];
         if (!all) {
-            throw "Unknown duration " + duration;
+            throw "Unknown duration ".concat(duration);
         }
         var value = parseFloat(sValue);
         switch (unit) {
@@ -176,10 +177,10 @@ var Exact;
                 opts.sceneMarkers[sceneIndex] === i) {
                 sceneIndex++;
                 res.push('    </div>');
-                res.push("    <div class=\"abeamer-scene\" id=scene" + (sceneIndex + 1) + ">");
+                res.push("    <div class=\"abeamer-scene\" id=scene".concat(sceneIndex + 1, ">"));
             }
-            res.push("        <" + opts.htmlTag + " class='" + opts.cssClass + "' "
-                + ("id='" + opts.idPrefix + i + "'>" + opts.textPrefix + i + "</" + opts.htmlTag + ">"));
+            res.push("        <".concat(opts.htmlTag, " class='").concat(opts.cssClass, "' ")
+                + "id='".concat(opts.idPrefix).concat(i, "'>").concat(opts.textPrefix).concat(i, "</").concat(opts.htmlTag, ">"));
         }
         return Exact.getTestSquare + res.join('\n');
     }
@@ -246,7 +247,7 @@ var Exact;
     // ------------------------------------------------------------------------
     function AssertHasLine(rd, line, isError) {
         if (isError === void 0) { isError = false; }
-        chai_1.assert.isTrue((!isError ? rd.out : rd.errLines).indexOf(line) !== -1, "missing: [" + line + "]");
+        chai_1.assert.isTrue((!isError ? rd.out : rd.errLines).indexOf(line) !== -1, "missing: [".concat(line, "]"));
     }
     Exact.AssertHasLine = AssertHasLine;
     // ------------------------------------------------------------------------
@@ -306,8 +307,8 @@ var Exact;
             if (expected.length !== actual.length) {
                 if (toAssert) {
                     failTestAndLog();
-                    throw "id: " + elementId + " prop: " + propName + " actions "
-                        + ("expected " + expected.length + " length, but actual is " + actual.length);
+                    throw "id: ".concat(elementId, " prop: ").concat(propName, " actions ")
+                        + "expected ".concat(expected.length, " length, but actual is ").concat(actual.length);
                 }
                 return -2;
             }
@@ -315,8 +316,8 @@ var Exact;
                 if (value !== expected[index]) {
                     failTestAndLog();
                     if (toAssert) {
-                        throw "id: " + elementId + " prop: " + propName + " index: " + index + " "
-                            + ("expected " + value + " length, but actual is " + expected[index]);
+                        throw "id: ".concat(elementId, " prop: ").concat(propName, " index: ").concat(index, " ")
+                            + "expected ".concat(value, " length, but actual is ").concat(expected[index]);
                     }
                     return true;
                 }
@@ -356,8 +357,8 @@ var Exact;
             if (expected.length !== actual.length) {
                 if (toAssert) {
                     failTestAndLog();
-                    throw "id: " + elementId + " prop: " + propName + " actions "
-                        + ("expected " + expected.length + " length, but actual is " + actual.length);
+                    throw "id: ".concat(elementId, " prop: ").concat(propName, " actions ")
+                        + "expected ".concat(expected.length, " length, but actual is ").concat(actual.length);
                 }
                 return -2;
             }
@@ -365,8 +366,8 @@ var Exact;
                 if (value[0] !== expected[index][0] || value[1] !== expected[index][1]) {
                     failTestAndLog();
                     if (toAssert) {
-                        throw "id: " + elementId + " prop: " + propName + " index: " + index + " "
-                            + ("expected " + value + " length, but actual is " + expected[index]);
+                        throw "id: ".concat(elementId, " prop: ").concat(propName, " index: ").concat(index, " ")
+                            + "expected ".concat(value, " length, but actual is ").concat(expected[index]);
                     }
                     return true;
                 }
@@ -444,7 +445,7 @@ var Exact;
         var holder = {};
         assertionManager(suiteName, params, holder, function (resolve) {
             if (params.toNotTimeExecution) {
-                console.log(suiteName + " started");
+                console.log("".concat(suiteName, " started"));
                 rd.startTime = new Date();
             }
             runExternal(rd, callback, holder, resolve);
@@ -472,8 +473,8 @@ var Exact;
                     case '@@scene':
                         sceneNr = value;
                         if (addedScenes.indexOf(sceneNr) === -1) {
-                            preAdd += "var scene" + sceneNr + " = "
-                                + ("story.scenes[" + (parseInt(sceneNr) - 1) + "];\n");
+                            preAdd += "var scene".concat(sceneNr, " = ")
+                                + "story.scenes[".concat(parseInt(sceneNr) - 1, "];\n");
                         }
                         break;
                     case '@@no-wrap-add-animation':
@@ -486,7 +487,7 @@ var Exact;
                     ? Exact.obj2String(jsAnime) : '[' + Exact.obj2String(jsAnime) + ']';
             }
             if (toWrapAddAnimations) {
-                jsAnime = "\nscene" + sceneNr + ".addAnimations("
+                jsAnime = "\nscene".concat(sceneNr, ".addAnimations(")
                     + jsAnime
                     + ");\n";
             }
@@ -521,20 +522,20 @@ var Exact;
     function initReplaceMacros(inMacros, params) {
         var cfg = dev_config_js_1.DevCfg.getConfig(sysPath.dirname(__dirname));
         var macros = Object.keys(inMacros).map(function (key) {
-            return [new RegExp("__" + key.toUpperCase() + "__", 'g'),
+            return [new RegExp("__".concat(key.toUpperCase(), "__"), 'g'),
                 inMacros[key] || ''];
         });
         macros.push([/__LIB_FILES__/,
             fsix_js_1.fsix.loadJsonSync(cfg.paths.MODULES_LIST_FILE)
                 .libModules.map(function (file) {
-                return "    <script src=\"../../../client/lib/js/" + file + ".js\"></script>\n";
+                return "    <script src=\"../../../client/lib/js/".concat(file, ".js\"></script>\n");
             }).join('')]);
         macros.push([/__PLUGINS__/,
             params.plugins ?
                 params.plugins.map(function (plugin) {
-                    return "    <script src=\"../../../client/lib/plugins/" + plugin + "/" + plugin + ".js\"></script>\n";
+                    return "    <script src=\"../../../client/lib/plugins/".concat(plugin, "/").concat(plugin, ".js\"></script>\n");
                 }).join('') : '']);
-        macros.push([/__ASSETS_PATH__/g, "../../" + ASSETS_PATH]);
+        macros.push([/__ASSETS_PATH__/g, "../../".concat(ASSETS_PATH)]);
         macros.push([/__IND_CASES__/,
             params.casesAreDependent !== true ? 'true' : 'false']);
         macros.push([/__EXIT_RENDER_ON_FINISHED__/,
@@ -579,11 +580,11 @@ var Exact;
         var serverName = (params.server || rel_consts_js_1.RelConsts.DEFAULT_SERVER);
         var cmdLine = (rel_consts_js_1.RelConsts.NODE_SERVERS.indexOf(serverName) !== -1 ? 'node' : serverName)
             // use double quotes for files to support space files and windows
-            + (" \"" + rd.root + "/../cli/../server/server-agent-" + serverName + ".js\"")
-            + (" --ll " + (params.logLevel !== undefined ? params.logLevel : consts_js_1.Consts.LL_VERBOSE))
+            + " \"".concat(rd.root, "/../cli/../server/server-agent-").concat(serverName, ".js\"")
+            + " --ll ".concat(params.logLevel !== undefined ? params.logLevel : consts_js_1.Consts.LL_VERBOSE)
             + (params.toDelPreviousFrames !== false ? ' --dp' : '')
             + (params.toGenFrames ? '' : ' --noframes')
-            + (" --config \"" + rd.outFolder + "/abeamer.ini\"");
+            + " --config \"".concat(rd.outFolder, "/abeamer.ini\"");
         if (params.onCmdLine) {
             cmdLine = params.onCmdLine(cmdLine);
         }
@@ -596,7 +597,7 @@ var Exact;
         fsix_js_1.fsix.runExternal(rd.cmdLine, function (error, stdout, stderr) {
             if (rd.params.toNotTimeExecution) {
                 rd.executionTime = new Date() - rd.startTime;
-                console.log(rd.suiteName + " finished " + rd.executionTime + " (ms)\n");
+                console.log("".concat(rd.suiteName, " finished ").concat(rd.executionTime, " (ms)\n"));
             }
             rd.error = error;
             rd.out = (stdout || '').trim();
@@ -620,7 +621,7 @@ var Exact;
                     rd.filteredErrLines = rd.errLines;
                 }
                 if (rd.hasError) {
-                    console.log("rd.hasError: " + rd.hasError);
+                    console.log("rd.hasError: ".concat(rd.hasError));
                 }
                 if (rd.hasError && rd.params.toNotLogStdErr !== false) {
                     console.error('Error:', rd.error);
@@ -661,7 +662,7 @@ var Exact;
         var ranges = [];
         if (rd.params.toLogStdOut) {
             rd.outLines.forEach(function (line, index) {
-                console.log(index + ":[" + line + "]");
+                console.log("".concat(index, ":[").concat(line, "]"));
             });
         }
         rd.outLines.forEach(function (line) {
@@ -684,5 +685,5 @@ var Exact;
             console.log(rd.actions);
         }
     }
-})(Exact = exports.Exact || (exports.Exact = {}));
+})(Exact || (exports.Exact = Exact = {}));
 //# sourceMappingURL=exact.js.map

@@ -93,7 +93,7 @@ var ABeamer;
                         }]);
                 }
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         /** Removes it self from the story. Used internally. */
@@ -119,7 +119,7 @@ var ABeamer;
             get: function () {
                 return this._frameInNr;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Scene.prototype, "frameCount", {
@@ -131,7 +131,7 @@ var ABeamer;
             get: function () {
                 return this._frameCount;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Scene.prototype, "storyFrameStart", {
@@ -144,7 +144,7 @@ var ABeamer;
                 this._story._calcFrameCount();
                 return this._storyFrameStart;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Scene.prototype, "storySceneIndex", {
@@ -156,7 +156,7 @@ var ABeamer;
             get: function () {
                 return this._storySceneIndex;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(_Scene.prototype, "id", {
@@ -168,7 +168,7 @@ var ABeamer;
             get: function () {
                 return this._sceneAdpt.getProp('id', this._story._args);
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         // ------------------------------------------------------------------------
@@ -189,7 +189,7 @@ var ABeamer;
         };
         _Scene.prototype._gotoSceneFrame = function (framePos) {
             if (framePos < 0 || framePos >= this._frameCount) {
-                ABeamer.throwErr("Position " + framePos + " is out of scope");
+                ABeamer.throwErr("Position ".concat(framePos, " is out of scope"));
             }
             this._internalGotoFrame(framePos);
         };
@@ -307,7 +307,7 @@ var ABeamer;
                 }
                 else {
                     if (_this._story._logLevel >= ABeamer.LL_WARN) {
-                        _this._story.logWarn("Selector " + anime.selector + " is empty");
+                        _this._story.logWarn("Selector ".concat(anime.selector, " is empty"));
                     }
                 }
                 elAnimations.push(elAnimation);
