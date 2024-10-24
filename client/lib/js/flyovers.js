@@ -89,7 +89,7 @@ var ABeamer;
      */
     ABeamer._flyoverFunctions = {};
     function _buildWorkFlyover(handler, params, toTeleport, args) {
-        var flyoverFunc;
+        let flyoverFunc;
         switch (typeof handler) {
             case 'string':
                 flyoverFunc = ABeamer._flyoverFunctions[handler];
@@ -102,7 +102,7 @@ var ABeamer;
         if (!flyoverFunc) {
             ABeamer.throwI8n(ABeamer.Msgs.UnknownOf, { type: ABeamer.Msgs.flyover, p: handler });
         }
-        var wkFlyover = {
+        const wkFlyover = {
             func: flyoverFunc,
             name: handler,
             params: params || {},
@@ -127,19 +127,19 @@ var ABeamer;
                 break;
             case ABeamer.TS_ANIME_LOOP:
                 // rendering
-                var format_1 = params.format || '${storyFrameNr}';
-                var story_1 = args.story;
-                params._elAdapters.forEach(function (elAdapter) {
-                    var text = format_1.replace(/\$\{(\w+)\}/g, function (_all, macro) {
+                const format = params.format || '${storyFrameNr}';
+                const story = args.story;
+                params._elAdapters.forEach(elAdapter => {
+                    const text = format.replace(/\$\{(\w+)\}/g, (_all, macro) => {
                         switch (macro) {
                             case 'storyFrameNr':
-                                return story_1.renderFramePos.toString();
+                                return story.renderFramePos.toString();
                             case 'storyElapsedMS':
-                                return ABeamer.frame2Time(story_1.renderFramePos, story_1.fps, ABeamer.TimeUnit.ms);
+                                return ABeamer.frame2Time(story.renderFramePos, story.fps, ABeamer.TimeUnit.ms);
                             case 'storyElapsedS':
-                                return ABeamer.frame2Time(story_1.renderFramePos, story_1.fps, ABeamer.TimeUnit.s);
+                                return ABeamer.frame2Time(story.renderFramePos, story.fps, ABeamer.TimeUnit.s);
                             case 'storyElapsedM':
-                                return ABeamer.frame2Time(story_1.renderFramePos, story_1.fps, ABeamer.TimeUnit.m);
+                                return ABeamer.frame2Time(story.renderFramePos, story.fps, ABeamer.TimeUnit.m);
                         }
                         return '';
                     });
@@ -168,10 +168,10 @@ var ABeamer;
                 }
             case ABeamer.TS_ANIME_LOOP:
                 // rendering
-                var storyFps_1 = args.story.fps;
+                const storyFps = args.story.fps;
                 if (!args.hasServer || params.serverRender !== false) {
-                    params._elAdapters.forEach(function (elAdapter) {
-                        var currentTime = args.story.renderFramePos / storyFps_1;
+                    params._elAdapters.forEach(elAdapter => {
+                        const currentTime = args.story.renderFramePos / storyFps;
                         // #debug-start
                         if (args.isVerbose) {
                             args.story.logFrmt('video-sync', [['currentTime', currentTime]]);

@@ -35,26 +35,146 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Story
     // ------------------------------------------------------------------------
-    var _WaitMan = /** @class */ (function () {
-        function _WaitMan() {
+    class _WaitMan {
+        constructor() {
             this.funcs = [];
             this.pos = 0;
         }
-        _WaitMan.prototype.addWaitFunc = function (func, params) {
-            this.funcs.push({ func: func, params: params });
-        };
-        return _WaitMan;
-    }());
+        addWaitFunc(func, params) {
+            this.funcs.push({ func, params });
+        }
+    }
     ABeamer._WaitMan = _WaitMan;
     /**
      * Implementation of _Story class.
      */
-    var _Story = /** @class */ (function () {
+    class _Story {
+        /**
+         * Numerical value of the frame width in pixels.
+         *
+         * #end-user @readonly
+         */
+        get metadata() {
+            return this._metadata;
+        }
+        /**
+         * Numerical value of the frame width in pixels.
+         *
+         * #end-user @readonly
+         */
+        get width() {
+            return this._width;
+        }
+        /**
+         * Numerical value of the frame height in pixels.
+         *
+         * #end-user @readonly
+         */
+        get height() {
+            return this._height;
+        }
+        /**
+         * Total number of frames from all the scenes.
+         *
+         * #end-user @readonly
+         */
+        get frameCount() {
+            this._calcFrameCount();
+            return this._frameCount;
+        }
+        /**
+         * Render direction. 1 for forward, -1 for backwards.
+         * Defined during the call to `story.render`.
+         *
+         * #end-user @readonly
+         */
+        get renderDir() { return this._renderDir; }
+        /**
+         * The number of the last frame to be rendered within the story.
+         * Defined during the call to `story.render`.
+         * This value doesn't changes during the rendering process.
+         *
+         * #end-user @readonly
+         */
+        get renderFrameEnd() { return this._renderFrameEnd; }
+        /**
+         * The number of the current frame being rendered.
+         * Defined during the call to `story.render`.
+         * This value changes during the rendering process.
+         *
+         * #end-user @readonly
+         */
+        get renderFramePos() { return this._renderFramePos; }
+        /**
+         * The number of the current frame being rendered.
+         * Defined during the call to `story.render`.
+         * This value doesn't changes during the rendering process.
+         *
+         * #end-user @readonly
+         */
+        get renderFrameCount() { return this._renderFrameCount; }
+        /**
+         * True if the rendering has started.
+         * Use `finishRender` to abort the rendering process.
+         *
+         * #end-user @readonly
+         */
+        get isRendering() { return this._isRendering; }
+        /**
+         * True if it's teleporting.
+         *
+         * #end-user @readonly
+         */
+        get isTeleporting() { return this._isTeleporting; }
+        /**
+         * Returns ABeamerArgs.
+         * This should be used only in specific cases such the access to --var.
+         * In most cases, this property is passed as an argument to plugins and callbacks.
+         *
+         * #end-user @readonly
+         */
+        get args() { return this._args; }
+        get strictMode() {
+            return this._strictMode;
+        }
+        set strictMode(newStrictMode) {
+            this._strictMode = newStrictMode;
+            this._args.isStrict = newStrictMode;
+        }
+        get logLevel() { return this._logLevel; }
+        set logLevel(newLogLevel) {
+            this._logLevel = newLogLevel;
+            this._isVerbose = newLogLevel >= ABeamer.LL_VERBOSE;
+            this._args.isVerbose = this._isVerbose;
+        }
+        get isVerbose() { return this._isVerbose; }
+        /**
+         * List of the scenes.
+         *
+         * #end-user @readonly
+         */
+        get scenes() { return this._scenes; }
+        /**
+         * Current active and visible scene.
+         * Valid both for adding animations and rendering.
+         * Use `gotoScene` to change this value.
+         *
+         * #end-user @readonly
+         */
+        get curScene() { return this._curScene; }
+        /**
+         * @deprecated Use addVirtualAnimator instead.
+         * The direct access to virtualAnimators in future versions will likely be disabled
+         *
+         */
+        get virtualAnimators() {
+            console.log(`virtualAnimators has been deprecated, use addVirtualAnimator`);
+            return this._virtualAnimators;
+        }
         /**
          * Sets up the Story and adds the Default Scenes.
          */
-        function _Story(cfg, createParams) {
-            var _this = this;
+        constructor(cfg, createParams) {
             // protected
             this._isServerReady = false;
             this._width = 0;
@@ -125,14 +245,14 @@ var ABeamer;
             /**
              * Returns the play speed that best matches the fps.
              */
-            this.bestPlaySpeed = function () { return Math.abs(1000 / _this.fps); };
-            var urlParams = window.location.search || '';
-            var args = this._args;
-            var self = this;
+            this.bestPlaySpeed = () => Math.abs(1000 / this.fps);
+            const urlParams = window.location.search || '';
+            const args = this._args;
+            const self = this;
             this.logLevel = createParams.logLevel || ABeamer.LL_SILENT;
             if (urlParams) {
-                urlParams.replace(new RegExp(ABeamer._SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), function (_all, p1) {
-                    _this.logLevel = parseInt(p1); // don't use _logLevel
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.LOG_LEVEL_SUFFIX + '(\\d+)'), (_all, p1) => {
+                    this.logLevel = parseInt(p1); // don't use _logLevel
                     return '';
                 });
             }
@@ -144,10 +264,10 @@ var ABeamer;
             ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(cfg.fps), ABeamer.Msgs.MustNatPositive, { p: 'fps' });
             ABeamer._vars.fps = cfg.fps;
             function setDim(srvPropPrefix, cfgValue, propName) {
-                var res = cfgValue || self.storyAdapter.getProp(propName, args);
+                let res = cfgValue || self.storyAdapter.getProp(propName, args);
                 if (urlParams) {
-                    urlParams.replace(new RegExp(srvPropPrefix + '(\\d+)'), function (_all, p1) {
-                        var qsValue = parseInt(p1);
+                    urlParams.replace(new RegExp(srvPropPrefix + '(\\d+)'), (_all, p1) => {
+                        const qsValue = parseInt(p1);
                         res = qsValue || res;
                         return '';
                     });
@@ -162,30 +282,30 @@ var ABeamer;
             ABeamer._vars.frameHeight = cfg.height;
             // setting clip-path is used because of slide transitions that display outside
             // the story boundaries
-            this.storyAdapter.setProp('clip-path', "polygon(0 0, 0 ".concat(cfg.height, "px, ").concat(cfg.width, "px ").concat(cfg.height, "px, ").concat(cfg.width, "px 0px)"), args);
+            this.storyAdapter.setProp('clip-path', `polygon(0 0, 0 ${cfg.height}px, ${cfg.width}px ${cfg.height}px, ${cfg.width}px 0px)`, args);
             args.story = this;
             this.fps = cfg.fps;
             this._isTeleporting = createParams.toTeleport || false;
             if (urlParams) {
-                urlParams.replace(new RegExp(ABeamer._SRV_CNT.TELEPORT_SUFFIX + '(\\w+)'), function (_all, p1) {
-                    _this._isTeleporting = p1 === 'true';
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.TELEPORT_SUFFIX + '(\\w+)'), (_all, p1) => {
+                    this._isTeleporting = p1 === 'true';
                     return '';
                 });
-                urlParams.replace(new RegExp(ABeamer._SRV_CNT.SERVER_SUFFIX + '(\\w+)'), function (_all, p1) {
-                    _this.hasServer = true;
-                    _this.storyAdapter.setProp('class', 'has-server', args);
-                    _this.serverName = p1;
-                    _this.serverFeatures = ABeamer._setServer(_this.serverName);
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.SERVER_SUFFIX + '(\\w+)'), (_all, p1) => {
+                    this.hasServer = true;
+                    this.storyAdapter.setProp('class', 'has-server', args);
+                    this.serverName = p1;
+                    this.serverFeatures = ABeamer._setServer(this.serverName);
                     return '';
                 });
-                urlParams.replace(new RegExp(ABeamer._SRV_CNT.RENDER_VAR_SUFFIX + '([^&]+)', 'g'), function (_all, p1) {
+                urlParams.replace(new RegExp(ABeamer._SRV_CNT.RENDER_VAR_SUFFIX + '([^&]+)', 'g'), (_all, p1) => {
                     p1 = decodeURIComponent(p1);
                     // tslint:disable-next-line:prefer-const
-                    var _a = p1.match(/^([^=]+)=(.*)$/) || ['', '', ''], key = _a[1], value = _a[2];
+                    let [, key, value] = p1.match(/^([^=]+)=(.*)$/) || ['', '', ''];
                     if (!key) {
-                        throw "var ".concat(p1, " requires the key field");
+                        throw `var ${p1} requires the key field`;
                     }
-                    key = key.replace(/-(\w)/g, function (_all2, p) { return p.toUpperCase(); });
+                    key = key.replace(/-(\w)/g, (_all2, p) => p.toUpperCase());
                     args.vars[key] = value;
                     return '';
                 });
@@ -221,196 +341,6 @@ var ABeamer;
                 }
             }
         }
-        Object.defineProperty(_Story.prototype, "metadata", {
-            /**
-             * Numerical value of the frame width in pixels.
-             *
-             * #end-user @readonly
-             */
-            get: function () {
-                return this._metadata;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "width", {
-            /**
-             * Numerical value of the frame width in pixels.
-             *
-             * #end-user @readonly
-             */
-            get: function () {
-                return this._width;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "height", {
-            /**
-             * Numerical value of the frame height in pixels.
-             *
-             * #end-user @readonly
-             */
-            get: function () {
-                return this._height;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "frameCount", {
-            /**
-             * Total number of frames from all the scenes.
-             *
-             * #end-user @readonly
-             */
-            get: function () {
-                this._calcFrameCount();
-                return this._frameCount;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "renderDir", {
-            /**
-             * Render direction. 1 for forward, -1 for backwards.
-             * Defined during the call to `story.render`.
-             *
-             * #end-user @readonly
-             */
-            get: function () { return this._renderDir; },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "renderFrameEnd", {
-            /**
-             * The number of the last frame to be rendered within the story.
-             * Defined during the call to `story.render`.
-             * This value doesn't changes during the rendering process.
-             *
-             * #end-user @readonly
-             */
-            get: function () { return this._renderFrameEnd; },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "renderFramePos", {
-            /**
-             * The number of the current frame being rendered.
-             * Defined during the call to `story.render`.
-             * This value changes during the rendering process.
-             *
-             * #end-user @readonly
-             */
-            get: function () { return this._renderFramePos; },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "renderFrameCount", {
-            /**
-             * The number of the current frame being rendered.
-             * Defined during the call to `story.render`.
-             * This value doesn't changes during the rendering process.
-             *
-             * #end-user @readonly
-             */
-            get: function () { return this._renderFrameCount; },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "isRendering", {
-            /**
-             * True if the rendering has started.
-             * Use `finishRender` to abort the rendering process.
-             *
-             * #end-user @readonly
-             */
-            get: function () { return this._isRendering; },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "isTeleporting", {
-            /**
-             * True if it's teleporting.
-             *
-             * #end-user @readonly
-             */
-            get: function () { return this._isTeleporting; },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "args", {
-            /**
-             * Returns ABeamerArgs.
-             * This should be used only in specific cases such the access to --var.
-             * In most cases, this property is passed as an argument to plugins and callbacks.
-             *
-             * #end-user @readonly
-             */
-            get: function () { return this._args; },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "strictMode", {
-            get: function () {
-                return this._strictMode;
-            },
-            set: function (newStrictMode) {
-                this._strictMode = newStrictMode;
-                this._args.isStrict = newStrictMode;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "logLevel", {
-            get: function () { return this._logLevel; },
-            set: function (newLogLevel) {
-                this._logLevel = newLogLevel;
-                this._isVerbose = newLogLevel >= ABeamer.LL_VERBOSE;
-                this._args.isVerbose = this._isVerbose;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "isVerbose", {
-            get: function () { return this._isVerbose; },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "scenes", {
-            /**
-             * List of the scenes.
-             *
-             * #end-user @readonly
-             */
-            get: function () { return this._scenes; },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "curScene", {
-            /**
-             * Current active and visible scene.
-             * Valid both for adding animations and rendering.
-             * Use `gotoScene` to change this value.
-             *
-             * #end-user @readonly
-             */
-            get: function () { return this._curScene; },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Story.prototype, "virtualAnimators", {
-            /**
-             * @deprecated Use addVirtualAnimator instead.
-             * The direct access to virtualAnimators in future versions will likely be disabled
-             *
-             */
-            get: function () {
-                console.log("virtualAnimators has been deprecated, use addVirtualAnimator");
-                return this._virtualAnimators;
-            },
-            enumerable: false,
-            configurable: true
-        });
         // ------------------------------------------------------------------------
         //                               Virtual Animators
         // ------------------------------------------------------------------------
@@ -418,30 +348,30 @@ var ABeamer;
          * Adds a [](VirtualAnimator) to the story.
          * Use [story.removeVirtualAnimator](#storyremovevirtualanimator) to take it from the story.
          */
-        _Story.prototype.addVirtualAnimator = function (animator) {
-            var selector = animator.selector;
+        addVirtualAnimator(animator) {
+            const selector = animator.selector;
             if (!selector) {
                 ABeamer.throwI8n(ABeamer.Msgs.NoEmptySelector);
             }
             if (this._virtualAnimatorMap[selector]) {
-                ABeamer.throwErr("The selector must be unique");
+                ABeamer.throwErr(`The selector must be unique`);
             }
             this._virtualAnimators.push(animator);
             this._virtualAnimatorMap[selector] = animator;
-        };
+        }
         /**
          * Removes a [](VirtualAnimator) to the story.
          * Use [story.addVirtualAnimator](#storyaddvirtualanimator) to add it to the story.
          */
-        _Story.prototype.removeVirtualAnimator = function (animator) {
-            var index = this._virtualAnimators.indexOf(animator);
+        removeVirtualAnimator(animator) {
+            const index = this._virtualAnimators.indexOf(animator);
             if (index !== -1) {
                 this._virtualAnimators.splice(index, 1);
                 // Although there is _virtualAnimatorMap and provides faster access,
                 // until the access to virtualAnimators has been disabled, it can't be used.
                 delete this._virtualAnimatorMap[animator.selector];
             }
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Scenes
         // ------------------------------------------------------------------------
@@ -450,15 +380,15 @@ var ABeamer;
          * These classes are added automatically during Story constructor.
          * Add only after a `story.reset()`.
          */
-        _Story.prototype.addDefaultScenes = function () {
-            var story = this;
-            $('.abeamer-scene').each(function (_index, htmlElement) {
+        addDefaultScenes() {
+            const story = this;
+            $('.abeamer-scene').each((_index, htmlElement) => {
                 story.addScene($(htmlElement));
             });
             if (this._scenes.length) {
                 this.gotoScene(this._scenes[0]);
             }
-        };
+        }
         /**
          * Adds a scene to the story.
          * HTML elements with abeamer-scene class are added automatically.
@@ -466,20 +396,20 @@ var ABeamer;
          * @param sceneSelector DOM selector, JQuery object or Virtual Scene
          * @returns A pointer to newly created scene
          */
-        _Story.prototype.addScene = function (sceneSelector) {
-            var scene = new ABeamer._Scene(this, sceneSelector, this._scenes.length ? this._scenes[this._scenes.length - 1] : undefined);
+        addScene(sceneSelector) {
+            const scene = new ABeamer._Scene(this, sceneSelector, this._scenes.length ? this._scenes[this._scenes.length - 1] : undefined);
             this._scenes.push(scene);
             this._setFrameCountChanged();
             if (this._teleporter.active) {
                 this._teleporter._addScene();
             }
             return scene;
-        };
+        }
         /**
          * Removes a frame from scene list and removes the its rendering pipeline
          * but its DOM elements aren't removed.
          */
-        _Story.prototype.removeScene = function (scene) {
+        removeScene(scene) {
             this._exceptIfRendering();
             if (this._curScene === scene) {
                 scene._hide();
@@ -487,20 +417,20 @@ var ABeamer;
             }
             scene._remove();
             this._scenes.splice(scene.storySceneIndex, 1);
-        };
+        }
         /**
          * Rewinds the animation to the start.
          * Deletes all the scenes and frames from the story.
          * The DOM is left untouched.
          */
-        _Story.prototype.clear = function () {
+        clear() {
             this._exceptIfRendering();
             this.rewind();
             this._internalGotoScene(undefined);
             this.scenes.length = 0;
             this._renderFramePos = 0;
             this._frameCount = 0;
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Animations
         // ------------------------------------------------------------------------
@@ -510,27 +440,26 @@ var ABeamer;
          * Use this method to load the whole storyline from an external file.
          * Otherwise is preferable to add animation scene by scene.
          */
-        _Story.prototype.addStoryAnimations = function (sceneSerialAnimes) {
-            var _this = this;
-            sceneSerialAnimes.forEach(function (sceneSerialAnime, index) {
-                _this._scenes[index].addSerialAnimations(sceneSerialAnime);
+        addStoryAnimations(sceneSerialAnimes) {
+            sceneSerialAnimes.forEach((sceneSerialAnime, index) => {
+                this._scenes[index].addSerialAnimations(sceneSerialAnime);
             });
-        };
+        }
         /**
          * Adds a list of serial/parallel animations per scene Id.
          * It requires that each scene has defined the id (DOM attribute).
          * It bypasses invalid scene ids.
          */
-        _Story.prototype.addStoryAnimationsBySceneId = function (sceneSerialAnimes) {
-            var ids = {};
-            this._scenes.forEach(function (scene) { ids[scene.id] = scene; });
-            Object.keys(sceneSerialAnimes).forEach(function (id) {
-                var scene = ids[id];
+        addStoryAnimationsBySceneId(sceneSerialAnimes) {
+            const ids = {};
+            this._scenes.forEach(scene => { ids[scene.id] = scene; });
+            Object.keys(sceneSerialAnimes).forEach(id => {
+                const scene = ids[id];
                 if (scene) {
                     scene.addSerialAnimations(sceneSerialAnimes[id]);
                 }
             });
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Flyovers
         // ------------------------------------------------------------------------
@@ -539,11 +468,11 @@ var ABeamer;
          *
          * @see flyovers
          */
-        _Story.prototype.addFlyover = function (handler, params) {
-            var wkFlyover = ABeamer._buildWorkFlyover(handler, params, false, this._args);
+        addFlyover(handler, params) {
+            const wkFlyover = ABeamer._buildWorkFlyover(handler, params, false, this._args);
             if (this._isTeleporting && this._args.stage !== ABeamer.AS_ADD_ANIMATION
                 && this._scenes.length) {
-                var scene = this._scenes[0];
+                const scene = this._scenes[0];
                 scene.addAnimations([{
                         tasks: [
                             {
@@ -560,26 +489,26 @@ var ABeamer;
                 wkFlyover.func(wkFlyover, wkFlyover.params, ABeamer.TS_INIT, this._args);
                 this._wkFlyovers.push(wkFlyover);
             }
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Scene Methods
         // ------------------------------------------------------------------------
         /**
          * Changes the active and visible to a different scene.
          */
-        _Story.prototype.gotoScene = function (scene) {
+        gotoScene(scene) {
             if (scene === this._curScene) {
                 return;
             }
             this._exceptIfRendering();
             this._calcFrameCount();
             this._internalGotoScene(scene);
-        };
+        }
         /**
          * Internal and faster version of gotoScene.
          */
-        _Story.prototype._internalGotoScene = function (scene) {
-            var curScene = this._curScene;
+        _internalGotoScene(scene) {
+            const curScene = this._curScene;
             if (curScene) {
                 curScene._hide();
             }
@@ -588,11 +517,11 @@ var ABeamer;
                 scene._show();
             }
             this._args.scene = scene;
-        };
+        }
         /** Returns the Scene Object which has `sceneName`, undefined otherwise */
-        _Story.prototype.findSceneByName = function (sceneName) {
-            return this._scenes.find(function (scene) { return scene.name === sceneName; });
-        };
+        findSceneByName(sceneName) {
+            return this._scenes.find(scene => scene.name === sceneName);
+        }
         // ------------------------------------------------------------------------
         //                               Frame Methods
         // ------------------------------------------------------------------------
@@ -600,62 +529,60 @@ var ABeamer;
          * Signals that there was a change in the number of frames.
          * Usually used by `addAnimations`.
          */
-        _Story.prototype._setFrameCountChanged = function () {
+        _setFrameCountChanged() {
             this._frameCountChanged = true;
-        };
+        }
         /**
          * Recomputes the total number of frames as well as other scene parameters
          * associated with frames.
          */
-        _Story.prototype._calcFrameCount = function () {
+        _calcFrameCount() {
             if (!this._frameCountChanged) {
                 return;
             }
-            var frameCount = 0;
-            this._scenes.forEach(function (scene, index) {
+            let frameCount = 0;
+            this._scenes.forEach((scene, index) => {
                 frameCount += scene._setStoryParams(frameCount, index);
             });
             this._frameCountChanged = false;
             this._frameCount = frameCount;
-        };
+        }
         /**
          * Rewinds the animation to the start.
          */
-        _Story.prototype.rewind = function () {
+        rewind() {
             this.gotoFrame(0);
-        };
+        }
         /**
          * Moves the current render Position when is not rendering by consuming the pipeline.
          * Use this only if you need to compute parameters at certain position.
          * When render starts
          */
-        _Story.prototype.gotoFrame = function (framePos) {
+        gotoFrame(framePos) {
             this._exceptIfRendering();
             this._calcFrameCount();
             if (framePos < 0 || framePos >= this._frameCount) {
                 ABeamer.throwI8n(ABeamer.Msgs.OutOfScope, { p: ABeamer.Msgs.pos });
             }
             this._internalGotoFrame(framePos);
-        };
-        _Story.prototype._internalGotoFrame = function (framePos) {
-            var _curScene = this._curScene;
+        }
+        _internalGotoFrame(framePos) {
+            let _curScene = this._curScene;
             if (!_curScene
                 || !_curScene._internalContainsFrame(framePos)) {
-                _curScene = this._scenes.find(function (scene) {
-                    return scene._internalContainsFrame(framePos);
-                });
+                _curScene = this._scenes.find(scene => scene._internalContainsFrame(framePos));
                 this._internalGotoScene(_curScene);
             }
             _curScene._internalGotoFrame(framePos - _curScene.storyFrameStart);
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Transitions
         // ------------------------------------------------------------------------
-        _Story.prototype._setupTransitions = function () {
-            this._scenes.forEach(function (scene) {
+        _setupTransitions() {
+            this._scenes.forEach((scene) => {
                 scene._setupTransition();
             });
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Teleporting
         // ------------------------------------------------------------------------
@@ -667,11 +594,11 @@ var ABeamer;
          * Set frameOpts, if you need segment rendering.
          * Set isPretty = true, to test only, since this mode will return a formatted output but bigger in size.
          */
-        _Story.prototype.getStoryToTeleport = function (frameOpts, isPretty) {
-            var cfg = this.getStoryToTeleportAsConfig(frameOpts);
+        getStoryToTeleport(frameOpts, isPretty) {
+            const cfg = this.getStoryToTeleportAsConfig(frameOpts);
             return cfg !== undefined ?
                 JSON.stringify(cfg, undefined, isPretty ? 2 : undefined) : '';
-        };
+        }
         /**
          * Same as `getStoryToTeleport()` but it returns as `StoryConfig` object.
          * Use this function instead of getStoryToTeleport, if you need to
@@ -679,15 +606,15 @@ var ABeamer;
          * Modifying the content of `config.abeamer` is forbidden for 3rd-party
          * remote server rendering.
          */
-        _Story.prototype.getStoryToTeleportAsConfig = function (frameOpts) {
+        getStoryToTeleportAsConfig(frameOpts) {
             if (!this._isTeleporting) {
-                throw "getStoryToTeleport requires to be in teleporting mode";
+                throw `getStoryToTeleport requires to be in teleporting mode`;
             }
             if (!this._calcRenderFrameOptions(frameOpts)) {
                 return undefined;
             }
             return this._teleporter._getStoryToTeleportAsConfig();
-        };
+        }
         /**
          * Stores the complete story on a file in the disk.
          * Use this method only for testing.
@@ -698,12 +625,12 @@ var ABeamer;
          *
          * Use this method instead of `getStoryToTeleport`.
          */
-        _Story.prototype.teleport = function (frameOpts, isPretty) {
+        teleport(frameOpts, isPretty) {
             if (!this.hasServer) {
-                console.warn("To teleport it requires the render server agent to be running");
+                console.warn(`To teleport it requires the render server agent to be running`);
             }
             this._sendCmd(ABeamer._SRV_CNT.MSG_TELEPORT, this.getStoryToTeleport(frameOpts, isPretty));
-        };
+        }
         /**
          * Use this method only if you have created the story with `toTeleport = true`
          * and `toStartTeleporting = false`, because you need to inject
@@ -711,31 +638,31 @@ var ABeamer;
          * Otherwise, you won't need to call this method since it's called automatically
          * if teleporting a story.
          */
-        _Story.prototype.startTeleporting = function () {
+        startTeleporting() {
             if (this._isTeleporting) {
                 this._teleporter.createSnapshot();
             }
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Render
         // ------------------------------------------------------------------------
         /**
          * Throws exception if is rendering.
          */
-        _Story.prototype._exceptIfRendering = function () {
+        _exceptIfRendering() {
             if (this._isRendering) {
                 throw "Render is still running";
             }
-        };
-        _Story.prototype._getSceneByHandler = function (scene) {
+        }
+        _getSceneByHandler(scene) {
             switch (typeof scene) {
                 case 'object': return scene;
                 case 'string':
-                    var outScene = this.findSceneByName(scene);
+                    const outScene = this.findSceneByName(scene);
                     ABeamer.throwIfI8n(!outScene, ABeamer.Msgs.Unknown, { p: scene });
                     return outScene;
                 case 'number':
-                    var sceneIdx = scene;
+                    const sceneIdx = scene;
                     if (this._strictMode) {
                         ABeamer.throwIfI8n(ABeamer.isNotNegativeNatural(sceneIdx), ABeamer.Msgs.MustNatNotNegative, { p: sceneIdx });
                     }
@@ -744,24 +671,24 @@ var ABeamer;
                     }
                     return this._scenes[sceneIdx];
             }
-        };
+        }
         /**
          * Computes the render properties from the user frame params.
          */
-        _Story.prototype._calcRenderFrameOptions = function (frameOpts) {
+        _calcRenderFrameOptions(frameOpts) {
             frameOpts = frameOpts || {};
             this._calcFrameCount();
-            var renderFramePos = ABeamer.parseTimeHandler(frameOpts.renderPos, this._args, 0, 0);
-            var renderFrameCount = ABeamer.parseTimeHandler(frameOpts.renderCount, this._args, this._frameCount, this._frameCount);
+            let renderFramePos = ABeamer.parseTimeHandler(frameOpts.renderPos, this._args, 0, 0);
+            let renderFrameCount = ABeamer.parseTimeHandler(frameOpts.renderCount, this._args, this._frameCount, this._frameCount);
             if (frameOpts.startScene !== undefined) {
-                var startScene = this._getSceneByHandler(frameOpts.startScene);
+                const startScene = this._getSceneByHandler(frameOpts.startScene);
                 renderFramePos += startScene.storyFrameStart;
                 if (frameOpts.renderCount === undefined) {
                     renderFrameCount -= startScene.storyFrameStart;
                 }
             }
             if (frameOpts.endScene !== undefined) {
-                var endScene = this._getSceneByHandler(frameOpts.endScene);
+                const endScene = this._getSceneByHandler(frameOpts.endScene);
                 if (frameOpts.renderCount === undefined) {
                     renderFrameCount = endScene.storyFrameStart
                         + endScene.frameCount - renderFramePos;
@@ -771,11 +698,11 @@ var ABeamer;
             if (!renderFrameCount) {
                 return false;
             }
-            var renderFrameDir = renderFrameCount > 0 ? 1 : -1;
+            const renderFrameDir = renderFrameCount > 0 ? 1 : -1;
             if (renderFrameDir === -1) {
                 ABeamer.throwErr('Reverse render isn\'t supported yet');
             }
-            var renderFrameEnd = renderFrameCount > 0
+            const renderFrameEnd = renderFrameCount > 0
                 ? renderFramePos + renderFrameCount - 1
                 : renderFramePos + renderFrameCount;
             renderFrameCount = Math.abs(renderFrameCount);
@@ -790,7 +717,7 @@ var ABeamer;
             this._renderFrameEnd = renderFrameEnd;
             this._renderFrameCount = renderFrameCount;
             return true;
-        };
+        }
         /**
          * Starts the Rendering process.
          * It can render the whole storyline or just a segment.
@@ -803,7 +730,7 @@ var ABeamer;
          * ignored on server mode. ABeamer doesn't guarantee the exact timing.
          * If it's undefined, it will play at full speed.
          */
-        _Story.prototype.render = function (playSpeedMs, frameOpts) {
+        render(playSpeedMs, frameOpts) {
             if (this.hasServer && this._isTeleporting) {
                 this.teleport(frameOpts, true);
                 this.exit();
@@ -816,8 +743,8 @@ var ABeamer;
                 return;
             }
             this._internalRender(playSpeedMs, frameOpts);
-        };
-        _Story.prototype._internalRender = function (playSpeedMs, frameOpts) {
+        }
+        _internalRender(playSpeedMs, frameOpts) {
             this._args.stage = ABeamer.AS_RENDERING;
             this._isRendering = true;
             if (!this._calcRenderFrameOptions(this._teleporter._fillFrameOpts(frameOpts))) {
@@ -837,11 +764,11 @@ var ABeamer;
             else {
                 this._sendCmd(ABeamer._SRV_CNT.MSG_READY);
             }
-        };
+        }
         /**
          * Aborts the rendering process.
          */
-        _Story.prototype.finishRender = function () {
+        finishRender() {
             if (this._isRendering) {
                 this._isRendering = false;
                 if (this._renderTimer) {
@@ -849,7 +776,7 @@ var ABeamer;
                     this._renderTimer = undefined;
                 }
                 if (this._queueRenders.length) {
-                    var queuedRender = this._queueRenders[0];
+                    const queuedRender = this._queueRenders[0];
                     this._queueRenders.splice(0, 1);
                     this._internalRender(queuedRender.playSpeedMs, queuedRender);
                     return;
@@ -860,28 +787,27 @@ var ABeamer;
                     this.exit();
                 }
             }
-        };
+        }
         /**
          * Renders each frame at a pre-defined speed.
          */
-        _Story.prototype._renderLoop = function () {
-            var _this = this;
-            var stage = this._renderStage;
-            var waitMan = this._waitMan;
+        _renderLoop() {
+            let stage = this._renderStage;
+            const waitMan = this._waitMan;
             while (true) {
                 if (!this._isRendering) {
                     return;
                 }
                 if (stage && waitMan.funcs.length > waitMan.pos) {
                     this._renderStage = stage;
-                    var func = waitMan.funcs[waitMan.pos];
+                    const func = waitMan.funcs[waitMan.pos];
                     waitMan.pos++;
                     if (waitMan.funcs.length === waitMan.pos) {
                         waitMan.pos = 0;
                         waitMan.funcs = [];
                     }
-                    func.func(this._args, func.params, function () {
-                        _this._renderLoop();
+                    func.func(this._args, func.params, () => {
+                        this._renderLoop();
                     });
                     return;
                 }
@@ -896,8 +822,8 @@ var ABeamer;
                         break;
                     case 3:
                         stage++;
-                        this._wkFlyovers.forEach(function (wkFlyover) {
-                            wkFlyover.func(wkFlyover, wkFlyover.params, ABeamer.TS_ANIME_LOOP, _this._args);
+                        this._wkFlyovers.forEach(wkFlyover => {
+                            wkFlyover.func(wkFlyover, wkFlyover.params, ABeamer.TS_ANIME_LOOP, this._args);
                         });
                         break;
                     case 4:
@@ -922,15 +848,15 @@ var ABeamer;
                             }
                         }
                         this._renderStage = stage;
-                        var newDate = new Date();
-                        var elapsed = newDate - this._renderTimeStamp;
-                        var waitTime = Math.max(this._renderPlaySpeed - Math.floor(elapsed /* / 1000 */), 1);
-                        this._renderTimer = window.setTimeout(function () {
-                            if (!_this.hasServer) {
-                                _this._renderLoop();
+                        const newDate = new Date();
+                        const elapsed = newDate - this._renderTimeStamp;
+                        const waitTime = Math.max(this._renderPlaySpeed - Math.floor(elapsed /* / 1000 */), 1);
+                        this._renderTimer = window.setTimeout(() => {
+                            if (!this.hasServer) {
+                                this._renderLoop();
                             }
                             else {
-                                _this._sendCmd(ABeamer._SRV_CNT.MSG_RENDER);
+                                this._sendCmd(ABeamer._SRV_CNT.MSG_RENDER);
                             }
                         }, waitTime);
                         return;
@@ -957,29 +883,29 @@ var ABeamer;
                         break;
                 }
             }
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Communicate with the server
         // ------------------------------------------------------------------------
-        _Story.prototype._sendCmd = function (cmd, value) {
+        _sendCmd(cmd, value) {
             console.log(ABeamer._SRV_CNT.MESSAGE_PREFIX + cmd +
                 (value ? ABeamer._SRV_CNT.CMD_VALUE_SEP + value : ''));
-        };
+        }
         /**
          * Terminates the server in case is a headless webpage capture program.
          * In other cases, it has no effect.
          */
-        _Story.prototype.exit = function () {
+        exit() {
             this._sendCmd(ABeamer._SRV_CNT.MSG_EXIT);
-        };
+        }
         /**
          * Formats a log using a format supported by exact test framework.
          * This is mostly used internally for testing, but it's publicly available.
          *
          * @param params list of [name, value]
          */
-        _Story.prototype.logFrmt = function (tag, params, logType) {
-            var msg = "".concat(tag, ":") + params.map(function (param) { return "".concat(param[0], "=_[").concat(param[1], "]_"); })
+        logFrmt(tag, params, logType) {
+            const msg = `${tag}:` + params.map(param => `${param[0]}=_[${param[1]}]_`)
                 .join(' ');
             switch (logType) {
                 case ABeamer.LT_WARN:
@@ -991,47 +917,47 @@ var ABeamer;
                 default:
                     this.logMsg(msg);
             }
-        };
+        }
         /**
          * If a server is present and supports logging,
          * it sends a log message to server otherwise it sends to the browser console.
          */
-        _Story.prototype.logMsg = function (msg) {
+        logMsg(msg) {
             if (this.hasServer && this.serverFeatures.hasLogging) {
                 this._sendCmd(ABeamer._SRV_CNT.MSG_LOG_MSG, msg);
             }
             else {
                 console.log(msg);
             }
-        };
+        }
         /**
          * If a server is present and supports logging,
          * it sends a warn message to server otherwise it sends to the browser console.
          */
-        _Story.prototype.logWarn = function (msg) {
+        logWarn(msg) {
             if (this.hasServer && this.serverFeatures.hasLogging) {
                 this._sendCmd(ABeamer._SRV_CNT.MSG_LOG_WARN, msg);
             }
             else {
                 console.warn(msg);
             }
-        };
+        }
         /**
          * If a server is present and supports logging,
          * it sends a error message to server otherwise it sends to the browser console.
          */
-        _Story.prototype.logError = function (msg) {
+        logError(msg) {
             if (this.hasServer && this.serverFeatures.hasLogging) {
                 this._sendCmd(ABeamer._SRV_CNT.MSG_LOG_ERROR, msg);
             }
             else {
                 console.error(msg);
             }
-        };
+        }
         /**
          * This method is called by the server to communicate with the client.
          */
-        _Story.prototype._internalGetServerMsg = function (cmd, _value) {
+        _internalGetServerMsg(cmd, _value) {
             switch (cmd) {
                 case ABeamer._SRV_CNT.MSG_SERVER_READY:
                     this._isServerReady = true;
@@ -1047,15 +973,14 @@ var ABeamer;
                     this._renderLoop();
                     break;
             }
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Proxies
         // ------------------------------------------------------------------------
-        _Story.prototype.getElementAdapters = function (selector) {
+        getElementAdapters(selector) {
             return ABeamer._parseInElSelector(this, [], this.storyAdapter, selector);
-        };
-        return _Story;
-    }());
+        }
+    }
     ABeamer._Story = _Story;
     // ------------------------------------------------------------------------
     //                               Global Functions
@@ -1067,7 +992,7 @@ var ABeamer;
      * @see config-file
      */
     function createStory(fps, createParams) {
-        _abeamer = new _Story({ fps: fps }, createParams || {});
+        _abeamer = new _Story({ fps }, createParams || {});
         return _abeamer;
     }
     ABeamer.createStory = createStory;
@@ -1077,8 +1002,8 @@ var ABeamer;
      * @see config-file
      */
     function createStoryFromConfig(cfgUrl, callback, fps, createParams) {
-        $.get(cfgUrl, function (data) {
-            var cfgRoot;
+        $.get(cfgUrl, (data) => {
+            let cfgRoot;
             if (cfgUrl.endsWith('.json')) {
                 cfgRoot = data;
             }
@@ -1086,17 +1011,15 @@ var ABeamer;
                 cfgRoot = {};
                 // @HINT: this code is a copy of  server.ts / parseIniCfgContent
                 // @TODO: find a way to avoid duplicating this code
-                data.split(/\n/).forEach(function (line) {
-                    return line.replace(/^\s*[\$@]abeamer-([\w+\-]+)\s*:\s*"?([^\n]+)"?\s*;\s*$/, function (_all, p1, p2) {
-                        cfgRoot[p1] = p2;
-                        return '';
-                    });
-                });
+                data.split(/\n/).forEach(line => line.replace(/^\s*[\$@]abeamer-([\w+\-]+)\s*:\s*"?([^\n]+)"?\s*;\s*$/, (_all, p1, p2) => {
+                    cfgRoot[p1] = p2;
+                    return '';
+                }));
                 cfgRoot = { config: { abeamer: cfgRoot } };
             }
-            var cfgConfig = cfgRoot.config;
+            const cfgConfig = cfgRoot.config;
             if (cfgConfig) {
-                var cfg = cfgConfig.abeamer;
+                const cfg = cfgConfig.abeamer;
                 if (cfg) {
                     cfg.fps = cfg.fps || fps;
                     _abeamer = new _Story(cfg, createParams || {});
@@ -1107,5 +1030,5 @@ var ABeamer;
     }
     ABeamer.createStoryFromConfig = createStoryFromConfig;
 })(ABeamer || (ABeamer = {}));
-var _abeamer;
+let _abeamer;
 //# sourceMappingURL=story.js.map

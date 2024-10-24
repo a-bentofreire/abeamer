@@ -33,19 +33,11 @@ var ABeamer;
         }
     }
     ABeamer.throwIfI8n = throwIfI8n;
-    ABeamer.isPositiveNatural = function (value) {
-        return (typeof value === 'number') && value > 0 &&
-            (Math.abs(Math.floor(value) - value) < 0.0000001);
-    };
-    ABeamer.isNotNegativeNatural = function (value) {
-        return (typeof value === 'number') && value >= 0 &&
-            (Math.abs(Math.floor(value) - value) < 0.0000001);
-    };
-    ABeamer.isPositive = function (value) {
-        return (typeof value === 'number') && value > 0;
-    };
-    ABeamer.isNotNegative = function (value) {
-        return (typeof value === 'number') && value >= 0;
-    };
+    ABeamer.isPositiveNatural = (value) => (typeof value === 'number') && value > 0 &&
+        (Math.abs(Math.floor(value) - value) < 0.0000001);
+    ABeamer.isNotNegativeNatural = (value) => (typeof value === 'number') && value >= 0 &&
+        (Math.abs(Math.floor(value) - value) < 0.0000001);
+    ABeamer.isPositive = (value) => (typeof value === 'number') && value > 0;
+    ABeamer.isNotNegative = (value) => (typeof value === 'number') && value >= 0;
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=validators.js.map

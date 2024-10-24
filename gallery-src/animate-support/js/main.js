@@ -3,14 +3,14 @@
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 20);
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 20);
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
-    var d1 = '5s';
-    var d2 = '1s';
-    var scene1 = story.scenes[0];
+    const d1 = '5s';
+    const d2 = '1s';
+    const scene1 = story.scenes[0];
     scene1
         // move the bug to the left and the letters to the bottom
         .addAnimations([{

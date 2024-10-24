@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DevConsts = void 0;
-// This file was generated gulp build-shared-lib
-// It has no uuid
+// This file was generated gulp build_shared_lib
 //
 // @WARN: Don't edit this file.
 var DevConsts;
@@ -10,7 +9,7 @@ var DevConsts;
     // -------------
     // version
     // -------------
-    DevConsts.VERSION = "1.6.1";
+    DevConsts.VERSION = "1.7.0";
     // -------------
     // consts
     // -------------
@@ -28,7 +27,7 @@ var DevConsts;
     // -------------
     // i18n
     // -------------
-    var Msgs;
+    let Msgs;
     (function (Msgs) {
         Msgs["MustNatPositive"] = "The value of %p% must be a natural positive";
         Msgs["MustNatNotNegative"] = "The value of %p% must be a natural non-negative";
@@ -57,7 +56,7 @@ var DevConsts;
     // -------------
     // utilities
     // -------------
-    var RoundFuncName;
+    let RoundFuncName;
     (function (RoundFuncName) {
         RoundFuncName[RoundFuncName["none"] = 0] = "none";
         RoundFuncName[RoundFuncName["round"] = 1] = "round";
@@ -68,7 +67,7 @@ var DevConsts;
     // -------------
     // time
     // -------------
-    var TimeUnit;
+    let TimeUnit;
     (function (TimeUnit) {
         TimeUnit[TimeUnit["f"] = 0] = "f";
         TimeUnit[TimeUnit["ms"] = 1] = "ms";
@@ -86,7 +85,7 @@ var DevConsts;
     // -------------
     // easings
     // -------------
-    var EasingName;
+    let EasingName;
     (function (EasingName) {
         EasingName[EasingName["linear"] = 0] = "linear";
         EasingName[EasingName["easeInQuad"] = 1] = "easeInQuad";
@@ -123,19 +122,19 @@ var DevConsts;
     // -------------
     // oscillators
     // -------------
-    var OscillatorName;
+    let OscillatorName;
     (function (OscillatorName) {
         OscillatorName[OscillatorName["harmonic"] = 1000] = "harmonic";
         OscillatorName[OscillatorName["damped"] = 1001] = "damped";
         OscillatorName[OscillatorName["pulsar"] = 1002] = "pulsar";
     })(OscillatorName = DevConsts.OscillatorName || (DevConsts.OscillatorName = {}));
-    var NegativeBuiltInFuncs;
+    let NegativeBuiltInFuncs;
     (function (NegativeBuiltInFuncs) {
         NegativeBuiltInFuncs[NegativeBuiltInFuncs["none"] = 0] = "none";
         NegativeBuiltInFuncs[NegativeBuiltInFuncs["clip"] = 1] = "clip";
         NegativeBuiltInFuncs[NegativeBuiltInFuncs["abs"] = 2] = "abs";
     })(NegativeBuiltInFuncs = DevConsts.NegativeBuiltInFuncs || (DevConsts.NegativeBuiltInFuncs = {}));
-    var PulsarType;
+    let PulsarType;
     (function (PulsarType) {
         PulsarType[PulsarType["normal"] = 0] = "normal";
         PulsarType[PulsarType["sine"] = 1] = "sine";
@@ -145,7 +144,7 @@ var DevConsts;
     // -------------
     // paths
     // -------------
-    var PathName;
+    let PathName;
     (function (PathName) {
         PathName[PathName["line"] = 0] = "line";
         PathName[PathName["rect"] = 1] = "rect";
@@ -164,7 +163,7 @@ var DevConsts;
     // -------------
     // adapters
     // -------------
-    var WaitForWhat;
+    let WaitForWhat;
     (function (WaitForWhat) {
         WaitForWhat[WaitForWhat["Custom"] = 0] = "Custom";
         WaitForWhat[WaitForWhat["ImageLoad"] = 1] = "ImageLoad";
@@ -188,7 +187,7 @@ var DevConsts;
     DevConsts.TRS_AT_OUT = 1;
     DevConsts.TRS_AT_IN = 2;
     DevConsts.DEFAULT_TRANSITION_DURATION = '1s';
-    var StdTransitions;
+    let StdTransitions;
     (function (StdTransitions) {
         StdTransitions[StdTransitions["slideLeft"] = 0] = "slideLeft";
         StdTransitions[StdTransitions["slideRight"] = 1] = "slideRight";
@@ -199,7 +198,7 @@ var DevConsts;
     // -------------
     // plugin-manager
     // -------------
-    var Functionalities;
+    let Functionalities;
     (function (Functionalities) {
         Functionalities[Functionalities["easings"] = 0] = "easings";
         Functionalities[Functionalities["oscillators"] = 1] = "oscillators";
@@ -212,7 +211,7 @@ var DevConsts;
     // -------------
     // animation-direction
     // -------------
-    var Directions;
+    let Directions;
     (function (Directions) {
         Directions[Directions["normal"] = 0] = "normal";
         Directions[Directions["reverse"] = 1] = "reverse";

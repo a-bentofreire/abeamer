@@ -12,16 +12,16 @@ exports.PluginInjector = void 0;
 var PluginInjector;
 (function (PluginInjector) {
     PluginInjector.plugins = [];
-    var allowedPlugins = [];
+    let allowedPlugins = [];
     function loadAllowedPlugins(fileName, existsSync, readUtf8Sync) {
         if (!existsSync(fileName)) {
-            throw "".concat(fileName, " doesn't exists");
+            throw `${fileName} doesn't exists`;
         }
         allowedPlugins = JSON.parse(readUtf8Sync(fileName)).plugins;
     }
     PluginInjector.loadAllowedPlugins = loadAllowedPlugins;
     function processUrl(urlBase, url) {
-        return url.search(/^http/) !== -1 ? url : "".concat(urlBase, "/").concat(url);
+        return url.search(/^http/) !== -1 ? url : `${urlBase}/${url}`;
     }
     PluginInjector.processUrl = processUrl;
     function inject(existsSync, readUtf8Sync, writeFileSync) {
@@ -30,43 +30,43 @@ var PluginInjector;
             return;
         }
         if (!PluginInjector.injectPage || !existsSync(PluginInjector.injectPage)) {
-            throw "".concat(PluginInjector.injectPage, " doesn't exists");
+            throw `${PluginInjector.injectPage} doesn't exists`;
         }
         // check if the plugins are allowed and replace the urls with safe urls.
-        PluginInjector.plugins.forEach(function (plugin) {
+        PluginInjector.plugins.forEach(plugin => {
             if (!plugin.uuid || !plugin.author) {
-                throw "Invalid plugin uuid: ".concat(plugin.uuid, " author: ").concat(plugin.author);
+                throw `Invalid plugin uuid: ${plugin.uuid} author: ${plugin.author}`;
             }
-            var match = allowedPlugins.find(function (allowedPlugin) { return allowedPlugin.uuid === plugin.uuid; });
+            const match = allowedPlugins.find(allowedPlugin => allowedPlugin.uuid === plugin.uuid);
             if (!match) {
-                throw "Forbidden plugin uuid: ".concat(plugin.uuid, " author: ").concat(plugin.author);
+                throw `Forbidden plugin uuid: ${plugin.uuid} author: ${plugin.author}`;
             }
             plugin.jsUrls = match.jsUrls;
             plugin.cssUrls = match.cssUrls;
         });
-        var content = readUtf8Sync(PluginInjector.injectPage);
+        let content = readUtf8Sync(PluginInjector.injectPage);
         writeFileSync(PluginInjector.injectPage + '.bak.html', content);
-        var urlMatches = content.match(/["']([^"']+)\/css\/abeamer\.[\w\.]*css["']/);
+        const urlMatches = content.match(/["']([^"']+)\/css\/abeamer\.[\w\.]*css["']/);
         if (!urlMatches) {
-            throw "Couldn't parse abeamer script link";
+            throw `Couldn't parse abeamer script link`;
         }
-        var urlBase = urlMatches[1];
+        const urlBase = urlMatches[1];
         // inject js scripts
-        content = content.replace(/(#plugins-js-block-start.*\n)((?:.|\n)*)(\n.*#plugins-js-block-end)/, function (_all, before, _replaceArea, after) {
-            var output = [];
-            PluginInjector.plugins.forEach(function (plugin) {
-                (plugin.jsUrls || []).forEach(function (url) {
-                    output.push("    <script src=\"".concat(processUrl(urlBase, url), "\"></script>"));
+        content = content.replace(/(#plugins-js-block-start.*\n)((?:.|\n)*)(\n.*#plugins-js-block-end)/, (_all, before, _replaceArea, after) => {
+            const output = [];
+            PluginInjector.plugins.forEach(plugin => {
+                (plugin.jsUrls || []).forEach(url => {
+                    output.push(`    <script src="${processUrl(urlBase, url)}"></script>`);
                 });
             });
             return before + '\n' + output.join('\n') + '\n' + after;
         });
         // inject css links
-        content = content.replace(/(#plugins-css-block-start.*\n)((?:.|\n)*)(\n.*#plugins-css-block-end)/, function (_all, before, _replaceArea, after) {
-            var output = [];
-            PluginInjector.plugins.forEach(function (plugin) {
-                (plugin.cssUrls || []).forEach(function (url) {
-                    output.push("    <link href=\"".concat(processUrl(urlBase, url), "\" rel=\"stylesheet\">"));
+        content = content.replace(/(#plugins-css-block-start.*\n)((?:.|\n)*)(\n.*#plugins-css-block-end)/, (_all, before, _replaceArea, after) => {
+            const output = [];
+            PluginInjector.plugins.forEach(plugin => {
+                (plugin.cssUrls || []).forEach(url => {
+                    output.push(`    <link href="${processUrl(urlBase, url)}" rel="stylesheet">`);
                 });
             });
             return before + '\n' + output.join('\n') + '\n' + after;

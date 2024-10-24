@@ -44,25 +44,25 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               pEls
     // ------------------------------------------------------------------------
-    var _pEls = /** @class */ (function () {
-        function _pEls(scene, selector) {
+    class _pEls {
+        constructor(scene, selector) {
             this._elementAdapters = [];
             this._scene = scene;
             this._selector = selector;
             this._elementAdapters = scene.getElementAdapters(selector);
         }
-        _pEls.prototype.getSelector = function () {
+        getSelector() {
             return ABeamer._vars.isTeleporting ? this._selector : this;
-        };
+        }
         /**
          * Wrapper for `scene.addAnimation` with `visible = false`,
          * followed by opacity moving to 1.
          */
-        _pEls.prototype.fadeIn = function (duration) {
-            var selector = this.getSelector();
+        fadeIn(duration) {
+            const selector = this.getSelector();
             this._scene.addSerialAnimations([
                 [{
-                        selector: selector,
+                        selector,
                         duration: '1f',
                         props: [
                             {
@@ -72,7 +72,7 @@ var ABeamer;
                         ],
                     }],
                 [{
-                        selector: selector,
+                        selector,
                         position: '-1f',
                         duration: duration || ABeamer.DEFAULT_FADE_DURATION,
                         props: [
@@ -84,16 +84,16 @@ var ABeamer;
                     }],
             ]);
             return this;
-        };
+        }
         /**
          * Wrapper for scene.addAnimation with opacity moving to 0,
          * followed by `visible = false`.
          */
-        _pEls.prototype.fadeOut = function (duration) {
-            var selector = this.getSelector();
+        fadeOut(duration) {
+            const selector = this.getSelector();
             this._scene.addSerialAnimations([
                 [{
-                        selector: selector,
+                        selector,
                         duration: duration || ABeamer.DEFAULT_FADE_DURATION,
                         props: [
                             {
@@ -103,7 +103,7 @@ var ABeamer;
                         ],
                     }],
                 [{
-                        selector: selector,
+                        selector,
                         position: '-1f',
                         duration: '1f',
                         props: [
@@ -115,11 +115,11 @@ var ABeamer;
                     }],
             ]);
             return this;
-        };
+        }
         /**
          * Shows all the elements owned by pEls.
          */
-        _pEls.prototype.show = function () {
+        show() {
             this._scene.addAnimations([{
                     selector: this.getSelector(),
                     duration: '1f',
@@ -131,11 +131,11 @@ var ABeamer;
                     ],
                 }]);
             return this;
-        };
+        }
         /**
          * Hides all the elements owned by pEls.
          */
-        _pEls.prototype.hide = function () {
+        hide() {
             this._scene.addAnimations([{
                     selector: this.getSelector(),
                     duration: '1f',
@@ -147,11 +147,11 @@ var ABeamer;
                     ],
                 }]);
             return this;
-        };
+        }
         /**
          * Sets the text of all the elements owned by pEls.
          */
-        _pEls.prototype.text = function (text) {
+        text(text) {
             this._scene.addAnimations([{
                     selector: this.getSelector(),
                     duration: '1f',
@@ -163,9 +163,8 @@ var ABeamer;
                     ],
                 }]);
             return this;
-        };
-        return _pEls;
-    }());
+        }
+    }
     ABeamer._pEls = _pEls;
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=pels.js.map

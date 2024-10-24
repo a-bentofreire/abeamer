@@ -1,60 +1,44 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 20);
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 20);
     // [TOPIC] using a DOM Scene and virtual element
-    var canvas = document.getElementById('canvas');
-    var context = canvas.getContext('2d');
-    var patImg = document.getElementById('pat');
-    var patHeight = 14;
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const patImg = document.getElementById('pat');
+    const patHeight = 14;
     // ------------------------------------------------------------------------
     //                               VirtualElement
     // ------------------------------------------------------------------------
-    var Player = /** @class */ (function () {
-        function Player(id, left, height) {
+    class Player {
+        constructor(id, left, height) {
             this.id = id;
             this.left = left;
             this.height = height;
             this.top = 0;
             this.img = document.getElementById(this.id);
         }
-        Player.prototype.setProp = function (name, value) {
+        setProp(name, value) {
             this[name] = value;
-            console.log("Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]"));
+            console.log(`Set [${this.id}] [${name}]=[${value}]`);
             if (name === 'left' || name === 'top') {
                 drawGame();
             }
-        };
-        Player.prototype.getProp = function (name) {
-            console.log("Get [".concat(this.id, "] [").concat(name, "]=[").concat(this[name], "]"));
+        }
+        getProp(name) {
+            console.log(`Get [${this.id}] [${name}]=[${this[name]}]`);
             return this[name];
-        };
-        Player.prototype.draw = function () {
+        }
+        draw() {
             context.drawImage(this.img, this.left, story.height - this.height
                 - patHeight - this.top);
-        };
-        return Player;
-    }());
-    var android = new Player('android', 10, 31);
-    var iphone = new Player('iphone', story.width - 30, 44);
+        }
+    }
+    const android = new Player('android', 10, 31);
+    const iphone = new Player('iphone', story.width - 30, 44);
     // ------------------------------------------------------------------------
     //                               drawGame
     // ------------------------------------------------------------------------
@@ -67,8 +51,8 @@ $(window).on("load", function () {
     // // ------------------------------------------------------------------------
     // //                               Scene1
     // // ------------------------------------------------------------------------
-    var scene1 = story.scenes[0];
-    story.onGetVirtualElement = function (id, args) {
+    const scene1 = story.scenes[0];
+    story.onGetVirtualElement = (id, args) => {
         switch (id) {
             case 'android': return android;
             case 'iphone': return iphone;
@@ -112,52 +96,47 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Scene2
     // ------------------------------------------------------------------------
-    var infoScene = document.getElementById('info-scene');
-    var PureVirtual = /** @class */ (function (_super) {
-        __extends(PureVirtual, _super);
-        function PureVirtual(id, left) {
-            var _this = _super.call(this, id, left, 0) || this;
-            _this.info = document.getElementById("info-".concat(id));
-            return _this;
+    const infoScene = document.getElementById('info-scene');
+    class PureVirtual extends Player {
+        constructor(id, left) {
+            super(id, left, 0);
+            this.info = document.getElementById(`info-${id}`);
         }
-        PureVirtual.prototype.setProp = function (name, value) {
+        setProp(name, value) {
             this[name] = value;
-            console.log("Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]"));
-            this.info.textContent = "Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]");
-        };
-        return PureVirtual;
-    }(Player));
+            console.log(`Set [${this.id}] [${name}]=[${value}]`);
+            this.info.textContent = `Set [${this.id}] [${name}]=[${value}]`;
+        }
+    }
     // [TOPIC] Using Virtual scenes and virtual elements
-    var myVirtualScene = /** @class */ (function () {
-        function myVirtualScene(id) {
+    class myVirtualScene {
+        constructor(id) {
             this.id = id;
             this.vElements = {};
             this.vElements['#field'] = new PureVirtual('field', 60);
             this.vElements['#popcorn'] = new PureVirtual('popcorn', 20);
         }
-        myVirtualScene.prototype.setProp = function (name, value) {
+        setProp(name, value) {
             this[name] = value;
-            console.log("Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]"));
-            infoScene.textContent = "Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]");
-        };
-        myVirtualScene.prototype.getProp = function (name) {
-            console.log("Get [".concat(this.id, "] [").concat(name, "]=[").concat(this[name], "]"));
+            console.log(`Set [${this.id}] [${name}]=[${value}]`);
+            infoScene.textContent = `Set [${this.id}] [${name}]=[${value}]`;
+        }
+        getProp(name) {
+            console.log(`Get [${this.id}] [${name}]=[${this[name]}]`);
             return this[name];
-        };
-        myVirtualScene.prototype.query = function (selector, iterator) {
-            var _this = this;
-            var index = 0;
-            selector.split(/\s*,\s*/).forEach(function (selElement) {
-                var vElement = _this.vElements[selElement];
+        }
+        query(selector, iterator) {
+            let index = 0;
+            selector.split(/\s*,\s*/).forEach((selElement) => {
+                const vElement = this.vElements[selElement];
                 if (vElement) {
                     iterator(vElement, index);
                     index++;
                 }
             });
-        };
-        return myVirtualScene;
-    }());
-    var scene2 = story.addScene(new myVirtualScene('scene2'));
+        }
+    }
+    const scene2 = story.addScene(new myVirtualScene('scene2'));
     scene2
         .addAnimations([{
             selector: '#field',

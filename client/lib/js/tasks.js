@@ -94,8 +94,8 @@ var ABeamer;
     /** Map of the built-in path tasks, plus the ones added via plugins. */
     ABeamer._taskFunctions = {};
     function _buildWorkTask(task, anime, toTeleport, args) {
-        var handler = task.handler;
-        var taskFunc;
+        const handler = task.handler;
+        let taskFunc;
         args.user = task.params;
         switch (typeof handler) {
             case 'string':
@@ -109,7 +109,7 @@ var ABeamer;
         if (!taskFunc) {
             ABeamer.throwI8n(ABeamer.Msgs.UnknownOf, { type: ABeamer.Msgs.task, p: handler });
         }
-        var wkTask = {
+        const wkTask = {
             func: taskFunc,
             name: handler,
             params: task.params || {},
@@ -125,7 +125,7 @@ var ABeamer;
      * Converts the Handlers into strings, and calls tasks on TELEPORT stage.
      */
     function _prepareTasksForTeleporting(anime, tasks, args) {
-        tasks.forEach(function (task) { _buildWorkTask(task, anime, true, args); });
+        tasks.forEach(task => { _buildWorkTask(task, anime, true, args); });
     }
     ABeamer._prepareTasksForTeleporting = _prepareTasksForTeleporting;
     /**
@@ -133,10 +133,10 @@ var ABeamer;
      * and the animation should be bypassed.
      */
     function _processTasks(tasks, wkTasks, anime, args) {
-        var toExit = true;
-        tasks.forEach(function (task) {
-            var wkTask = _buildWorkTask(task, anime, false, args);
-            var taskResult = wkTask.func(anime, wkTask, wkTask.params, ABeamer.TS_INIT, args);
+        let toExit = true;
+        tasks.forEach(task => {
+            const wkTask = _buildWorkTask(task, anime, false, args);
+            const taskResult = wkTask.func(anime, wkTask, wkTask.params, ABeamer.TS_INIT, args);
             switch (taskResult) {
                 case ABeamer.TR_EXIT: return;
                 case ABeamer.TR_DONE:
@@ -152,7 +152,7 @@ var ABeamer;
     }
     ABeamer._processTasks = _processTasks;
     function _runTasks(wkTasks, anime, animeIndex, args) {
-        wkTasks.forEach(function (wkTask) {
+        wkTasks.forEach(wkTask => {
             wkTask.animeIndex = animeIndex;
             wkTask.func(anime, wkTask, wkTask.params, ABeamer.TS_ANIME_LOOP, args);
         });
@@ -169,7 +169,7 @@ var ABeamer;
             return value;
         }
         args.vars.i = index;
-        var exprValue = ABeamer.ifExprCalc(value, args);
+        const exprValue = ABeamer.ifExprCalc(value, args);
         return exprValue !== undefined ? exprValue.toString() :
             ABeamer.sprintf(value, index);
     }
@@ -178,29 +178,26 @@ var ABeamer;
     function _factory(anime, _wkTask, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_INIT:
-                var tag_1 = params.tag || 'div';
-                var count_1 = ABeamer.ifExprCalcNum(params.count, params.count, args);
-                var needsClosing_1 = ['img'].indexOf(tag_1) === -1;
-                var elAdapters = args.scene.getElementAdapters(anime.selector);
+                const tag = params.tag || 'div';
+                const count = ABeamer.ifExprCalcNum(params.count, params.count, args);
+                const needsClosing = ['img'].indexOf(tag) === -1;
+                const elAdapters = args.scene.getElementAdapters(anime.selector);
                 args.vars.elCount = elAdapters.length;
-                elAdapters.forEach(function (elAdapter, elIndex) {
+                elAdapters.forEach((elAdapter, elIndex) => {
                     args.vars.elIndex = elIndex;
-                    var inTextHtml = [];
-                    var _loop_1 = function (i) {
-                        var parts = ['<' + tag_1];
-                        (params.attrs || []).forEach(function (param) {
-                            var value = _formatValue(param.value, param.isFormatted, i, args);
-                            parts.push(" ".concat(param.name, "=\"").concat(value, "\""));
+                    const inTextHtml = [];
+                    for (let i = 0; i < count; i++) {
+                        const parts = ['<' + tag];
+                        (params.attrs || []).forEach(param => {
+                            const value = _formatValue(param.value, param.isFormatted, i, args);
+                            parts.push(` ${param.name}="${value}"`);
                         });
                         parts.push('>');
                         parts.push(_formatValue(params.content || '', params.isContentFormatted, i, args));
-                        if (needsClosing_1) {
-                            parts.push("</".concat(tag_1, ">"));
+                        if (needsClosing) {
+                            parts.push(`</${tag}>`);
                         }
                         inTextHtml.push(parts.join(''));
-                    };
-                    for (var i = 0; i < count_1; i++) {
-                        _loop_1(i);
                     }
                     elAdapter.setProp('html', inTextHtml.join('\n'), args);
                 });

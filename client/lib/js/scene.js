@@ -31,8 +31,39 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Scene
     // ------------------------------------------------------------------------
-    var _Scene = /** @class */ (function () {
-        function _Scene(story, sceneSelector, prevScene) {
+    class _Scene {
+        /**
+         * Returns scene transition information.
+         *
+         * @see transitions
+         */
+        get transition() {
+            return this._transitionInterpolator._transition;
+        }
+        /**
+         * Defines the scene transition selector (name or function)
+         * and duration.
+         *
+         * @see transitions
+         */
+        set transition(transition) {
+            this._transitionInterpolator._set(transition, this._frameCount, this._story._args);
+            // if it's teleporting, then convert into a wrapper task.
+            if (this._story.isTeleporting && !this._addAnimationCallCount) {
+                this.addAnimations([{
+                        tasks: [
+                            {
+                                handler: 'scene-transition',
+                                params: {
+                                    handler: transition.handler,
+                                    duration: transition.duration,
+                                },
+                            },
+                        ],
+                    }]);
+            }
+        }
+        constructor(story, sceneSelector, prevScene) {
             this._frameCount = 0;
             this._storyFrameStart = 0;
             this._storySceneIndex = -1;
@@ -61,170 +92,115 @@ var ABeamer;
                 prevScene._nextScene = this;
             }
         }
-        Object.defineProperty(_Scene.prototype, "transition", {
-            /**
-             * Returns scene transition information.
-             *
-             * @see transitions
-             */
-            get: function () {
-                return this._transitionInterpolator._transition;
-            },
-            /**
-             * Defines the scene transition selector (name or function)
-             * and duration.
-             *
-             * @see transitions
-             */
-            set: function (transition) {
-                this._transitionInterpolator._set(transition, this._frameCount, this._story._args);
-                // if it's teleporting, then convert into a wrapper task.
-                if (this._story.isTeleporting && !this._addAnimationCallCount) {
-                    this.addAnimations([{
-                            tasks: [
-                                {
-                                    handler: 'scene-transition',
-                                    params: {
-                                        handler: transition.handler,
-                                        duration: transition.duration,
-                                    },
-                                },
-                            ],
-                        }]);
-                }
-            },
-            enumerable: false,
-            configurable: true
-        });
         /** Removes it self from the story. Used internally. */
-        _Scene.prototype._remove = function () {
+        _remove() {
             if (this._prevScene) {
                 this._prevScene._nextScene = this._nextScene;
             }
             if (this._nextScene) {
                 this._nextScene._prevScene = this._prevScene;
             }
-        };
-        Object.defineProperty(_Scene.prototype, "frameInNr", {
-            // ------------------------------------------------------------------------
-            //                               get/set
-            // ------------------------------------------------------------------------
-            /**
-             * Defines the end of the scene pipeline. Usually this value is the
-             * same as `frameCount` but for off-sync animations `frameInNr` can have
-             * less value than frameCount.
-             *
-             * #end-user @readonly
-             */
-            get: function () {
-                return this._frameInNr;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Scene.prototype, "frameCount", {
-            /**
-             * Total number of frames contained the scene.
-             *
-             * #end-user @readonly
-             */
-            get: function () {
-                return this._frameCount;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Scene.prototype, "storyFrameStart", {
-            /**
-             * Sum of all the frames from the previous scenes.
-             *
-             * #end-user @readonly
-             */
-            get: function () {
-                this._story._calcFrameCount();
-                return this._storyFrameStart;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Scene.prototype, "storySceneIndex", {
-            /**
-             * Zero-based Index of this scene within the list of scenes.
-             *
-             * #end-user @readonly
-             */
-            get: function () {
-                return this._storySceneIndex;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(_Scene.prototype, "id", {
-            /**
-             * Scene id from the DOM element.
-             *
-             * #end-user @readonly
-             */
-            get: function () {
-                return this._sceneAdpt.getProp('id', this._story._args);
-            },
-            enumerable: false,
-            configurable: true
-        });
+        }
+        // ------------------------------------------------------------------------
+        //                               get/set
+        // ------------------------------------------------------------------------
+        /**
+         * Defines the end of the scene pipeline. Usually this value is the
+         * same as `frameCount` but for off-sync animations `frameInNr` can have
+         * less value than frameCount.
+         *
+         * #end-user @readonly
+         */
+        get frameInNr() {
+            return this._frameInNr;
+        }
+        /**
+         * Total number of frames contained the scene.
+         *
+         * #end-user @readonly
+         */
+        get frameCount() {
+            return this._frameCount;
+        }
+        /**
+         * Sum of all the frames from the previous scenes.
+         *
+         * #end-user @readonly
+         */
+        get storyFrameStart() {
+            this._story._calcFrameCount();
+            return this._storyFrameStart;
+        }
+        /**
+         * Zero-based Index of this scene within the list of scenes.
+         *
+         * #end-user @readonly
+         */
+        get storySceneIndex() {
+            return this._storySceneIndex;
+        }
+        /**
+         * Scene id from the DOM element.
+         *
+         * #end-user @readonly
+         */
+        get id() {
+            return this._sceneAdpt.getProp('id', this._story._args);
+        }
         // ------------------------------------------------------------------------
         //                               Frame methods
         // ------------------------------------------------------------------------
-        _Scene.prototype._containsFrame = function (storyFramePos) {
+        _containsFrame(storyFramePos) {
             this._story._calcFrameCount();
             return this._internalContainsFrame(storyFramePos);
-        };
-        _Scene.prototype._internalContainsFrame = function (storyFramePos) {
+        }
+        _internalContainsFrame(storyFramePos) {
             return (storyFramePos >= this._storyFrameStart)
                 && storyFramePos < (this._storyFrameStart + this._frameCount);
-        };
-        _Scene.prototype._setStoryParams = function (storyFramePos, storySceneIndex) {
+        }
+        _setStoryParams(storyFramePos, storySceneIndex) {
             this._storyFrameStart = storyFramePos;
             this._storySceneIndex = storySceneIndex;
             return this._frameCount;
-        };
-        _Scene.prototype._gotoSceneFrame = function (framePos) {
+        }
+        _gotoSceneFrame(framePos) {
             if (framePos < 0 || framePos >= this._frameCount) {
-                ABeamer.throwErr("Position ".concat(framePos, " is out of scope"));
+                ABeamer.throwErr(`Position ${framePos} is out of scope`);
             }
             this._internalGotoFrame(framePos);
-        };
-        _Scene.prototype._internalGotoFrame = function (framePos) {
+        }
+        _internalGotoFrame(framePos) {
             if (framePos === this._renderFramePos) {
                 return;
             }
-            var isVerbose = this._story.isVerbose;
+            const isVerbose = this._story.isVerbose;
             // @WARN: Don't use story.renderDir since it can bypassing backwards
             // in order to rewind and the story.renderDir be moving forward
-            var bypassDir = framePos > this._renderFramePos ? 1 : -1;
+            const bypassDir = framePos > this._renderFramePos ? 1 : -1;
             while (framePos !== this._renderFramePos) {
                 this._internalRenderFrame(this._renderFramePos, bypassDir, isVerbose, true);
             }
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Visibility
         // ------------------------------------------------------------------------
-        _Scene.prototype._show = function () {
+        _show() {
             this._sceneAdpt.setProp('visible', 'true', this._story._args);
-        };
-        _Scene.prototype._hide = function () {
+        }
+        _hide() {
             this._sceneAdpt.setProp('visible', 'false', this._story._args);
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Transitions
         // ------------------------------------------------------------------------
         /**
          * Prepares the transitions when the rendering process starts
          */
-        _Scene.prototype._setupTransition = function () {
+        _setupTransition() {
             if (this._transitionInterpolator._active) {
                 this._transitionInterpolator._setup(this._sceneAdpt, this._nextScene ? this._nextScene._sceneAdpt : undefined, this._frameCount, this._story._args);
             }
-        };
+        }
         // ------------------------------------------------------------------------
         //                               addStills
         // ------------------------------------------------------------------------
@@ -232,7 +208,7 @@ var ABeamer;
          * Adds a series of motionless frames defined by duration.
          * This method changes the end of the pipeline (frameInNr).
          */
-        _Scene.prototype.addStills = function (duration) {
+        addStills(duration) {
             // if it's teleporting, then convert into a wrapper task.
             if (this._story.isTeleporting && !this._addAnimationCallCount) {
                 this.addAnimations([{
@@ -240,17 +216,17 @@ var ABeamer;
                             {
                                 handler: 'add-stills',
                                 params: {
-                                    duration: duration,
+                                    duration,
                                 },
                             },
                         ],
                     }]);
             }
-            var frameCount = ABeamer.parseTimeHandler(duration, this._story._args, 0, 0);
+            const frameCount = ABeamer.parseTimeHandler(duration, this._story._args, 0, 0);
             if (frameCount <= 0) {
                 return this;
             }
-            var newFrameInNr = this._frameInNr + frameCount;
+            const newFrameInNr = this._frameInNr + frameCount;
             if (newFrameInNr > this._frames.length) {
                 // #debug-start
                 if (this._story._isVerbose) {
@@ -275,28 +251,27 @@ var ABeamer;
             // #debug-end
             this._frameInNr = newFrameInNr;
             return this;
-        };
+        }
         // ------------------------------------------------------------------------
         //                               initInterpolators
         // ------------------------------------------------------------------------
         /**
          * Creates the interpolator animations for `Scene.addAnimations`.
          */
-        _Scene.prototype._initInterpolators = function (animes) {
-            var _this = this;
-            var story = this._story;
-            var args = story._args;
-            var elAnimations = [];
-            animes.forEach(function (anime) {
+        _initInterpolators(animes) {
+            const story = this._story;
+            const args = story._args;
+            const elAnimations = [];
+            animes.forEach((anime) => {
                 if (anime.enabled === false) {
                     elAnimations.push(undefined);
                     return;
                 }
-                var elAnimation = new ABeamer._ElWorkAnimation();
-                elAnimation.buildElements(_this._story, _this._sceneAdpt, anime);
+                let elAnimation = new ABeamer._ElWorkAnimation();
+                elAnimation.buildElements(this._story, this._sceneAdpt, anime);
                 if (elAnimation.elAdapters.length) {
-                    if (elAnimation.assignValues(anime, story, undefined, elAnimation.elAdapters[0].getId(args), _this._frameInNr)) {
-                        anime.props.forEach(function (prop) {
+                    if (elAnimation.assignValues(anime, story, undefined, elAnimation.elAdapters[0].getId(args), this._frameInNr)) {
+                        anime.props.forEach(prop => {
                             elAnimation.propInterpolators
                                 .push(prop.enabled !== false ? new ABeamer._PropInterpolator(prop) : undefined);
                         });
@@ -306,14 +281,14 @@ var ABeamer;
                     }
                 }
                 else {
-                    if (_this._story._logLevel >= ABeamer.LL_WARN) {
-                        _this._story.logWarn("Selector ".concat(anime.selector, " is empty"));
+                    if (this._story._logLevel >= ABeamer.LL_WARN) {
+                        this._story.logWarn(`Selector ${anime.selector} is empty`);
                     }
                 }
                 elAnimations.push(elAnimation);
             });
             return elAnimations;
-        };
+        }
         // ------------------------------------------------------------------------
         //                               addAnimations
         // ------------------------------------------------------------------------
@@ -323,17 +298,16 @@ var ABeamer;
          *
          * @see animations
          */
-        _Scene.prototype.addAnimations = function (animes) {
-            var _this = this;
+        addAnimations(animes) {
             if (!animes.length) {
                 return this;
             }
-            var story = this._story;
-            var args = story._args;
-            var maxEndFrame = this._frameInNr;
-            var isVerbose = this._story._isVerbose;
-            var prevStage = story._args.stage;
-            var advanceInTheEnd = true;
+            const story = this._story;
+            const args = story._args;
+            let maxEndFrame = this._frameInNr;
+            const isVerbose = this._story._isVerbose;
+            const prevStage = story._args.stage;
+            let advanceInTheEnd = true;
             story._exceptIfRendering();
             if (story._teleporter.active) {
                 ABeamer._prepareAnimationsForTeleporting(animes, args);
@@ -348,71 +322,71 @@ var ABeamer;
                     story._internalGotoScene(this);
                 }
                 // 1st pass - process tasks
-                var wkAnimes_1 = [];
-                var wkAnimesTasks_1 = [];
-                animes.forEach(function (anime) {
-                    var tasks = anime.tasks;
-                    var wkTasks;
+                const wkAnimes = [];
+                const wkAnimesTasks = [];
+                animes.forEach((anime) => {
+                    const tasks = anime.tasks;
+                    let wkTasks;
                     if (tasks) {
                         wkTasks = [];
                         if (ABeamer._processTasks(tasks, wkTasks, anime, args) && !anime.props) {
                             return;
                         }
                     }
-                    wkAnimes_1.push(anime);
-                    wkAnimesTasks_1.push(wkTasks);
+                    wkAnimes.push(anime);
+                    wkAnimesTasks.push(wkTasks);
                 });
-                animes = wkAnimes_1;
+                animes = wkAnimes;
                 // 2st pass - preprocess interpolators
-                var animeInterpolators_1 = this._initInterpolators(animes);
-                var animeAdvanceValue_1 = 0;
+                const animeInterpolators = this._initInterpolators(animes);
+                let animeAdvanceValue = 0;
                 // 3st pass - compute values
-                animes.forEach(function (anime, animeIndex) {
-                    var ai = animeInterpolators_1[animeIndex];
+                animes.forEach((anime, animeIndex) => {
+                    const ai = animeInterpolators[animeIndex];
                     if (!ai) {
                         return;
                     } // bypass missing selectors
-                    var propInterpolators = ai.propInterpolators;
-                    var elementAdapters = ai.elAdapters;
+                    const propInterpolators = ai.propInterpolators;
+                    const elementAdapters = ai.elAdapters;
                     ABeamer._vars.elCount = elementAdapters.length;
-                    if (animeAdvanceValue_1) {
-                        ai.positionFrame += animeAdvanceValue_1;
+                    if (animeAdvanceValue) {
+                        ai.positionFrame += animeAdvanceValue;
                     }
                     if (animeIndex === animes.length - 1) {
                         advanceInTheEnd = ai.advance !== false;
                     }
-                    elementAdapters.forEach(function (elementAdpt, elIndex) {
+                    elementAdapters.forEach((elementAdpt, elIndex) => {
                         ABeamer._vars.elIndex = elIndex;
-                        var wkTasks = wkAnimesTasks_1[animeIndex];
+                        const wkTasks = wkAnimesTasks[animeIndex];
                         if (wkTasks) {
                             ABeamer._runTasks(wkTasks, anime, animeIndex, args);
                         }
                         ai.nextPropStartFrame = undefined;
-                        anime.props.forEach(function (inProp, propIndex) {
-                            var pi = propInterpolators[propIndex];
+                        anime.props.forEach((inProp, propIndex) => {
+                            const pi = propInterpolators[propIndex];
                             // properties can override the anime values
                             if (!pi || !pi.propAssignValues(inProp, story, ai, elIndex)) {
                                 return;
                             }
-                            var posFrame = pi.startFrame;
-                            var endFrame = pi.endFrame;
-                            var totalDuration = pi.totalDuration;
-                            if (endFrame > _this._frameCount) {
-                                _this._frames.length = endFrame;
-                                _this._frameCount = endFrame;
+                            let posFrame = pi.startFrame;
+                            const endFrame = pi.endFrame;
+                            const totalDuration = pi.totalDuration;
+                            if (endFrame > this._frameCount) {
+                                this._frames.length = endFrame;
+                                this._frameCount = endFrame;
                             }
                             maxEndFrame = Math.max(maxEndFrame, endFrame);
                             if (ai.advance) {
-                                animeAdvanceValue_1 = Math.max(animeAdvanceValue_1, endFrame - _this._frameInNr);
+                                animeAdvanceValue = Math.max(animeAdvanceValue, endFrame - this._frameInNr);
                             }
-                            var elActRg = ABeamer._findActionRg(_this._actionRgMaps, elementAdpt, pi.realPropName, posFrame, endFrame - 1, args);
+                            const elActRg = ABeamer._findActionRg(this._actionRgMaps, elementAdpt, pi.realPropName, posFrame, endFrame - 1, args);
                             pi.attachSelector(elementAdpt, elActRg, isVerbose, args);
-                            var frameI = pi.dirPair[0] === 1 ? 0 : (pi.framesPerCycle - 1);
-                            var v;
-                            var action;
+                            let frameI = pi.dirPair[0] === 1 ? 0 : (pi.framesPerCycle - 1);
+                            let v;
+                            let action;
                             // #debug-start
                             if (isVerbose) {
-                                _this._story.logFrmt('action-range', [
+                                this._story.logFrmt('action-range', [
                                     ['id', elementAdpt.getId(args)],
                                     ['prop', pi.propName],
                                     ['frame', posFrame],
@@ -420,16 +394,16 @@ var ABeamer;
                                 ]);
                             }
                             // #debug-end
-                            for (var i = 0; i < totalDuration; i++) {
-                                var t = pi.framesPerCycle > 1 ? frameI / (pi.framesPerCycle - 1) : 1;
+                            for (let i = 0; i < totalDuration; i++) {
+                                const t = pi.framesPerCycle > 1 ? frameI / (pi.framesPerCycle - 1) : 1;
                                 v = pi.interpolate(t, story, isVerbose);
                                 action = pi.toAction(v, i === 0, i === totalDuration - 1);
                                 frameI = ABeamer._computeIterationCount(i, frameI, pi.dirPair, pi.framesPerCycle);
-                                _this._setActionOnFrames(posFrame, elementAdpt, pi, action, v);
+                                this._setActionOnFrames(posFrame, elementAdpt, pi, action, v);
                                 posFrame++;
                             }
                             // stores the last output value in the ActRg
-                            var outputValue = ABeamer._applyAction(action, elementAdpt, false, args, true);
+                            const outputValue = ABeamer._applyAction(action, elementAdpt, false, args, true);
                             elActRg.actionRg.endValue = outputValue;
                         });
                     });
@@ -456,15 +430,15 @@ var ABeamer;
                 story._setFrameCountChanged();
             }
             return this;
-        };
-        _Scene.prototype._setActionOnFrames = function (pos, elementAdpt, pi, action, v) {
+        }
+        _setActionOnFrames(pos, elementAdpt, pi, action, v) {
             function getIAction() {
                 return {
-                    elementAdpt: elementAdpt,
+                    elementAdpt,
                     actions: [action],
                 };
             }
-            var frame;
+            let frame;
             elementAdpt._clearComputerData();
             if (this._frames[pos] === undefined) {
                 this._frames[pos] = {
@@ -475,15 +449,13 @@ var ABeamer;
             else {
                 frame = this._frames[pos];
                 frame.uniqueElementAdpt.add(elementAdpt);
-                var item = frame.elActions.find(function (it) { return it.elementAdpt === elementAdpt; });
+                const item = frame.elActions.find(it => it.elementAdpt === elementAdpt);
                 if (!item) {
                     frame.elActions.push(getIAction());
                 }
                 else {
-                    var actions = item.actions;
-                    var oldAction = actions.find(function (actionI) {
-                        return actionI.realPropName === pi.propName;
-                    });
+                    const actions = item.actions;
+                    const oldAction = actions.find(actionI => actionI.realPropName === pi.propName);
                     if (oldAction) {
                         oldAction.value = v;
                     }
@@ -492,7 +464,7 @@ var ABeamer;
                     }
                 }
             }
-        };
+        }
         // ------------------------------------------------------------------------
         //                               addSerialAnimations
         // ------------------------------------------------------------------------
@@ -501,27 +473,26 @@ var ABeamer;
          * This is the same as: `serialAnimes.forEach(anime => addAnimations(anime))`
          * Use this if you want to load all animations from an external file.
          */
-        _Scene.prototype.addSerialAnimations = function (serialAnimes) {
-            var _this = this;
-            serialAnimes.forEach(function (anime) { return _this.addAnimations(anime); });
+        addSerialAnimations(serialAnimes) {
+            serialAnimes.forEach(anime => this.addAnimations(anime));
             return this;
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Render
         // ------------------------------------------------------------------------
-        _Scene.prototype._internalRenderFrame = function (framePos, dir, isVerbose, bypassMode) {
-            var args = this._story._args;
+        _internalRenderFrame(framePos, dir, isVerbose, bypassMode) {
+            const args = this._story._args;
             // handle transitions
             if (!bypassMode) {
                 if (this._transitionInterpolator._active) {
                     this._transitionInterpolator._render(framePos, this._frameCount, true, this._story._args);
                 }
-                var prevScene = this._prevScene;
+                const prevScene = this._prevScene;
                 if (prevScene && prevScene._transitionInterpolator._active) {
                     prevScene._transitionInterpolator._render(framePos, this._frameCount, false, this._story._args);
                 }
             }
-            var frame = this._frames[framePos];
+            const frame = this._frames[framePos];
             // stills must come after transitions
             if (!frame) {
                 // #debug-start
@@ -533,16 +504,16 @@ var ABeamer;
                 return;
             }
             // execute each action of a frame
-            var itemCount = frame.elActions.length;
-            for (var i = 0; i < itemCount; i++) {
-                var item = frame.elActions[i];
-                var elementAdpt = item.elementAdpt;
-                var actionCount = item.actions.length;
-                for (var j = 0; j < actionCount; j++) {
-                    var action = item.actions[j];
+            const itemCount = frame.elActions.length;
+            for (let i = 0; i < itemCount; i++) {
+                const item = frame.elActions[i];
+                const elementAdpt = item.elementAdpt;
+                const actionCount = item.actions.length;
+                for (let j = 0; j < actionCount; j++) {
+                    const action = item.actions[j];
                     // handles bypassing
                     if (bypassMode) {
-                        var canByPass = dir > 0 ? action.toBypassForward :
+                        const canByPass = dir > 0 ? action.toBypassForward :
                             action.toBypassBackward;
                         if (canByPass) {
                             // #debug-start
@@ -558,56 +529,55 @@ var ABeamer;
                     ABeamer._applyAction(action, elementAdpt, isVerbose, args);
                 }
             }
-            frame.uniqueElementAdpt.forEach(function (elAdapter) {
+            frame.uniqueElementAdpt.forEach(elAdapter => {
                 if (elAdapter.frameRendered) {
                     elAdapter.frameRendered(args);
                 }
             });
             this._renderFramePos += dir;
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Wrappers
         // ------------------------------------------------------------------------
         /**
          * Used only task plugin creators.
          */
-        _Scene.prototype.getElementAdapters = function (selector) {
+        getElementAdapters(selector) {
             return ABeamer._parseInElSelector(this._story, [], this._sceneAdpt, selector);
-        };
+        }
         /**
          * Creates a pEls from the selectors.
          */
-        _Scene.prototype.getPEls = function (selector) {
+        getPEls(selector) {
             return new ABeamer._pEls(this, selector);
-        };
+        }
         /**
          * Adds `visible = true` to the pipeline.
          */
-        _Scene.prototype.pElsShow = function (selector) {
+        pElsShow(selector) {
             return this.getPEls(selector).show();
-        };
+        }
         /**
          * Adds `visible = false` to the pipeline.
          */
-        _Scene.prototype.pElsHide = function (selector) {
+        pElsHide(selector) {
             return this.getPEls(selector).hide();
-        };
+        }
         /**
          * Wrapper for `addAnimation` with `visible = false`,
          * followed by opacity moving to 1.
          */
-        _Scene.prototype.pElsFadeIn = function (selector, duration) {
+        pElsFadeIn(selector, duration) {
             return this.getPEls(selector).fadeIn(duration);
-        };
+        }
         /**
          * Wrapper for `addAnimation` with opacity moving to 0,
          * followed by `visible = false`
          */
-        _Scene.prototype.pElsFadeOut = function (selector, duration) {
+        pElsFadeOut(selector, duration) {
             return this.getPEls(selector).fadeOut(duration);
-        };
-        return _Scene;
-    }());
+        }
+    }
     ABeamer._Scene = _Scene;
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=scene.js.map

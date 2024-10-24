@@ -6,15 +6,15 @@ exports.Exact = void 0;
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
 /** @module developer | This module won't be part of release version */
-var chai_1 = require("chai");
-var sysFs = require("fs");
-var sysPath = require("path");
-var sysProcess = require("process");
-var consts_js_1 = require("../shared/lib/consts.js");
-var rel_consts_js_1 = require("../shared/rel-consts.js");
-var dev_consts_js_1 = require("../shared/lib/dev-consts.js");
-var fsix_js_1 = require("../shared/vendor/fsix.js");
-var dev_config_js_1 = require("../shared/dev-config.js");
+const chai_1 = require("chai");
+const sysFs = require("fs");
+const sysPath = require("path");
+const sysProcess = require("process");
+const consts_js_1 = require("../shared/lib/consts.js");
+const rel_consts_js_1 = require("../shared/rel-consts.js");
+const dev_consts_js_1 = require("../shared/lib/dev-consts.js");
+const fsix_js_1 = require("../shared/vendor/fsix.js");
+const dev_config_js_1 = require("../shared/dev-config.js");
 /**
  * ## Description
  *
@@ -34,18 +34,18 @@ var Exact;
     // ------------------------------------------------------------------------
     //                               Consts
     // ------------------------------------------------------------------------
-    var TEMPLATE_PATH = 'template';
-    var RUN_PATH = 'tests.run';
-    var ASSETS_PATH = 'assets';
-    var DEFAULT_TEST_WIDTH = 640;
-    var DEFAULT_TEST_HEIGHT = 480;
-    var _DEFAULT_TIMEOUT = 20 * 1000;
-    var DEFAULT_TEST_GEN_FRAMES_WIDTH = 100;
-    var DEFAULT_TEST_GEN_FRAMES_HEIGHT = 100;
-    var _DEFAULT_EXPECTED_PATH = './expected/frames';
+    const TEMPLATE_PATH = 'template';
+    const RUN_PATH = 'tests.run';
+    const ASSETS_PATH = 'assets';
+    const DEFAULT_TEST_WIDTH = 640;
+    const DEFAULT_TEST_HEIGHT = 480;
+    const _DEFAULT_TIMEOUT = 20 * 1000;
+    const DEFAULT_TEST_GEN_FRAMES_WIDTH = 100;
+    const DEFAULT_TEST_GEN_FRAMES_HEIGHT = 100;
+    const _DEFAULT_EXPECTED_PATH = './expected/frames';
     Exact._TEST_DIGIT_LIMIT = 1000; // same as interpolator.js
-    var TestBuilder = /** @class */ (function () {
-        function TestBuilder() {
+    class TestBuilder {
+        constructor() {
             // default input params
             this.elDuration = '1s';
             this.prop = 'left';
@@ -56,13 +56,13 @@ var Exact;
             this.runTestParams = {};
             this.testFunc = defaultTestFunc;
         }
-        TestBuilder.prototype.getTestLabel = function (test) {
-            return "".concat(test.preLabel || '').concat(test.elName, " ")
-                + "".concat(test.prop, " goes from ").concat(test.min, " to ").concat(test.max).concat(test.postLabel || '');
-        };
-        TestBuilder.prototype.getTestAnime = function (test) {
+        getTestLabel(test) {
+            return `${test.preLabel || ''}${test.elName} `
+                + `${test.prop} goes from ${test.min} to ${test.max}${test.postLabel || ''}`;
+        }
+        getTestAnime(test) {
             return {
-                selector: "#".concat(test.elName),
+                selector: `#${test.elName}`,
                 duration: test.elDuration,
                 props: [{
                         duration: test.duration,
@@ -71,55 +71,50 @@ var Exact;
                         value: test.max,
                     }],
             };
-        };
-        TestBuilder.prototype.buildRunTest = function (test) {
+        }
+        buildRunTest(test) {
             this.runTestParams[this.getTestLabel(test)] = defaultTestFunc;
-        };
-        TestBuilder.prototype.runTest = function (rd, test) {
+        }
+        runTest(rd, test) {
             rd.actions.isIdPropActions(test.elName, test.prop, Exact.simulatePixelAction(Exact.interpolateMinMax(test.min, test.max, test.frameCount, test.easingFunc)));
-        };
-        TestBuilder.prototype.addTests = function (tests) {
-            var _this = this;
+        }
+        addTests(tests) {
             Exact.builder = this;
             this.tests = tests;
             this.testCountForHtml = tests.length;
-            tests.forEach(function (test, index) {
-                test.builder = _this;
-                test.elIndex = test.elIndex || _this.elIndex;
+            tests.forEach((test, index) => {
+                test.builder = this;
+                test.elIndex = test.elIndex || this.elIndex;
                 if (test.elIndex === undefined) {
                     test.elIndex = index;
                 }
                 if (test.isPosAbsolute === undefined) {
-                    test.isPosAbsolute = _this.isPosAbsolute;
+                    test.isPosAbsolute = this.isPosAbsolute;
                 }
-                test.elName = "t".concat(test.elIndex);
-                test.min = test.min || _this.min;
-                test.max = test.max || _this.max;
-                test.prop = test.prop || _this.prop;
-                test.elDuration = test.elDuration || _this.elDuration;
+                test.elName = `t${test.elIndex}`;
+                test.min = test.min || this.min;
+                test.max = test.max || this.max;
+                test.prop = test.prop || this.prop;
+                test.elDuration = test.elDuration || this.elDuration;
                 test.realDuration = test.duration || test.elDuration;
                 if (test.frameCount === undefined) {
-                    test.frameCount = calcFrameCount(test.realDuration, _this.fps);
+                    test.frameCount = calcFrameCount(test.realDuration, this.fps);
                 }
-                _this.buildRunTest(test);
+                this.buildRunTest(test);
             });
-        };
-        TestBuilder.prototype.getInMacros = function () {
-            var _this = this;
+        }
+        getInMacros() {
             return {
                 fps: this.fps,
-                css: this.tests.map(function (test) {
-                    return "#".concat(test.elName, " {").concat(test.isPosAbsolute ? 'position: absolute; ' : '')
-                        + "".concat(test.prop, ": ").concat(test.min, "px}");
-                }).join('\n'),
-                animes: this.tests.map(function (test) {
-                    return _this.getTestAnime(test);
+                css: this.tests.map((test) => `#${test.elName} {${test.isPosAbsolute ? 'position: absolute; ' : ''}`
+                    + `${test.prop}: ${test.min}px}`).join('\n'),
+                animes: this.tests.map((test) => {
+                    return this.getTestAnime(test);
                 }),
                 html: Exact.genTestHtml(this.testCountForHtml, this.cssClassesForHtml),
             };
-        };
-        return TestBuilder;
-    }());
+        }
+    }
     Exact.TestBuilder = TestBuilder;
     function defaultTestFunc(rd, done, index) {
         Exact.builder.runTest(rd, Exact.builder.tests[index]);
@@ -129,15 +124,13 @@ var Exact;
     // ------------------------------------------------------------------------
     //                               Tools
     // ------------------------------------------------------------------------
-    Exact.obj2String = function (obj) { return JSON.stringify(obj, undefined, 2); };
+    Exact.obj2String = (obj) => JSON.stringify(obj, undefined, 2);
     function hexToRgb(hex) {
-        var _hh2Int = function (delta) { return parseInt(hex.substr(delta, 2), 16); };
-        return "rgb(".concat(_hh2Int(1), ", ").concat(_hh2Int(3), ", ").concat(_hh2Int(5), ")");
+        const _hh2Int = (delta) => parseInt(hex.substr(delta, 2), 16);
+        return `rgb(${_hh2Int(1)}, ${_hh2Int(3)}, ${_hh2Int(5)})`;
     }
     Exact.hexToRgb = hexToRgb;
-    Exact.roundTestDigit = function (v) {
-        return Math.round(v * Exact._TEST_DIGIT_LIMIT) / Exact._TEST_DIGIT_LIMIT;
-    };
+    Exact.roundTestDigit = (v) => Math.round(v * Exact._TEST_DIGIT_LIMIT) / Exact._TEST_DIGIT_LIMIT;
     function calcFrameCount(duration, fps, defaultDuration) {
         if (!duration) {
             return Math.round(defaultDuration * fps - 0.0001);
@@ -145,11 +138,11 @@ var Exact;
         if (typeof duration === 'number') {
             return duration;
         }
-        var _a = duration.match(/^([\d\.]+)(s|ms|f|%)$/) || ['', '', ''], all = _a[0], sValue = _a[1], unit = _a[2];
+        const [all, sValue, unit] = duration.match(/^([\d\.]+)(s|ms|f|%)$/) || ['', '', ''];
         if (!all) {
-            throw "Unknown duration ".concat(duration);
+            throw `Unknown duration ${duration}`;
         }
-        var value = parseFloat(sValue);
+        let value = parseFloat(sValue);
         switch (unit) {
             case '%':
                 value = (value / 100) * fps * defaultDuration;
@@ -165,22 +158,22 @@ var Exact;
     }
     Exact.calcFrameCount = calcFrameCount;
     function genTestHtml(count, opts) {
-        var res = [];
+        const res = [];
         opts = opts || {};
         opts.cssClass = opts.cssClass === undefined ? 'abslf' : opts.cssClass;
         opts.htmlTag = opts.htmlTag || 'div';
         opts.idPrefix = opts.idPrefix || 't';
         opts.textPrefix = opts.textPrefix || 't';
-        var sceneIndex = 0;
-        for (var i = 0; i < count; i++) {
+        let sceneIndex = 0;
+        for (let i = 0; i < count; i++) {
             if (opts.sceneMarkers && opts.sceneMarkers.length > sceneIndex &&
                 opts.sceneMarkers[sceneIndex] === i) {
                 sceneIndex++;
                 res.push('    </div>');
-                res.push("    <div class=\"abeamer-scene\" id=scene".concat(sceneIndex + 1, ">"));
+                res.push(`    <div class="abeamer-scene" id=scene${sceneIndex + 1}>`);
             }
-            res.push("        <".concat(opts.htmlTag, " class='").concat(opts.cssClass, "' ")
-                + "id='".concat(opts.idPrefix).concat(i, "'>").concat(opts.textPrefix).concat(i, "</").concat(opts.htmlTag, ">"));
+            res.push(`        <${opts.htmlTag} class='${opts.cssClass}' `
+                + `id='${opts.idPrefix}${i}'>${opts.textPrefix}${i}</${opts.htmlTag}>`);
         }
         return Exact.getTestSquare + res.join('\n');
     }
@@ -198,41 +191,37 @@ var Exact;
     function interpolateMinMax(min, max, frameCount, interpolator) {
         // @TIP: JS doesn't differentiate between int and float but this code
         // for a future differentiation
-        var framesInt = Math.round(frameCount);
-        var res = [];
-        var delta = (max - min);
-        for (var i = 0; i < framesInt; i++) {
-            var t = framesInt > 1 ? i / (framesInt - 1) : 1;
-            var v = interpolator ? interpolator(t) : t;
+        const framesInt = Math.round(frameCount);
+        const res = [];
+        const delta = (max - min);
+        for (let i = 0; i < framesInt; i++) {
+            const t = framesInt > 1 ? i / (framesInt - 1) : 1;
+            const v = interpolator ? interpolator(t) : t;
             res.push(v * delta + min);
         }
         return res;
     }
     Exact.interpolateMinMax = interpolateMinMax;
     function interpolateList(list, cycle) {
-        var res = [];
-        var listLen = list.length;
+        const res = [];
+        const listLen = list.length;
         // tslint:disable-next-line:prefer-for-of
-        for (var i = 0; i < cycle.length; i++) {
-            var listIndex = Math.floor(listLen * Math.min(Math.max(0, cycle[i]), 0.999));
+        for (let i = 0; i < cycle.length; i++) {
+            const listIndex = Math.floor(listLen * Math.min(Math.max(0, cycle[i]), 0.999));
             res.push(list[listIndex]);
         }
         return res;
     }
     Exact.interpolateList = interpolateList;
     function roundToTestDigits(values) {
-        values.forEach(function (v, i) {
+        values.forEach((v, i) => {
             values[i] = Math.round(v * Exact._TEST_DIGIT_LIMIT) /
                 Exact._TEST_DIGIT_LIMIT;
         });
     }
     Exact.roundToTestDigits = roundToTestDigits;
-    Exact.simulatePixelAction = function (values) {
-        return values.map(function (value) { return Math.round(value) + 'px'; });
-    };
-    Exact.simulateNumAction = function (values) {
-        return values.map(function (value) { return value.toString(); });
-    };
+    Exact.simulatePixelAction = (values) => values.map(value => Math.round(value) + 'px');
+    Exact.simulateNumAction = (values) => values.map(value => value.toString());
     function simulateAction(values, propType) {
         switch (propType) {
             case dev_consts_js_1.DevConsts.PT_PIXEL:
@@ -245,54 +234,43 @@ var Exact;
     // ------------------------------------------------------------------------
     //                               Assertion
     // ------------------------------------------------------------------------
-    function AssertHasLine(rd, line, isError) {
-        if (isError === void 0) { isError = false; }
-        chai_1.assert.isTrue((!isError ? rd.out : rd.errLines).indexOf(line) !== -1, "missing: [".concat(line, "]"));
+    function AssertHasLine(rd, line, isError = false) {
+        chai_1.assert.isTrue((!isError ? rd.out : rd.errLines).indexOf(line) !== -1, `missing: [${line}]`);
     }
     Exact.AssertHasLine = AssertHasLine;
     // ------------------------------------------------------------------------
     //                               Actions
     // ------------------------------------------------------------------------
-    var Actions = /** @class */ (function () {
-        function Actions(actions, ranges) {
-            var _this = this;
+    class Actions {
+        constructor(actions, ranges) {
             this.actions = actions;
             this.ranges = ranges;
             // ------------------------------------------------------------------------
             //                               Filter
             // ------------------------------------------------------------------------
-            this.filterByElement = function (elementId) {
-                return _this.actions.filter(function (action) { return action[0] === elementId; }).
-                    map(function (action) { return [action[1], action[2]]; });
-            };
-            this.filterByElementProp = function (elementId, propName) {
-                return _this.actions.filter(function (action) { return action[0] === elementId && action[1] === propName; }).
-                    map(function (action) { return action[2]; });
-            };
-            this.filterRangeByElementProp = function (elementId, propName) {
-                return _this.ranges.filter(function (range) { return range[0] === elementId && range[1] === propName; }).
-                    map(function (range) { return [range[2], range[3]]; });
-            };
+            this.filterByElement = (elementId) => this.actions.filter(action => action[0] === elementId).
+                map(action => [action[1], action[2]]);
+            this.filterByElementProp = (elementId, propName) => this.actions.filter(action => action[0] === elementId && action[1] === propName).
+                map(action => action[2]);
+            this.filterRangeByElementProp = (elementId, propName) => this.ranges.filter(range => range[0] === elementId && range[1] === propName).
+                map(range => [range[2], range[3]]);
         }
         // ------------------------------------------------------------------------
         //                               Log
         // ------------------------------------------------------------------------
-        Actions.prototype.log = function () {
+        log() {
             console.log(this.actions);
-        };
-        Actions.prototype.logByElement = function (elementId) {
+        }
+        logByElement(elementId) {
             console.log(this.filterByElement(elementId));
-        };
-        Actions.prototype.logByElementProp = function (elementId, propName) {
+        }
+        logByElementProp(elementId, propName) {
             console.log(this.filterByElementProp(elementId, propName));
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Assertion
         // ------------------------------------------------------------------------
-        Actions.prototype.isIdPropActions = function (elementId, propName, expected, toAssert, toLogIfFails, actualStartIndex, actualLength) {
-            if (toAssert === void 0) { toAssert = true; }
-            if (toLogIfFails === void 0) { toLogIfFails = true; }
-            if (actualStartIndex === void 0) { actualStartIndex = 0; }
+        isIdPropActions(elementId, propName, expected, toAssert = true, toLogIfFails = true, actualStartIndex = 0, actualLength) {
             function failTestAndLog() {
                 if (toLogIfFails) {
                     console.log('Actual:');
@@ -301,23 +279,23 @@ var Exact;
                     console.log(expected);
                 }
             }
-            var actual = this.filterByElementProp(elementId, propName);
+            let actual = this.filterByElementProp(elementId, propName);
             actual = actual.slice(actualStartIndex, actualLength === undefined ? actual.length :
                 actualStartIndex + actualLength);
             if (expected.length !== actual.length) {
                 if (toAssert) {
                     failTestAndLog();
-                    throw "id: ".concat(elementId, " prop: ").concat(propName, " actions ")
-                        + "expected ".concat(expected.length, " length, but actual is ").concat(actual.length);
+                    throw `id: ${elementId} prop: ${propName} actions `
+                        + `expected ${expected.length} length, but actual is ${actual.length}`;
                 }
                 return -2;
             }
-            return actual.findIndex(function (value, index) {
+            return actual.findIndex((value, index) => {
                 if (value !== expected[index]) {
                     failTestAndLog();
                     if (toAssert) {
-                        throw "id: ".concat(elementId, " prop: ").concat(propName, " index: ").concat(index, " ")
-                            + "expected ".concat(value, " length, but actual is ").concat(expected[index]);
+                        throw `id: ${elementId} prop: ${propName} index: ${index} `
+                            + `expected ${value} length, but actual is ${expected[index]}`;
                     }
                     return true;
                 }
@@ -325,24 +303,19 @@ var Exact;
                     return false;
                 }
             });
-        };
-        Actions.prototype.isActions = function (_expected, toAssert, _toLogIfFails) {
-            if (toAssert === void 0) { toAssert = true; }
-            if (_toLogIfFails === void 0) { _toLogIfFails = true; }
-            return this.actions.findIndex(function (action, index) {
-                var expectedIt = action[index];
-                var res = action[0] === expectedIt[0]
+        }
+        isActions(_expected, toAssert = true, _toLogIfFails = true) {
+            return this.actions.findIndex((action, index) => {
+                const expectedIt = action[index];
+                const res = action[0] === expectedIt[0]
                     && (action[1] === expectedIt[1])
                     && (action[2] === expectedIt[2]);
                 if (!res && toAssert) {
                 }
                 return !res;
             });
-        };
-        Actions.prototype.isIdPropRanges = function (elementId, propName, expected, toAssert, toLogIfFails, actualStartIndex, actualLength) {
-            if (toAssert === void 0) { toAssert = true; }
-            if (toLogIfFails === void 0) { toLogIfFails = true; }
-            if (actualStartIndex === void 0) { actualStartIndex = 0; }
+        }
+        isIdPropRanges(elementId, propName, expected, toAssert = true, toLogIfFails = true, actualStartIndex = 0, actualLength) {
             function failTestAndLog() {
                 if (toLogIfFails) {
                     console.log('Actual:');
@@ -351,23 +324,23 @@ var Exact;
                     console.log(expected);
                 }
             }
-            var actual = this.filterRangeByElementProp(elementId, propName);
+            let actual = this.filterRangeByElementProp(elementId, propName);
             actual = actual.slice(actualStartIndex, actualLength === undefined ? actual.length :
                 actualStartIndex + actualLength);
             if (expected.length !== actual.length) {
                 if (toAssert) {
                     failTestAndLog();
-                    throw "id: ".concat(elementId, " prop: ").concat(propName, " actions ")
-                        + "expected ".concat(expected.length, " length, but actual is ").concat(actual.length);
+                    throw `id: ${elementId} prop: ${propName} actions `
+                        + `expected ${expected.length} length, but actual is ${actual.length}`;
                 }
                 return -2;
             }
-            return actual.findIndex(function (value, index) {
+            return actual.findIndex((value, index) => {
                 if (value[0] !== expected[index][0] || value[1] !== expected[index][1]) {
                     failTestAndLog();
                     if (toAssert) {
-                        throw "id: ".concat(elementId, " prop: ").concat(propName, " index: ").concat(index, " ")
-                            + "expected ".concat(value, " length, but actual is ").concat(expected[index]);
+                        throw `id: ${elementId} prop: ${propName} index: ${index} `
+                            + `expected ${value} length, but actual is ${expected[index]}`;
                     }
                     return true;
                 }
@@ -375,22 +348,21 @@ var Exact;
                     return false;
                 }
             });
-        };
-        return Actions;
-    }());
+        }
+    }
     Exact.Actions = Actions;
     function assertionManager(suiteName, params, holder, callback) {
-        before(function () {
-            return new Promise(function (resolve) {
+        before(() => {
+            return new Promise((resolve) => {
                 callback(resolve);
             });
         });
-        var tests = params.tests || {};
-        var testNames = Object.keys(tests);
+        const tests = params.tests || {};
+        const testNames = Object.keys(tests);
         // tslint:disable-next-line:only-arrow-functions space-before-function-paren
         describe(suiteName, function () {
-            testNames.forEach(function (name, index) {
-                var func = tests[name];
+            testNames.forEach((name, index) => {
+                const func = tests[name];
                 // tslint:disable-next-line:only-arrow-functions space-before-function-paren
                 it(name, function (done) {
                     this.timeout(/* holder.rd.params.timeout || DEFAULT_TIMEOUT */ 0);
@@ -417,10 +389,10 @@ var Exact;
         // converts __filename to the suiteName
         suiteName = fsix_js_1.fsix.toPosixSlash(suiteName).replace(/^.*\/([^\/]+)\.js$/, '$1');
         params.toNotTimeExecution = params.toNotTimeExecution !== false ? true : false;
-        var rd = {
-            suiteName: suiteName,
-            params: params,
-            inMacros: inMacros,
+        const rd = {
+            suiteName,
+            params,
+            inMacros,
             fps: inMacros.fps,
             exceptions: {},
         };
@@ -431,21 +403,21 @@ var Exact;
         fsix_js_1.fsix.mkdirpSync(rd.runPath);
         fsix_js_1.fsix.mkdirpSync(rd.outFolder);
         initInMacros(inMacros, params);
-        var macros = initReplaceMacros(inMacros, params);
-        var files = sysFs.readdirSync(rd.inFolder);
-        files.forEach(function (fileName) {
-            var text = fsix_js_1.fsix.readUtf8Sync(sysPath.join(rd.inFolder, fileName));
-            macros.forEach(function (item) {
+        const macros = initReplaceMacros(inMacros, params);
+        const files = sysFs.readdirSync(rd.inFolder);
+        files.forEach((fileName) => {
+            let text = fsix_js_1.fsix.readUtf8Sync(sysPath.join(rd.inFolder, fileName));
+            macros.forEach(item => {
                 text = text.replace(item[0], item[1]);
             });
             sysFs.writeFileSync(sysPath.join(rd.outFolder, fileName), text);
         });
         buildCmdLine(rd);
         createShellFile(rd);
-        var holder = {};
-        assertionManager(suiteName, params, holder, function (resolve) {
+        const holder = {};
+        assertionManager(suiteName, params, holder, (resolve) => {
             if (params.toNotTimeExecution) {
-                console.log("".concat(suiteName, " started"));
+                console.log(`${suiteName} started`);
                 rd.startTime = new Date();
             }
             runExternal(rd, callback, holder, resolve);
@@ -456,25 +428,30 @@ var Exact;
     //                               parseAnimes
     // ------------------------------------------------------------------------
     function parseAnimes(jsAnimes, parallelAnimes) {
-        var PRE_ADD_TRY_CATCH = "try {";
-        var POST_ADD_TRY_CATCH = "\n} catch (error) {\n  story.logFrmt('EXCEPTION', [['index', __INDEX__], ['error', error]]);\n  if (!independentCases) story.exit();\n}\n";
+        const PRE_ADD_TRY_CATCH = `try {`;
+        const POST_ADD_TRY_CATCH = `
+} catch (error) {
+  story.logFrmt('EXCEPTION', [['index', __INDEX__], ['error', error]]);
+  if (!independentCases) story.exit();
+}
+`;
         jsAnimes = (typeof jsAnimes === 'object') ? jsAnimes : [jsAnimes];
-        var addedScenes = ['1'];
-        return jsAnimes.map(function (jsAnime, animeIndex) {
-            var toWrapAddAnimations = true;
-            var sceneNr = '1';
-            var preAdd = '';
+        const addedScenes = ['1'];
+        return jsAnimes.map((jsAnime, animeIndex) => {
+            let toWrapAddAnimations = true;
+            let sceneNr = '1';
+            let preAdd = '';
             if (typeof jsAnime === 'object' &&
                 jsAnime.length === 2 &&
                 typeof (jsAnime[0]) === 'string' && jsAnime[0][0] === '@') {
-                var _a = jsAnime[0].split(':'), command = _a[0], value = _a[1];
+                const [command, value] = jsAnime[0].split(':');
                 jsAnime = jsAnime[1];
                 switch (command) {
                     case '@@scene':
                         sceneNr = value;
                         if (addedScenes.indexOf(sceneNr) === -1) {
-                            preAdd += "var scene".concat(sceneNr, " = ")
-                                + "story.scenes[".concat(parseInt(sceneNr) - 1, "];\n");
+                            preAdd += `var scene${sceneNr} = `
+                                + `story.scenes[${parseInt(sceneNr) - 1}];\n`;
                         }
                         break;
                     case '@@no-wrap-add-animation':
@@ -487,9 +464,9 @@ var Exact;
                     ? Exact.obj2String(jsAnime) : '[' + Exact.obj2String(jsAnime) + ']';
             }
             if (toWrapAddAnimations) {
-                jsAnime = "\nscene".concat(sceneNr, ".addAnimations(")
+                jsAnime = `\nscene${sceneNr}.addAnimations(`
                     + jsAnime
-                    + ");\n";
+                    + `);\n`;
             }
             return preAdd
                 + PRE_ADD_TRY_CATCH
@@ -506,7 +483,7 @@ var Exact;
             inMacros.animes = undefined;
         }
         if (params.jsMacros) {
-            params.jsMacros.forEach(function (macro) {
+            params.jsMacros.forEach(macro => {
                 inMacros.js = inMacros.js.replace(macro[0], macro[1]);
             });
         }
@@ -520,22 +497,16 @@ var Exact;
      * Usage: replace text on `.js/.html/.css` files.
      */
     function initReplaceMacros(inMacros, params) {
-        var cfg = dev_config_js_1.DevCfg.getConfig(sysPath.dirname(__dirname));
-        var macros = Object.keys(inMacros).map(function (key) {
-            return [new RegExp("__".concat(key.toUpperCase(), "__"), 'g'),
-                inMacros[key] || ''];
-        });
+        const cfg = dev_config_js_1.DevCfg.getConfig(sysPath.dirname(__dirname));
+        const macros = Object.keys(inMacros).map(key => [new RegExp(`__${key.toUpperCase()}__`, 'g'),
+            inMacros[key] || '']);
         macros.push([/__LIB_FILES__/,
             fsix_js_1.fsix.loadJsonSync(cfg.paths.MODULES_LIST_FILE)
-                .libModules.map(function (file) {
-                return "    <script src=\"../../../client/lib/js/".concat(file, ".js\"></script>\n");
-            }).join('')]);
+                .libModules.map(file => `    <script src="../../../client/lib/js/${file}.js"></script>\n`).join('')]);
         macros.push([/__PLUGINS__/,
             params.plugins ?
-                params.plugins.map(function (plugin) {
-                    return "    <script src=\"../../../client/lib/plugins/".concat(plugin, "/").concat(plugin, ".js\"></script>\n");
-                }).join('') : '']);
-        macros.push([/__ASSETS_PATH__/g, "../../".concat(ASSETS_PATH)]);
+                params.plugins.map(plugin => `    <script src="../../../client/lib/plugins/${plugin}/${plugin}.js"></script>\n`).join('') : '']);
+        macros.push([/__ASSETS_PATH__/g, `../../${ASSETS_PATH}`]);
         macros.push([/__IND_CASES__/,
             params.casesAreDependent !== true ? 'true' : 'false']);
         macros.push([/__EXIT_RENDER_ON_FINISHED__/,
@@ -546,10 +517,8 @@ var Exact;
                 : 'undefined']);
         macros.push([/__EXTRA_RENDER_CALLS__/,
             params.extraRenderCalls && params.extraRenderCalls.length ?
-                params.extraRenderCalls.map(function (frameOptions) {
-                    return "        story.render(story.bestPlaySpeed()," +
-                        JSON.stringify(frameOptions, undefined, 2) + ');\n';
-                }).join('\n') : '']);
+                params.extraRenderCalls.map(frameOptions => `        story.render(story.bestPlaySpeed(),` +
+                    JSON.stringify(frameOptions, undefined, 2) + ');\n').join('\n') : '']);
         return macros;
     }
     // ------------------------------------------------------------------------
@@ -560,9 +529,9 @@ var Exact;
      * Usage: manually execute a test.
      */
     function createShellFile(rd) {
-        var isWin = sysProcess.platform === 'win32';
-        var scriptName = rd.outFolder + '/run' + (isWin ? '.bat' : '.sh');
-        var shell = '#/usr/bin/env sh\n';
+        const isWin = sysProcess.platform === 'win32';
+        const scriptName = rd.outFolder + '/run' + (isWin ? '.bat' : '.sh');
+        const shell = '#/usr/bin/env sh\n';
         sysFs.writeFileSync(scriptName, (isWin ? '' : shell) + rd.cmdLine + '\n');
         if (!isWin) {
             sysFs.chmodSync(scriptName, '0775');
@@ -576,15 +545,15 @@ var Exact;
      * Usage: execute the render server agent.
      */
     function buildCmdLine(rd) {
-        var params = rd.params;
-        var serverName = (params.server || rel_consts_js_1.RelConsts.DEFAULT_SERVER);
-        var cmdLine = (rel_consts_js_1.RelConsts.NODE_SERVERS.indexOf(serverName) !== -1 ? 'node' : serverName)
+        const params = rd.params;
+        const serverName = (params.server || rel_consts_js_1.RelConsts.DEFAULT_SERVER);
+        let cmdLine = (rel_consts_js_1.RelConsts.NODE_SERVERS.indexOf(serverName) !== -1 ? 'node' : serverName)
             // use double quotes for files to support space files and windows
-            + " \"".concat(rd.root, "/../cli/../server/server-agent-").concat(serverName, ".js\"")
-            + " --ll ".concat(params.logLevel !== undefined ? params.logLevel : consts_js_1.Consts.LL_VERBOSE)
+            + ` "${rd.root}/../cli/../server/server-agent-${serverName}.js"`
+            + ` --ll ${params.logLevel !== undefined ? params.logLevel : consts_js_1.Consts.LL_VERBOSE}`
             + (params.toDelPreviousFrames !== false ? ' --dp' : '')
             + (params.toGenFrames ? '' : ' --noframes')
-            + " --config \"".concat(rd.outFolder, "/abeamer.ini\"");
+            + ` --config "${rd.outFolder}/abeamer.ini"`;
         if (params.onCmdLine) {
             cmdLine = params.onCmdLine(cmdLine);
         }
@@ -594,10 +563,10 @@ var Exact;
     //                               runExternal
     // ------------------------------------------------------------------------
     function runExternal(rd, callback, holder, resolve) {
-        fsix_js_1.fsix.runExternal(rd.cmdLine, function (error, stdout, stderr) {
+        fsix_js_1.fsix.runExternal(rd.cmdLine, (error, stdout, stderr) => {
             if (rd.params.toNotTimeExecution) {
                 rd.executionTime = new Date() - rd.startTime;
-                console.log("".concat(rd.suiteName, " finished ").concat(rd.executionTime, " (ms)\n"));
+                console.log(`${rd.suiteName} finished ${rd.executionTime} (ms)\n`);
             }
             rd.error = error;
             rd.out = (stdout || '').trim();
@@ -605,7 +574,7 @@ var Exact;
             rd.outLines = rd.out.split('\n');
             rd.errLines = rd.err.split('\n');
             // browser can send error but the server doesn't log as an error
-            rd.outLines.forEach(function (line) {
+            rd.outLines.forEach(line => {
                 if (line.search(/\[(CRITICAL|ERROR|EXCEPTION)\]/) !== -1) {
                     rd.errLines.push(line);
                 }
@@ -614,14 +583,14 @@ var Exact;
             if (rd.hasError) {
                 if (rd.errLines && rd.params.expectedErrors) {
                     rd.filteredErrLines = rd.errLines
-                        .filter(function (item) { return rd.params.expectedErrors.indexOf(item) === -1; });
+                        .filter(item => rd.params.expectedErrors.indexOf(item) === -1);
                     rd.hasError = rd.filteredErrLines.length > 0;
                 }
                 else {
                     rd.filteredErrLines = rd.errLines;
                 }
                 if (rd.hasError) {
-                    console.log("rd.hasError: ".concat(rd.hasError));
+                    console.log(`rd.hasError: ${rd.hasError}`);
                 }
                 if (rd.hasError && rd.params.toNotLogStdErr !== false) {
                     console.error('Error:', rd.error);
@@ -644,36 +613,36 @@ var Exact;
     // ------------------------------------------------------------------------
     function getResTagParams(line, tag, callback) {
         if (line.substr(0, tag.length + 1) === tag + ':') {
-            var res_1 = [];
-            line.replace(/_\[([^\]]*)\]_/g, function (match, p) {
-                res_1.push(p);
+            const res = [];
+            line.replace(/_\[([^\]]*)\]_/g, (match, p) => {
+                res.push(p);
                 return match;
             });
             if (callback) {
-                callback(res_1);
+                callback(res);
             }
-            return res_1;
+            return res;
         }
         return undefined;
     }
     Exact.getResTagParams = getResTagParams;
     function parseActions(rd) {
-        var actions = [];
-        var ranges = [];
+        const actions = [];
+        const ranges = [];
         if (rd.params.toLogStdOut) {
-            rd.outLines.forEach(function (line, index) {
-                console.log("".concat(index, ":[").concat(line, "]"));
+            rd.outLines.forEach((line, index) => {
+                console.log(`${index}:[${line}]`);
             });
         }
-        rd.outLines.forEach(function (line) {
-            getResTagParams(line, 'action', function (action) {
+        rd.outLines.forEach(line => {
+            getResTagParams(line, 'action', (action) => {
                 actions.push(action);
             });
-            getResTagParams(line, 'action-range', function (range) {
+            getResTagParams(line, 'action-range', (range) => {
                 ranges.push([range[0], range[1],
                     parseInt(range[2]), parseInt(range[3])]);
             });
-            Exact.getResTagParams(line, 'EXCEPTION', function (exprData) {
+            Exact.getResTagParams(line, 'EXCEPTION', (exprData) => {
                 rd.exceptions[parseInt(exprData[0])] = exprData[1];
             });
             if (rd.params.onParseOutputLine) {

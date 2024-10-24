@@ -3,23 +3,23 @@
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 10);
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 10);
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
-    var scene1 = story.scenes[0];
+    const scene1 = story.scenes[0];
     // [TOPIC] adds 0.5s of unanimated frames.
     scene1.addStills('0.5s');
     // [TOPIC] fades in story using pElsFadeIn
-    var storyPels = scene1.pElsFadeIn('#storyTxt');
+    const storyPels = scene1.pElsFadeIn('#storyTxt');
     scene1.addStills('1s');
-    var justPels = scene1.pElsFadeIn('#just');
+    const justPels = scene1.pElsFadeIn('#just');
     scene1.addStills('1s');
     // [TOPIC] uses pels directly
     justPels.fadeOut('100ms');
     scene1.pElsFadeOut('#storyTxt', '0.5s');
-    var aPls = scene1.pElsHide('#a');
+    const aPls = scene1.pElsHide('#a');
     scene1.addAnimations([{
             // [TOPIC] uses aPls as a selector, but it's not teleportable.
             selector: !story.isTeleporting ? aPls : '#a',
@@ -48,7 +48,7 @@ $(window).on("load", function () {
         }]);
     scene1.addStills('0.5s');
     // [TOPIC] gets pEls first, to later allow their usage.
-    var endPels = scene1.getPEls('#world, #img');
+    const endPels = scene1.getPEls('#world, #img');
     endPels.fadeIn('2s');
     story.render(story.bestPlaySpeed());
 });

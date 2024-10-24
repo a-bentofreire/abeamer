@@ -4,14 +4,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-var chai_1 = require("chai");
-var exact_js_1 = require("../exact.js");
+const chai_1 = require("chai");
+const exact_js_1 = require("../exact.js");
 var Tests;
 (function (Tests) {
-    var fps = 4;
-    var seconds = 1;
-    var totalD = fps * seconds;
-    var animes = [[
+    const fps = 4;
+    const seconds = 1;
+    const totalD = fps * seconds;
+    const animes = [[
             {
                 selector: '#t0,#t1,#t2',
                 duration: '1s',
@@ -58,7 +58,7 @@ var Tests;
                 ],
             },
         ]];
-    var tests = [
+    const tests = [
         { elIndex: 0, prop: 'top', startFrame: 4, label: 'simple prop advance' },
         { elIndex: 1, prop: 'top', startFrame: 3, label: 'simple prop advance' },
         { elIndex: 2, prop: 'top', startFrame: 5, label: 'simple prop advance' },
@@ -70,24 +70,24 @@ var Tests;
         { elIndex: 5, prop: 'left', startFrame: 21, label: 'animation advance+position' },
         { elIndex: 6, prop: 'left', startFrame: 21, label: 'animation advance+position' },
     ];
-    var func = function (rd, done, index) {
-        var test = tests[index];
-        rd.actions.isIdPropRanges("t".concat(test.elIndex), test.prop, [[test.startFrame, test.duration || totalD]]);
+    const func = (rd, done, index) => {
+        const test = tests[index];
+        rd.actions.isIdPropRanges(`t${test.elIndex}`, test.prop, [[test.startFrame, test.duration || totalD]]);
         done();
     };
-    var testParams = {};
-    tests.forEach(function (test) {
-        testParams["".concat(test.label, " t").concat(test.elIndex, " ").concat(test.prop)
-            + " starting on frame from ".concat(test.startFrame)] = func;
+    const testParams = {};
+    tests.forEach((test) => {
+        testParams[`${test.label} t${test.elIndex} ${test.prop}`
+            + ` starting on frame from ${test.startFrame}`] = func;
     });
-    testParams["no-advance-in-the-end"] = function (rd, done) {
+    testParams[`no-advance-in-the-end`] = (rd, done) => {
         chai_1.assert.isTrue(rd.outLines.indexOf('no-advance-in-end:') !== -1);
         done();
     };
     exact_js_1.Exact.runTestSuite(__filename, {
-        fps: fps,
-        css: "#t0,#t1,#t3,#t4,#t5,#t6 {left: 5px; top: 5px; opacity: 0.2;}",
-        animes: animes,
+        fps,
+        css: `#t0,#t1,#t3,#t4,#t5,#t6 {left: 5px; top: 5px; opacity: 0.2;}`,
+        animes,
         html: exact_js_1.Exact.genTestHtml(7),
     }, {
         tests: testParams,

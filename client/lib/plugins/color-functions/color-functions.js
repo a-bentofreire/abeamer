@@ -68,8 +68,8 @@ var ABeamer;
     function _parseColorInput(params, req, hasTransparency) {
         if (params.length === 1) {
             req.checkParams(req, 1, [3 /* ExFuncParamType.Array */]);
-            var res = params[0].arrayValue;
-            var resLen = res.length;
+            const res = params[0].arrayValue;
+            const resLen = res.length;
             if (resLen !== (hasTransparency ? 4 : 3)) {
                 ABeamer.throwI8n(ABeamer.Msgs.ExpHasErrors);
             }
@@ -78,12 +78,12 @@ var ABeamer;
         else if (hasTransparency) {
             req.checkParams(req, 4, [1 /* ExFuncParamType.Number */,
                 1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */]);
-            return params.map(function (p) { return p.numValue; });
+            return params.map(p => p.numValue);
         }
         else {
             req.checkParams(req, 3, [1 /* ExFuncParamType.Number */,
                 1 /* ExFuncParamType.Number */, 1 /* ExFuncParamType.Number */]);
-            return params.map(function (p) { return p.numValue; });
+            return params.map(p => p.numValue);
         }
     }
     // ------------------------------------------------------------------------
@@ -94,19 +94,19 @@ var ABeamer;
      *  credit to https://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
      */
     function _rgb2HslFunc(r, g, b) {
-        var numR = r / 255;
-        var numG = g / 255;
-        var numB = b / 255;
-        var maxRGB = Math.max(numR, numG, numB);
-        var minRGB = Math.min(numR, numG, numB);
-        var h;
-        var s;
-        var l = (maxRGB + minRGB) / 2;
+        const numR = r / 255;
+        const numG = g / 255;
+        const numB = b / 255;
+        const maxRGB = Math.max(numR, numG, numB);
+        const minRGB = Math.min(numR, numG, numB);
+        let h;
+        let s;
+        const l = (maxRGB + minRGB) / 2;
         if (maxRGB === minRGB) {
             h = s = 0; // achromatic
         }
         else {
-            var delta = maxRGB - minRGB;
+            const delta = maxRGB - minRGB;
             s = l > 0.5 ? delta / (2 - maxRGB - minRGB) : delta / (maxRGB + minRGB);
             switch (maxRGB) {
                 case numR:
@@ -150,15 +150,15 @@ var ABeamer;
      *  credit to https://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
      */
     function _hsl2RgbFunc(h, s, l) {
-        var r;
-        var g;
-        var b;
+        let r;
+        let g;
+        let b;
         if (s === 0) {
             r = g = b = l; // achromatic
         }
         else {
-            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-            var p = 2 * l - q;
+            const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            const p = 2 * l - q;
             r = _hue2Rgb(p, q, h + 1 / 3);
             g = _hue2Rgb(p, q, h);
             b = _hue2Rgb(p, q, h - 1 / 3);
@@ -166,8 +166,8 @@ var ABeamer;
         return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
     }
     function _hslaCommon(params, req, hasTransparency) {
-        var color34 = _parseColorInput(params, req, hasTransparency);
-        var rgb = _hsl2RgbFunc(color34[0], color34[1], color34[2]);
+        const color34 = _parseColorInput(params, req, hasTransparency);
+        const rgb = _hsl2RgbFunc(color34[0], color34[1], color34[2]);
         req.res.paType = 2 /* ExFuncParamType.String */;
         req.res.sValue = _rgbaToStr(!hasTransparency ? rgb :
             [rgb[0], rgb[1], rgb[2], color34[3]]);
@@ -179,12 +179,12 @@ var ABeamer;
         _hslaCommon(params, req, true);
     }
     function _hsl2Rgb(params, req) {
-        var color34 = _parseColorInput(params, req, false);
+        const color34 = _parseColorInput(params, req, false);
         req.res.paType = 3 /* ExFuncParamType.Array */;
         req.res.arrayValue = _hsl2RgbFunc(color34[0], color34[1], color34[2]);
     }
     function _rgb2Hsl(params, req) {
-        var color34 = _parseColorInput(params, req, false);
+        const color34 = _parseColorInput(params, req, false);
         req.res.paType = 3 /* ExFuncParamType.Array */;
         req.res.arrayValue = _rgb2HslFunc(color34[0], color34[1], color34[2]);
     }
@@ -192,18 +192,18 @@ var ABeamer;
     //                               rgb functions
     // ------------------------------------------------------------------------
     function _rgbaToStr(color34) {
-        return color34.map(function (pa, index) {
-            var numValue = pa;
+        return color34.map((pa, index) => {
+            let numValue = pa;
             if (index === 3) {
                 numValue = numValue * 255;
             }
             numValue = Math.round(Math.max(Math.min(numValue, 255), 0));
-            var v = numValue.toString(16);
+            const v = numValue.toString(16);
             return v.length < 2 ? '0' + v : v;
         }).join('');
     }
     function _rgbaCommon(params, req, hasTransparency) {
-        var color34 = _parseColorInput(params, req, hasTransparency);
+        const color34 = _parseColorInput(params, req, hasTransparency);
         req.res.paType = 2 /* ExFuncParamType.String */;
         req.res.sValue = _rgbaToStr(color34);
     }

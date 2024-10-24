@@ -3,13 +3,13 @@
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 10);
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 10);
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
-    var IMG = '<img src="assets/pixabay/emoji-2762568_640.png">';
-    var scene1 = story.scenes[0];
+    const IMG = '<img src="assets/pixabay/emoji-2762568_640.png">';
+    const scene1 = story.scenes[0];
     scene1
         .addAnimations([{
             selector: '#write',
@@ -30,7 +30,7 @@ $(window).on("load", function () {
                 {
                     prop: 'html',
                     duration: '1f',
-                    valueText: ["What's up!".concat(IMG)],
+                    valueText: [`What\'s up!${IMG}`],
                 },
             ],
         }])
@@ -121,7 +121,7 @@ $(window).on("load", function () {
                 {
                     prop: 'html',
                     duration: '5f',
-                    valueText: ["What's left".concat(IMG), "What's left".concat(IMG).concat(IMG), "What's left".concat(IMG).concat(IMG).concat(IMG)],
+                    valueText: [`What\'s left${IMG}`, `What\'s left${IMG}${IMG}`, `What\'s left${IMG}${IMG}${IMG}`],
                 },
             ],
         }])

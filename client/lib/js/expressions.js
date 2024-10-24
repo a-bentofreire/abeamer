@@ -114,13 +114,12 @@ var ABeamer;
      * Used by developers and plugin creators.
      *
      */
-    function isCharacter(ch, pos) {
-        if (pos === void 0) { pos = 0; }
+    function isCharacter(ch, pos = 0) {
         if (ch === undefined || ch[pos] === undefined) {
             return false;
         }
-        var codePoint = ch.codePointAt(pos);
-        return ABeamer.CharRanges.findIndex(function (rg) { return codePoint >= rg[0] && codePoint <= rg[1]; }) !== -1;
+        const codePoint = ch.codePointAt(pos);
+        return ABeamer.CharRanges.findIndex(rg => codePoint >= rg[0] && codePoint <= rg[1]) !== -1;
     }
     ABeamer.isCharacter = isCharacter;
     /**
@@ -150,7 +149,7 @@ var ABeamer;
         return text !== undefined && text[0] === '=';
     }
     ABeamer.isExpr = isExpr;
-    var Str2TokenType;
+    let Str2TokenType;
     (function (Str2TokenType) {
         Str2TokenType[Str2TokenType["["] = 2] = "[";
         Str2TokenType[Str2TokenType["]"] = 3] = "]";
@@ -173,7 +172,7 @@ var ABeamer;
      * List of operator precedence.
      * Taken from the JavaScript operator precedence.
      */
-    var opPriority = [
+    const opPriority = [
         0, // None,
         19, // Function,
         19, // ArrayOpen,
@@ -197,7 +196,7 @@ var ABeamer;
         5, // LogicalOr
         16, // LogicalNot
     ];
-    var Type2Class = [
+    const Type2Class = [
         0 /* TokenClass.None */,
         1 /* TokenClass.Function */,
         2 /* TokenClass.ArrayOpen */,
@@ -226,9 +225,9 @@ var ABeamer;
             (ch === '_' ? true : isFirst ? isCharacter(ch) : isCharacterOrNum(ch));
     }
     function _parseVars(p, varValue, varName, expr, pos) {
-        var varTypeOf = typeof varValue;
+        const varTypeOf = typeof varValue;
         if (varValue === undefined) {
-            err(p, "Unknown variable ".concat(varName));
+            err(p, `Unknown variable ${varName}`);
         }
         if (varTypeOf === 'string') {
             p.token.paType = 2 /* ExFuncParamType.String */;
@@ -248,19 +247,19 @@ var ABeamer;
                 p.token.numValue = undefined;
             }
             else if (expr[pos] === '.') {
-                var varPropStart = ++pos;
+                const varPropStart = ++pos;
                 while (_isId(expr[pos], varPropStart === pos)) {
                     pos++;
                 }
-                var varProp = expr.substring(varPropStart, pos);
+                const varProp = expr.substring(varPropStart, pos);
                 if (!varProp) {
-                    err(p, "Invalid object variable ".concat(varName));
+                    err(p, `Invalid object variable ${varName}`);
                 }
                 pos = _parseVars(p, varValue[varProp], varName + '.' + varProp, expr, pos);
             }
             if (expr[pos] === '[') {
-                var varPropStart = ++pos;
-                var bracketCount = 1;
+                const varPropStart = ++pos;
+                let bracketCount = 1;
                 while (bracketCount > 0) {
                     switch (expr[pos]) {
                         case '[':
@@ -270,13 +269,13 @@ var ABeamer;
                             bracketCount--;
                             break;
                         case undefined:
-                            err(p, "Invalid  variable indexing ".concat(varName));
+                            err(p, `Invalid  variable indexing ${varName}`);
                     }
                     pos++;
                 }
-                var indexExpr = '=' + expr.substring(varPropStart, pos - 1);
-                var indexValue = calcExpr(indexExpr, p.args);
-                var arrayItem = varValue[parseInt(indexValue)];
+                const indexExpr = '=' + expr.substring(varPropStart, pos - 1);
+                const indexValue = calcExpr(indexExpr, p.args);
+                const arrayItem = varValue[parseInt(indexValue)];
                 _parseVars(p, arrayItem, varName, indexExpr, 1);
                 pos++;
             }
@@ -288,22 +287,22 @@ var ABeamer;
             p.token.arrayValue = undefined;
         }
         else {
-            err(p, "Unsupported type of ".concat(varName));
+            err(p, `Unsupported type of ${varName}`);
         }
         return pos;
     }
     function _parser(p, checkSign) {
-        var startPos;
+        let startPos;
         function setToken(aType) {
             p.token.sValue = expr.substring(startPos, pos);
             p.token.tkType = aType;
             p.token.tkClass = Type2Class[aType];
         }
-        var expr = p.expr;
-        var pos = p.pos;
+        const expr = p.expr;
+        let pos = p.pos;
         p.token.tkClass = 0 /* TokenClass.None */;
         do {
-            var ch = expr[pos];
+            let ch = expr[pos];
             while (ch === ' ') {
                 ch = expr[++pos];
             }
@@ -316,7 +315,7 @@ var ABeamer;
                 while (_isId(expr[++pos], false)) { }
                 if (expr[pos] === '(') {
                     setToken(1 /* TokenType.Function */);
-                    var funcName = p.token.sValue;
+                    const funcName = p.token.sValue;
                     if (funcName === 'not') {
                         p.token.tkType = 21 /* TokenType.LogicalNot */;
                         p.token.tkClass = 8 /* TokenClass.LogicalUnary */;
@@ -327,8 +326,8 @@ var ABeamer;
                 }
                 else {
                     setToken(7 /* TokenType.Value */);
-                    var varName = p.token.sValue;
-                    var opNameIndex = ['not', 'and', 'or'].indexOf(varName);
+                    const varName = p.token.sValue;
+                    const opNameIndex = ['not', 'and', 'or'].indexOf(varName);
                     if (opNameIndex !== -1) {
                         // named operators
                         p.token.tkType = [21 /* TokenType.LogicalNot */, 19 /* TokenType.LogicalAnd */,
@@ -359,14 +358,14 @@ var ABeamer;
             }
             // strings
             if (ch === "'") {
-                var prevCh = void 0;
+                let prevCh;
                 do {
                     prevCh = ch;
                     ch = expr[++pos];
                 } while ((ch !== "'" || prevCh === '\\') && ch !== undefined);
                 startPos++;
                 setToken(7 /* TokenType.Value */);
-                p.token.sValue = p.token.sValue.replace(/\\([n'])/g, function (_all, meta) {
+                p.token.sValue = p.token.sValue.replace(/\\([n'])/g, (_all, meta) => {
                     switch (meta) {
                         case 'n': return '\n';
                         case "'": return "'";
@@ -382,15 +381,15 @@ var ABeamer;
                 pos++;
             }
             // symbols
-            var type = Str2TokenType[ch] || 0 /* TokenType.None */;
+            const type = Str2TokenType[ch] || 0 /* TokenType.None */;
             if (type === 0 /* TokenType.None */) {
-                err(p, "Unknown token ".concat(ch, " in position ").concat(pos), p.token);
+                err(p, `Unknown token ${ch} in position ${pos}`, p.token);
             }
             pos++;
             setToken(type);
             break;
         } while (true);
-        var tkClass = p.token.tkClass;
+        const tkClass = p.token.tkClass;
         p.pos = pos;
         // @ts-ignore   TypeScript bug :-(
         p.token.canBinOp = tkClass === 7 /* TokenClass.Unary */ || tkClass === 9 /* TokenClass.Binary */;
@@ -400,12 +399,12 @@ var ABeamer;
     //                               Execute Expression Function
     // ------------------------------------------------------------------------
     function _execExprFunction(p, funcToken) {
-        var funcName = funcToken.sValue;
-        var func = ABeamer._exFunctions[funcName];
+        const funcName = funcToken.sValue;
+        const func = ABeamer._exFunctions[funcName];
         if (!func) {
-            err(p, "Unknown function: ".concat(funcName), funcToken);
+            err(p, `Unknown function: ${funcName}`, funcToken);
         }
-        var res = {
+        const res = {
             canBinOp: false,
             tkClass: 4 /* TokenClass.Value */,
             tkType: 7 /* TokenType.Value */,
@@ -419,11 +418,11 @@ var ABeamer;
     //                               Execute Array
     // ------------------------------------------------------------------------
     function _execArray(_p, funcToken) {
-        var res = {
+        const res = {
             paType: 3 /* ExFuncParamType.Array */,
             sValue: undefined,
             numValue: undefined,
-            arrayValue: funcToken.funcParams.map(function (param) {
+            arrayValue: funcToken.funcParams.map(param => {
                 return param.numValue;
             }),
             canBinOp: false,
@@ -437,23 +436,23 @@ var ABeamer;
     // ------------------------------------------------------------------------
     // @TODO: Implement logical Not
     function _stateMachine(p) {
-        var stack = [];
-        var state = 0 /* States.IdAndUnary */;
-        var token;
-        var op;
+        const stack = [];
+        let state = 0 /* States.IdAndUnary */;
+        let token;
+        let op;
         /** stack.length - 1 */
-        var stackLast = -1;
+        let stackLast = -1;
         /**  startPoints[startPoints.length-1] */
-        var startPoint = 0;
+        let startPoint = 0;
         /** list of indexes to the stack element after for each 'func', '(' and ',' */
-        var startPoints = [];
+        const startPoints = [];
         p.req = p;
         function push() {
             stack.push(token);
             stackLast++;
         }
         function pop() {
-            var tk = stack[stackLast];
+            const tk = stack[stackLast];
             stack.length = stackLast;
             stackLast--;
             return tk;
@@ -465,8 +464,8 @@ var ABeamer;
                 if (!op.canBinOp) {
                     break;
                 }
-                var t1 = stack[startPoint];
-                var t2 = stack[startPoint + 2];
+                const t1 = stack[startPoint];
+                const t2 = stack[startPoint + 2];
                 _calcBinary(p, op, t1, t2);
                 stack.splice(startPoint + 1, 2);
                 stackLast -= 2;
@@ -478,9 +477,9 @@ var ABeamer;
                 if (!op.canBinOp) {
                     break;
                 }
-                var t1 = stack[stackLast - 2];
-                var t2 = stack[stackLast];
-                var prevOp = stack[stackLast - 3];
+                const t1 = stack[stackLast - 2];
+                const t2 = stack[stackLast];
+                const prevOp = stack[stackLast - 3];
                 if (_comparePriority(op, prevOp)) {
                     _calcBinary(p, op, t1, t2);
                     stack.length = stackLast - 1;
@@ -501,7 +500,7 @@ var ABeamer;
         }
         do {
             p.token = {};
-            var thisTkClass = _parser(p, state !== 2 /* States.Binary */);
+            const thisTkClass = _parser(p, state !== 2 /* States.Binary */);
             token = p.token;
             if (thisTkClass === 0 /* TokenClass.None */) {
                 break;
@@ -540,14 +539,14 @@ var ABeamer;
                 case 6 /* TokenClass.ParamClose */:
                 case 3 /* TokenClass.ArrayClose */:
                     if (!startPoint) {
-                        err(p, "Missing starting parenthesis", token);
+                        err(p, `Missing starting parenthesis`, token);
                     }
-                    var funcToken = stack[startPoint - 1];
-                    var isTokenComma = thisTkClass === 10 /* TokenClass.Comma */;
-                    var isFunc = funcToken.tkClass === 1 /* TokenClass.Function */;
-                    var isArray = funcToken.tkClass === 2 /* TokenClass.ArrayOpen */;
+                    const funcToken = stack[startPoint - 1];
+                    const isTokenComma = thisTkClass === 10 /* TokenClass.Comma */;
+                    const isFunc = funcToken.tkClass === 1 /* TokenClass.Function */;
+                    const isArray = funcToken.tkClass === 2 /* TokenClass.ArrayOpen */;
                     if (isTokenComma && !isFunc && !isArray) {
-                        err(p, "Missing function", token);
+                        err(p, `Missing function`, token);
                     }
                     if ((isFunc || isArray) && !isTokenComma) {
                         // function code
@@ -606,7 +605,7 @@ var ABeamer;
         // #debug-start
         if (p.args.isVerbose) {
             token = stack.length > 0 ? stack[0] : { paType: 2 /* ExFuncParamType.String */ };
-            var v = _valueOfToken(token);
+            const v = _valueOfToken(token);
             p.args.story.logFrmt('expression', [
                 ['expression', p.expr],
                 ['value', v.toString()],
@@ -616,7 +615,7 @@ var ABeamer;
         }
         // #debug-end
         if (stack.length !== 1) {
-            err(p, "Stack not empty");
+            err(p, `Stack not empty`);
         }
         token = stack[0];
         if (stack[stackLast].tkClass !== 4 /* TokenClass.Value */) {
@@ -640,13 +639,13 @@ var ABeamer;
      * and if their types match the expected.
      */
     function _checkFuncParams(req, paramCount, paramTypes) {
-        var params = req.token.funcParams;
+        const params = req.token.funcParams;
         if (paramCount >= 0 && params.length !== paramCount) {
             err(req, ABeamer.i8nMsg(ABeamer.Msgs.WrongNrParams, { p: req.token.sValue }));
         }
         if (paramTypes) {
-            paramTypes.forEach(function (paramType, index) {
-                var pi = params[index];
+            paramTypes.forEach((paramType, index) => {
+                const pi = params[index];
                 if (!pi || (pi.paType !== paramType && paramType !== 0 /* ExFuncParamType.Any */)) {
                     err(req, ABeamer.i8nMsg(ABeamer.Msgs.WrongParamType, { p: req.token.sValue, i: index }));
                 }
@@ -671,7 +670,7 @@ var ABeamer;
      *
      */
     function arrayInputHelper(params, req, paramCount, arrayLength, func) {
-        var inpArray;
+        let inpArray;
         if (params.length === 1 && params[0].paType === 3 /* ExFuncParamType.Array */) {
             // if the input value is a numerical array
             inpArray = params[0].arrayValue;
@@ -679,7 +678,7 @@ var ABeamer;
                 err(req, ABeamer.i8nMsg(ABeamer.Msgs.WrongNrParams, { p: req.token.sValue }));
             }
             if (paramCount !== arrayLength) {
-                inpArray.forEach(function (el, index) {
+                inpArray.forEach((el, index) => {
                     inpArray[index] = func(el);
                 });
                 req.res.paType = 3 /* ExFuncParamType.Array */;
@@ -692,7 +691,7 @@ var ABeamer;
             if (paramCount >= 0 && params.length !== paramCount) {
                 err(req, ABeamer.i8nMsg(ABeamer.Msgs.WrongNrParams, { p: req.token.sValue }));
             }
-            inpArray = params.map(function (param, index) {
+            inpArray = params.map((param, index) => {
                 if (param.paType !== 1 /* ExFuncParamType.Number */) {
                     err(req, ABeamer.i8nMsg(ABeamer.Msgs.WrongParamType, { p: req.token.sValue, i: index }));
                 }
@@ -704,7 +703,7 @@ var ABeamer;
                 return;
             }
         }
-        var resValue = func(inpArray);
+        const resValue = func(inpArray);
         if (typeof resValue === 'number') {
             req.res.paType = 1 /* ExFuncParamType.Number */;
             req.res.numValue = resValue;
@@ -739,25 +738,25 @@ var ABeamer;
     }
     /** Computes binary operators. */
     function _calcBinary(p, op, value1, value2) {
-        var AnyNotNumber = value1.paType !== 1 /* ExFuncParamType.Number */
+        const AnyNotNumber = value1.paType !== 1 /* ExFuncParamType.Number */
             || value2.paType !== 1 /* ExFuncParamType.Number */;
-        var is1stArray = value1.paType === 3 /* ExFuncParamType.Array */;
-        var is2ndArray = value2.paType === 3 /* ExFuncParamType.Array */;
+        const is1stArray = value1.paType === 3 /* ExFuncParamType.Array */;
+        const is2ndArray = value2.paType === 3 /* ExFuncParamType.Array */;
         function NumbersOnly() {
             if (AnyNotNumber) {
                 err(p, 'This op only supports numbers', value1);
             }
         }
-        var v;
+        let v;
         function execOp(f, allowOther) {
             if (is1stArray || is2ndArray) {
                 if (!is1stArray || !is2ndArray) {
-                    ABeamer.throwErr("Can only add 2 arrays");
+                    ABeamer.throwErr(`Can only add 2 arrays`);
                 }
                 if (value1.arrayValue.length !== value2.arrayValue.length) {
-                    ABeamer.throwErr("Both arrays must have the same value");
+                    ABeamer.throwErr(`Both arrays must have the same value`);
                 }
-                value1.arrayValue.forEach(function (v1, index) {
+                value1.arrayValue.forEach((v1, index) => {
                     value1.arrayValue[index] = f(v1, value2.arrayValue[index]);
                 });
                 value1.paType = 3 /* ExFuncParamType.Array */;
@@ -780,7 +779,7 @@ var ABeamer;
         }
         switch (op.tkType) {
             case 8 /* TokenType.Plus */:
-                if (!execOp(function (a, b) { return a + b; }, true)) {
+                if (!execOp((a, b) => a + b, true)) {
                     value1.sValue =
                         (value1.paType === 1 /* ExFuncParamType.Number */
                             ? value1.numValue.toString() : value1.sValue)
@@ -791,16 +790,16 @@ var ABeamer;
                 }
                 break;
             case 9 /* TokenType.Minus */:
-                execOp(function (a, b) { return a - b; });
+                execOp((a, b) => a - b);
                 break;
             case 10 /* TokenType.Multiply */:
-                execOp(function (a, b) { return a * b; });
+                execOp((a, b) => a * b);
                 break;
             case 11 /* TokenType.Divide */:
-                execOp(function (a, b) { return a / b; });
+                execOp((a, b) => a / b);
                 break;
             case 12 /* TokenType.Mod */:
-                execOp(function (a, b) { return a % b; });
+                execOp((a, b) => a % b);
                 break;
             case 13 /* TokenType.Equal */:
                 NumbersOnly();
@@ -847,9 +846,9 @@ var ABeamer;
      */
     function calcExpr(expr, args) {
         return _stateMachine({
-            args: args,
+            args,
             checkParams: _checkFuncParams,
-            expr: expr,
+            expr,
             pos: 1,
         });
     }
@@ -872,7 +871,7 @@ var ABeamer;
         if (!isExpr(expr)) {
             return defNumber;
         }
-        var exprValue = calcExpr(expr, args);
+        const exprValue = calcExpr(expr, args);
         if (args.isStrict && exprValue !== undefined && typeof exprValue !== 'number') {
             ABeamer.throwI8n(ABeamer.Msgs.MustBeANumber, { p: expr });
         }
@@ -884,7 +883,7 @@ var ABeamer;
      * If isStrict, checks if the return value is textual, if not throws error.
      */
     function calcStr(expr, args) {
-        var exprValue = calcExpr(expr, args);
+        const exprValue = calcExpr(expr, args);
         if (args.isStrict && (exprValue === undefined || typeof exprValue !== 'string')) {
             ABeamer.throwI8n(ABeamer.Msgs.MustBeAString, { p: expr });
         }
@@ -900,7 +899,7 @@ var ABeamer;
         if (!isExpr(expr)) {
             return defString;
         }
-        var exprValue = calcExpr(expr, args);
+        const exprValue = calcExpr(expr, args);
         if (args.isStrict && exprValue !== undefined && typeof exprValue !== 'string') {
             ABeamer.throwI8n(ABeamer.Msgs.MustBeAString, { p: expr });
         }
@@ -914,7 +913,7 @@ var ABeamer;
      */
     function ExprOrNumToNum(param, defValue, args) {
         if (args.isStrict && param !== undefined) {
-            var typeofP = typeof param;
+            const typeofP = typeof param;
             if (typeofP !== 'string' && typeofP !== 'number') {
                 ABeamer.throwI8n(ABeamer.Msgs.MustBeANumberOrExpr, { p: param });
             }
@@ -929,7 +928,7 @@ var ABeamer;
      */
     function ExprOrStrToStr(param, defValue, args) {
         if (args.isStrict && param !== undefined) {
-            var typeofP = typeof param;
+            const typeofP = typeof param;
             if (typeofP !== 'string') {
                 ABeamer.throwI8n(ABeamer.Msgs.MustBeAStringOrExpr, { p: param });
             }

@@ -1,30 +1,21 @@
 #!/usr/bin/env node
 "use strict";
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
 // @TODO: implement inject plugins
-var sysFs = require("fs");
-var sysPath = require("path");
-var sysProcess = require("process");
-var child_process_1 = require("child_process");
-var opts_parser_js_1 = require("../shared/opts-parser.js");
-var fsix_js_1 = require("../shared/vendor/fsix.js");
-var version_js_1 = require("../shared/version.js");
-var consts_js_1 = require("../shared/lib/consts.js");
-var rel_consts_js_1 = require("../shared/rel-consts.js");
-var http_server_ex_js_1 = require("../shared/vendor/http-server-ex.js");
+const sysFs = require("fs");
+const sysPath = require("path");
+const sysProcess = require("process");
+const child_process_1 = require("child_process");
+const opts_parser_js_1 = require("../shared/opts-parser.js");
+const fsix_js_1 = require("../shared/vendor/fsix.js");
+const version_js_1 = require("../shared/version.js");
+const consts_js_1 = require("../shared/lib/consts.js");
+const rel_consts_js_1 = require("../shared/rel-consts.js");
+const http_server_ex_js_1 = require("../shared/vendor/http-server-ex.js");
 // @doc-name Command Line
 /** @module end-user | The lines bellow convey information for the end-user */
 /**
@@ -167,71 +158,107 @@ var Cli;
     // ------------------------------------------------------------------------
     //                               Global Vars
     // ------------------------------------------------------------------------
-    var DO_PRINT_USAGE = 0;
-    var DO_RUN_COMMAND = 1;
-    var DO_EXIT = 2;
-    var DEFAULT_PORT = 9000;
-    var CMD_CHECK = 'check';
-    var CMD_CREATE = 'create';
-    var CMD_SERVE = 'serve';
-    var CMD_RENDER = 'render';
-    var CMD_GIF = 'gif';
-    var CMD_MOVIE = 'movie';
-    var DEFAULT_GIF_NAME = 'story.gif';
-    var DEFAULT_MOVIE_NAME = 'story.mp4';
-    var DEFAULT_BACKGROUND = 'white';
-    var MANUAL_BACKGROUND = 'manual';
-    var logLevel = consts_js_1.Consts.LL_ERROR;
-    var isVerbose = false;
-    var cmdName = '';
-    var cmdParam = '';
-    var outArgs = [];
-    var isWin = sysProcess.platform === 'win32';
-    var argOpts = opts_parser_js_1.OptsParser.argOpts;
+    const DO_PRINT_USAGE = 0;
+    const DO_RUN_COMMAND = 1;
+    const DO_EXIT = 2;
+    const DEFAULT_PORT = 9000;
+    const CMD_CHECK = 'check';
+    const CMD_CREATE = 'create';
+    const CMD_SERVE = 'serve';
+    const CMD_RENDER = 'render';
+    const CMD_GIF = 'gif';
+    const CMD_MOVIE = 'movie';
+    const DEFAULT_GIF_NAME = 'story.gif';
+    const DEFAULT_MOVIE_NAME = 'story.mp4';
+    const DEFAULT_BACKGROUND = 'white';
+    const MANUAL_BACKGROUND = 'manual';
+    let logLevel = consts_js_1.Consts.LL_ERROR;
+    let isVerbose = false;
+    let cmdName = '';
+    let cmdParam = '';
+    const outArgs = [];
+    const isWin = sysProcess.platform === 'win32';
+    const argOpts = opts_parser_js_1.OptsParser.argOpts;
     argOpts['port'] = {
-        param: 'int', desc: "port for serve command. default is ".concat(DEFAULT_PORT),
+        param: 'int', desc: `port for serve command. default is ${DEFAULT_PORT}`,
     };
     argOpts['gif'] = {
-        param: 'string', desc: "output gif filename. default is ".concat(DEFAULT_GIF_NAME),
+        param: 'string', desc: `output gif filename. default is ${DEFAULT_GIF_NAME}`,
     };
     argOpts['movie'] = {
-        param: 'string', desc: "output movie filename. default is ".concat(DEFAULT_MOVIE_NAME),
+        param: 'string', desc: `output movie filename. default is ${DEFAULT_MOVIE_NAME}`,
     };
     argOpts['bkgMovie'] = {
-        param: 'string', desc: "movie filename to be used as background to blend with transparent images",
+        param: 'string', desc: `movie filename to be used as background to blend with transparent images`,
     };
     argOpts['noPlugins'] = {
-        desc: "creates a project without plugins",
+        desc: `creates a project without plugins`,
     };
     argOpts['noTypescript'] = {
-        desc: "creates a project without TypeScript files",
+        desc: `creates a project without TypeScript files`,
     };
     argOpts['listDir'] = {
-        desc: "serve command lists the directory contents if url has the querystring '?dir'",
+        desc: `serve command lists the directory contents if url has the querystring '?dir'`,
     };
     argOpts['loop'] = {
-        param: 'string', desc: "defines how many times a gif will loop. set to -1 if you don't won't it to loop",
+        param: 'string', desc: `defines how many times a gif will loop. set to -1 if you don't won't it to loop`,
     };
     argOpts['moviePre'] = {
-        param: 'array', allowOption: true, desc: "arguments to be passed to ffmpeg before the arguments passed by abeamer",
+        param: 'array', allowOption: true, desc: `arguments to be passed to ffmpeg before the arguments passed by abeamer`,
     };
     argOpts['moviePost'] = {
-        param: 'array', allowOption: true, desc: "arguments to be passed to ffmpeg after the arguments passed by abeamer",
+        param: 'array', allowOption: true, desc: `arguments to be passed to ffmpeg after the arguments passed by abeamer`,
     };
     argOpts['gifPre'] = {
-        param: 'array', allowOption: true, desc: "arguments to be passed to gif generator(convert) before the arguments passed by abeamer",
+        param: 'array', allowOption: true, desc: `arguments to be passed to gif generator(convert) before the arguments passed by abeamer`,
     };
     argOpts['gifPost'] = {
-        param: 'array', allowOption: true, desc: "arguments to be passed to gif generator(convert) after the arguments passed by abeamer",
+        param: 'array', allowOption: true, desc: `arguments to be passed to gif generator(convert) after the arguments passed by abeamer`,
     };
     argOpts['gifBackground'] = {
-        param: 'string', desc: "background color used to replace the alpha channel in gif generation.\nif this is value is set to \"".concat(MANUAL_BACKGROUND, "\" , no parameters relating are passed to the gif generator.\ndefault is ").concat(MANUAL_BACKGROUND),
+        param: 'string', desc: `background color used to replace the alpha channel in gif generation.
+if this is value is set to "${MANUAL_BACKGROUND}" , no parameters relating are passed to the gif generator.
+default is ${MANUAL_BACKGROUND}`,
     };
     // ------------------------------------------------------------------------
     //                               Print Usage
     // ------------------------------------------------------------------------
     function printUsage() {
-        console.log("abeamer [command] [options] [project-name|report-name]\nThe commands are:\n    ".concat(CMD_CHECK, " checks if the all requirements are installed and configured\n    ").concat(CMD_CREATE, " creates a project with project-name\n    ").concat(CMD_SERVE, "  starts a live server. Use it in case you need to load the config from JSON file\n    ").concat(CMD_RENDER, " runs your project in the context of the headless browser.\n    ").concat(CMD_GIF, "    creates an animated gif from the project-name or report-name\n    ").concat(CMD_MOVIE, "  creates a movie from the project-name or report-name\n\n    e.g.\n      echo \"checks if chrome, puppeteer, imagemagick, ffmpeg are installed and configured\"\n      abeamer ").concat(CMD_CHECK, "\n\n      echo \"create folder foo and copy necessary files\"\n      abeamer ").concat(CMD_CREATE, " --width 640 --height 480 --fps 25 foo\n\n      cd foo\n\n      echo \"start a live server\"\n      echo \"only required if you need to load your configuration from json file\"\n      abeamer ").concat(CMD_SERVE, "\n\n      echo \"generates the png files and a report on story-frames folder\"\n      abeamer ").concat(CMD_RENDER, "\n\n      echo \"creates story.gif file on story-frames folder\"\n      abeamer ").concat(CMD_GIF, "\n\n      echo \"creates story.mp4 file on story-frames folder\"\n      abeamer ").concat(CMD_MOVIE, "\n\n      For more information, read:\n      https://abeamer.devtoix.com/docs/latest/end-user/en/site/abeamer-cli/\n\n"));
+        console.log(`abeamer [command] [options] [project-name|report-name]
+The commands are:
+    ${CMD_CHECK} checks if the all requirements are installed and configured
+    ${CMD_CREATE} creates a project with project-name
+    ${CMD_SERVE}  starts a live server. Use it in case you need to load the config from JSON file
+    ${CMD_RENDER} runs your project in the context of the headless browser.
+    ${CMD_GIF}    creates an animated gif from the project-name or report-name
+    ${CMD_MOVIE}  creates a movie from the project-name or report-name
+
+    e.g.
+      echo "checks if chrome, puppeteer, imagemagick, ffmpeg are installed and configured"
+      abeamer ${CMD_CHECK}
+
+      echo "create folder foo and copy necessary files"
+      abeamer ${CMD_CREATE} --width 640 --height 480 --fps 25 foo
+
+      cd foo
+
+      echo "start a live server"
+      echo "only required if you need to load your configuration from json file"
+      abeamer ${CMD_SERVE}
+
+      echo "generates the png files and a report on story-frames folder"
+      abeamer ${CMD_RENDER}
+
+      echo "creates story.gif file on story-frames folder"
+      abeamer ${CMD_GIF}
+
+      echo "creates story.mp4 file on story-frames folder"
+      abeamer ${CMD_MOVIE}
+
+      For more information, read:
+      https://abeamer.devtoix.com/docs/latest/end-user/en/site/abeamer-cli/
+
+`);
         opts_parser_js_1.OptsParser.printUsage();
     }
     // ------------------------------------------------------------------------
@@ -248,8 +275,8 @@ var Cli;
     //                               Parse Arguments
     // ------------------------------------------------------------------------
     function parseArguments() {
-        var args = sysProcess.argv;
-        var argI = 1;
+        const args = sysProcess.argv;
+        let argI = 1;
         // @TODO: Improve this code
         while (args[argI - 1].search(/abeamer/) === -1) {
             argI++;
@@ -262,7 +289,7 @@ var Cli;
             console.log(version_js_1.VERSION);
             return DO_EXIT;
         }
-        return opts_parser_js_1.OptsParser.iterateArgOpts(true, function () { return args[argI++]; }, function (option, value) {
+        return opts_parser_js_1.OptsParser.iterateArgOpts(true, () => args[argI++], (option, value) => {
             switch (option) {
                 case '@param':
                     cmdParam = value;
@@ -275,8 +302,8 @@ var Cli;
                     logLevel = value;
                     isVerbose = logLevel >= consts_js_1.Consts.LL_VERBOSE;
                     if (isVerbose) {
-                        console.log("Args: [".concat(args.join('],['), "]"));
-                        console.log("Current Path: ".concat(sysProcess.cwd()));
+                        console.log(`Args: [${args.join('],[')}]`);
+                        console.log(`Current Path: ${sysProcess.cwd()}`);
                     }
                     break;
             }
@@ -298,21 +325,21 @@ var Cli;
     // ------------------------------------------------------------------------
     function runSpawn(cmdLine, args, callback) {
         if (isVerbose) {
-            console.log("spawn cmdLine: ".concat(cmdLine));
-            console.log("args: ".concat(args.join(' ')));
+            console.log(`spawn cmdLine: ${cmdLine}`);
+            console.log(`args: ${args.join(' ')}`);
         }
-        var ls = (0, child_process_1.spawn)(cmdLine, args);
-        ls.stdout.on('data', function (data) {
+        const ls = (0, child_process_1.spawn)(cmdLine, args);
+        ls.stdout.on('data', (data) => {
             if (logLevel >= consts_js_1.Consts.LL_SILENT) {
                 console.log(data.toString());
             }
         });
-        ls.stderr.on('data', function (data) {
+        ls.stderr.on('data', (data) => {
             if (logLevel >= consts_js_1.Consts.LL_SILENT) {
                 console.error(data.toString());
             }
         });
-        ls.on('close', function (_code) {
+        ls.on('close', (_code) => {
             callback();
         });
     }
@@ -320,11 +347,11 @@ var Cli;
     //                                Command: Check
     // ------------------------------------------------------------------------
     function commandCheck() {
-        var checkCount = 0;
-        var TOTAL_CHECK_COUNT = 5;
+        let checkCount = 0;
+        const TOTAL_CHECK_COUNT = 5;
         function displayCheck(what, passed, failedMsg) {
             checkCount++;
-            console.log("".concat(checkCount, ". Check: ").concat(what, " --> ").concat(passed ? 'OK' : 'Failed'));
+            console.log(`${checkCount}. Check: ${what} --> ${passed ? 'OK' : 'Failed'}`);
             if (!passed) {
                 console.log('  TODO:' + failedMsg + '\n');
             }
@@ -333,15 +360,21 @@ var Cli;
             }
         }
         function addToStartUp(passed, key, value, failedMsg) {
-            displayCheck("".concat(key, "=").concat(value), passed, "\n    ".concat(failedMsg, "\n    Add to the shell startup script:\n").concat(isWin ? 'SET' : 'export', " ").concat(key, "=").concat(value));
+            displayCheck(`${key}=${value}`, passed, `
+    ${failedMsg}
+    Add to the shell startup script:
+${isWin ? 'SET' : 'export'} ${key}=${value}`);
         }
         function checkProgramIsValid(envKey, appName, versionParam, matchRegEx, requireMsg) {
             function displayResult(passed) {
-                displayCheck(appName, passed, "\n    ABeamer requires ".concat(requireMsg, "\n    Either add the executable to the system path, or add to the shell startup script:\n").concat(isWin ? 'set' : 'export', " ").concat(envKey, "=<absolute-path-to-").concat(appName, ">"));
+                displayCheck(appName, passed, `
+    ABeamer requires ${requireMsg}
+    Either add the executable to the system path, or add to the shell startup script:
+${isWin ? 'set' : 'export'} ${envKey}=<absolute-path-to-${appName}>`);
             }
-            var envValue = sysProcess.env[envKey];
+            const envValue = sysProcess.env[envKey];
             if (!envValue) {
-                fsix_js_1.fsix.runExternal("".concat(appName, " ").concat(versionParam), function (_error, stdout, stderr) {
+                fsix_js_1.fsix.runExternal(`${appName} ${versionParam}`, (_error, stdout, stderr) => {
                     displayResult(stderr === '' && stdout.match(matchRegEx));
                 });
             }
@@ -349,9 +382,9 @@ var Cli;
                 displayResult(sysFs.existsSync(envValue));
             }
         }
-        console.log("\nChecking:\n");
+        console.log(`\nChecking:\n`);
         addToStartUp((sysProcess.env['PUPPETEER_SKIP_CHROMIUM_DOWNLOAD'] || '').toLowerCase() === 'true', 'PUPPETEER_SKIP_CHROMIUM_DOWNLOAD', 'TRUE', 'by default puppeteer downloads Chromium which is doesn\'t support many features');
-        var chromeBin = sysProcess.env['CHROME_BIN'];
+        const chromeBin = sysProcess.env['CHROME_BIN'];
         if (!chromeBin) {
             addToStartUp(false, 'CHROME_BIN', '<chrome-path>', 'puppeteer uses by default Chromium, set CHROME_BIN with the absolute path to chrome web browser executable');
         }
@@ -360,85 +393,87 @@ var Cli;
         }
         checkProgramIsValid('FFMPEG_BIN', 'ffmpeg', '-version', /ffmpeg version/, 'ffmpeg to generate movies');
         checkProgramIsValid('IM_CONVERT_BIN', 'convert', '--version', /Version: ImageMagick/, 'ImageMagick convert program to generate gifs');
-        var puppeteer;
+        let puppeteer;
         try {
             puppeteer = require('puppeteer');
         }
         catch (error) {
         }
-        displayCheck('puppeteer', puppeteer, "\n   ABeamer requires puppeteer. Install using the following command\nnpm i puppeteer");
+        displayCheck('puppeteer', puppeteer, `
+   ABeamer requires puppeteer. Install using the following command
+npm i puppeteer`);
     }
     // ------------------------------------------------------------------------
     //                                Command: Create
     // ------------------------------------------------------------------------
     function commandCreate() {
-        var projName = fsix_js_1.fsix.toPosixSlash(cmdParam);
+        const projName = fsix_js_1.fsix.toPosixSlash(cmdParam);
         if (!projName) {
-            throw "Missing project name";
+            throw `Missing project name`;
         }
         if (projName[0] === '-' || projName.search(/[\"\'\?\*\+]/) !== -1
             || projName.search(/^[\.\/]+$/) !== -1) {
-            throw "Error: ".concat(projName, " is not valid project name");
+            throw `Error: ${projName} is not valid project name`;
         }
         if (sysFs.existsSync(projName)) {
-            throw "Error: Project ".concat(projName, " already exists");
+            throw `Error: Project ${projName} already exists`;
         }
         if (projName.includes('/')) {
-            var dirname = sysPath.posix.dirname(projName);
+            const dirname = sysPath.posix.dirname(projName);
             fsix_js_1.fsix.mkdirpSync(dirname);
         }
-        var ROOT_PATH = fsix_js_1.fsix.toPosixSlash(__dirname) + '/..';
-        var TEMPLATE_PATH = ROOT_PATH + '/gallery/hello-world';
-        var LIB_PATH = ROOT_PATH + '/client/lib';
-        var width = argOpts.width.value || rel_consts_js_1.RelConsts.DEFAULT_WIDTH;
-        var height = argOpts.height.value || rel_consts_js_1.RelConsts.DEFAULT_HEIGHT;
-        var fps = argOpts.fps.value || rel_consts_js_1.RelConsts.DEFAULT_FPS;
-        var noPlugins = argOpts['noPlugins'].hasOption;
-        var noTypescript = argOpts['noTypescript'].hasOption;
-        copyTree(TEMPLATE_PATH, projName, function (text, fileName) {
-            var fileBase = sysPath.basename(fileName);
+        const ROOT_PATH = fsix_js_1.fsix.toPosixSlash(__dirname) + '/..';
+        const TEMPLATE_PATH = ROOT_PATH + '/gallery/hello-world';
+        const LIB_PATH = ROOT_PATH + '/client/lib';
+        const width = argOpts.width.value || rel_consts_js_1.RelConsts.DEFAULT_WIDTH;
+        const height = argOpts.height.value || rel_consts_js_1.RelConsts.DEFAULT_HEIGHT;
+        const fps = argOpts.fps.value || rel_consts_js_1.RelConsts.DEFAULT_FPS;
+        const noPlugins = argOpts['noPlugins'].hasOption;
+        const noTypescript = argOpts['noTypescript'].hasOption;
+        copyTree(TEMPLATE_PATH, projName, (text, fileName) => {
+            const fileBase = sysPath.basename(fileName);
             switch (fileBase) {
                 case 'main.js':
                 case 'main.ts':
                     if (noTypescript) {
                         text = text.replace(/^.*sourceMappingURL=.*$/m, '');
                     }
-                    text = text.replace(/createStory\([^)]*\)/, "createStory(/*FPS:*/".concat(fps, ")"));
+                    text = text.replace(/createStory\([^)]*\)/, `createStory(/*FPS:*/${fps})`);
                     break;
                 case 'abeamer.ini':
-                    text = text.replace(/width:\s*\d+/, "width: ".concat(width))
-                        .replace(/height:\s*\d+/, "height: ".concat(height));
+                    text = text.replace(/width:\s*\d+/, `width: ${width}`)
+                        .replace(/height:\s*\d+/, `height: ${height}`);
                     break;
                 case 'main.min.css':
-                    text = text.replace(/.abeamer-scene{width:\d+px;height:\d+px}/, ".abeamer-scene{width:".concat(width, "px;height:").concat(height, "px}"));
+                    text = text.replace(/.abeamer-scene{width:\d+px;height:\d+px}/, `.abeamer-scene{width:${width}px;height:${height}px}`);
                     break;
                 case 'index.html':
                     // inserts the plugins.
                     if (!noPlugins) {
-                        var plugins_1 = fsix_js_1.fsix.loadJsonSync("".concat(ROOT_PATH, "/client/lib/plugins/plugins-list.json"));
-                        var pre_1 = '';
-                        var post_1 = '';
-                        text.replace(/^(.*)js\/abeamer\.min\.js(.*)$/m, function (_app, _pre, _post) {
-                            pre_1 = _pre;
-                            post_1 = _post;
+                        const plugins = fsix_js_1.fsix.loadJsonSync(`${ROOT_PATH}/client/lib/plugins/plugins-list.json`);
+                        let pre = '';
+                        let post = '';
+                        text.replace(/^(.*)js\/abeamer\.min\.js(.*)$/m, (_app, _pre, _post) => {
+                            pre = _pre;
+                            post = _post;
                             return '';
                         });
-                        text = text.replace(/^(.*js\/main\.js.*)$/m, function (all) {
-                            return "\n          <!-- remove the unnecessary plugins -->\n"
-                                + plugins_1.map(function (plugin) { return "".concat(pre_1, "plugins/").concat(plugin, "/").concat(plugin, ".js").concat(post_1); }).join('\n')
+                        text = text.replace(/^(.*js\/main\.js.*)$/m, (all) => {
+                            return `\n          <!-- remove the unnecessary plugins -->\n`
+                                + plugins.map(plugin => `${pre}plugins/${plugin}/${plugin}.js${post}`).join('\n')
                                 + '\n\n' + all;
                         });
                     }
                     break;
             }
             return text;
-        }, function (fileBase) {
+        }, (fileBase) => {
             if (noTypescript && fileBase.match(/(?:js\.map|\.ts|tsconfig\.json)$/)) {
                 return false;
             }
             return true;
         });
-        copyTree(LIB_PATH, "".concat(projName, "/abeamer"), undefined, function (fileBase) {
+        copyTree(LIB_PATH, `${projName}/abeamer`, undefined, (fileBase) => {
             if (noTypescript && fileBase.match(/(?:typings|\.ts)$/)) {
                 return false;
             }
@@ -448,7 +483,13 @@ var Cli;
             return !fileBase.match(/plugins-list\.json$/);
         });
         if (logLevel > consts_js_1.Consts.LL_SILENT) {
-            console.log("Project ".concat(projName, " created.\n- frame-width: ").concat(width, "px\n- frame-height: ").concat(height, "px\n- fps: ").concat(fps, "\nTo modify the the frame dimensions, edit [abeamer.ini] and recompile the [css/main.scss] file.\nTo modify the fps, edit the [js/main.ts] file.\n"));
+            console.log(`Project ${projName} created.
+- frame-width: ${width}px
+- frame-height: ${height}px
+- fps: ${fps}
+To modify the the frame dimensions, edit [abeamer.ini] and recompile the [css/main.scss] file.
+To modify the fps, edit the [js/main.ts] file.
+`);
         }
     }
     /**
@@ -458,21 +499,21 @@ var Cli;
      */
     function copyTree(srcPath, dstPath, onCopyText, allowCopy) {
         if (isVerbose) {
-            console.log("Copying Directory ".concat(srcPath, " to ").concat(dstPath));
+            console.log(`Copying Directory ${srcPath} to ${dstPath}`);
         }
         fsix_js_1.fsix.mkdirpSync(dstPath);
-        sysFs.readdirSync(srcPath).forEach(function (fileBase) {
+        sysFs.readdirSync(srcPath).forEach(fileBase => {
             if (allowCopy && !allowCopy(fileBase)) {
                 return;
             }
-            var srcFileName = "".concat(srcPath, "/").concat(fileBase);
-            var dstFileName = "".concat(dstPath, "/").concat(fileBase);
-            var stats = sysFs.statSync(srcFileName);
+            const srcFileName = `${srcPath}/${fileBase}`;
+            const dstFileName = `${dstPath}/${fileBase}`;
+            const stats = sysFs.statSync(srcFileName);
             if (stats.isFile()) {
                 if (isVerbose) {
-                    console.log("Copying ".concat(srcFileName, " to ").concat(dstFileName));
+                    console.log(`Copying ${srcFileName} to ${dstFileName}`);
                 }
-                var data = fsix_js_1.fsix.readUtf8Sync(srcFileName);
+                let data = fsix_js_1.fsix.readUtf8Sync(srcFileName);
                 if (onCopyText) {
                     data = onCopyText(data, fileBase);
                 }
@@ -487,18 +528,18 @@ var Cli;
     //                               Serve
     // ------------------------------------------------------------------------
     function commandServe() {
-        var hasMarked = sysFs.existsSync(sysPath.posix.join(__dirname, '../node_modules/marked/bin/marked'));
-        var hasHighlightJs = sysFs.existsSync(sysPath.posix.join(__dirname, '../node_modules/highlight.js/lib/index.js'));
-        var port = argOpts['port'].value || DEFAULT_PORT;
-        var allowDirListing = argOpts['listDir'].hasOption;
+        const hasMarked = sysFs.existsSync(sysPath.posix.join(__dirname, '../node_modules/marked/bin/marked'));
+        const hasHighlightJs = sysFs.existsSync(sysPath.posix.join(__dirname, '../node_modules/highlight.js/lib/index.js'));
+        const port = argOpts['port'].value || DEFAULT_PORT;
+        const allowDirListing = argOpts['listDir'].hasOption;
         new http_server_ex_js_1.HttpServerEx.ServerEx(port, isVerbose, 'EXIT_SERVER', allowDirListing, hasMarked, hasHighlightJs).start();
         if (logLevel >= consts_js_1.Consts.LL_SILENT) {
             if (hasMarked) {
-                console.log("Using markdown compiler");
+                console.log(`Using markdown compiler`);
             }
-            console.log("Serving on http://localhost:".concat(port, "/"));
+            console.log(`Serving on http://localhost:${port}/`);
             if (allowDirListing) {
-                console.log("Directory listing on http://localhost:".concat(port, "/?dir"));
+                console.log(`Directory listing on http://localhost:${port}/?dir`);
             }
         }
     }
@@ -506,10 +547,10 @@ var Cli;
     //                                Command: Render
     // ------------------------------------------------------------------------
     function commandRender() {
-        var serverName = (opts_parser_js_1.OptsParser.argOpts.server.value
+        const serverName = (opts_parser_js_1.OptsParser.argOpts.server.value
             || rel_consts_js_1.RelConsts.DEFAULT_SERVER).toLowerCase();
         if (rel_consts_js_1.RelConsts.SUPPORTED_SERVERS.indexOf(serverName) === -1) {
-            throw "Unknown ".concat(serverName);
+            throw `Unknown ${serverName}`;
         }
         // if use hasn't provided the folder name nor config file
         if (!cmdParam && !argOpts.config.value && !argOpts.url.value) {
@@ -517,37 +558,37 @@ var Cli;
         }
         // adding this suffix, it solves the conflict of slimerjs `--config`.
         // the `opt-parser.ts` will remove this extra suffix during parsing the name
-        var configArgIndex = outArgs.indexOf('--config');
+        const configArgIndex = outArgs.indexOf('--config');
         if (configArgIndex !== -1) {
             outArgs[configArgIndex] = outArgs[configArgIndex] + '__2';
         }
-        outArgs.splice(0, 0, "".concat(fsix_js_1.fsix.toPosixSlash(__dirname), "/../server/server-agent-").concat(serverName, ".js"));
-        var cmdLine = argOpts.serverExec.value ||
+        outArgs.splice(0, 0, `${fsix_js_1.fsix.toPosixSlash(__dirname)}/../server/server-agent-${serverName}.js`);
+        const cmdLine = argOpts.serverExec.value ||
             (rel_consts_js_1.RelConsts.NODE_SERVERS.indexOf(serverName) === -1 ? serverName : 'node');
-        runSpawn(cmdLine, outArgs, function () {
+        runSpawn(cmdLine, outArgs, () => {
             if (logLevel > consts_js_1.Consts.LL_SILENT) {
-                console.log("Server finished");
+                console.log(`Server finished`);
             }
         });
     }
     function getReport() {
-        var reportFileName = fsix_js_1.fsix.toPosixSlash(cmdParam || '.');
-        var realReportFileName = sysPath.posix.join(reportFileName, 'story-frames/frame-report.json');
+        let reportFileName = fsix_js_1.fsix.toPosixSlash(cmdParam || '.');
+        const realReportFileName = sysPath.posix.join(reportFileName, 'story-frames/frame-report.json');
         // in case the user param is the project folder
         if (sysFs.existsSync(realReportFileName)) {
             reportFileName = realReportFileName;
         }
         if (isVerbose) {
-            console.log("reportFileName: ".concat(reportFileName));
-            console.log("realReportFileName: ".concat(realReportFileName));
+            console.log(`reportFileName: ${reportFileName}`);
+            console.log(`realReportFileName: ${realReportFileName}`);
         }
         if (!sysFs.existsSync(reportFileName)) {
-            throw "Report file ".concat(reportFileName, " doesn't exist");
+            throw `Report file ${reportFileName} doesn't exist`;
         }
-        var report = fsix_js_1.fsix.loadJsonSync(reportFileName);
+        const report = fsix_js_1.fsix.loadJsonSync(reportFileName);
         report.dirname = sysPath.dirname(reportFileName);
         if (isVerbose) {
-            console.log("report path: ".concat(report.dirname));
+            console.log(`report path: ${report.dirname}`);
         }
         // handle relative paths
         if (report.framespattern.substr(0, 2) === './') {
@@ -559,38 +600,38 @@ var Cli;
     //                                Command: Gif
     // ------------------------------------------------------------------------
     function commandGif() {
-        var report = getReport();
-        var gifFileName = argOpts['gif'].value
-            || "".concat(report.dirname, "/").concat(DEFAULT_GIF_NAME);
-        var toOptimize = true;
-        var cmdLine = sysProcess.env['IM_CONVERT_BIN'] || 'convert';
-        var args = ['-delay', "1x".concat(report.fps)];
-        var scale = opts_parser_js_1.OptsParser.computeScale(report.width, report.height);
+        const report = getReport();
+        const gifFileName = argOpts['gif'].value
+            || `${report.dirname}/${DEFAULT_GIF_NAME}`;
+        const toOptimize = true;
+        const cmdLine = sysProcess.env['IM_CONVERT_BIN'] || 'convert';
+        let args = ['-delay', `1x${report.fps}`];
+        const scale = opts_parser_js_1.OptsParser.computeScale(report.width, report.height);
         if (scale) {
             args.push('-scale', scale.join('x'));
         }
-        var loop = argOpts['loop'].value || '0';
+        const loop = argOpts['loop'].value || '0';
         args.push('-loop', loop);
         if (toOptimize) {
             args.push('-strip', '-layers', 'optimize');
-            var gifBackground = argOpts['gifBackground'].value || DEFAULT_BACKGROUND;
+            const gifBackground = argOpts['gifBackground'].value || DEFAULT_BACKGROUND;
             if (gifBackground !== MANUAL_BACKGROUND) {
                 args.push('-background', gifBackground, '-alpha', 'remove');
             }
         }
         args.push(report.framespattern.replace(/\%\d*d/, '*'), gifFileName);
         if (argOpts['gifPre'].multipleValue) {
-            args = __spreadArray(__spreadArray([], argOpts['gifPre'].multipleValue, true), args, true);
+            args = [...argOpts['gifPre'].multipleValue, ...args];
         }
         if (argOpts['gifPost'].multipleValue) {
-            args = __spreadArray(__spreadArray([], args, true), argOpts['gifPost'].multipleValue, true);
+            args = [...args, ...argOpts['gifPost'].multipleValue];
         }
         if (isVerbose) {
-            console.log("\n".concat(cmdLine, " ").concat(args.join(' '), "\n"));
+            console.log(`\n${cmdLine} ${args.join(' ')}\n`);
         }
-        runSpawn(cmdLine, args, function () {
+        runSpawn(cmdLine, args, () => {
             if (logLevel > consts_js_1.Consts.LL_SILENT) {
-                console.log("Created gif ".concat(gifFileName));
+                console.log(`Created gif ${gifFileName}`);
             }
         });
     }
@@ -598,30 +639,30 @@ var Cli;
     //                                Command: Movie
     // ------------------------------------------------------------------------
     function commandMovie() {
-        var report = getReport();
-        var movieFileName = argOpts['movie'].value
-            || "".concat(report.dirname, "/").concat(DEFAULT_MOVIE_NAME);
-        var bkgMovieFileName = argOpts['bkgMovie'].value;
-        var cmdLine = sysProcess.env['FFMPEG_BIN'] || 'ffmpeg';
-        var scale = opts_parser_js_1.OptsParser.computeScale(report.width, report.height);
-        var args = [
+        const report = getReport();
+        const movieFileName = argOpts['movie'].value
+            || `${report.dirname}/${DEFAULT_MOVIE_NAME}`;
+        const bkgMovieFileName = argOpts['bkgMovie'].value;
+        const cmdLine = sysProcess.env['FFMPEG_BIN'] || 'ffmpeg';
+        const scale = opts_parser_js_1.OptsParser.computeScale(report.width, report.height);
+        let args = [
             '-r', report.fps.toString(),
             '-f', 'image2',
         ];
         if (!scale) {
-            args.push('-s', "".concat(report.width, "x").concat(report.height));
+            args.push('-s', `${report.width}x${report.height}`);
         }
         args.push('-i', report.framespattern, '-y');
         if (scale) {
-            args.push('-vf', "scale=".concat(scale.join('x')));
+            args.push('-vf', `scale=${scale.join('x')}`);
         }
         /* spell-checker: disable */
         if (bkgMovieFileName) {
-            args.push('-vf', "movie=".concat(bkgMovieFileName, ",hue=s=1[bg];[in]setpts=PTS,scale=-1:-1")
-                + ",pad=iw:ih:0:0:color=yellow[m]; [bg][m]overlay=shortest=1:x=0:y=0");
+            args.push('-vf', `movie=${bkgMovieFileName},hue=s=1[bg];[in]setpts=PTS,scale=-1:-1`
+                + `,pad=iw:ih:0:0:color=yellow[m]; [bg][m]overlay=shortest=1:x=0:y=0`);
         }
-        var ext = sysPath.extname(movieFileName);
-        var codec = '';
+        const ext = sysPath.extname(movieFileName);
+        let codec = '';
         switch (ext) {
             case '.mp4':
                 codec = 'libx264';
@@ -635,18 +676,18 @@ var Cli;
         }
         args.push(movieFileName);
         if (argOpts['moviePre'].multipleValue) {
-            args = __spreadArray(__spreadArray([], argOpts['moviePre'].multipleValue, true), args, true);
+            args = [...argOpts['moviePre'].multipleValue, ...args];
         }
         if (argOpts['moviePost'].multipleValue) {
-            args = __spreadArray(__spreadArray([], args, true), argOpts['moviePost'].multipleValue, true);
+            args = [...args, ...argOpts['moviePost'].multipleValue];
         }
         if (isVerbose) {
-            console.log("\next: ".concat(ext, "\n"));
-            console.log("cmdLine:[".concat(cmdLine, " ").concat(args.join(' '), "]\n\n"));
+            console.log(`\next: ${ext}\n`);
+            console.log(`cmdLine:[${cmdLine} ${args.join(' ')}]\n\n`);
         }
-        runSpawn(cmdLine, args, function () {
+        runSpawn(cmdLine, args, () => {
             if (logLevel > consts_js_1.Consts.LL_SILENT) {
-                console.log("Created movie ".concat(movieFileName));
+                console.log(`Created movie ${movieFileName}`);
             }
         });
     }
@@ -660,7 +701,7 @@ var Cli;
                 break;
             case DO_RUN_COMMAND:
                 if (isVerbose) {
-                    console.log("Run Command: ".concat(cmdName));
+                    console.log(`Run Command: ${cmdName}`);
                 }
                 switch (cmdName) {
                     case CMD_CHECK:
@@ -682,7 +723,7 @@ var Cli;
                         commandMovie();
                         break;
                     default:
-                        throw "Unknown command ".concat(cmdName);
+                        throw `Unknown command ${cmdName}`;
                 }
                 break;
         }

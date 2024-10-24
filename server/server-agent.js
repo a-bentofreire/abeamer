@@ -9,13 +9,13 @@ exports.ServerAgent = void 0;
 /** @module internal | This module is to be read only by developers */
 // @WARN: Don't import any nodejs modules nor
 // any other modules depending on node modules since it can be called by phantomjs
-var version_js_1 = require("../shared/version.js");
-var rel_consts_js_1 = require("../shared/rel-consts.js");
-var consts_js_1 = require("../shared/lib/consts.js");
-var opts_parser_js_1 = require("../shared/opts-parser.js");
-var server_consts_js_1 = require("../shared/lib/server-consts.js");
-var sprintf_js_1 = require("../shared/lib/sprintf.js");
-var plugin_injector_js_1 = require("./plugin-injector.js");
+const version_js_1 = require("../shared/version.js");
+const rel_consts_js_1 = require("../shared/rel-consts.js");
+const consts_js_1 = require("../shared/lib/consts.js");
+const opts_parser_js_1 = require("../shared/opts-parser.js");
+const server_consts_js_1 = require("../shared/lib/server-consts.js");
+const sprintf_js_1 = require("../shared/lib/sprintf.js");
+const plugin_injector_js_1 = require("./plugin-injector.js");
 /**
  * ## Description
  *
@@ -25,14 +25,14 @@ var plugin_injector_js_1 = require("./plugin-injector.js");
  */
 var ServerAgent;
 (function (ServerAgent) {
-    var sc = server_consts_js_1.ServerConsts._SRV_CNT;
-    var sprintf = sprintf_js_1.Sprintf.sprintf;
+    const sc = server_consts_js_1.ServerConsts._SRV_CNT;
+    const sprintf = sprintf_js_1.Sprintf.sprintf;
     // ------------------------------------------------------------------------
     //                               Consts
     // ------------------------------------------------------------------------
-    var DO_PRINT_USAGE = 0;
-    var DO_RUN_SERVER = 1;
-    var DO_EXIT = 2;
+    const DO_PRINT_USAGE = 0;
+    const DO_RUN_SERVER = 1;
+    const DO_EXIT = 2;
     // ------------------------------------------------------------------------
     //                               Tools
     // ------------------------------------------------------------------------
@@ -44,23 +44,22 @@ var ServerAgent;
      *  PhantomJs/SlimerJS don't support nodejs filesystem
      */
     function dirName(filename) {
-        var lastSlash = filename.lastIndexOf('/');
+        const lastSlash = filename.lastIndexOf('/');
         return lastSlash === -1 ? '.' : filename.substr(0, lastSlash);
     }
     // this function is credited to @Flygenring
     // https://stackoverflow.com/questions/10830357/javascript-toisostring-ignores-timezone-offset
     function getLocalISOTimeDate() {
-        var tzOffset = (new Date()).getTimezoneOffset() * 60000; // offset in milliseconds
+        const tzOffset = (new Date()).getTimezoneOffset() * 60000; // offset in milliseconds
         return (new Date(Date.now() - tzOffset)).toISOString().substr(0, 19).replace('T', ' ');
     }
     // ------------------------------------------------------------------------
     //                               Server
     // ------------------------------------------------------------------------
-    var toExitOnError = true;
-    var isFirstFrame = true;
-    var BaseServer = /** @class */ (function () {
-        function BaseServer(serverName, args, platform, cwd, existsSync, isDirectory, unlinkSync, mkdirpSync, readUtf8Sync, writeFileSync, posixPathJoin) {
-            var _this = this;
+    const toExitOnError = true;
+    let isFirstFrame = true;
+    class BaseServer {
+        constructor(serverName, args, platform, cwd, existsSync, isDirectory, unlinkSync, mkdirpSync, readUtf8Sync, writeFileSync, posixPathJoin) {
             this.serverName = serverName;
             this.args = args;
             this.platform = platform;
@@ -97,66 +96,61 @@ var ServerAgent;
             this.frameNr = 0;
             this.frameCount = 0;
             this.configFileMode = false;
-            this.getViewport = function () {
-                var viewport = {
-                    width: _this.width,
-                    height: _this.height,
+            this.getViewport = () => {
+                const viewport = {
+                    width: this.width,
+                    height: this.height,
                 };
-                if (_this.isVerbose) {
-                    console.log("width: ".concat(viewport.width, ", height: ").concat(viewport.height));
+                if (this.isVerbose) {
+                    console.log(`width: ${viewport.width}, height: ${viewport.height}`);
                 }
                 return viewport;
             };
         }
-        BaseServer.prototype.exitServer = function (_retValue) {
-            if (_retValue === void 0) { _retValue = 0; }
+        exitServer(_retValue = 0) {
             if (this.logLevel) {
-                console.log("Terminating Server");
+                console.log(`Terminating Server`);
             }
-        };
-        BaseServer.prototype.getSetupVars = function () {
-            var _this = this;
+        }
+        getSetupVars() {
             return this.argsVars ?
-                (Object.keys(this.argsVars).map(function (key) {
-                    return sc.RENDER_VAR_SUFFIX + encodeURIComponent("".concat(key, "=").concat(_this.argsVars[key]));
-                }).join('&') + '&') : '';
-        };
-        BaseServer.prototype.getPageUrl = function () {
-            var pageUrl = this.url
+                (Object.keys(this.argsVars).map(key => sc.RENDER_VAR_SUFFIX + encodeURIComponent(`${key}=${this.argsVars[key]}`)).join('&') + '&') : '';
+        }
+        getPageUrl() {
+            let pageUrl = this.url
                 + (this.url.indexOf('?') === -1 ? '?' : '&')
                 + sc.LOG_LEVEL_SUFFIX + this.logLevel + '&'
-                + (this.hasArgWidth ? "".concat(sc.WIDTH_SUFFIX).concat(this.width, "&") : '')
-                + (this.hasArgHeight ? "".concat(sc.HEIGHT_SUFFIX).concat(this.height, "&") : '')
+                + (this.hasArgWidth ? `${sc.WIDTH_SUFFIX}${this.width}&` : '')
+                + (this.hasArgHeight ? `${sc.HEIGHT_SUFFIX}${this.height}&` : '')
                 + this.getSetupVars()
                 + sc.TELEPORT_SUFFIX + this.toTeleport.toString();
             // since this is an fundamental information it should always display
             // even not on verbose mode.
             if (this.logLevel !== 0) {
-                console.log("serverless pageUrl: [".concat(pageUrl, "]"));
+                console.log(`serverless pageUrl: [${pageUrl}]`);
             }
             // adds the server in separated so it can have a serverless link
             pageUrl += '&' + sc.SERVER_SUFFIX + this.serverName;
             // since this is an fundamental information it should always display
             // even not on verbose mode.
             if (this.logLevel !== 0) {
-                console.log("pageUrl: [".concat(pageUrl, "]"));
+                console.log(`pageUrl: [${pageUrl}]`);
             }
             return pageUrl;
-        };
+        }
         /** .json configuration parser */
-        BaseServer.prototype.parseJsonConfig = function (args, cfg, configFileName, argI) {
-            var _this = this;
-            var cfgConfigData = cfg['config'];
+        parseJsonConfig(args, cfg, configFileName, argI) {
+            const cfgConfigData = cfg['config'];
             if (cfgConfigData) {
-                var pCfg_1 = cfgConfigData['abeamer'];
-                if (pCfg_1) {
+                const pCfg = cfgConfigData['abeamer'];
+                if (pCfg) {
                     args.splice(0, argI + 1);
                     argI = 0;
                     this.projDir = this.projDir || dirName(configFileName);
-                    Object.keys(pCfg_1).forEach(function (key) {
+                    Object.keys(pCfg).forEach(key => {
                         switch (key) {
                             case 'plugins':
-                                plugin_injector_js_1.PluginInjector.plugins = pCfg_1[key] || [];
+                                plugin_injector_js_1.PluginInjector.plugins = pCfg[key] || [];
                                 break;
                             case 'file':
                             case 'report':
@@ -167,46 +161,43 @@ var ServerAgent;
                             // since these values can be part of a story teleported from the user.
                             case 'height':
                             case 'width':
-                                args.push('--' + key, pCfg_1[key].toString().
-                                    replace('__PROJDIR__', _this.projDir));
+                                args.push('--' + key, pCfg[key].toString().
+                                    replace('__PROJDIR__', this.projDir));
                                 break;
                         }
                     });
                 }
             }
             return argI;
-        };
+        }
         /** .ini configuration parser */
-        BaseServer.prototype.parseIniCfgContent = function (cfgText) {
-            var _this = this;
-            var cfg = {};
+        parseIniCfgContent(cfgText) {
+            const cfg = {};
             // very basic .ini variables parser
             // @TODO: place this code in a external module so it can be used by the library and the cli
-            cfgText.split(/\n/).forEach(function (line) {
-                return line.replace(/^\s*[\$@]abeamer-([\w+-]+)\s*:\s*"?([^\n"]+)"?\s*;\s*$/, function (_all, p1, p2) {
-                    if (_this.isVerbose) {
-                        console.log("config: ".concat(p1, "=[").concat(p2, "]"));
-                    }
-                    cfg[p1] = p2;
-                    return '';
-                });
-            });
+            cfgText.split(/\n/).forEach(line => line.replace(/^\s*[\$@]abeamer-([\w+-]+)\s*:\s*"?([^\n"]+)"?\s*;\s*$/, (_all, p1, p2) => {
+                if (this.isVerbose) {
+                    console.log(`config: ${p1}=[${p2}]`);
+                }
+                cfg[p1] = p2;
+                return '';
+            }));
             return cfg;
-        };
+        }
         /** Parses config */
-        BaseServer.prototype.parseConfig = function (args, cfgText, configFileName, argI) {
+        parseConfig(args, cfgText, configFileName, argI) {
             return this.parseJsonConfig(args, configFileName.match(/\.json$/)
                 ? JSON.parse(cfgText)
                 : { config: { abeamer: this.parseIniCfgContent(cfgText) } }, configFileName, argI);
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Parse Arguments
         // ------------------------------------------------------------------------
-        BaseServer.prototype.parseArguments = function (args) {
-            var argI = 1;
-            var self = this;
+        parseArguments(args) {
+            let argI = 1;
+            const self = this;
             function getConfigFileName(value) {
-                var configFileName = toPosixSlash(value);
+                let configFileName = toPosixSlash(value);
                 if (!configFileName) {
                     return '';
                 }
@@ -214,7 +205,7 @@ var ServerAgent;
                     configFileName = self.posixPathJoin(configFileName, 'abeamer.ini');
                 }
                 if (!self.existsSync(configFileName)) {
-                    throw "Config file ".concat(configFileName, " doesn't exists");
+                    throw `Config file ${configFileName} doesn't exists`;
                 }
                 return configFileName;
             }
@@ -222,7 +213,7 @@ var ServerAgent;
                 self.framesPattern = toPosixSlash(framesPattern || opts_parser_js_1.OptsParser.DEFAULT_OUT_PATTERN)
                     .replace('__PROJDIR__', self.projDir);
                 if (self.isVerbose && self.toGenFrames) {
-                    console.log("framesPattern: ".concat(self.framesPattern));
+                    console.log(`framesPattern: ${self.framesPattern}`);
                 }
             }
             function parseOption(option, value, multipleValue) {
@@ -237,27 +228,27 @@ var ServerAgent;
                         self.logLevel = value;
                         self.isVerbose = self.logLevel >= consts_js_1.Consts.LL_VERBOSE;
                         if (self.isVerbose) {
-                            console.log("Args: [".concat(args.join('],['), "]"));
+                            console.log(`Args: [${args.join('],[')}]`);
                         }
                         break;
                     case 'url':
                         self.url = value;
                         if (self.isVerbose) {
-                            console.log("url: ".concat(self.url));
+                            console.log(`url: ${self.url}`);
                         }
                         break;
                     case 'var':
                         self.argsVars = multipleValue;
                         if (self.isVerbose) {
-                            console.log("var: ".concat(multipleValue));
+                            console.log(`var: ${multipleValue}`);
                         }
                         break;
                     case 'file':
-                        var filename = toPosixSlash(value);
+                        const filename = toPosixSlash(value);
                         // rootPath is added at the beginning to able to generate report
                         // without self information due security reasons and provide a sharable report
-                        var needsRootPath = false;
-                        var isWin = self.platform.indexOf('win') !== -1;
+                        let needsRootPath = false;
+                        const isWin = self.platform.indexOf('win') !== -1;
                         if (isWin) {
                             needsRootPath = filename[1] !== ':' && filename[2] !== '/';
                         }
@@ -272,13 +263,13 @@ var ServerAgent;
                             setFramesPattern();
                         }
                         if (!self.existsSync(filename)) {
-                            throw "Page File ".concat(filename, " doesn't exists");
+                            throw `Page File ${filename} doesn't exists`;
                         }
                         if (!self.url) {
                             self.url = 'file://' + (isWin ? '/' : '') +
                                 encodeURI(self.rootPath + filename);
                             if (self.isVerbose) {
-                                console.log("final url: ".concat(self.url));
+                                console.log(`final url: ${self.url}`);
                             }
                         }
                         break;
@@ -290,14 +281,14 @@ var ServerAgent;
                             self.width = value;
                             self.hasArgWidth = !self.configFileMode;
                             if (self.isVerbose) {
-                                console.log("width: ".concat(self.width));
+                                console.log(`width: ${self.width}`);
                             }
                         }
                         break;
                     case 'maxWidth':
                         self.maxWidth = value;
                         if (self.isVerbose) {
-                            console.log("maxWidth: ".concat(self.maxWidth));
+                            console.log(`maxWidth: ${self.maxWidth}`);
                         }
                         break;
                     case 'height':
@@ -305,44 +296,44 @@ var ServerAgent;
                             self.height = value;
                             self.hasArgHeight = !self.configFileMode;
                             if (self.isVerbose) {
-                                console.log("height: ".concat(self.height));
+                                console.log(`height: ${self.height}`);
                             }
                         }
                         break;
                     case 'maxHeight':
                         self.maxHeight = value;
                         if (self.isVerbose) {
-                            console.log("maxHeight: ".concat(self.maxHeight));
+                            console.log(`maxHeight: ${self.maxHeight}`);
                         }
                         break;
                     case 'fps':
                         self.fps = value;
                         if (self.isVerbose) {
-                            console.log("fps: ".concat(self.fps));
+                            console.log(`fps: ${self.fps}`);
                         }
                         break;
                     case 'maxFps':
                         self.maxFps = value;
                         if (self.isVerbose) {
-                            console.log("maxFps: ".concat(self.maxFps));
+                            console.log(`maxFps: ${self.maxFps}`);
                         }
                         break;
                     case 'maxFrameCount':
                         self.maxFrameCount = value;
                         if (self.isVerbose) {
-                            console.log("maxFrameCount: ".concat(self.maxFrameCount));
+                            console.log(`maxFrameCount: ${self.maxFrameCount}`);
                         }
                         break;
                     case 'timeout':
                         self.timeout = value;
                         if (self.isVerbose) {
-                            console.log("timeout: ".concat(self.timeout));
+                            console.log(`timeout: ${self.timeout}`);
                         }
                         break;
                     case 'progress':
                         self.progress = value;
                         if (self.isVerbose) {
-                            console.log("progress: ".concat(self.progress));
+                            console.log(`progress: ${self.progress}`);
                         }
                         break;
                     case 'allowedPlugins':
@@ -351,7 +342,7 @@ var ServerAgent;
                     case 'injectPage':
                         plugin_injector_js_1.PluginInjector.injectPage = value;
                         if (self.isVerbose) {
-                            console.log("injectPage: ".concat(value));
+                            console.log(`injectPage: ${value}`);
                         }
                         break;
                     case 'teleport':
@@ -370,26 +361,26 @@ var ServerAgent;
                         self.serverName = value;
                         break;
                     case 'config':
-                        var configFileName = getConfigFileName(value);
+                        const configFileName = getConfigFileName(value);
                         if (!configFileName) {
                             return 0;
                         }
                         if (self.isVerbose) {
-                            console.log("Loading Config ".concat(configFileName));
+                            console.log(`Loading Config ${configFileName}`);
                         }
                         if (!self.existsSync(configFileName)) {
-                            throw "Config ".concat(configFileName, " doesn't exists");
+                            throw `Config ${configFileName} doesn't exists`;
                         }
                         self.configPath = dirName(configFileName) + '/';
                         // @TODO: Investigate how to make an async version of load the config
-                        var configFile = self.readUtf8Sync(configFileName);
-                        var injectArgs_1 = [];
-                        var injectArgI_1 = 0;
-                        self.parseConfig(injectArgs_1, configFile, configFileName, argI);
+                        const configFile = self.readUtf8Sync(configFileName);
+                        const injectArgs = [];
+                        let injectArgI = 0;
+                        self.parseConfig(injectArgs, configFile, configFileName, argI);
                         // injects the config as args to the main loop
                         self.configFileMode = true;
                         try {
-                            opts_parser_js_1.OptsParser.iterateArgOpts(true, function () { return injectArgs_1[injectArgI_1++]; }, parseOption);
+                            opts_parser_js_1.OptsParser.iterateArgOpts(true, () => injectArgs[injectArgI++], parseOption);
                         }
                         finally {
                             self.configFileMode = false;
@@ -397,7 +388,7 @@ var ServerAgent;
                         break;
                 }
             }
-            var res = opts_parser_js_1.OptsParser.iterateArgOpts(true, function () { return args[argI++]; }, parseOption);
+            const res = opts_parser_js_1.OptsParser.iterateArgOpts(true, () => args[argI++], parseOption);
             if (res) {
                 return res;
             }
@@ -411,20 +402,19 @@ var ServerAgent;
                 return (this.framesPattern ? DO_RUN_SERVER : DO_PRINT_USAGE);
             }
             return DO_PRINT_USAGE;
-        };
+        }
         /**
          * Parse Arguments is async to later provide async config loading
          * @param callback
          */
-        BaseServer.prototype.parseArgumentsAsync = function (callback) {
+        parseArgumentsAsync(callback) {
             callback(this.parseArguments(this.args));
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Message Handler
         // ------------------------------------------------------------------------
-        BaseServer.prototype.handleMessage = function (msg, sendClientMsg, takeScreenshot) {
-            var _this = this;
-            var self = this;
+        handleMessage(msg, sendClientMsg, takeScreenshot) {
+            const self = this;
             function renderDone() {
                 self.frameNr++;
                 if (self.frameNr >= self.frameCount) {
@@ -435,43 +425,43 @@ var ServerAgent;
             if (msg.indexOf(sc.MESSAGE_PREFIX) === 0) {
                 try {
                     msg = msg.substr(sc.MESSAGE_PREFIX.length);
-                    var parts = msg.split(sc.CMD_VALUE_SEP);
-                    var cmd = parts[0];
-                    var value = parts.length === 2 ? parts[1] : '';
+                    const parts = msg.split(sc.CMD_VALUE_SEP);
+                    const cmd = parts[0];
+                    const value = parts.length === 2 ? parts[1] : '';
                     if (this.isVerbose) {
-                        console.log("Cmd: ".concat(cmd, ", Value: ").concat(value));
+                        console.log(`Cmd: ${cmd}, Value: ${value}`);
                     }
                     switch (cmd) {
                         case sc.MSG_READY:
                             sendClientMsg(sc.MSG_SERVER_READY);
                             break;
                         case sc.MSG_RENDER:
-                            var frameFileName_1 = sprintf(this.framesPattern, this.frameNr);
+                            const frameFileName = sprintf(this.framesPattern, this.frameNr);
                             if (this.toGenFrames) {
                                 // creates output tree if doesn't exists
                                 if (isFirstFrame) {
                                     isFirstFrame = false;
-                                    var matches = frameFileName_1.match(/^(.+)\/([^/]+)$/);
+                                    const matches = frameFileName.match(/^(.+)\/([^/]+)$/);
                                     if (matches) {
-                                        var framesFolder = matches[1];
+                                        const framesFolder = matches[1];
                                         if (!this.existsSync(framesFolder)) {
                                             if (this.isVerbose) {
-                                                console.log("Creating Folder: ".concat(framesFolder));
+                                                console.log(`Creating Folder: ${framesFolder}`);
                                             }
                                             else if (this.logLevel > consts_js_1.Consts.LL_SILENT) {
-                                                console.log("Creating Story frames on: ".concat(framesFolder));
+                                                console.log(`Creating Story frames on: ${framesFolder}`);
                                             }
                                             this.mkdirpSync(framesFolder);
                                         }
                                     }
                                 }
-                                takeScreenshot(this.rootPath + frameFileName_1, function () {
-                                    if (_this.isVerbose) {
-                                        console.log("Saved: ".concat(frameFileName_1));
+                                takeScreenshot(this.rootPath + frameFileName, () => {
+                                    if (this.isVerbose) {
+                                        console.log(`Saved: ${frameFileName}`);
                                     }
-                                    if (_this.progress > 0 && _this.frameNr % _this.progress === 0) {
-                                        console.log(new Array(2 + (_this.frameNr / _this.progress))
-                                            .join('▒') + " ".concat(_this.frameNr, " frames"));
+                                    if (this.progress > 0 && this.frameNr % this.progress === 0) {
+                                        console.log(new Array(2 + (this.frameNr / this.progress))
+                                            .join('▒') + ` ${this.frameNr} frames`);
                                     }
                                     renderDone();
                                 });
@@ -486,21 +476,21 @@ var ServerAgent;
                         case sc.MSG_SET_FRAME_NR:
                             this.frameNr = parseInt(value);
                             if (this.isVerbose) {
-                                console.log("frame-nr: ".concat(this.frameNr));
+                                console.log(`frame-nr: ${this.frameNr}`);
                             }
-                            this.checkForValidFrame(this.frameNr, true, "Invalid number frame nr");
+                            this.checkForValidFrame(this.frameNr, true, `Invalid number frame nr`);
                             break;
                         case sc.MSG_SET_FRAME_COUNT:
                             this.frameCount = parseInt(value);
                             if (this.isVerbose) {
-                                console.log("frame-count: ".concat(this.frameCount));
+                                console.log(`frame-count: ${this.frameCount}`);
                             }
-                            this.checkForValidFrame(this.frameCount, false, "Invalid number of frames count");
+                            this.checkForValidFrame(this.frameCount, false, `Invalid number of frames count`);
                             break;
                         case sc.MSG_SET_FPS:
                             this.fps = parseInt(value);
                             if (this.isVerbose) {
-                                console.log("fps: ".concat(this.fps));
+                                console.log(`fps: ${this.fps}`);
                             }
                             this.checkForValidFps();
                             break;
@@ -514,9 +504,9 @@ var ServerAgent;
                             console.error(value);
                             break;
                         case sc.MSG_TELEPORT:
-                            var storyFileName = (this.configPath ? this.configPath :
+                            const storyFileName = (this.configPath ? this.configPath :
                                 this.rootPath) + 'story.json';
-                            console.log("Created ".concat(storyFileName));
+                            console.log(`Created ${storyFileName}`);
                             this.writeFileSync(storyFileName, value);
                             this.exitServer();
                             break;
@@ -529,47 +519,47 @@ var ServerAgent;
                     self.handleError(error.message);
                 }
             }
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Handle Errors
         // ------------------------------------------------------------------------
-        BaseServer.prototype.handleError = function (msg) {
+        handleError(msg) {
             console.error(msg);
             if (toExitOnError) {
                 this.exitServer(opts_parser_js_1.OptsParser.ON_ERROR_EXIT_VALUE);
             }
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Prepare Server
         // ------------------------------------------------------------------------
         // security checks
-        BaseServer.prototype.checkForValidFps = function () {
+        checkForValidFps() {
             if (this.fps <= 0 || this.fps > this.maxFps) {
-                throw "Invalid number of frames per second";
+                throw `Invalid number of frames per second`;
             }
-        };
+        }
         // security checks
-        BaseServer.prototype.checkForValidFrame = function (frameNr, allowZero, errorMsg) {
+        checkForValidFrame(frameNr, allowZero, errorMsg) {
             if ((allowZero || !frameNr) || frameNr < 0 || frameNr > this.maxFrameCount) {
                 throw errorMsg;
             }
-        };
-        BaseServer.prototype.prepareServer = function () {
+        }
+        prepareServer() {
             plugin_injector_js_1.PluginInjector.inject(this.existsSync, this.readUtf8Sync, this.writeFileSync);
             if (this.width <= 0 || this.width > this.maxWidth
                 || this.height <= 0 || this.height > this.maxHeight) {
-                throw "Invalid frame output size";
+                throw `Invalid frame output size`;
             }
             this.checkForValidFps();
             if (this.toDeletePreviousVersion) {
                 if (this.isVerbose) {
-                    console.log("Deleting previous frames");
+                    console.log(`Deleting previous frames`);
                 }
-                var frameI = this.frameNr;
+                let frameI = this.frameNr;
                 while (true) {
-                    var frameFileName = sprintf(this.framesPattern, frameI);
+                    const frameFileName = sprintf(this.framesPattern, frameI);
                     if (this.isVerbose) {
-                        console.log("frameFileName: ".concat(frameFileName));
+                        console.log(`frameFileName: ${frameFileName}`);
                     }
                     if (this.existsSync(frameFileName)) {
                         this.unlinkSync(frameFileName);
@@ -580,21 +570,21 @@ var ServerAgent;
                     frameI++;
                 }
             }
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Generate Report
         // ------------------------------------------------------------------------
-        BaseServer.prototype.generateReport = function () {
+        generateReport() {
             if (this.reportFileName && this.toGenFrames) {
-                var framesDir = dirName(this.framesPattern);
+                const framesDir = dirName(this.framesPattern);
                 this.reportFileName = this.reportFileName.
                     replace('__FRAMES_DIR__', framesDir);
-                var framesPattern = this.framesPattern;
+                let framesPattern = this.framesPattern;
                 // removes the absolute path due security issues
                 if (framesDir === framesPattern.substr(0, framesDir.length)) {
                     framesPattern = './' + framesPattern.substr(framesDir.length + 1);
                 }
-                var report = {
+                const report = {
                     width: this.width,
                     height: this.height,
                     fps: this.fps,
@@ -606,25 +596,24 @@ var ServerAgent;
                 this.mkdirpSync(dirName(this.reportFileName));
                 this.writeFileSync(this.reportFileName, JSON.stringify(report, null, 2));
                 if (this.isVerbose) {
-                    console.log("Generated Report ".concat(this.reportFileName));
+                    console.log(`Generated Report ${this.reportFileName}`);
                 }
-                console.log("Generated ".concat(this.frameCount, " frames"));
+                console.log(`Generated ${this.frameCount} frames`);
             }
-        };
+        }
         // ------------------------------------------------------------------------
         //                               Start
         // ------------------------------------------------------------------------
-        BaseServer.prototype.start = function () {
-            var _this = this;
+        start() {
             try {
-                this.parseArgumentsAsync(function (res) {
+                this.parseArgumentsAsync((res) => {
                     switch (res) {
                         case DO_PRINT_USAGE:
                             opts_parser_js_1.OptsParser.printUsage();
                             break;
                         case DO_RUN_SERVER:
-                            _this.prepareServer();
-                            _this.runServer();
+                            this.prepareServer();
+                            this.runServer();
                             break;
                         case DO_EXIT:
                             break;
@@ -632,13 +621,12 @@ var ServerAgent;
                 });
             }
             catch (error) {
-                console.log("Server Error: ".concat(error.message || error.toString()));
+                console.log(`Server Error: ${error.message || error.toString()}`);
                 this.exitServer(opts_parser_js_1.OptsParser.ON_ERROR_EXIT_VALUE);
                 // throw error;
             }
-        };
-        return BaseServer;
-    }());
+        }
+    }
     ServerAgent.BaseServer = BaseServer;
 })(ServerAgent || (exports.ServerAgent = ServerAgent = {}));
 //# sourceMappingURL=server-agent.js.map

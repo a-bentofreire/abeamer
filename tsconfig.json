@@ -5,7 +5,7 @@
         "noUnusedLocals": false,
         "noUnusedParameters": false,
         "strictNullChecks": false,
-        "target": "es5",
+        "target": "es6",
         "outDir": ".",
         "newLine": "lf",
         "lib": [
@@ -18,14 +18,12 @@
     "tslint.exclude": "client/lib/typings/vendor/*.ts",
     "exclude": [
         ".git/",
+        ".private/",
         "docs/",
         "release/",
         "gallery-release/",
-        "private/",
-        "website/",
         "node_modules/",
         "shared/dev-builders/output/",
-        "private-projects/**/typings/*",
         "client/lib/typings/release/abeamer-release.d.ts",
         "client/lib/typings/dev"
     ]

@@ -1,19 +1,4 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HttpServerEx = void 0;
 // ------------------------------------------------------------------------
@@ -21,8 +6,8 @@ exports.HttpServerEx = void 0;
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
 /** @module internal | This module is to be read only by developers */
-var sysFs = require("fs");
-var http_server_js_1 = require("./http-server.js");
+const sysFs = require("fs");
+const http_server_js_1 = require("./http-server.js");
 /**
  * ## Description
  *
@@ -37,29 +22,21 @@ var http_server_js_1 = require("./http-server.js");
  */
 var HttpServerEx;
 (function (HttpServerEx) {
-    var MAX_URL_LEN = 1024;
-    var ServerEx = /** @class */ (function (_super) {
-        __extends(ServerEx, _super);
-        function ServerEx(port, isVerbose, exitFile, allowDirListing, useMarkdown, useHighlightJs) {
-            if (isVerbose === void 0) { isVerbose = false; }
-            if (exitFile === void 0) { exitFile = ''; }
-            if (allowDirListing === void 0) { allowDirListing = false; }
-            if (useMarkdown === void 0) { useMarkdown = false; }
-            if (useHighlightJs === void 0) { useHighlightJs = false; }
-            var _this = _super.call(this, port) || this;
-            _this.isVerbose = isVerbose;
-            _this.exitFile = exitFile;
-            _this.allowDirListing = allowDirListing;
-            _this.markdownCompiler = useMarkdown ? require('marked') : undefined;
-            _this.highlightJs = useHighlightJs ? require('highlight.js') : undefined;
-            return _this;
+    const MAX_URL_LEN = 1024;
+    class ServerEx extends http_server_js_1.HttpServer.Server {
+        constructor(port, isVerbose = false, exitFile = '', allowDirListing = false, useMarkdown = false, useHighlightJs = false) {
+            super(port);
+            this.isVerbose = isVerbose;
+            this.exitFile = exitFile;
+            this.allowDirListing = allowDirListing;
+            this.markdownCompiler = useMarkdown ? require('marked') : undefined;
+            this.highlightJs = useHighlightJs ? require('highlight.js') : undefined;
         }
-        ServerEx.prototype.markdownToHtml = function (sourceMarkdown) {
-            var _this = this;
+        markdownToHtml(sourceMarkdown) {
             this.markdownCompiler.setOptions({
                 renderer: new this.markdownCompiler.Renderer(),
-                highlight: function (code) { return _this.highlightJs
-                    ? _this.highlightJs.highlightAuto(code).value : code; },
+                highlight: (code) => this.highlightJs
+                    ? this.highlightJs.highlightAuto(code).value : code,
                 pedantic: false,
                 gfm: true,
                 tables: true,
@@ -70,17 +47,50 @@ var HttpServerEx;
                 xhtml: false,
             });
             /* spell-checker: disable */
-            var html = '<html>\n<head>\n'
+            const html = '<html>\n<head>\n'
                 // this sytle used in html output of the markdown is designed to be similar
                 // to the github markdown rendered in order to have a good simulation of
                 // how the user will see the documentation.
-                + (this.highlightJs ? "\n    <link rel=\"stylesheet\" href=\"/node_modules/highlight.js/styles/github.css\">\n    <link rel=\"stylesheet\" href=\"/node_modules/font-awesome/css/font-awesome.css\">\n    <style>\n    body {\n      font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Helvetica,Arial,\n        sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\";\n        color: #24292e;\n        background-color: white;\n    }\n    pre {\n      background-color: #1b1f230d;\n      padding: 0.2em 0.4em;\n    }\n    #__page {\n       max-width: 980px;\n       padding: 45px;\n       border: 1px solid #ddd;\n       border-bottom-right-radius: 3px;\n       border-bottom-left-radius: 3px;\n       margin-left: 20px;\n    }\n    code {\n      background-color: #1b1f230d;\n      padding: 0.2em 0.4em;\n    }\n    pre code {\n      background-color: transparent;\n      padding: 0;\n    }\n\n    </style>\n    <script src=\"/node_modules/highlight.js/lib/highlight.js\"></script>\n    <script>hljs.initHighlightingOnLoad();</script>\n" : '')
+                + (this.highlightJs ? `
+    <link rel="stylesheet" href="/node_modules/highlight.js/styles/github.css">
+    <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.css">
+    <style>
+    body {
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,
+        sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+        color: #24292e;
+        background-color: white;
+    }
+    pre {
+      background-color: #1b1f230d;
+      padding: 0.2em 0.4em;
+    }
+    #__page {
+       max-width: 980px;
+       padding: 45px;
+       border: 1px solid #ddd;
+       border-bottom-right-radius: 3px;
+       border-bottom-left-radius: 3px;
+       margin-left: 20px;
+    }
+    code {
+      background-color: #1b1f230d;
+      padding: 0.2em 0.4em;
+    }
+    pre code {
+      background-color: transparent;
+      padding: 0;
+    }
+
+    </style>
+    <script src="/node_modules/highlight.js/lib/highlight.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>\n` : '')
                 + '</head>\n<body>\n<div id=__page>'
                 + this.markdownCompiler(sourceMarkdown)
                 + '</div></body>\n</html>';
             return html;
-        };
-        ServerEx.prototype.onBeforeServe = function (req, res) {
+        }
+        onBeforeServe(req, res) {
             if (req.url.length > MAX_URL_LEN
                 || req.url.indexOf('..') !== -1
                 || req.url.match(/\.[\w+\-]+\.(json|txt|ini)$/)) {
@@ -89,7 +99,7 @@ var HttpServerEx;
                 return false;
             }
             if (this.isVerbose) {
-                console.log("".concat(req.method, " ").concat(req.url));
+                console.log(`${req.method} ${req.url}`);
             }
             if (this.exitFile && req.url.indexOf(this.exitFile) !== -1) {
                 if (this.isVerbose) {
@@ -99,58 +109,67 @@ var HttpServerEx;
                 return false;
             }
             return true;
-        };
-        ServerEx.prototype.onAfterServe = function (rp) {
+        }
+        onAfterServe(rp) {
             if (this.markdownCompiler && rp.ext === '.md') {
-                var sourceMarkdown = sysFs.readFileSync(rp.path, { encoding: 'utf-8' });
+                const sourceMarkdown = sysFs.readFileSync(rp.path, { encoding: 'utf-8' });
                 rp.res.setHeader('Content-type', 'text/html');
                 rp.res.end(this.markdownToHtml(sourceMarkdown));
                 return false;
             }
             return true;
-        };
-        ServerEx.prototype.handleDirectory = function (rp) {
-            var DIR_PREFIX = '?dir';
+        }
+        handleDirectory(rp) {
+            const DIR_PREFIX = '?dir';
             if (this.allowDirListing && rp.search === DIR_PREFIX) {
-                sysFs.readdir(rp.path, function (_err, files) {
-                    var slashedPath = rp.path + (rp.path.endsWith('/') ? '' : '/');
-                    var filesInfo = files.map(function (file) {
-                        var fileName = "".concat(slashedPath).concat(file);
-                        var url = fileName.substr(1);
-                        var isDir = sysFs.statSync(fileName).isDirectory();
+                sysFs.readdir(rp.path, (_err, files) => {
+                    const slashedPath = rp.path + (rp.path.endsWith('/') ? '' : '/');
+                    const filesInfo = files.map(file => {
+                        const fileName = `${slashedPath}${file}`;
+                        const url = fileName.substr(1);
+                        const isDir = sysFs.statSync(fileName).isDirectory();
                         return {
-                            file: file,
-                            fileName: fileName,
-                            url: url,
-                            isDir: isDir,
+                            file,
+                            fileName,
+                            url,
+                            isDir,
                         };
                     });
-                    filesInfo.sort(function (fa, fb) {
+                    filesInfo.sort((fa, fb) => {
                         return fa.isDir === fb.isDir ? fa.file.localeCompare(fb.file) :
                             (fa.isDir ? -1 : 1);
                     });
                     if (slashedPath !== './') {
                         filesInfo.unshift({
                             file: '..',
-                            fileName: "".concat(slashedPath, ".."),
-                            url: "".concat(slashedPath.substr(1), "../"),
+                            fileName: `${slashedPath}..`,
+                            url: `${slashedPath.substr(1)}../`,
                             isDir: true,
                         });
                     }
-                    var html = "<html>\n<head>\n<style>\nbody {\n    font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Helvetica,Arial,\n      sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\";\n      color: #24292e;\n      background-color: white;\n}\n</style>\n          </head><body>\n"
-                        + filesInfo.map(function (fileInf) {
-                            var isDir = fileInf.isDir;
-                            var defaultLinks = [];
+                    const html = `<html>\n<head>
+<style>
+body {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,
+      sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+      color: #24292e;
+      background-color: white;
+}
+</style>
+          </head><body>\n`
+                        + filesInfo.map(fileInf => {
+                            const isDir = fileInf.isDir;
+                            const defaultLinks = [];
                             if (isDir) {
-                                http_server_js_1.HttpServer.DEFAULT_FILES.forEach(function (defFile) {
-                                    var defFileName = "".concat(fileInf.fileName, "/").concat(defFile);
+                                http_server_js_1.HttpServer.DEFAULT_FILES.forEach(defFile => {
+                                    const defFileName = `${fileInf.fileName}/${defFile}`;
                                     if (sysFs.existsSync(defFileName)) {
-                                        defaultLinks.push("&nbsp;(<a href=\"".concat(fileInf.url, "/").concat(defFile, "\">").concat(defFile, "</a>)"));
+                                        defaultLinks.push(`&nbsp;(<a href="${fileInf.url}/${defFile}">${defFile}</a>)`);
                                     }
                                 });
                             }
-                            return !isDir ? "<div><a href=\"".concat(fileInf.url, "\">").concat(fileInf.file, "</a></div>") :
-                                "<div>[<a href=\"".concat(fileInf.url).concat(DIR_PREFIX, "\">").concat(fileInf.file, "</a>]").concat(defaultLinks.join(''), "</div>");
+                            return !isDir ? `<div><a href="${fileInf.url}">${fileInf.file}</a></div>` :
+                                `<div>[<a href="${fileInf.url}${DIR_PREFIX}">${fileInf.file}</a>]${defaultLinks.join('')}</div>`;
                         }).join('\n')
                         + '\n</body>\n</html>';
                     rp.res.setHeader('Content-type', 'text/html');
@@ -159,11 +178,10 @@ var HttpServerEx;
                 return false;
             }
             else {
-                return _super.prototype.handleDirectory.call(this, rp);
+                return super.handleDirectory(rp);
             }
-        };
-        return ServerEx;
-    }(http_server_js_1.HttpServer.Server));
+        }
+    }
     HttpServerEx.ServerEx = ServerEx;
 })(HttpServerEx || (exports.HttpServerEx = HttpServerEx = {}));
 //# sourceMappingURL=http-server-ex.js.map

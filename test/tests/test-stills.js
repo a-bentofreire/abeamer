@@ -4,13 +4,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-var exact_js_1 = require("../exact.js");
+const exact_js_1 = require("../exact.js");
 var Tests;
 (function (Tests) {
-    var min = 50;
-    var fps = 4;
-    var divider = 1000 / fps;
-    var tests = [
+    const min = 50;
+    const fps = 4;
+    const divider = 1000 / fps;
+    const tests = [
         {
             name: 'before-still', duration: '2s', max: 100,
             frameCount: 2000 / divider, shift: 0,
@@ -25,11 +25,11 @@ var Tests;
             shift: -500 / divider,
         }
     ];
-    var ranges = [];
-    var minAcc = min;
-    var startFrameAcc = 0;
-    var absStartFrameAcc = 0;
-    tests.forEach(function (test) {
+    const ranges = [];
+    let minAcc = min;
+    let startFrameAcc = 0;
+    let absStartFrameAcc = 0;
+    tests.forEach(test => {
         absStartFrameAcc += test.shift;
         if (!test.isStill) {
             test.min = minAcc;
@@ -40,8 +40,8 @@ var Tests;
             absStartFrameAcc += test.frameCount;
         }
     });
-    var func = function (rd, done, index) {
-        var test = tests[index];
+    const func = (rd, done, index) => {
+        const test = tests[index];
         if (!test.isStill) {
             rd.actions.isIdPropActions('t0', 'left', exact_js_1.Exact.simulatePixelAction(exact_js_1.Exact.interpolateMinMax(test.min, test.max, test.frameCount)), true, true, test.startFrame, test.frameCount);
         }
@@ -50,16 +50,16 @@ var Tests;
         }
         done();
     };
-    var testParams = {};
-    tests.forEach(function (test) {
+    const testParams = {};
+    tests.forEach((test) => {
         testParams[!test.isStill
-            ? "".concat(test.name, " - t0 moves for ").concat(test.duration, " at ").concat(test.position || '')
-            : "".concat(test.name, " - t0 DOESN'T moves for ").concat(test.duration)] = func;
+            ? `${test.name} - t0 moves for ${test.duration} at ${test.position || ''}`
+            : `${test.name} - t0 DOESN'T moves for ${test.duration}`] = func;
     });
-    var animes = tests.map(function (test) {
+    const animes = tests.map((test) => {
         return !test.isStill ?
             {
-                selector: "#t0",
+                selector: `#t0`,
                 duration: test.duration,
                 position: test.position,
                 props: [{
@@ -67,12 +67,12 @@ var Tests;
                         value: test.max,
                     }],
             }
-            : ['@@no-wrap-add-animation', "scene1.addStills(\"".concat(test.duration, "\");")];
+            : ['@@no-wrap-add-animation', `scene1.addStills("${test.duration}");`];
     });
     exact_js_1.Exact.runTestSuite(__filename, {
-        fps: fps,
-        css: "#t0 {left: ".concat(min, "px}"),
-        animes: animes,
+        fps,
+        css: `#t0 {left: ${min}px}`,
+        animes,
         html: exact_js_1.Exact.genTestHtml(1),
     }, {
         tests: testParams,

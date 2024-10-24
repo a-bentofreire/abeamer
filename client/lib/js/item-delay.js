@@ -24,7 +24,7 @@ var ABeamer;
     }
     ABeamer._parseItemDelay = _parseItemDelay;
     function _computeItemDelay(it, elIndex /* , elCount: uint */) {
-        var disturbance = it.disturbance;
+        const disturbance = it.disturbance;
         if (disturbance) {
             elIndex = elIndex + (Math.random() * 2 * disturbance) - disturbance;
         }

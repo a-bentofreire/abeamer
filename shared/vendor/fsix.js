@@ -7,13 +7,13 @@ exports.fsix = void 0;
 // ------------------------------------------------------------------------
 // Common filesystem functions implemented by nodejs
 // Use IRel.Fs to have an abstract filesystem
-var sysFs = require("fs");
-var sysPath = require("path");
-var child_process_1 = require("child_process");
+const sysFs = require("fs");
+const sysPath = require("path");
+const child_process_1 = require("child_process");
 var fsix;
 (function (fsix) {
-    fsix.loadJsonSync = function (fileName) { return JSON.parse(fsix.readUtf8Sync(fileName)); };
-    fsix.writeJsonSync = function (fileName, data) {
+    fsix.loadJsonSync = (fileName) => JSON.parse(fsix.readUtf8Sync(fileName));
+    fsix.writeJsonSync = (fileName, data) => {
         sysFs.writeFileSync(fileName, JSON.stringify(data, null, 2));
     };
     /**
@@ -22,10 +22,8 @@ var fsix;
      *
      * @param path unix or windows style path
      */
-    fsix.toPosixSlash = function (path) { return path.replace(/\\/g, '/'); };
-    fsix.readUtf8Sync = function (fileName, encoding) {
-        return sysFs.readFileSync(fileName, { encoding: encoding || 'utf-8' });
-    };
+    fsix.toPosixSlash = (path) => path.replace(/\\/g, '/');
+    fsix.readUtf8Sync = (fileName, encoding) => sysFs.readFileSync(fileName, { encoding: encoding || 'utf-8' });
     /**
      * Creates a directory if doesn't exists, including parent folders
      *
@@ -39,7 +37,7 @@ var fsix;
     }
     fsix.mkdirpSync = mkdirpSync;
     function runExternal(cmd, callback) {
-        (0, child_process_1.exec)(cmd, function (error, stdout, stderr) {
+        (0, child_process_1.exec)(cmd, (error, stdout, stderr) => {
             if (callback) {
                 callback(error, stdout, stderr);
             }

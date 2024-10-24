@@ -3,13 +3,13 @@
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 20);
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 20);
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
-    var d = '2s';
-    var scene1 = story.scenes[0];
+    const d = '2s';
+    const scene1 = story.scenes[0];
     scene1
         .addAnimations([{
             selector: '#life',
@@ -19,7 +19,7 @@ $(window).on("load", function () {
                     prop: 'color',
                     // [TOPIC] Uses a Code Handler to retrieve the color RGB.
                     // This example is not teleportable.
-                    valueText: function (t) {
+                    valueText: (t) => {
                         return '#'
                             + Number(20).toString(16)
                             + Number(Math.round(255 * t)).toString(16)

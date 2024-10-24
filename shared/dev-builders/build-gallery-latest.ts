@@ -195,7 +195,8 @@ ${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation. 
       + galleryLinks.join('');
     sysFs.writeFileSync(`${cfg.paths.GALLERY_LATEST_PATH}/README.md`, outREADME);
     if (missingFiles.length) {
-      throw `Missing files:\n` + missingFiles.join('\n');
+        console.error(`Missing files:\n` + missingFiles.join('\n'));
+    //   throw `Missing files:\n` + missingFiles.join('\n');
     }
   }
 

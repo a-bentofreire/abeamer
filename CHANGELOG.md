@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] -
+### Updated
+- Update to gulp@5
+- Update compilation to es6
+- Updated compile abeamer.js with esbuild
+- Improve README
+
 ## [1.6.2] -
 ### Updated
 - Update links
@@ -24,12 +31,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `getVars` global function to allow plugins to add init vars.
 - Add support for cli options ending with `__\d+`.
  > This addition solves slimerjs `--config` option conflict with abeamer `--config`.
- - Add support for default `INFO_PER_SERVER`.
+- Add support for default `INFO_PER_SERVER`.
  > This allows to add more servers without changing `INFO_PER_SERVER`.
- - Add initial support for `slimerjs` server. (alpha version).
- - Add `--server-exec` option to command line.
- - Add `--scale` support for abeamer cli `gif` and `movie` command.
- - Add `--no-default-browser-check` to puppeteer server agent.
+- Add initial support for `slimerjs` server. (alpha version).
+- Add `--server-exec` option to command line.
+- Add `--scale` support for abeamer cli `gif` and `movie` command.
+- Add `--no-default-browser-check` to puppeteer server agent.
  > This change reduce chrome's the initialization phase.
 
 ### Changed

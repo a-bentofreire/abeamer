@@ -45,7 +45,7 @@ var ABeamer;
     //                               Plugin Manager
     // ------------------------------------------------------------------------
     /** List of all the functionalities available to be extended by plugins. */
-    var Functionalities;
+    let Functionalities;
     (function (Functionalities) {
         Functionalities[Functionalities["easings"] = 0] = "easings";
         Functionalities[Functionalities["oscillators"] = 1] = "oscillators";
@@ -57,7 +57,7 @@ var ABeamer;
     })(Functionalities = ABeamer.Functionalities || (ABeamer.Functionalities = {}));
     // #export-section-end: release
     // -------------------------------
-    var _FunctionalitiesContainers = [
+    const _FunctionalitiesContainers = [
         ABeamer._easingFunctions,
         ABeamer._easingFunctions,
         ABeamer._pathFunctions,
@@ -69,81 +69,80 @@ var ABeamer;
     /**
      * Allows 3rd-party to add easings, oscillators, paths, etc.
      */
-    var _PluginManager = /** @class */ (function () {
-        function _PluginManager() {
+    class _PluginManager {
+        constructor() {
             this._plugins = [];
             this._locale = 'en';
         }
-        _PluginManager.prototype.addPlugin = function (pluginInfo) {
+        addPlugin(pluginInfo) {
             this._plugins.push(pluginInfo);
-        };
-        _PluginManager.prototype.addEasings = function (easings) {
-            easings.forEach(function (easing) {
+        }
+        addEasings(easings) {
+            easings.forEach(easing => {
                 ABeamer._easingFunctions[easing[0]] = easing[1];
             });
-        };
-        _PluginManager.prototype.addOscillators = function (oscillators) {
-            oscillators.forEach(function (oscillator) {
+        }
+        addOscillators(oscillators) {
+            oscillators.forEach(oscillator => {
                 ABeamer._easingFunctions[oscillator[0]] = oscillator[1];
             });
-        };
-        _PluginManager.prototype.addPaths = function (paths) {
-            paths.forEach(function (path) {
+        }
+        addPaths(paths) {
+            paths.forEach(path => {
                 ABeamer._pathFunctions[path[0]] = path[1];
             });
-        };
-        _PluginManager.prototype.addTasks = function (tasks) {
-            tasks.forEach(function (task) {
+        }
+        addTasks(tasks) {
+            tasks.forEach(task => {
                 ABeamer._taskFunctions[task[0]] = task[1];
             });
-        };
-        _PluginManager.prototype.addTransitions = function (transitions) {
-            transitions.forEach(function (transition) {
+        }
+        addTransitions(transitions) {
+            transitions.forEach(transition => {
                 ABeamer._transitionFunctions[transition[0]] = transition[1];
             });
-        };
-        _PluginManager.prototype.addFlyovers = function (flyovers) {
-            flyovers.forEach(function (flyover) {
+        }
+        addFlyovers(flyovers) {
+            flyovers.forEach(flyover => {
                 ABeamer._flyoverFunctions[flyover[0]] = flyover[1];
             });
-        };
-        _PluginManager.prototype.addFunctions = function (functions) {
-            functions.forEach(function (exprFunction) {
+        }
+        addFunctions(functions) {
+            functions.forEach(exprFunction => {
                 ABeamer._exFunctions[exprFunction[0]] = exprFunction[1];
             });
-        };
-        _PluginManager.prototype.addLocalization = function (localeInfo) {
+        }
+        addLocalization(localeInfo) {
             this._locale = localeInfo.locale;
             if (!this._locale) {
                 ABeamer.throwErr('The localization locale can not be empty');
             }
             if (localeInfo.charRanges) {
-                localeInfo.charRanges.forEach(function (charRange) {
+                localeInfo.charRanges.forEach(charRange => {
                     ABeamer.CharRanges.push(charRange);
                 });
             }
-            var msgs = localeInfo.messages;
+            const msgs = localeInfo.messages;
             if (msgs) {
-                Object.keys(msgs).forEach(function (srcMsg) {
+                Object.keys(msgs).forEach(srcMsg => {
                     ABeamer.Msgs[srcMsg] = msgs[srcMsg];
                 });
             }
             if (localeInfo.functionalities) {
-                localeInfo.functionalities.forEach(function (functionality) {
-                    var aType = functionality[0], map = functionality[1];
-                    var funcIndex = typeof aType === 'string' ? Functionalities[aType] : aType;
+                localeInfo.functionalities.forEach(functionality => {
+                    const [aType, map] = functionality;
+                    const funcIndex = typeof aType === 'string' ? Functionalities[aType] : aType;
                     if (funcIndex === undefined) {
-                        throw "Unknown functionality ".concat(aType);
+                        throw `Unknown functionality ${aType}`;
                     }
-                    var container = _FunctionalitiesContainers[funcIndex];
-                    map.forEach(function (srcDst) {
+                    const container = _FunctionalitiesContainers[funcIndex];
+                    map.forEach(srcDst => {
                         container[srcDst.dst] = container[srcDst.src];
                     });
                 });
             }
-        };
-        return _PluginManager;
-    }());
+        }
+    }
     ABeamer._PluginManager = _PluginManager;
     ABeamer.pluginManager = new _PluginManager();
 })(ABeamer || (ABeamer = {}));

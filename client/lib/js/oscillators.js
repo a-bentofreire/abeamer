@@ -74,7 +74,7 @@ var ABeamer;
     //                               Oscillators
     // ------------------------------------------------------------------------
     /** List of the built-in oscillators */
-    var OscillatorName;
+    let OscillatorName;
     (function (OscillatorName) {
         OscillatorName[OscillatorName["harmonic"] = 1000] = "harmonic";
         OscillatorName[OscillatorName["damped"] = 1001] = "damped";
@@ -85,14 +85,14 @@ var ABeamer;
      * - `abs` Math.abs
      * - `clip` If v < 0 then v = 0
      */
-    var NegativeBuiltInFuncs;
+    let NegativeBuiltInFuncs;
     (function (NegativeBuiltInFuncs) {
         NegativeBuiltInFuncs[NegativeBuiltInFuncs["none"] = 0] = "none";
         NegativeBuiltInFuncs[NegativeBuiltInFuncs["clip"] = 1] = "clip";
         NegativeBuiltInFuncs[NegativeBuiltInFuncs["abs"] = 2] = "abs";
     })(NegativeBuiltInFuncs = ABeamer.NegativeBuiltInFuncs || (ABeamer.NegativeBuiltInFuncs = {}));
     /** List of the built-in pulsar type */
-    var PulsarType;
+    let PulsarType;
     (function (PulsarType) {
         PulsarType[PulsarType["normal"] = 0] = "normal";
         PulsarType[PulsarType["sine"] = 1] = "sine";
@@ -115,8 +115,8 @@ var ABeamer;
         }
         if (typeof negativeHander === 'number') {
             switch (negativeHander) {
-                case NegativeBuiltInFuncs.abs: return function (t) { return Math.abs(t); };
-                case NegativeBuiltInFuncs.clip: return function (t) { return Math.abs(t); };
+                case NegativeBuiltInFuncs.abs: return (t) => Math.abs(t);
+                case NegativeBuiltInFuncs.clip: return (t) => Math.abs(t);
             }
         }
         return negativeHander;
@@ -129,8 +129,8 @@ var ABeamer;
             params._negativeHandler = _parseNegativeHandler(params.negativeHander);
             params._shift = params.shift || 0;
         }
-        var cycles = params._cycles;
-        var v = Math.sin(Math.PI * 2 * (t + params._shift) * cycles);
+        const cycles = params._cycles;
+        const v = Math.sin(Math.PI * 2 * (t + params._shift) * cycles);
         return params._negativeHandler ? params._negativeHandler(v) : v;
     }
     ABeamer._easingFunctions['damped'] = _dampedOscillator;
@@ -144,7 +144,7 @@ var ABeamer;
             params._shift = 0;
             params._negativeHandler = _parseNegativeHandler(params.negativeHander);
         }
-        var t1 = t - params._shift;
+        let t1 = t - params._shift;
         if (t1 >= params._curFrequency) {
             params._shift = t;
             params._curFrequency = params._curFrequency * params._scale;
@@ -152,7 +152,7 @@ var ABeamer;
             t1 = t - params._shift;
         }
         // @TODO: Improve the damped function
-        var v = Math.sin(Math.PI * 2 * (t1 / params._curFrequency)) * params._curAmplitude;
+        const v = Math.sin(Math.PI * 2 * (t1 / params._curFrequency)) * params._curAmplitude;
         return params._negativeHandler ? params._negativeHandler(v) : v;
     }
     ABeamer._easingFunctions['pulsar'] = _pulsarOscillator;
@@ -167,21 +167,21 @@ var ABeamer;
                 params.type = PulsarType[params.type];
             }
         }
-        var midpoint = params.midpoint;
-        var spread = params.spread;
+        const midpoint = params.midpoint;
+        const spread = params.spread;
         if (t <= midpoint - spread || t >= midpoint + spread) {
             return 0;
         }
-        var pulsarType = params.type;
+        const pulsarType = params.type;
         switch (pulsarType) {
             case PulsarType.normal:
-                var t1 = (t - (midpoint - spread)) / spread;
+                let t1 = (t - (midpoint - spread)) / spread;
                 if (t > midpoint) {
                     t1 = 2 - t1;
                 }
                 return (Math.exp(t1) - 1) / (Math.E - 1);
             case PulsarType.sine:
-                var t2 = (t - (midpoint - spread)) / spread;
+                const t2 = (t - (midpoint - spread)) / spread;
                 return Math.sin(Math.PI * t2);
             case PulsarType.random:
                 return Math.random() * 2 - 1;

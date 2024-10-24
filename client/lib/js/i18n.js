@@ -28,7 +28,7 @@ var ABeamer;
     /**
      * These messages will be moved messages/messages-en.ts on version 2.x
      */
-    var Msgs;
+    let Msgs;
     (function (Msgs) {
         Msgs["MustNatPositive"] = "The value of %p% must be a natural positive";
         Msgs["MustNatNotNegative"] = "The value of %p% must be a natural non-negative";
@@ -61,7 +61,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     function i8nMsg(msg, params) {
         if (params) {
-            msg = msg.replace(/%(\w+)%/g, function (_all, p) { return params[p].toString(); });
+            msg = msg.replace(/%(\w+)%/g, (_all, p) => params[p].toString());
         }
         return msg;
     }

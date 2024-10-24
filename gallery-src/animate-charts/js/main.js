@@ -3,22 +3,22 @@
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 10);
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 10);
     // ------------------------------------------------------------------------
     //                               Charts
     // ------------------------------------------------------------------------
-    var duration = 0.6;
-    var defData0 = [23000, 32000, 45000, 15000, 50400, 60000];
-    var defData = [
+    const duration = 0.6;
+    const defData0 = [23000, 32000, 45000, 15000, 50400, 60000];
+    const defData = [
         defData0,
         [30000, 42000, 50000, 16000, 48400, 65000],
         [20000, 45000, 51000, 18000, 49400, 45000],
     ];
-    var defLabelsX = {
+    const defLabelsX = {
         captions: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     };
-    var charts = [{
+    const charts = [{
             chartType: ABeamer.ChartTypes.bar,
             labelsX: defLabelsX,
             title: '2017 Sales',
@@ -149,12 +149,10 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Add Charts
     // ------------------------------------------------------------------------
-    $('#story').html(charts.map(function () {
-        return "<div class=abeamer-scene><div class=gallery></div></div>";
-    }).join('\n'));
+    $('#story').html(charts.map(() => `<div class=abeamer-scene><div class=gallery></div></div>`).join('\n'));
     story.addDefaultScenes();
-    charts.forEach(function (chart, i) {
-        var scene = story.scenes[i];
+    charts.forEach((chart, i) => {
+        const scene = story.scenes[i];
         scene
             .addAnimations([{
                 selector: '.gallery',
@@ -167,7 +165,7 @@ $(window).on("load", function () {
                             attrs: [
                                 {
                                     name: 'width',
-                                    value: "".concat(chart.chartWidth || 280),
+                                    value: `${chart.chartWidth || 280}`,
                                 },
                                 {
                                     name: 'height',
@@ -178,10 +176,10 @@ $(window).on("load", function () {
                     },
                 ],
             }]);
-        chart.animeSelector = "chart-".concat(i, "-anime");
+        chart.animeSelector = `chart-${i}-anime`;
         scene
             .addAnimations([{
-                selector: "canvas",
+                selector: `canvas`,
                 tasks: [{
                         handler: 'chart',
                         params: chart,
@@ -189,8 +187,8 @@ $(window).on("load", function () {
             }]);
         if (chart.props) {
             scene.addAnimations([{
-                    selector: "%chart-".concat(i, "-anime"),
-                    duration: "".concat(duration, "s"),
+                    selector: `%chart-${i}-anime`,
+                    duration: `${duration}s`,
                     props: chart.props,
                 }]);
         }

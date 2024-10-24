@@ -48,43 +48,43 @@ var ABeamer;
         ABeamer.arrayInputHelper(params, req, undefined, undefined, f);
     }
     function _meanFunc(arr) {
-        return (arr.reduce(function (sum, v) { return sum + v; }, 0) / arr.length);
+        return (arr.reduce((sum, v) => sum + v, 0) / arr.length);
     }
     function _varianceFunc(arr) {
-        var mean = _meanFunc(arr);
-        var totalDev = arr.reduce(function (dev, v) { return dev + (Math.pow((Math.abs(v - mean)), 2)); }, 0);
+        const mean = _meanFunc(arr);
+        const totalDev = arr.reduce((dev, v) => dev + (Math.pow((Math.abs(v - mean)), 2)), 0);
         return totalDev / (arr.length - 1);
     }
     // ------------------------------------------------------------------------
     //                               statistic functions
     // ------------------------------------------------------------------------
     function _min(params, req) {
-        _statCommon(params, req, function (arr) { return Math.min.apply(Math, arr); });
+        _statCommon(params, req, (arr) => Math.min(...arr));
     }
     function _max(params, req) {
-        _statCommon(params, req, function (arr) { return Math.max.apply(Math, arr); });
+        _statCommon(params, req, (arr) => Math.max(...arr));
     }
     function _mean(params, req) {
         _statCommon(params, req, _meanFunc);
     }
     function _median(params, req) {
-        _statCommon(params, req, function (arr) {
-            arr.sort(function (a, b) { return (b < a); });
-            var center = Math.floor(arr.length / 2);
+        _statCommon(params, req, (arr) => {
+            arr.sort((a, b) => (b < a));
+            const center = Math.floor(arr.length / 2);
             return (arr.length % 2) ? arr[center] : (arr[center - 1] + arr[center]) / 2.0;
         });
     }
     function _std(params, req) {
-        _statCommon(params, req, function (arr) { return Math.sqrt(_varianceFunc(arr)); });
+        _statCommon(params, req, (arr) => Math.sqrt(_varianceFunc(arr)));
     }
     function _var(params, req) {
         _statCommon(params, req, _varianceFunc);
     }
     function _sort(params, req) {
-        _statCommon(params, req, function (arr) { return arr.sort(function (a, b) { return (b < a); }); });
+        _statCommon(params, req, (arr) => arr.sort((a, b) => (b < a)));
     }
     function _sortDesc(params, req) {
-        _statCommon(params, req, function (arr) { return arr.sort(function (a, b) { return (b > a); }); });
+        _statCommon(params, req, (arr) => arr.sort((a, b) => (b > a)));
     }
     ABeamer.pluginManager.addFunctions([
         ['min', _min], ['max', _max],

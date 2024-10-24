@@ -56,7 +56,7 @@ var ABeamer;
     //                               Easings
     // ------------------------------------------------------------------------
     /** List of the built-in easings */
-    var EasingName;
+    let EasingName;
     (function (EasingName) {
         EasingName[EasingName["linear"] = 0] = "linear";
         EasingName[EasingName["easeInQuad"] = 1] = "easeInQuad";
@@ -93,7 +93,7 @@ var ABeamer;
     // #export-section-end: release
     // -------------------------------
     ABeamer._easingFunctions = {
-        linear: function (t) {
+        linear(t) {
             return t;
         },
     };
@@ -101,12 +101,12 @@ var ABeamer;
         return EasingName[num];
     }
     ABeamer._easingNumToStr = _easingNumToStr;
-    var excludeFunctions = ['linear', 'swing', '_default', 'def'];
-    Object.keys($.easing).forEach(function (name) {
+    const excludeFunctions = ['linear', 'swing', '_default', 'def'];
+    Object.keys($.easing).forEach(name => {
         if (excludeFunctions.indexOf(name) !== -1) {
             return;
         }
-        ABeamer._easingFunctions[name] = function (t) { return $.easing[name](0, t, 0, 1, 1); };
+        ABeamer._easingFunctions[name] = (t) => $.easing[name](0, t, 0, 1, 1);
     });
     function _expressionEasing(t, params, args) {
         ABeamer._vars.t = t;

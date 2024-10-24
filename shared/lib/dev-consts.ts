@@ -1,6 +1,5 @@
 "use strict";
-// This file was generated gulp build-shared-lib
-// It has no uuid
+// This file was generated gulp build_shared_lib
 //
 // @WARN: Don't edit this file.
 
@@ -10,7 +9,7 @@ export namespace DevConsts {
   // version
   // -------------
 
-  export const VERSION = "1.6.1";
+  export const VERSION = "1.7.0";
 
   // -------------
   // consts

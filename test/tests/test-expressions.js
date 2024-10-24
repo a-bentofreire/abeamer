@@ -4,26 +4,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-var exact_js_1 = require("../exact.js");
-var chai_1 = require("chai");
+const exact_js_1 = require("../exact.js");
+const chai_1 = require("chai");
 var Tests;
 (function (Tests) {
-    var jsMacros = [];
-    var tests = [];
+    const jsMacros = [];
+    const tests = [];
     function add(expr, label, expected) {
         // if (tests.length > 0) { return; }
-        var i = tests.length;
+        const i = tests.length;
         tests.push({
             index: tests.length,
             name: expr,
             label: label ? label + ':  ' : '',
-            expr: expr,
+            expr,
             expected: (expected ? (typeof expected === 'function'
                 ? expected : expected.toString()) : undefined)
                 // tslint:disable-next-line:no-eval
                 || (eval(expr.substr(1))).toString(),
         });
-        jsMacros.push(["\"f".concat(i, "\""), "function (t) {\n          if (t === 0) {\n            var actual = ABeamer.calcExpr(\"".concat(expr, "\", story._args);\n          }\n      return t;\n    }")]);
+        jsMacros.push([`"f${i}"`,
+            `function (t) {
+          if (t === 0) {
+            var actual = ABeamer.calcExpr("${expr}", story._args);
+          }
+      return t;
+    }`]);
     }
     // @TODO: Implement array testing
     // add('=[56.4, 6, 7]', 'simple array', '56.4,6,7');
@@ -52,8 +58,8 @@ var Tests;
     add('= e + pi', 'variables', (Math.E + Math.PI).toString());
     add('= e * (23.56 + pi)', 'variables ops', (Math.E * (23.56 + Math.PI)).toString());
     // test functions
-    add('=random()', 'zero param func', function (actual) {
-        var v = parseFloat(actual);
+    add('=random()', 'zero param func', (actual) => {
+        const v = parseFloat(actual);
         return (v < 0 || v > 1) ? 'Invalid Random' : actual;
     });
     add('=round(14.4)', 'one param func', Math.round(14.4).toString());
@@ -64,49 +70,49 @@ var Tests;
     add('=  55 <= 55.4', 'comparison', '1');
     add('=  55.4 == 55.6', 'inequality', '0');
     add('=  55.4 == 55.4', 'equality', '1');
-    var outputMap = {};
-    var func = function (rd, done, index) {
-        var test = tests[index];
-        var filteredExpr = test.expr.replace(/\\\\/g, '\\');
-        var actual;
+    const outputMap = {};
+    const func = (rd, done, index) => {
+        const test = tests[index];
+        const filteredExpr = test.expr.replace(/\\\\/g, '\\');
+        let actual;
         if (test.expected !== '<error>') {
             actual = outputMap[filteredExpr];
         }
         else {
             actual = rd.exceptions[test.index] ? '<error>' : 'NO ERROR';
         }
-        var expected = typeof test.expected !== 'function' ? test.expected
+        const expected = typeof test.expected !== 'function' ? test.expected
             : test.expected(actual);
-        chai_1.assert.isTrue(expected === actual, "Expected: [".concat(expected, "], Actual: [").concat(actual, "]"));
+        chai_1.assert.isTrue(expected === actual, `Expected: [${expected}], Actual: [${actual}]`);
         done();
     };
-    var testParams = {};
-    tests.forEach(function (test) {
-        testParams["".concat(test.label, "\"").concat(test.name, "\" ~> \"").concat(test.expected, "\"")] = func;
+    const testParams = {};
+    tests.forEach((test) => {
+        testParams[`${test.label}"${test.name}" ~> "${test.expected}"`] = func;
     });
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: 2,
         css: '',
-        animes: tests.map(function (_test, index) {
+        animes: tests.map((_test, index) => {
             return {
-                selector: "#t".concat(index),
+                selector: `#t${index}`,
                 props: [{
                         prop: 'left',
                         duration: '2f',
-                        easing: "f".concat(index),
+                        easing: `f${index}`,
                         value: 5,
                     }],
             };
         }),
         html: exact_js_1.Exact.genTestHtml(tests.length),
     }, {
-        jsMacros: jsMacros,
+        jsMacros,
         plugins: ['color-functions'],
         tests: testParams,
         // toLogStdOut: true,
-        onParseOutputLine: function (line) {
-            exact_js_1.Exact.getResTagParams(line, 'expression', function (exprData) {
-                var filteredExpr = exprData[0].replace(/\\n/g, '(newline)');
+        onParseOutputLine: (line) => {
+            exact_js_1.Exact.getResTagParams(line, 'expression', (exprData) => {
+                const filteredExpr = exprData[0].replace(/\\n/g, '(newline)');
                 outputMap[filteredExpr] = exprData[1];
             });
         },

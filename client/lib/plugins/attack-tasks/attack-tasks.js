@@ -41,16 +41,16 @@ var ABeamer;
     function _colorAttack(anime, _wkTask, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_INIT:
-                var attack = params.attack;
-                var propName = params.prop || 'color';
-                var cycles = ABeamer.ExprOrNumToNum(params.cycles, 1, args);
-                var endColor = params.endColor;
-                var finalAttack = [];
-                for (var i = 0; i < cycles; i++) {
+                const attack = params.attack;
+                const propName = params.prop || 'color';
+                const cycles = ABeamer.ExprOrNumToNum(params.cycles, 1, args);
+                let endColor = params.endColor;
+                let finalAttack = [];
+                for (let i = 0; i < cycles; i++) {
                     finalAttack = finalAttack.concat(attack);
                 }
                 if (endColor === undefined) {
-                    var elAdapters = args.scene.getElementAdapters(anime.selector);
+                    const elAdapters = args.scene.getElementAdapters(anime.selector);
                     if (elAdapters.length) {
                         endColor = elAdapters[0].getProp(propName);
                     }

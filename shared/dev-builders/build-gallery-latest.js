@@ -5,9 +5,9 @@ exports.BuildGalleryLatest = void 0;
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-var sysFs = require("fs");
-var child_process_1 = require("child_process");
-var fsix_js_1 = require("../vendor/fsix.js");
+const sysFs = require("fs");
+const child_process_1 = require("child_process");
+const fsix_js_1 = require("../vendor/fsix.js");
 /** @module developer | This module won't be part of release version */
 /**
  * ## Description
@@ -24,23 +24,23 @@ var BuildGalleryLatest;
      * is prepared to be released.
      */
     function populateReleaseExamples(cfg) {
-        var exclusions = fsix_js_1.fsix
-            .loadJsonSync("".concat(cfg.paths.GALLERY_SRC_PATH, "/exclude-from-release.json"));
-        sysFs.readdirSync(cfg.paths.GALLERY_SRC_PATH).forEach(function (folder) {
+        const exclusions = fsix_js_1.fsix
+            .loadJsonSync(`${cfg.paths.GALLERY_SRC_PATH}/exclude-from-release.json`);
+        sysFs.readdirSync(cfg.paths.GALLERY_SRC_PATH).forEach(folder => {
             if (exclusions.indexOf(folder) !== -1) {
                 return;
             }
-            var srcFullPath = "".concat(cfg.paths.GALLERY_SRC_PATH, "/").concat(folder);
-            var dstFullPath = "".concat(cfg.paths.GALLERY_LATEST_PATH, "/").concat(folder);
-            var iniFileName = "".concat(srcFullPath, "/abeamer.ini");
+            const srcFullPath = `${cfg.paths.GALLERY_SRC_PATH}/${folder}`;
+            const dstFullPath = `${cfg.paths.GALLERY_LATEST_PATH}/${folder}`;
+            const iniFileName = `${srcFullPath}/abeamer.ini`;
             if (sysFs.existsSync(iniFileName)) {
-                var ex_1 = {
+                const ex = {
                     width: 0,
                     height: 0,
-                    folder: folder,
-                    srcFullPath: srcFullPath,
-                    dstFullPath: dstFullPath,
-                    iniFileName: iniFileName,
+                    folder,
+                    srcFullPath,
+                    dstFullPath,
+                    iniFileName,
                     description: [],
                     usesLive: false,
                     noGifImage: false,
@@ -49,57 +49,57 @@ var BuildGalleryLatest;
                     movieSnapshot: '',
                     movieViewPage: '',
                 };
-                var prevNr_1 = 0;
-                var lastDescLine_1 = '';
-                fsix_js_1.fsix.readUtf8Sync(iniFileName).replace(/[\$@]abeamer-([a-z\-]+)(\d*)\s*:\s*"?([^";]+)"?/g, function (_all, id, nr, value) {
+                let prevNr = 0;
+                let lastDescLine = '';
+                fsix_js_1.fsix.readUtf8Sync(iniFileName).replace(/[\$@]abeamer-([a-z\-]+)(\d*)\s*:\s*"?([^";]+)"?/g, (_all, id, nr, value) => {
                     switch (id) {
                         case 'description':
                             nr = parseInt(nr || '1');
-                            if (nr !== prevNr_1 + 1) {
-                                console.warn("Incorrect description numbering in ".concat(iniFileName));
+                            if (nr !== prevNr + 1) {
+                                console.warn(`Incorrect description numbering in ${iniFileName}`);
                             }
-                            prevNr_1 = nr;
-                            if (lastDescLine_1 && !lastDescLine_1.match(/[:\.]$/)) {
-                                lastDescLine_1 += ' ' + value;
-                                ex_1.description[ex_1.description.length - 1] = lastDescLine_1;
+                            prevNr = nr;
+                            if (lastDescLine && !lastDescLine.match(/[:\.]$/)) {
+                                lastDescLine += ' ' + value;
+                                ex.description[ex.description.length - 1] = lastDescLine;
                             }
                             else {
-                                ex_1.description.push(value);
-                                lastDescLine_1 = value;
+                                ex.description.push(value);
+                                lastDescLine = value;
                             }
                             break;
                         case 'width':
-                            ex_1.width = parseInt(value);
+                            ex.width = parseInt(value);
                             break;
                         case 'height':
-                            ex_1.height = parseInt(value);
+                            ex.height = parseInt(value);
                             break;
                         case 'uses-live':
-                            ex_1.usesLive = value.toLowerCase() === 'true';
+                            ex.usesLive = value.toLowerCase() === 'true';
                             break;
                         case 'no-gif-image':
-                            ex_1.noGifImage = value.toLowerCase() === 'true';
+                            ex.noGifImage = value.toLowerCase() === 'true';
                             break;
                         case 'gen-movie':
-                            ex_1.genMovie = value.toLowerCase() === 'true';
-                            ex_1.noGifImage = ex_1.noGifImage || ex_1.genMovie;
+                            ex.genMovie = value.toLowerCase() === 'true';
+                            ex.noGifImage = ex.noGifImage || ex.genMovie;
                             break;
                         case 'teleportable':
-                            ex_1.teleportable = value.toLowerCase() === 'true';
+                            ex.teleportable = value.toLowerCase() === 'true';
                             break;
                         case 'movie-snapshot':
-                            ex_1.movieSnapshot = value;
+                            ex.movieSnapshot = value;
                             break;
                         case 'movie-view-page':
-                            ex_1.movieViewPage = value;
+                            ex.movieViewPage = value;
                             break;
                     }
                     return '';
                 });
-                if (!ex_1.description.length) {
-                    ex_1.description.push(folder);
+                if (!ex.description.length) {
+                    ex.description.push(folder);
                 }
-                BuildGalleryLatest.releaseExamples.push(ex_1);
+                BuildGalleryLatest.releaseExamples.push(ex);
             }
         });
     }
@@ -111,37 +111,43 @@ var BuildGalleryLatest;
      * Builds the gallery-release ReadMe file
      */
     function buildReadMe(cfg) {
-        var galleryLinks = [];
-        var missingFiles = [];
-        var rnd = Math.round(Math.random() * 100000000);
+        const galleryLinks = [];
+        const missingFiles = [];
+        const rnd = Math.round(Math.random() * 100000000);
         function checkFile(fileName) {
             if (!sysFs.existsSync(fileName)) {
                 missingFiles.push(fileName);
             }
             return fileName;
         }
-        BuildGalleryLatest.releaseExamples.forEach(function (ex) {
-            galleryLinks.push("\n--------------------------"
-                + "\n### ".concat(ex.folder, "\n")
-                + "".concat(ex.description.join('  \n')).concat('  '));
-            var storyFramesFolder = "".concat(ex.folder, "/story-frames");
+        BuildGalleryLatest.releaseExamples.forEach(ex => {
+            galleryLinks.push(`\n--------------------------`
+                + `\n### ${ex.folder}\n`
+                + `${ex.description.join('  \n')}${'  '}`);
+            const storyFramesFolder = `${ex.folder}/story-frames`;
             if (!ex.noGifImage) {
-                checkFile("./".concat(cfg.paths.GALLERY_SRC_PATH, "/").concat(ex.folder, "/story-frames/story.gif"));
-                galleryLinks.push("\n  "
-                    + "\n![Image](".concat(storyFramesFolder, "/story.gif?").concat(rnd, ")").concat('  ', "\n  "));
+                checkFile(`./${cfg.paths.GALLERY_SRC_PATH}/${ex.folder}/story-frames/story.gif`);
+                galleryLinks.push(`\n  `
+                    + `\n![Image](${storyFramesFolder}/story.gif?${rnd})${'  '}\n  `);
             }
             if (ex.genMovie) {
-                galleryLinks.push("\n  "
-                    + "\n[![Image](".concat(storyFramesFolder, "/../").concat(ex.movieSnapshot, ")]")
-                    + "(".concat(storyFramesFolder, "/../").concat(ex.movieViewPage, ")").concat('  ', "\n  "));
+                galleryLinks.push(`\n  `
+                    + `\n[![Image](${storyFramesFolder}/../${ex.movieSnapshot})]`
+                    + `(${storyFramesFolder}/../${ex.movieViewPage})${'  '}\n  `);
             }
-            galleryLinks.push("\nDownload code: [zip](".concat(ex.folder, "/").concat(BuildGalleryLatest.EXAMPLE_ZIP_FILE, ").").concat('  ', "\nTry it <a href=\"").concat(ex.folder, "/index-online.html\">online</a>.").concat('  ', "\n").concat(ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n', "\n").concat(!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n', "\n    "));
+            galleryLinks.push(`
+Download code: [zip](${ex.folder}/${BuildGalleryLatest.EXAMPLE_ZIP_FILE}).${'  '}
+Try it <a href="${ex.folder}/index-online.html">online</a>.${'  '}
+${ex.usesLive ? '**WARNING** This example requires a live server.  \n' : '  \n'}
+${!ex.teleportable ? '**WARNING** This example doesn\'t supports teleportation.  \n' : '  \n'}
+    `);
         });
-        var outREADME = fsix_js_1.fsix.readUtf8Sync("".concat(cfg.paths.GALLERY_SRC_PATH, "/README-rel.md"))
+        const outREADME = fsix_js_1.fsix.readUtf8Sync(`${cfg.paths.GALLERY_SRC_PATH}/README-rel.md`)
             + galleryLinks.join('');
-        sysFs.writeFileSync("".concat(cfg.paths.GALLERY_LATEST_PATH, "/README.md"), outREADME);
+        sysFs.writeFileSync(`${cfg.paths.GALLERY_LATEST_PATH}/README.md`, outREADME);
         if (missingFiles.length) {
-            throw "Missing files:\n" + missingFiles.join('\n');
+            console.error(`Missing files:\n` + missingFiles.join('\n'));
+            //   throw `Missing files:\n` + missingFiles.join('\n');
         }
     }
     BuildGalleryLatest.buildReadMe = buildReadMe;
@@ -149,16 +155,16 @@ var BuildGalleryLatest;
     //                               Runs External Commands
     // ------------------------------------------------------------------------
     function runSpawn(cmdLine, args, callback) {
-        console.log("spawn cmdLine: ".concat(cmdLine));
-        console.log("args: ".concat(args));
-        var ls = (0, child_process_1.spawn)(cmdLine, args);
-        ls.stdout.on('data', function (data) {
+        console.log(`spawn cmdLine: ${cmdLine}`);
+        console.log(`args: ${args}`);
+        const ls = (0, child_process_1.spawn)(cmdLine, args);
+        ls.stdout.on('data', (data) => {
             console.log(data.toString());
         });
-        ls.stderr.on('data', function (data) {
+        ls.stderr.on('data', (data) => {
             console.error(data.toString());
         });
-        ls.on('close', function () {
+        ls.on('close', () => {
             callback();
         });
     }
@@ -167,19 +173,21 @@ var BuildGalleryLatest;
     // ------------------------------------------------------------------------
     function buildGifs(cfg) {
         populateReleaseExamples(cfg);
-        BuildGalleryLatest.releaseExamples.forEach(function (example /* , index */) {
+        BuildGalleryLatest.releaseExamples.forEach((example /* , index */) => {
             if (example.noGifImage) {
                 return;
             }
             // if (example.folder === 'animate-attack-task') { // use to test one example only
-            runSpawn('npm', ['run', '--', 'render', '--dp', '--url', "".concat(cfg.webLinks.localServer, "/").concat(cfg.paths.GALLERY_SRC_PATH, "/").concat(example.folder, "/"), '--config', "./".concat(cfg.paths.GALLERY_SRC_PATH, "/").concat(example.folder, "/abeamer.ini"),
-            ], function () {
-                runSpawn('npm', ['run', '--', 'gif', "".concat(cfg.paths.GALLERY_SRC_PATH, "/").concat(example.folder, "/")], function () {
-                    console.log("Done example: ".concat(example.folder));
+            runSpawn('npm', ['run', '--', 'render', '--dp', '--url',
+                `${cfg.webLinks.localServer}/${cfg.paths.GALLERY_SRC_PATH}/${example.folder}/`,
+                '--config', `./${cfg.paths.GALLERY_SRC_PATH}/${example.folder}/abeamer.ini`,
+            ], () => {
+                runSpawn('npm', ['run', '--', 'gif', `${cfg.paths.GALLERY_SRC_PATH}/${example.folder}/`], () => {
+                    console.log(`Done example: ${example.folder}`);
                 });
             });
             // }
-            console.log("example.folder: ".concat(example.folder));
+            console.log(`example.folder: ${example.folder}`);
         });
     }
     BuildGalleryLatest.buildGifs = buildGifs;

@@ -175,22 +175,19 @@
  */
 var ABeamer;
 (function (ABeamer) {
-    var _InnerConfig = /** @class */ (function () {
-        function _InnerConfig() {
-        }
-        return _InnerConfig;
-    }());
+    class _InnerConfig {
+    }
     ABeamer._InnerConfig = _InnerConfig;
-    var _Teleporter = /** @class */ (function () {
-        function _Teleporter(story, cfg, isTeleport) {
+    class _Teleporter {
+        constructor(story, cfg, isTeleport) {
             this._active = false;
             this.hasStory = false;
             this._story = story;
             this._cfg = cfg;
             if (isTeleport) {
-                ABeamer.pluginManager._plugins.forEach(function (plugin) {
+                ABeamer.pluginManager._plugins.forEach(plugin => {
                     if (!plugin.teleportable) {
-                        ABeamer.throwErr("Plugin ".concat(plugin.id, " doesn't supports teleporting"));
+                        ABeamer.throwErr(`Plugin ${plugin.id} doesn't supports teleporting`);
                     }
                 });
                 this._active = true;
@@ -210,25 +207,21 @@ var ABeamer;
                 this.hasStory = cfg.html !== undefined;
             }
         }
-        _Teleporter.prototype.createSnapshot = function () {
+        createSnapshot() {
             this._cfg.html = this._story.storyAdapter.getProp('html', this._story._args).split(/\n/);
             this._cfg.css = _getStoryCSS();
-        };
-        Object.defineProperty(_Teleporter.prototype, "active", {
-            get: function () {
-                return this._active;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        _Teleporter.prototype._getStoryToTeleportAsConfig = function () {
+        }
+        get active() {
+            return this._active;
+        }
+        _getStoryToTeleportAsConfig() {
             this._cfg.renderPos = this._story.renderFramePos;
             this._cfg.renderCount = this._story.renderFrameCount;
             this._cfg.metadata = this._story.metadata;
             return { config: { abeamer: this._cfg } };
-        };
-        _Teleporter.prototype._rebuildStory = function () {
-            var story = this._story;
+        }
+        _rebuildStory() {
+            const story = this._story;
             // css must be rebuilt before html.
             if (this._cfg.css) {
                 _buildCssRulesFromConfig(this._cfg.css);
@@ -243,14 +236,14 @@ var ABeamer;
             if (this._cfg.metadata) {
                 _filteredDeepCopy(this._cfg.metadata, story.metadata);
             }
-        };
-        _Teleporter.prototype._addScene = function () {
+        }
+        _addScene() {
             this._cfg.animations.push([]);
-        };
-        _Teleporter.prototype._addAnimations = function (anime, sceneIndex) {
+        }
+        _addAnimations(anime, sceneIndex) {
             this._cfg.animations[sceneIndex].push(_filteredDeepCopy(anime, []));
-        };
-        _Teleporter.prototype._fillFrameOpts = function (frameOpts) {
+        }
+        _fillFrameOpts(frameOpts) {
             frameOpts = frameOpts || {};
             // during teleporting don't use stored frameOptions.
             if (this._active) {
@@ -260,27 +253,26 @@ var ABeamer;
             // frameOpts.renderPos = frameOpts.renderPos || this._cfg.renderPos;
             // frameOpts.renderCount = frameOpts.renderCount || this._cfg.renderCount;
             return frameOpts;
-        };
-        return _Teleporter;
-    }());
+        }
+    }
     ABeamer._Teleporter = _Teleporter;
     function _getStoryCSS() {
-        var pageRoot = _getPageRoot();
-        var styleSheets = window.document.styleSheets;
-        var rules = [];
-        for (var sheetI = 0; sheetI < styleSheets.length; sheetI++) {
-            var style = styleSheets[sheetI];
-            var styleHref = style.href;
+        const pageRoot = _getPageRoot();
+        const styleSheets = window.document.styleSheets;
+        const rules = [];
+        for (let sheetI = 0; sheetI < styleSheets.length; sheetI++) {
+            const style = styleSheets[sheetI];
+            const styleHref = style.href;
             if (styleHref.endsWith('normalize.css')
                 || styleHref.endsWith('abeamer.min.css')) {
                 continue;
             }
-            var path = styleHref.startsWith(pageRoot) ?
+            const path = styleHref.startsWith(pageRoot) ?
                 styleHref.substr(pageRoot.length).replace(/\/[^/]*$/, '/') : '';
-            var cssRules = style.cssRules;
-            for (var ruleI = 0; ruleI < cssRules.length; ruleI++) {
-                var cssRule = cssRules[ruleI];
-                rules.push({ path: path, text: cssRule.cssText });
+            const cssRules = style.cssRules;
+            for (let ruleI = 0; ruleI < cssRules.length; ruleI++) {
+                const cssRule = cssRules[ruleI];
+                rules.push({ path, text: cssRule.cssText });
             }
         }
         return rules;
@@ -292,7 +284,7 @@ var ABeamer;
      */
     function _filteredDeepCopy(src, dst) {
         if (Array.isArray(src)) {
-            src.forEach(function (item) {
+            src.forEach(item => {
                 switch (typeof item) {
                     case 'function':
                         ABeamer.throwI8n(ABeamer.Msgs.NoCode);
@@ -306,9 +298,9 @@ var ABeamer;
             });
         }
         else {
-            Object.keys(src).forEach(function (key) {
+            Object.keys(src).forEach(key => {
                 if (key[0] !== '_') {
-                    var item = src[key];
+                    const item = src[key];
                     switch (typeof item) {
                         case 'function':
                             ABeamer.throwI8n(ABeamer.Msgs.NoCode);
@@ -326,14 +318,14 @@ var ABeamer;
         return dst;
     }
     function _buildCssRulesFromConfig(cssRules) {
-        var pageRoot = _getPageRoot();
-        var styleSheets = window.document.styleSheets;
-        var lastSheet = styleSheets[styleSheets.length - 1];
-        var cssRulesLen = lastSheet.cssRules.length;
-        for (var i = 0; i < cssRules.length; i++) {
-            var cssRule = cssRules[i];
-            var prefixedCssRule = _handleVendorPrefixes(cssRule.text);
-            var remappedRule = _remapCSSRuleLocalLink(pageRoot, cssRule.path, prefixedCssRule);
+        const pageRoot = _getPageRoot();
+        const styleSheets = window.document.styleSheets;
+        const lastSheet = styleSheets[styleSheets.length - 1];
+        let cssRulesLen = lastSheet.cssRules.length;
+        for (let i = 0; i < cssRules.length; i++) {
+            const cssRule = cssRules[i];
+            const prefixedCssRule = _handleVendorPrefixes(cssRule.text);
+            const remappedRule = _remapCSSRuleLocalLink(pageRoot, cssRule.path, prefixedCssRule);
             lastSheet.insertRule(remappedRule, cssRulesLen++);
         }
     }
@@ -343,16 +335,16 @@ var ABeamer;
     }
     /** Returns the url location of the current web page without the html file name. */
     function _getPageRoot() {
-        var location = window.location;
+        const location = window.location;
         return location.origin + (location.pathname || '').replace(/\/[^/]*$/, '/');
     }
     /**
      * Adds or removes vendor prefixes from the teleported story.
      */
     function _handleVendorPrefixes(text) {
-        return text.replace(/([\w\-]+)\s*:([^;]*;)/g, function (_all, propName, propValue) {
-            var propNames = ABeamer._propNameToVendorProps(propName);
-            return propNames.map(function (name) { return "".concat(name, ": ").concat(propValue); }).join(' ');
+        return text.replace(/([\w\-]+)\s*:([^;]*;)/g, (_all, propName, propValue) => {
+            const propNames = ABeamer._propNameToVendorProps(propName);
+            return propNames.map(name => `${name}: ${propValue}`).join(' ');
         });
     }
     /**
@@ -361,12 +353,12 @@ var ABeamer;
      * This function from the original path and current host generates a new link.
      */
     function _remapCSSRuleLocalLink(pageRoot, path, cssText) {
-        return !path ? path : cssText.replace(/url\("([^"]+)"\)/g, function (all, link) {
+        return !path ? path : cssText.replace(/url\("([^"]+)"\)/g, (all, link) => {
             if (link.startsWith('http')) {
                 return all;
             }
-            var newLink = pageRoot + path + link;
-            return "url(\"".concat(newLink, "\")");
+            const newLink = pageRoot + path + link;
+            return `url("${newLink}")`;
         });
     }
 })(ABeamer || (ABeamer = {}));

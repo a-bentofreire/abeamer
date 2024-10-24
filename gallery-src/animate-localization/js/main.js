@@ -3,7 +3,7 @@
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-$(window).on("load", function () {
+$(window).on("load", () => {
     ABeamer.pluginManager.addLocalization({
         locale: 'pt_PT',
         functionalities: [[ABeamer.Functionalities.functions, [
@@ -15,12 +15,12 @@ $(window).on("load", function () {
             MustNatPositive: 'O valor de %p% tem de ser um número natural positivo',
         },
     });
-    var story = ABeamer.createStory(/*FPS:*/ 8);
+    const story = ABeamer.createStory(/*FPS:*/ 8);
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
-    var d = '2s';
-    var scene1 = story.scenes[0];
+    const d = '2s';
+    const scene1 = story.scenes[0];
     scene1
         .addAnimations([{
             selector: '#dot',

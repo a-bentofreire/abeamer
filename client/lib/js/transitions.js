@@ -57,7 +57,7 @@ var ABeamer;
     /**
      * List of the built-in Transition Names.
      */
-    var StdTransitions;
+    let StdTransitions;
     (function (StdTransitions) {
         StdTransitions[StdTransitions["slideLeft"] = 0] = "slideLeft";
         StdTransitions[StdTransitions["slideRight"] = 1] = "slideRight";
@@ -71,28 +71,28 @@ var ABeamer;
     //                               Implementation
     // ------------------------------------------------------------------------
     ABeamer._transitionFunctions = {};
-    var _TransitionInterpolator = /** @class */ (function () {
-        function _TransitionInterpolator() {
+    class _TransitionInterpolator {
+        constructor() {
             this._active = false;
             this._transition = {
                 handler: '',
             };
         }
-        _TransitionInterpolator.prototype._set = function (transition, sceneFrameCount, args) {
+        _set(transition, sceneFrameCount, args) {
             this._active = false;
             this._transition = transition;
-            var handler = transition.handler;
-            var duration = transition.duration;
+            let handler = transition.handler;
+            const duration = transition.duration;
             if (handler === undefined) {
                 return false;
             }
-            var frameCount = ABeamer.parseTimeHandler(duration, args, ABeamer.DEFAULT_TRANSITION_DURATION, sceneFrameCount);
+            const frameCount = ABeamer.parseTimeHandler(duration, args, ABeamer.DEFAULT_TRANSITION_DURATION, sceneFrameCount);
             if (frameCount === 0) {
                 return false;
             }
             this._params = {
                 bothVisible: true,
-                frameCount: frameCount,
+                frameCount,
                 leaveFrameCount: Math.round(frameCount / 2),
             };
             this._params.enterFrameCount = frameCount - this._params.leaveFrameCount;
@@ -107,19 +107,19 @@ var ABeamer;
             }
             this._active = this._transitionFunc !== undefined;
             return this._active;
-        };
-        _TransitionInterpolator.prototype._setup = function (leaveAdapter, enterAdapter, sceneFrameCount, args) {
-            var params = this._params;
+        }
+        _setup(leaveAdapter, enterAdapter, sceneFrameCount, args) {
+            const params = this._params;
             this._firstOutTransitionFrame = sceneFrameCount - params.leaveFrameCount;
             params.leaveAdapter = leaveAdapter;
             params.enterAdapter = enterAdapter;
             params.state = ABeamer.TRS_SETUP;
             this._transitionFunc(params, args);
-        };
-        _TransitionInterpolator.prototype._render = function (frameNr, _frameCount, isLeaveAdapted, args) {
-            var params = this._params;
+        }
+        _render(frameNr, _frameCount, isLeaveAdapted, args) {
+            const params = this._params;
             if (isLeaveAdapted) {
-                var frameI = frameNr - this._firstOutTransitionFrame;
+                const frameI = frameNr - this._firstOutTransitionFrame;
                 if (frameI >= 0) {
                     params.state = ABeamer.TRS_AT_OUT;
                     params.enterFrameI = undefined;
@@ -148,20 +148,19 @@ var ABeamer;
                     this._transitionFunc(params, args);
                 }
             }
-        };
-        return _TransitionInterpolator;
-    }());
+        }
+    }
     ABeamer._TransitionInterpolator = _TransitionInterpolator;
     function _slide(params, args, refAttrName, lengthAttrName, isNegDir) {
-        var sParams = params;
-        var leaveAdapter = params.leaveAdapter;
+        const sParams = params;
+        const leaveAdapter = params.leaveAdapter;
         if (params.state === ABeamer.TRS_SETUP) {
             sParams.ref = parseInt(leaveAdapter.getProp(refAttrName, args));
             sParams.length = parseInt(leaveAdapter.getProp(lengthAttrName, args));
         }
         else {
-            var shift = ABeamer.downRound((params.frameI / params.frameCount) * sParams.length);
-            var ref = sParams.ref;
+            const shift = ABeamer.downRound((params.frameI / params.frameCount) * sParams.length);
+            let ref = sParams.ref;
             ref = isNegDir ? ref - shift : ref + shift;
             params.leaveAdapter.setProp(refAttrName, ref, args);
             // #debug-start
@@ -205,7 +204,7 @@ var ABeamer;
     ABeamer._transitionFunctions['dissolve'] = _dissolveTransition;
     function _dissolveTransition(params, args) {
         if (params.state !== ABeamer.TRS_SETUP) {
-            var opacity = 1 - (params.frameI / params.frameCount);
+            let opacity = 1 - (params.frameI / params.frameCount);
             params.leaveAdapter.setProp('opacity', opacity, args);
             // #debug-start
             if (args.isVerbose) {

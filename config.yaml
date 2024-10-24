@@ -73,16 +73,16 @@ webLinks:
 docs:
   replacePaths:
     -
-      - !!js/regexp /"[^"]*highlight.[^"]*\.js"/
+      - '"[^"]*highlight.[^"]*\.js"'
       - '"/vendor/highlight.js"'
     -
-      - !!js/regexp /"[^"]+jquery[^"]*\.js"/
+      - '"[^"]+jquery[^"]*\.js"'
       - '"/vendor/jquery-3.7.1.min.js"'
     -
-      - !!js/regexp /"[\.\/]*css\/theme(\w*)\.css"/g
+      - '"[\.\/]*css\/theme(\w*)\.css'
       - '"/css/mydocs/theme$1.min.css"'
     -
-      - !!js/regexp /"[^"]+highlight.js[^"]*\.css"/
+      - '"[^"]+highlight.js[^"]*\.css"'
       - '"/css/my-code-theme.min.css"'
 
   keywords:

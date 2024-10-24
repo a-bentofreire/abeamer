@@ -48,30 +48,23 @@ var ABeamer;
     function _formatCommon(params, req, maxParam, f) {
         req.checkParams(req, Math.min(Math.max(1, params.length), maxParam), [1 /* ExFuncParamType.Number */, 2 /* ExFuncParamType.String */, 2 /* ExFuncParamType.String */]
             .slice(0, params.length));
-        var v = params[0].numValue;
-        var locale = params.length > 1 ? params[1].sValue : undefined;
-        var currency = params.length > 2 ? params[2].sValue : 'USD';
+        const v = params[0].numValue;
+        const locale = params.length > 1 ? params[1].sValue : undefined;
+        const currency = params.length > 2 ? params[2].sValue : 'USD';
         req.res.paType = 2 /* ExFuncParamType.String */;
         req.res.sValue = f(v, locale, currency);
     }
     function _numToStr(params, req) {
-        _formatCommon(params, req, 2, function (v, locale) {
-            return new Intl.NumberFormat(locale, { useGrouping: true }).format(v);
-        });
+        _formatCommon(params, req, 2, (v, locale) => new Intl.NumberFormat(locale, { useGrouping: true }).format(v));
     }
     function _nogrpToStr(params, req) {
-        _formatCommon(params, req, 2, function (v, locale) {
-            return new Intl.NumberFormat(locale, { useGrouping: false }).format(v);
-        });
+        _formatCommon(params, req, 2, (v, locale) => new Intl.NumberFormat(locale, { useGrouping: false }).format(v));
     }
     function _currToStr(params, req) {
-        _formatCommon(params, req, 3, function (v, locale, currency) {
-            return new Intl.NumberFormat(locale, {
-                useGrouping: true,
-                style: 'currency',
-                currency: currency,
-            }).format(v);
-        });
+        _formatCommon(params, req, 3, (v, locale, currency) => new Intl.NumberFormat(locale, {
+            useGrouping: true,
+            style: 'currency', currency,
+        }).format(v));
     }
     ABeamer.pluginManager.addFunctions([
         ['numToStr', _numToStr], ['nogrpToStr', _nogrpToStr], ['currToStr', _currToStr],

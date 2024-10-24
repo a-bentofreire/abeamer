@@ -25,7 +25,7 @@ var ABeamer;
      * List of supported Time Units.
      * `%` can only be used if there is a parent time reference.
      */
-    var TimeUnit;
+    let TimeUnit;
     (function (TimeUnit) {
         TimeUnit[TimeUnit["f"] = 0] = "f";
         TimeUnit[TimeUnit["ms"] = 1] = "ms";
@@ -52,8 +52,8 @@ var ABeamer;
                 frame = frame / 60;
                 break;
         }
-        var unitTime = frame / fps;
-        var divider = Math.pow(10, (maxPrecision || 4));
+        const unitTime = frame / fps;
+        const divider = Math.pow(10, (maxPrecision || 4));
         return (ABeamer.downRound(unitTime * divider) / divider).toString() + TimeUnit[unit];
     }
     ABeamer.frame2Time = frame2Time;
@@ -67,36 +67,35 @@ var ABeamer;
      *
      * @param toInt rounds the nearest int. if the float part is 0.5, it rounds to the lower
      */
-    function parseTimeHandler(timeOrFrame, args, defaultTimeOrFrame, referenceFrame, toInt) {
-        if (toInt === void 0) { toInt = true; }
+    function parseTimeHandler(timeOrFrame, args, defaultTimeOrFrame, referenceFrame, toInt = true) {
         if (timeOrFrame === undefined || timeOrFrame === '') {
             timeOrFrame = defaultTimeOrFrame;
         }
-        var shift = '';
-        var story = args.story;
+        let shift = '';
+        const story = args.story;
         if (typeof timeOrFrame === 'function') {
             timeOrFrame = timeOrFrame(args);
         }
-        var defaultUnit = story.defaultUnit;
-        var isStringTime = typeof timeOrFrame === 'string';
+        let defaultUnit = story.defaultUnit;
+        let isStringTime = typeof timeOrFrame === 'string';
         if (isStringTime) {
-            var exprTime = ABeamer.ifExprCalc(timeOrFrame, args);
+            const exprTime = ABeamer.ifExprCalc(timeOrFrame, args);
             if (exprTime !== undefined) {
                 timeOrFrame = exprTime;
                 isStringTime = typeof timeOrFrame === 'string';
             }
         }
         if (isStringTime) {
-            var _a = timeOrFrame
-                .match(/^([+\-])?([\d\.]+)([\w%]+)$/) || ['', '', '', ''], sShift = _a[1], sValue = _a[2], suffix = _a[3];
+            const [, sShift, sValue, suffix] = timeOrFrame
+                .match(/^([+\-])?([\d\.]+)([\w%]+)$/) || ['', '', '', ''];
             defaultUnit = TimeUnit[suffix];
             if (defaultUnit === undefined) {
-                throw "Unknown time of ".concat(timeOrFrame);
+                throw `Unknown time of ${timeOrFrame}`;
             }
             timeOrFrame = parseFloat(sValue);
             shift = sShift;
         }
-        var res = timeOrFrame;
+        let res = timeOrFrame;
         switch (defaultUnit) {
             case TimeUnit.ms:
                 res = res * story.fps / 1000.0;

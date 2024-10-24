@@ -3,12 +3,12 @@
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 20);
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 20);
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
-    var scene1 = story.scenes[0];
+    const scene1 = story.scenes[0];
     scene1
         .addAnimations([{
             selector: '#type, #java',

@@ -1,6 +1,6 @@
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 20);
-    var scene1 = story.scenes[0];
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 20);
+    const scene1 = story.scenes[0];
     scene1.addAnimations([{
             selector: '#hello',
             duration: '2s',

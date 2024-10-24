@@ -1,28 +1,4 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -59,7 +35,7 @@ var ABeamer;
     ABeamer.PT_VALUE_TEXT_FUNC = 5;
     ABeamer.PT_VALUE_TEXT_EXPR = 6;
     /** Pre-compiled RegEx to determine if the string is a pixel. */
-    var pxRegExp = /^-?[\d\.]+(?:px)?$/;
+    const pxRegExp = /^-?[\d\.]+(?:px)?$/;
     // ------------------------------------------------------------------------
     //                               _parseRelativeValue
     // ------------------------------------------------------------------------
@@ -78,7 +54,7 @@ var ABeamer;
                 return curValue - parseFloat(value.substr(1));
             }
             else {
-                var resValue = parseFloat(value);
+                const resValue = parseFloat(value);
                 if (isNaN(resValue)) {
                     ABeamer.throwI8n(ABeamer.Msgs.ValueTypeError, { p: value });
                 }
@@ -103,18 +79,14 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               PropInterpolator
     // ------------------------------------------------------------------------
-    var _PropInterpolator = /** @class */ (function (_super) {
-        __extends(_PropInterpolator, _super);
-        function _PropInterpolator() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        _PropInterpolator.prototype.attachSelector = function (elementAdpt, elActRg, _isVerbose, args) {
-            var self = this;
-            var realPropName = this.realPropName;
-            var actRg = elActRg.actionRg;
+    class _PropInterpolator extends ABeamer._WorkAnimationProp {
+        attachSelector(elementAdpt, elActRg, _isVerbose, args) {
+            const self = this;
+            const realPropName = this.realPropName;
+            const actRg = elActRg.actionRg;
             function getStartValue() {
                 // user valueStart has priority
-                var valueStart = self.animProp.valueStart;
+                const valueStart = self.animProp.valueStart;
                 if (valueStart !== undefined) {
                     return _parseStartValueHandler(valueStart, args);
                 }
@@ -126,15 +98,15 @@ var ABeamer;
                     return elementAdpt.getProp(realPropName, args);
                 }
             }
-            var startValue = getStartValue();
+            let startValue = getStartValue();
             if (startValue === 'auto') {
                 startValue = '';
             }
-            var strStartValue = startValue;
-            var numStartValue = 0;
-            var propType = ABeamer.PT_NUMBER;
+            const strStartValue = startValue;
+            let numStartValue = 0;
+            let propType = ABeamer.PT_NUMBER;
             // computes PROP_TYPE based on startValue
-            var valueText = this.animProp.valueText;
+            const valueText = this.animProp.valueText;
             if (valueText) {
                 switch (typeof valueText) {
                     case 'string':
@@ -195,8 +167,8 @@ var ABeamer;
                         }
                 }
             }
-            var endValue = this.animProp.value;
-            var numEndValue;
+            const endValue = this.animProp.value;
+            let numEndValue;
             // computes EndValue based on value
             switch (propType) {
                 case ABeamer.PT_BOOLEAN:
@@ -213,17 +185,17 @@ var ABeamer;
             actRg.initialValue = numStartValue;
             actRg.waitFor = this.waitFor;
             actRg.propType = this.propType;
-        };
-        _PropInterpolator.prototype.interpolate = function (t, story, isVerbose) {
-            var args = story._args;
+        }
+        interpolate(t, story, isVerbose) {
+            const args = story._args;
             ABeamer._vars.v0 = this.numStartValue;
             ABeamer._vars.v1 = this.numEndValue;
             ABeamer._vars.vd = this.variation;
             // processes easing
-            var tAfterEasing = this.easing ? this.easing.func(t, this.easing.params, args) : t;
+            const tAfterEasing = this.easing ? this.easing.func(t, this.easing.params, args) : t;
             ABeamer._vars.vot = tAfterEasing;
             // processes oscillator
-            var tAfterOscillator = this.oscillator
+            const tAfterOscillator = this.oscillator
                 ? this.oscillator.func(tAfterEasing, this.oscillator.params, args) : tAfterEasing;
             // #debug-start
             if (isVerbose && this.oscillator) {
@@ -236,11 +208,11 @@ var ABeamer;
             }
             // #debug-end
             // processes `variation` and `startValue`
-            var v = tAfterOscillator * this.variation + this.numStartValue;
+            let v = tAfterOscillator * this.variation + this.numStartValue;
             this.curNumValue = v;
             // processes `path`
-            var values;
-            var dimCount = 1;
+            let values;
+            let dimCount = 1;
             if (this.path) {
                 ABeamer._vars.vpt = v;
                 values = this.path.func(v, this.path.params, ABeamer.FS_RUN, args);
@@ -259,9 +231,9 @@ var ABeamer;
                     v = values[0];
                 }
             }
-            var value = v;
-            var valueFormat = this.animProp.valueFormat;
-            var propType = this.propType;
+            let value = v;
+            const valueFormat = this.animProp.valueFormat;
+            const propType = this.propType;
             if (dimCount === 1) {
                 value = this.roundFunc ? this.roundFunc(value) : value;
                 switch (propType) {
@@ -276,9 +248,9 @@ var ABeamer;
                         value = ABeamer.calcExpr(this.animProp.valueText, args).toString();
                         break;
                     case ABeamer.PT_VALUE_TEXT_LIST:
-                        var list = this.animProp.valueText;
-                        var len = list.length;
-                        var listIndex = Math.floor(len * Math.min(Math.max(0, value), 0.999));
+                        const list = this.animProp.valueText;
+                        const len = list.length;
+                        const listIndex = Math.floor(len * Math.min(Math.max(0, value), 0.999));
                         value = list[listIndex];
                         break;
                     case ABeamer.PT_VALUE_TEXT_FUNC:
@@ -296,12 +268,12 @@ var ABeamer;
             else {
                 // multi-dimension paths
                 values = ABeamer._applyRoundFunc(values, this.roundFunc);
-                value = valueFormat ? ABeamer.sprintf.apply(void 0, __spreadArray([valueFormat], values, false)) : values.toString();
+                value = valueFormat ? ABeamer.sprintf(valueFormat, ...values) : values.toString();
             }
             // console.log(t, v, this.variation, value);
             return value;
-        };
-        _PropInterpolator.prototype.toAction = function (v, isFirst, isLast) {
+        }
+        toAction(v, isFirst, isLast) {
             return {
                 realPropName: this.realPropName,
                 value: v,
@@ -310,15 +282,13 @@ var ABeamer;
                 toBypassForward: _bypassModeToBool(isFirst, isLast, this.bypassForwardMode),
                 toBypassBackward: _bypassModeToBool(isLast, isFirst, this.bypassBackwardMode),
             };
-        };
-        return _PropInterpolator;
-    }(ABeamer._WorkAnimationProp));
+        }
+    }
     ABeamer._PropInterpolator = _PropInterpolator;
-    function _applyAction(action, elAdapter, isVerbose, args, simulateOnly) {
-        if (simulateOnly === void 0) { simulateOnly = false; }
-        var actRg = action.actRg;
-        var value = action.value;
-        var propName = action.realPropName;
+    function _applyAction(action, elAdapter, isVerbose, args, simulateOnly = false) {
+        const actRg = action.actRg;
+        const value = action.value;
+        const propName = action.realPropName;
         // #debug-start
         function log(name, aValue) {
             args.story.logFrmt('action', [
@@ -339,13 +309,13 @@ var ABeamer;
             elAdapter.setProp(propName, newValue, args);
             // #debug-start
             if (isVerbose) {
-                var actualNewValue = elAdapter.getProp(propName, args);
-                var isDifferent = newValue !== actualNewValue;
+                const actualNewValue = elAdapter.getProp(propName, args);
+                let isDifferent = newValue !== actualNewValue;
                 if (isDifferent) {
                     // compares numerical values taking into account the numeric precision errors
                     if (isDifferent && actRg.propType === ABeamer.PT_NUMBER) {
-                        var actualFloat = Math.round(parseFloat(actualNewValue) * ABeamer._TEST_DIGIT_LIMIT);
-                        var newFloat = Math.round(newValue * ABeamer._TEST_DIGIT_LIMIT);
+                        const actualFloat = Math.round(parseFloat(actualNewValue) * ABeamer._TEST_DIGIT_LIMIT);
+                        const newFloat = Math.round(newValue * ABeamer._TEST_DIGIT_LIMIT);
                         isDifferent = newFloat !== actualFloat;
                     }
                 }
@@ -363,9 +333,8 @@ var ABeamer;
         }
         setValue(value);
         if (actRg.waitFor && actRg.waitFor.length) {
-            for (var _i = 0, _a = actRg.waitFor; _i < _a.length; _i++) {
-                var waitFor = _a[_i];
-                args.waitMan.addWaitFunc(ABeamer._handleWaitFor, { waitFor: waitFor, elAdapter: elAdapter });
+            for (const waitFor of actRg.waitFor) {
+                args.waitMan.addWaitFunc(ABeamer._handleWaitFor, { waitFor, elAdapter });
             }
         }
         return action.numValue;

@@ -37,7 +37,7 @@ var ABeamer;
     function _SceneTransitionTask(_anime, _wkTask, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_TELEPORT:
-                var handler = params.handler;
+                let handler = params.handler;
                 if (typeof handler === 'number') {
                     handler = ABeamer.StdTransitions[handler];
                 }
@@ -86,21 +86,21 @@ var ABeamer;
     function _addVarsTask(_anime, _wkTask, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_INIT:
-                var vars_1 = params.vars || {};
-                var overwrite_1 = params.overwrite !== false;
-                var allowExpr_1 = params.allowExpr === true;
-                Object.keys(vars_1).forEach(function (varName) {
-                    var varParts = varName.split('.');
-                    var argsPointer = args.vars;
-                    var objPartName = varParts.shift();
+                const vars = params.vars || {};
+                const overwrite = params.overwrite !== false;
+                const allowExpr = params.allowExpr === true;
+                Object.keys(vars).forEach(varName => {
+                    const varParts = varName.split('.');
+                    let argsPointer = args.vars;
+                    let objPartName = varParts.shift();
                     while (varParts.length) {
                         argsPointer[objPartName] = argsPointer[objPartName] || {};
                         argsPointer = argsPointer[objPartName];
                         objPartName = varParts.shift();
                     }
-                    if (overwrite_1 || argsPointer[objPartName] === undefined) {
-                        var varValue = vars_1[varName];
-                        if (allowExpr_1 && typeof varValue === 'string' && ABeamer.isExpr(varValue)) {
+                    if (overwrite || argsPointer[objPartName] === undefined) {
+                        let varValue = vars[varName];
+                        if (allowExpr && typeof varValue === 'string' && ABeamer.isExpr(varValue)) {
                             varValue = ABeamer.calcExpr(varValue, args);
                         }
                         argsPointer[objPartName] = varValue;

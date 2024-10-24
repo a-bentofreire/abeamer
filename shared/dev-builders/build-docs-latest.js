@@ -1,25 +1,16 @@
 "use strict";
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BuildDocsLatest = void 0;
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-var globule = require("globule");
-var yaml = require("js-yaml");
-var sysFs = require("fs");
-var sysPath = require("path");
-var fsix_js_1 = require("../vendor/fsix.js");
-var versionLib = require("../version.js");
+const globule = require("globule");
+const yaml = require("js-yaml");
+const sysFs = require("fs");
+const sysPath = require("path");
+const fsix_js_1 = require("../vendor/fsix.js");
+const versionLib = require("../version.js");
 /** @module developer | This module won't be part of release version */
 /**
  * ## Description
@@ -46,12 +37,12 @@ var versionLib = require("../version.js");
  */
 var BuildDocsLatest;
 (function (BuildDocsLatest) {
-    var EMPTY = ['', '', '', '', '', '', '', '', '', ''];
-    var MARKDOWN_FOLDER = 'docs';
+    const EMPTY = ['', '', '', '', '', '', '', '', '', ''];
+    const MARKDOWN_FOLDER = 'docs';
     BuildDocsLatest.API_FOLDER = 'api';
     BuildDocsLatest.EN_LAST_VERSION_PATH = 'en';
-    var badgeLine = '';
-    BuildDocsLatest.getTargets = function (cfg) { return [
+    let badgeLine = '';
+    BuildDocsLatest.getTargets = (cfg) => [
         {
             id: 'end-user',
             name: 'End User',
@@ -61,13 +52,13 @@ var BuildDocsLatest;
             indexFile: './README.md',
             isEndUser: true,
             logFile: './build-docs-latest-end-user.log',
-            processIndexPage: function (data) {
+            processIndexPage: (data) => {
                 return data
-                    .replace(/^(.*)developer-badge\.gif(.*)$/m, function (all, p1, p2) {
+                    .replace(/^(.*)developer-badge\.gif(.*)$/m, (all, p1, p2) => {
                     badgeLine = all;
                     return p1 + 'end-user-badge.gif' + p2;
                 })
-                    .replace(new RegExp("".concat(cfg.webLinks.webDomain, "/"), 'g'), '/');
+                    .replace(new RegExp(`${cfg.webLinks.webDomain}/`, 'g'), '/');
             },
         },
         {
@@ -76,19 +67,19 @@ var BuildDocsLatest;
             dstPath: cfg.paths.DOCS_LATEST_DEVELOPER_PATH,
             sourcePaths: [cfg.paths.DOCS_SOURCE_PATH, cfg.paths.DOCS_SOURCE_DEV_PATH],
             moduleTypes: ['end-user', 'developer', 'internal'],
-            indexFile: "".concat(cfg.paths.DOCS_SOURCE_PATH, "-dev/README.md"),
+            indexFile: `${cfg.paths.DOCS_SOURCE_PATH}-dev/README.md`,
             isEndUser: false,
             logFile: './build-docs-latest-dev.log',
-            processIndexPage: function (data) {
-                return data.replace(/^(# Description.*)$/m, function (all) {
+            processIndexPage: (data) => {
+                return data.replace(/^(# Description.*)$/m, (all) => {
                     if (!badgeLine) {
-                        throw "end-user should had been processed already.";
+                        throw `end-user should had been processed already.`;
                     }
                     return all + '\n' + badgeLine + '  \n';
                 });
             },
         },
-    ]; };
+    ];
     // ------------------------------------------------------------------------
     //                               ReferenceBuilder
     // ------------------------------------------------------------------------
@@ -100,75 +91,70 @@ var BuildDocsLatest;
      * Processes all output Markdown files, by scanning all the local links and
      * filling the missing details.
      */
-    var ReferenceBuilder = /** @class */ (function () {
-        function ReferenceBuilder(log) {
+    class ReferenceBuilder {
+        constructor(log) {
             this.log = log;
             this.refs = {};
         }
         /** Stage 0. Generate references from the filename and headers */
-        ReferenceBuilder.prototype.buildRefs = function (fileBase, content) {
-            var _this = this;
-            this.refs[textToRef(fileBase)] = "".concat(fileBase, ".md");
-            content.replace(/^#+\s*(.+)\s*$/mg, function (all, text) {
-                var ref = textToRef(text);
-                var fullRef = "".concat(fileBase, ".md#").concat(ref);
-                _this.refs[ref] = fullRef;
-                _this.refs[fullRef] = fullRef;
-                _this.refs["".concat(fileBase, "#").concat(ref)] = fullRef;
+        buildRefs(fileBase, content) {
+            this.refs[textToRef(fileBase)] = `${fileBase}.md`;
+            content.replace(/^#+\s*(.+)\s*$/mg, (all, text) => {
+                const ref = textToRef(text);
+                const fullRef = `${fileBase}.md#${ref}`;
+                this.refs[ref] = fullRef;
+                this.refs[fullRef] = fullRef;
+                this.refs[`${fileBase}#${ref}`] = fullRef;
                 return all;
             });
-        };
+        }
         /** Processes the links from Markdown content, updating its content */
-        ReferenceBuilder.prototype.updateLinks = function (fileBase, content) {
-            var _this = this;
-            return content.replace(/\[([^\]]*)\]\(([\w\-\s]*)(?:#([\w\-\s]*))?\)/g, function (_app, info, link, bookmark) {
-                var _a;
+        updateLinks(fileBase, content) {
+            return content.replace(/\[([^\]]*)\]\(([\w\-\s]*)(?:#([\w\-\s]*))?\)/g, (_app, info, link, bookmark) => {
                 bookmark = bookmark || '';
                 link = link || '';
                 if (!info) {
                     info = bookmark || link;
                 }
-                var refBookmark = textToRef(bookmark || '');
-                var refLink = textToRef(link || fileBase);
-                var tracedLink;
+                const refBookmark = textToRef(bookmark || '');
+                const refLink = textToRef(link || fileBase);
+                let tracedLink;
                 if (refBookmark) {
-                    tracedLink = _this.refs[refLink + '#' + refBookmark] ||
-                        _this.refs[refBookmark];
+                    tracedLink = this.refs[refLink + '#' + refBookmark] ||
+                        this.refs[refBookmark];
                 }
                 else {
-                    tracedLink = _this.refs[refLink];
+                    tracedLink = this.refs[refLink];
                 }
                 if (!tracedLink) {
-                    _this.log.notFound.push("".concat(link, "#").concat(bookmark, " in ").concat(fileBase));
+                    this.log.notFound.push(`${link}#${bookmark} in ${fileBase}`);
                 }
                 else {
-                    _this.log.found.push("".concat(link, "#").concat(bookmark, " in ").concat(fileBase, " = ").concat(tracedLink));
-                    _a = tracedLink.split('#'), link = _a[0], bookmark = _a[1];
+                    this.log.found.push(`${link}#${bookmark} in ${fileBase} = ${tracedLink}`);
+                    [link, bookmark] = tracedLink.split('#');
                 }
-                return "[".concat(info, "](").concat(link).concat(bookmark ? '#' + bookmark : '', ")");
+                return `[${info}](${link}${bookmark ? '#' + bookmark : ''})`;
             });
-        };
+        }
         /** Main entry point. Reads the files and calls appropriate action. */
-        ReferenceBuilder.prototype.build = function (path) {
-            var _this = this;
-            var fileBases = sysFs.readdirSync(path)
-                .filter(function (file) { return file.endsWith('.md'); }).map(function (file) { return file.replace(/\.md$/, ''); });
-            [0, 1].forEach(function (stage) {
-                fileBases.forEach(function (fileBase) {
-                    var fileName = "".concat(path, "/").concat(fileBase, ".md");
-                    var content = fsix_js_1.fsix.readUtf8Sync(fileName);
+        build(path) {
+            const fileBases = sysFs.readdirSync(path)
+                .filter(file => file.endsWith('.md')).map(file => file.replace(/\.md$/, ''));
+            [0, 1].forEach(stage => {
+                fileBases.forEach(fileBase => {
+                    const fileName = `${path}/${fileBase}.md`;
+                    const content = fsix_js_1.fsix.readUtf8Sync(fileName);
                     if (stage === 0) {
-                        _this.buildRefs(fileBase, content);
+                        this.buildRefs(fileBase, content);
                     }
                     else {
-                        sysFs.writeFileSync(fileName, _this.updateLinks(fileBase, content));
+                        sysFs.writeFileSync(fileName, this.updateLinks(fileBase, content));
                     }
                 });
             });
             this.log.refs = this.refs;
-        };
-        return ReferenceBuilder;
-    }());
+        }
+    }
     /* enum ModuleType {
       unknown,
       developer,
@@ -176,7 +162,7 @@ var BuildDocsLatest;
       shared,
       'end-user',
     } */
-    var BadgeNameOfDocIdType = [
+    const BadgeNameOfDocIdType = [
         "enum",
         "type",
         "const",
@@ -189,15 +175,14 @@ var BuildDocsLatest;
         "setter",
         "constructor",
     ];
-    var IdTypeAreFunctions = [3 /* DocIdType.FunctionName */, 6 /* DocIdType.MethodName */];
-    var IdTypeAreSections = [
+    const IdTypeAreFunctions = [3 /* DocIdType.FunctionName */, 6 /* DocIdType.MethodName */];
+    const IdTypeAreSections = [
         0 /* DocIdType.EnumName */, 2 /* DocIdType.ConstName */, 1 /* DocIdType.TypeName */,
         4 /* DocIdType.InterfaceName */,
         5 /* DocIdType.ClassName */, 3 /* DocIdType.FunctionName */,
     ];
-    var DocParser = /** @class */ (function () {
-        function DocParser(localWebLinks, isEndUser) {
-            var _this = this;
+    class DocParser {
+        constructor(localWebLinks, isEndUser) {
             this.localWebLinks = localWebLinks;
             this.isEndUser = isEndUser;
             this.outLines = [];
@@ -211,11 +196,10 @@ var BuildDocsLatest;
             this.links = [];
             this.lastJsDocsLineNr = 0;
             this.lastPeekLineNr = 0;
-            this.isFinished = function () { return _this.inpLineNr >= _this.inpLineCount; };
+            this.isFinished = () => this.inpLineNr >= this.inpLineCount;
         }
-        DocParser.prototype.getLine = function (peekOnly) {
-            if (peekOnly === void 0) { peekOnly = false; }
-            var res = this.inpLines[this.inpLineNr] || '';
+        getLine(peekOnly = false) {
+            const res = this.inpLines[this.inpLineNr] || '';
             if (!peekOnly) {
                 this.inpLineNr++;
             }
@@ -223,17 +207,17 @@ var BuildDocsLatest;
                 this.lastPeekLineNr = this.inpLineNr;
             }
             return res;
-        };
-        DocParser.prototype._processDefContent = function (line, scanForComma) {
+        }
+        _processDefContent(line, scanForComma) {
             line = line.trim();
-            var line1 = line;
-            var securityLineCount = 0;
+            const line1 = line;
+            let securityLineCount = 0;
             do {
                 if (securityLineCount > 150) {
-                    console.log("too many lines ".concat(scanForComma ? 'YES' : 'NO', ":\n").concat(line1, "\n").concat(line));
+                    console.log(`too many lines ${scanForComma ? 'YES' : 'NO'}:\n${line1}\n${line}`);
                     return 'ERROR';
                 }
-                var matches = line.match(scanForComma ?
+                const matches = line.match(scanForComma ?
                     /((?:.|\n)+\S)\s*;\s*$/ :
                     /^([^{]*\S)\s*\{/);
                 if (matches) {
@@ -242,16 +226,16 @@ var BuildDocsLatest;
                 line = line + '\n' + this.getLine();
                 securityLineCount++;
             } while (true);
-        };
-        DocParser.prototype._allowId = function (id, _idType, accessTag, exportTag) {
+        }
+        _allowId(id, _idType, accessTag, exportTag) {
             return (!this.isEndUser)
                 || (id[0] !== '_' && accessTag === 'public'
                     && (this.isInsideClassOrInterface || exportTag !== undefined));
-        };
-        DocParser.prototype._processAccessTag = function (accessTag) {
+        }
+        _processAccessTag(accessTag) {
             return accessTag ? accessTag.trim() : 'public';
-        };
-        DocParser.prototype._prepareBadges = function (id, idType, badges, accessTag, exportTag) {
+        }
+        _prepareBadges(id, idType, badges, accessTag, exportTag) {
             badges.push(accessTag);
             if (exportTag) {
                 badges.push(exportTag);
@@ -260,13 +244,13 @@ var BuildDocsLatest;
                 badges.push('internal');
             }
             badges = (badges || [])
-                .filter(function (badge) { return badge !== undefined; })
-                .map(function (badge) { return badge.trim(); });
+                .filter(badge => badge !== undefined)
+                .map(badge => badge.trim());
             badges.push(BadgeNameOfDocIdType[idType]);
             return badges;
-        };
-        DocParser.prototype.addId = function (id, idType, line, badges, accessTag, exportTag) {
-            var svJsDocs = this.jsDocs;
+        }
+        addId(id, idType, line, badges, accessTag, exportTag) {
+            const svJsDocs = this.jsDocs;
             this.jsDocs = [];
             // this.isReadOnly = false;
             accessTag = this._processAccessTag(accessTag);
@@ -274,59 +258,59 @@ var BuildDocsLatest;
             if (!this._allowId(id, idType, accessTag, exportTag)) {
                 return false;
             }
-            this.outLines.push("##".concat(IdTypeAreSections.indexOf(idType) !== -1 ? '' : '#', " ")
-                + "".concat(this.classOrInterfaceName ? this.classOrInterfaceName + '.' : '')
-                + "".concat(id).concat(IdTypeAreFunctions.indexOf(idType) !== -1 ? '()' : '', "\n"));
+            this.outLines.push(`##${IdTypeAreSections.indexOf(idType) !== -1 ? '' : '#'} `
+                + `${this.classOrInterfaceName ? this.classOrInterfaceName + '.' : ''}`
+                + `${id}${IdTypeAreFunctions.indexOf(idType) !== -1 ? '()' : ''}\n`);
             if (this.classOrInterfaceName) {
                 this.links.push(this.classOrInterfaceName);
             }
             this.outLines.push(badges
-                .map(function (badge) { return "<span class=\"code-badge badge-".concat(badge, "\">").concat(badge, "</span>"); })
+                .map(badge => `<span class="code-badge badge-${badge}">${badge}</span>`)
                 .join(' ')
-                + '  ' + this.links.map(function (link) { return "[[".concat(link, "](").concat(link, ")]"); }).join(' ')
+                + '  ' + this.links.map(link => `[[${link}](${link})]`).join(' ')
                 + '  ');
             this.links = [];
             this.outLines.push('```js\n' + line.trimLeft() + '\n```\n');
             if (svJsDocs.length && this.lastJsDocsLineNr === this.lastPeekLineNr) {
-                var formattedJsDocs = formatJsDocsMarkdown(svJsDocs.join('\n'), this.localWebLinks);
+                const formattedJsDocs = formatJsDocsMarkdown(svJsDocs.join('\n'), this.localWebLinks);
                 this.outLines.push(formattedJsDocs);
             }
             else {
             }
             return true;
-        };
-        DocParser.prototype.parseJsDocs = function () {
+        }
+        parseJsDocs() {
             this.lastJsDocsLineNr = -1;
             if (this.getLine(true).match(/^\s*\/\*\*/)) {
                 this.jsDocs = [];
-                var done_1;
+                let done;
                 do {
-                    var line = this.getLine();
-                    done_1 = line.length === 0;
-                    line = line.replace(/\s*\*\/\s*$/, function () {
-                        done_1 = true;
+                    let line = this.getLine();
+                    done = line.length === 0;
+                    line = line.replace(/\s*\*\/\s*$/, () => {
+                        done = true;
                         return '';
                     });
                     // removes the @readonly line
-                    line = line.replace(/\s*\*\s*#end-user\s+@readonly\s*/, function () {
+                    line = line.replace(/\s*\*\s*#end-user\s+@readonly\s*/, () => {
                         // this.isReadOnly = true;
                         return '';
                     });
                     // removes the start comment marker
                     line = line.replace(/^\s*\/?\*{1,2}\s?/, '');
                     this.jsDocs.push(line);
-                } while (!done_1);
+                } while (!done);
                 this.lastJsDocsLineNr = this.inpLineNr;
             }
-        };
-        DocParser.prototype.parseMethodsAndProperties = function () {
+        }
+        parseMethodsAndProperties() {
             if (this.disabledClassOrInterface) {
                 return;
             }
-            var _a = this.getLine(true)
-                .match(/^(\s*)(protected\s+|private\s+|public\s+)?(abstract\s+)?(readonly\s+)?(get\s+)?(set\s+)?(\w+)(\s*\()?/) || EMPTY, spaces = _a[1], accessTag = _a[2], abstractTag = _a[3], readonlyTag = _a[4], getterTag = _a[5], setterTag = _a[6], id = _a[7], parenthesisTag = _a[8];
+            const [, spaces, accessTag, abstractTag, readonlyTag, getterTag, setterTag, id, parenthesisTag] = this.getLine(true)
+                .match(/^(\s*)(protected\s+|private\s+|public\s+)?(abstract\s+)?(readonly\s+)?(get\s+)?(set\s+)?(\w+)(\s*\()?/) || EMPTY;
             if (spaces === this.innerSpaces) {
-                var idType = 7 /* DocIdType.PropertyName */;
+                let idType = 7 /* DocIdType.PropertyName */;
                 if (parenthesisTag) {
                     if (getterTag) {
                         idType = 8 /* DocIdType.GetterName */;
@@ -344,15 +328,15 @@ var BuildDocsLatest;
                 this.addId(id, idType, this._processDefContent(this.getLine(), idType === 7 /* DocIdType.PropertyName */ || this.isInterface
                     || abstractTag !== undefined), [abstractTag, readonlyTag], accessTag);
             }
-        };
-        DocParser.prototype.parseInterfaceOrClass = function () {
-            var _a = this.getLine(true)
+        }
+        parseInterfaceOrClass() {
+            const [, spaces, exportTag, abstractTag, idTypeTag, id] = this.getLine(true)
                 .match(/^(\s*)(?:(export)\s+)?(abstract\s+)?(interface\s+|class\s+)(\w+)/)
-                || EMPTY, spaces = _a[1], exportTag = _a[2], abstractTag = _a[3], idTypeTag = _a[4], id = _a[5];
+                || EMPTY;
             if (spaces === this.outerSpaces) {
-                var line = this.getLine();
+                let line = this.getLine();
                 line = line.replace(/\s*\{?\s*\}?\s*$/, '{ }');
-                var idType = idTypeTag[0] === 'i'
+                const idType = idTypeTag[0] === 'i'
                     ? 4 /* DocIdType.InterfaceName */ : 5 /* DocIdType.ClassName */;
                 this.disabledClassOrInterface = this.isEndUser
                     && (!exportTag || !this._allowId(id, idType, 'public', exportTag));
@@ -366,52 +350,52 @@ var BuildDocsLatest;
                 return true;
             }
             return false;
-        };
-        DocParser.prototype.parseEndOfClassOrInterface = function () {
-            var _a = this.getLine(true)
-                .match(/^(\s*)}/) || EMPTY, spaces = _a[1];
+        }
+        parseEndOfClassOrInterface() {
+            const [, spaces] = this.getLine(true)
+                .match(/^(\s*)}/) || EMPTY;
             if (spaces === this.outerSpaces) {
                 this.isInsideClassOrInterface = false;
                 this.classOrInterfaceName = '';
             }
-        };
-        DocParser.prototype.parseFunction = function () {
-            var _a = this.getLine(true)
-                .match(/^(\s*)(export\s+)?function\s+(\w+)\b/) || EMPTY, spaces = _a[1], exportTag = _a[2], id = _a[3];
+        }
+        parseFunction() {
+            const [, spaces, exportTag, id] = this.getLine(true)
+                .match(/^(\s*)(export\s+)?function\s+(\w+)\b/) || EMPTY;
             if (spaces === this.outerSpaces) {
-                var line = this.getLine();
+                let line = this.getLine();
                 this.addId(id, 3 /* DocIdType.FunctionName */, this._processDefContent(line, false), [], undefined, exportTag);
                 while (true) {
                     line = this.getLine();
-                    var _b = line.match(/^(\s*)\}\s*$/) || EMPTY, endSpaces = _b[1];
+                    const [, endSpaces] = line.match(/^(\s*)\}\s*$/) || EMPTY;
                     if (endSpaces === this.outerSpaces) {
                         break;
                     }
                 }
             }
-        };
-        DocParser.prototype.parseType = function () {
-            var _a = this.getLine(true)
-                .match(/^(\s*)(export\s+)?type\s+(\w+)\b/) || EMPTY, spaces = _a[1], exportTag = _a[2], id = _a[3];
+        }
+        parseType() {
+            const [, spaces, exportTag, id] = this.getLine(true)
+                .match(/^(\s*)(export\s+)?type\s+(\w+)\b/) || EMPTY;
             if (spaces === this.outerSpaces) {
                 this.addId(id, 1 /* DocIdType.TypeName */, this._processDefContent(this.getLine(), true), [], undefined, exportTag);
             }
-        };
-        DocParser.prototype.parseEnum = function () {
-            var _a = this.getLine(true)
-                .match(/^(\s*)(export\s+)?(const\s+)?enum\s+(\w+)\b/) || EMPTY, spaces = _a[1], constTag = _a[2], exportTag = _a[3], id = _a[4];
+        }
+        parseEnum() {
+            const [, spaces, constTag, exportTag, id] = this.getLine(true)
+                .match(/^(\s*)(export\s+)?(const\s+)?enum\s+(\w+)\b/) || EMPTY;
             if (spaces === this.outerSpaces) {
                 this.addId(id, 0 /* DocIdType.EnumName */, this._processDefContent(this.getLine(), false), [constTag], undefined, exportTag);
             }
-        };
-        DocParser.prototype.parseConst = function () {
-            var _a = this.getLine(true)
-                .match(/^(\s*)(export\s+)?const\s+(\w+)\b/) || EMPTY, spaces = _a[1], exportTag = _a[2], id = _a[3];
+        }
+        parseConst() {
+            const [, spaces, exportTag, id] = this.getLine(true)
+                .match(/^(\s*)(export\s+)?const\s+(\w+)\b/) || EMPTY;
             if (spaces === this.outerSpaces) {
                 this.addId(id, 2 /* DocIdType.ConstName */, this._processDefContent(this.getLine(), true), [exportTag]);
             }
-        };
-        DocParser.prototype.parseFileData = function (text) {
+        }
+        parseFileData(text) {
             this.outerSpaces = '  ';
             this.innerSpaces = this.outerSpaces + this.outerSpaces;
             this.inpLines = text.split('\n');
@@ -423,7 +407,7 @@ var BuildDocsLatest;
                 //   console.log(this.inpLines);
                 //   break;
                 // }
-                var curLineNr = this.inpLineNr;
+                const curLineNr = this.inpLineNr;
                 this.parseJsDocs();
                 if (this.isInsideClassOrInterface) {
                     this.parseMethodsAndProperties();
@@ -441,29 +425,28 @@ var BuildDocsLatest;
                     this.getLine();
                 }
             }
-        };
-        return DocParser;
-    }());
+        }
+    }
     /**
      * Loads a mkdocs.yml template file, adds and organizes pages,
      * and generates the output.
      */
-    var MkDocsYml = /** @class */ (function () {
-        function MkDocsYml(templateFileName, targetName) {
+    class MkDocsYml {
+        constructor(templateFileName, targetName) {
             this.folderMap = {};
-            this.yamlDoc = yaml.safeLoad(fsix_js_1.fsix.readUtf8Sync(templateFileName));
+            this.yamlDoc = yaml.load(fsix_js_1.fsix.readUtf8Sync(templateFileName));
             this.yamlDoc.site_name = this.yamlDoc.site_name
                 .replace(/%target%/, targetName)
                 .replace(/%version%/, versionLib.VERSION);
         }
-        MkDocsYml.prototype.save = function (dstFileName) {
-            sysFs.writeFileSync(dstFileName, yaml.safeDump(this.yamlDoc));
-        };
-        MkDocsYml.prototype.addSourceFile = function (opts, fileName, content) {
-            var pageName = sysPath.posix.basename(fileName);
+        save(dstFileName) {
+            sysFs.writeFileSync(dstFileName, yaml.dump(this.yamlDoc));
+        }
+        addSourceFile(opts, fileName, content) {
+            const pageName = sysPath.posix.basename(fileName);
             // gets document name from the source/markdown file
             if (!opts.name) {
-                content = content.replace(/^\s*[\/\*]*\s*@doc-name\s+\b([\w ]+)\s*\n/m, function (_all, docName) {
+                content = content.replace(/^\s*[\/\*]*\s*@doc-name\s+\b([\w ]+)\s*\n/m, (_all, docName) => {
                     opts.name = docName;
                     return '';
                 });
@@ -472,22 +455,22 @@ var BuildDocsLatest;
             if (!opts.name && pageName.includes('-')) {
                 opts.name = pageName[0].toUpperCase() + pageName.substr(1)
                     .replace(/\.md$/, '')
-                    .replace(/-(\w)/g, function (_all, p) { return ' ' + p.toUpperCase(); });
+                    .replace(/-(\w)/g, (_all, p) => ' ' + p.toUpperCase());
             }
             // gets the folder name from the source/markdown file
-            content.replace(/^\s*[\/\*]+\s*@doc-folder\s+\b([\w ]+)\s*\n/m, function (_all, folder) {
+            content.replace(/^\s*[\/\*]+\s*@doc-folder\s+\b([\w ]+)\s*\n/m, (_all, folder) => {
                 opts.folder = folder;
                 return '';
             });
-            var folderContainer = opts.folder ? this.folderMap[opts.folder] : this.yamlDoc.nav;
+            let folderContainer = opts.folder ? this.folderMap[opts.folder] : this.yamlDoc.nav;
             if (!folderContainer) {
                 folderContainer = this.folderMap[opts.folder] = [];
-                var subFolder = {};
+                const subFolder = {};
                 subFolder[opts.folder] = folderContainer;
                 this.yamlDoc.nav.push(subFolder);
             }
             if (opts.name) {
-                var formattedPageName = {};
+                const formattedPageName = {};
                 formattedPageName[opts.name] = pageName;
                 folderContainer.push(formattedPageName);
             }
@@ -495,9 +478,8 @@ var BuildDocsLatest;
                 folderContainer.push(pageName);
             }
             return content;
-        };
-        return MkDocsYml;
-    }());
+        }
+    }
     // ------------------------------------------------------------------------
     //                               formatMarkdown
     // ------------------------------------------------------------------------
@@ -512,14 +494,14 @@ var BuildDocsLatest;
         text = text.replace(/^\s*@(param)\s+(\w+)\s*/mg, '**$1**: `$2` ');
         text = text.replace(/^\s*@(returns)\b\s*/mg, '**$1**: ');
         text = text.replace(/^\s*@(type|memberof|readonly)\b(.*)$/mg, '');
-        text = text.replace(/@see\b\s*((https?:\/\/)?(\w+\/)?([^#\s]*)?(#\S*)?\b)/g, function (_all, link, http, folder, title, bookmark) {
+        text = text.replace(/@see\b\s*((https?:\/\/)?(\w+\/)?([^#\s]*)?(#\S*)?\b)/g, (_all, link, http, folder, title, bookmark) => {
             if (http) {
                 title = link;
             }
             else {
                 if (folder) {
-                    var key = folder.substr(0, folder.length - 1);
-                    return "_see_: ".concat(localWebLinks(key, title), ".  ");
+                    const key = folder.substr(0, folder.length - 1);
+                    return `_see_: ${localWebLinks(key, title)}.  `;
                 }
                 else {
                     link = (folder || '')
@@ -530,7 +512,7 @@ var BuildDocsLatest;
                     title = title || bookmark.substr(1);
                 }
             }
-            return "_see_: [".concat(title || link, "](").concat(link, ").  ");
+            return `_see_: [${title || link}](${link}).  `;
         });
         return text;
     }
@@ -546,21 +528,21 @@ var BuildDocsLatest;
      */
     function buildMarkdownFromSourceFile(inpFileName, outFileName, apiFileName, moduleTypes, mkDocsYml, mkDocsOpts, localWebLinks, isEndUser, log) {
         // if (isEndUser || inpFileName.indexOf('story') === -1) { return; }
-        var inpText = fsix_js_1.fsix.readUtf8Sync(inpFileName);
-        var matches = inpText.match(/\/\*\*\s*@module ([\w+\-]+)(?:\s*\|.*)\n(?:(?:.|\n)*?)\/\*\*((?:.|\n)*?)\*\//) || EMPTY;
-        var moduleType = matches[1] || '';
+        const inpText = fsix_js_1.fsix.readUtf8Sync(inpFileName);
+        const matches = inpText.match(/\/\*\*\s*@module ([\w+\-]+)(?:\s*\|.*)\n(?:(?:.|\n)*?)\/\*\*((?:.|\n)*?)\*\//) || EMPTY;
+        const moduleType = matches[1] || '';
         if (moduleType && moduleTypes.indexOf(moduleType) !== -1) {
-            var outText = formatJsDocsMarkdown(matches[2].trim().split('\n').map(function (line) {
+            let outText = formatJsDocsMarkdown(matches[2].trim().split('\n').map(line => {
                 return line.replace(/^\s*\*\s/, '').trimRight()
                     .replace(/^\s*\*$/, '  '); // removes the end delimiter of JSDocs
             }).join('\n'), localWebLinks);
-            var preDocText = '';
+            let preDocText = '';
             if (isEndUser && sysFs.existsSync(apiFileName)) {
                 preDocText = fsix_js_1.fsix.readUtf8Sync(apiFileName) + '\n';
                 // inpText = inpText.replace(/(namespace)/, '// @stop-processing\n$1');
             }
             if ((!isEndUser) || moduleType === 'end-user') {
-                var docParser = new DocParser(localWebLinks, isEndUser);
+                const docParser = new DocParser(localWebLinks, isEndUser);
                 docParser.parseFileData(preDocText + inpText);
                 if (docParser.outLines.length) {
                     outText += '  \n  \n<div class=api-header>&nbsp;</div>\n#API\n'
@@ -577,7 +559,7 @@ var BuildDocsLatest;
      * and adds the file to mkdocs.
      */
     function copyMarkdownFile(srcFileName, dstFileName, mkDocs, mkDocsOpts, _cfg, processPage) {
-        var data = fsix_js_1.fsix.readUtf8Sync(srcFileName);
+        let data = fsix_js_1.fsix.readUtf8Sync(srcFileName);
         data = mkDocs.addSourceFile(mkDocsOpts, dstFileName, data);
         if (processPage) {
             data = processPage(data);
@@ -590,9 +572,9 @@ var BuildDocsLatest;
      * Read the module information for details.
      */
     function build(libModules, pluginModules, cfg) {
-        var localWebLinks = function (key, title) {
+        const localWebLinks = (key, title) => {
             if (key === 'gallery') {
-                return "[".concat(title, "](/").concat(cfg.paths.GALLERY_LATEST_PATH, "/#").concat(title, ")");
+                return `[${title}](/${cfg.paths.GALLERY_LATEST_PATH}/#${title})`;
             }
             else {
                 return '';
@@ -603,47 +585,54 @@ var BuildDocsLatest;
         // ------------------------------------------------------------------------
         // in case of documentation, it's better to visualize the more specific at the top.
         libModules.reverse();
-        BuildDocsLatest.getTargets(cfg).forEach(function (target) {
-            var baseDstPath = "".concat(target.dstPath, "/").concat(BuildDocsLatest.EN_LAST_VERSION_PATH);
-            var markdownDstPath = "".concat(baseDstPath, "/").concat(MARKDOWN_FOLDER);
+        BuildDocsLatest.getTargets(cfg).forEach(target => {
+            const baseDstPath = `${target.dstPath}/${BuildDocsLatest.EN_LAST_VERSION_PATH}`;
+            const markdownDstPath = `${baseDstPath}/${MARKDOWN_FOLDER}`;
             fsix_js_1.fsix.mkdirpSync(markdownDstPath);
-            var mkDocsYml = new MkDocsYml("".concat(cfg.paths.DOCS_SOURCE_PATH, "/.mkdocs-template.yml"), target.name);
-            var log = {
+            const mkDocsYml = new MkDocsYml(`${cfg.paths.DOCS_SOURCE_PATH}/.mkdocs-template.yml`, target.name);
+            const log = {
                 notFound: [],
                 found: [],
                 generated: [],
                 refs: {},
             };
             // index.html
-            copyMarkdownFile(target.indexFile, "".concat(markdownDstPath, "/index.md"), mkDocsYml, {}, cfg, target.processIndexPage);
+            copyMarkdownFile(target.indexFile, `${markdownDstPath}/index.md`, mkDocsYml, {}, cfg, target.processIndexPage);
             // copy sources
-            target.sourcePaths.forEach(function (sourcesPathName) {
-                sysFs.readdirSync(sourcesPathName).forEach(function (file) {
+            target.sourcePaths.forEach(sourcesPathName => {
+                sysFs.readdirSync(sourcesPathName).forEach(file => {
                     if (file.endsWith('.md') && !file.match(/-dev|README/)) {
-                        copyMarkdownFile("".concat(sourcesPathName, "/").concat(file), "".concat(markdownDstPath, "/").concat(file), mkDocsYml, {}, cfg);
+                        copyMarkdownFile(`${sourcesPathName}/${file}`, `${markdownDstPath}/${file}`, mkDocsYml, {}, cfg);
                     }
                     if (file.endsWith('.css') || file.endsWith('.png') || file.endsWith('.ico')) {
-                        sysFs.writeFileSync("".concat(markdownDstPath, "/").concat(file), sysFs.readFileSync("".concat(sourcesPathName, "/").concat(file)));
+                        sysFs.writeFileSync(`${markdownDstPath}/${file}`, sysFs.readFileSync(`${sourcesPathName}/${file}`));
                     }
                 });
             });
             // builds markdown files
-            __spreadArray(__spreadArray([['abeamer-cli', 'cli/abeamer-cli.ts', ''],
+            [['abeamer-cli', 'cli/abeamer-cli.ts', ''],
                 ['server-agent', 'server/server-agent.ts', 'Server'],
-                ['exact', 'test/exact.ts', 'Testing']], libModules
-                .map(function (fileTitle) { return [fileTitle, "".concat(cfg.paths.JS_PATH, "/").concat(fileTitle, ".ts"), 'Library']; }), true), pluginModules
-                .map(function (fileTitle) { return [fileTitle, "".concat(cfg.paths.PLUGINS_PATH, "/").concat(fileTitle, "/").concat(fileTitle, ".ts"), 'Plugins']; }), true).forEach(function (item) {
-                var fileTitle = item[0], srcFileName = item[1], folder = item[2];
-                var dstFileName = "".concat(markdownDstPath, "/").concat(fileTitle, ".md");
-                buildMarkdownFromSourceFile(srcFileName, dstFileName, "".concat(baseDstPath, "/").concat(BuildDocsLatest.API_FOLDER, "/").concat(fileTitle, ".txt"), target.moduleTypes, mkDocsYml, { folder: folder }, localWebLinks, target.isEndUser, log);
+                ['exact', 'test/exact.ts', 'Testing'],
+                ...libModules
+                    .map(fileTitle => [fileTitle, `${cfg.paths.JS_PATH}/${fileTitle}.ts`, 'Library']),
+                ...pluginModules
+                    .map(fileTitle => [fileTitle, `${cfg.paths.PLUGINS_PATH}/${fileTitle}/${fileTitle}.ts`, 'Plugins']),
+            ]
+                .forEach(item => {
+                const [fileTitle, srcFileName, folder] = item;
+                const dstFileName = `${markdownDstPath}/${fileTitle}.md`;
+                buildMarkdownFromSourceFile(srcFileName, dstFileName, `${baseDstPath}/${BuildDocsLatest.API_FOLDER}/${fileTitle}.txt`, target.moduleTypes, mkDocsYml, { folder }, localWebLinks, target.isEndUser, log);
             });
             // writes mkdocs to be used by mkdocs command-line program
-            mkDocsYml.save("".concat(baseDstPath, "/mkdocs.yml"));
+            mkDocsYml.save(`${baseDstPath}/mkdocs.yml`);
             // process all the links
             new ReferenceBuilder(log).build(markdownDstPath);
             // save log
             fsix_js_1.fsix.writeJsonSync(target.logFile, log);
-            console.log("\nGenerated: ".concat(log.generated.length, " files.\nNot Found references: ").concat(log.notFound.length, "\n"));
+            console.log(`
+Generated: ${log.generated.length} files.
+Not Found references: ${log.notFound.length}
+`);
         });
     }
     BuildDocsLatest.build = build;
@@ -651,17 +640,17 @@ var BuildDocsLatest;
     //                               buildWebLinks
     // ------------------------------------------------------------------------
     function postBuild(filePatterns, replacePaths, wordMap) {
-        var highlightRegEx = new RegExp("\\b(".concat(Object.keys(wordMap).join('|'), ")\\b"), 'g');
-        globule.find(filePatterns).forEach(function (file) {
-            var content = fsix_js_1.fsix.readUtf8Sync(file);
-            replacePaths.forEach(function (pathSrcDst) {
-                content = content.replace(pathSrcDst[0], pathSrcDst[1]);
+        const highlightRegEx = new RegExp(`\\b(${Object.keys(wordMap).join('|')})\\b`, 'g');
+        globule.find(filePatterns).forEach(file => {
+            let content = fsix_js_1.fsix.readUtf8Sync(file);
+            replacePaths.forEach((pathSrcDst) => {
+                content = content.replace(new RegExp(pathSrcDst[0], "g"), pathSrcDst[1]);
             });
-            content = content.replace(/(<code class="js">)((?:.|\n)+?)(<\/code>)/g, function (_all, preTag, code, postTag) {
-                code = code.replace(highlightRegEx, function (_all2, word) {
-                    var wordInf = wordMap[word];
-                    return "<span class=\"hljs-".concat(wordInf.wordClass, "\"")
-                        + "".concat(wordInf.title ? " title=\"".concat(wordInf.title, "\"") : '', ">").concat(word, "</span>");
+            content = content.replace(/(<code class="js">)((?:.|\n)+?)(<\/code>)/g, (_all, preTag, code, postTag) => {
+                code = code.replace(highlightRegEx, (_all2, word) => {
+                    const wordInf = wordMap[word];
+                    return `<span class="hljs-${wordInf.wordClass}"`
+                        + `${wordInf.title ? ` title="${wordInf.title}"` : ''}>${word}</span>`;
                 });
                 return preTag + code + postTag;
             });

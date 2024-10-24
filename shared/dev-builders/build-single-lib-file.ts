@@ -25,7 +25,6 @@ export namespace BuildSingleLibFile {
 
     const WARN_MSG = `
 // This file was generated via ${generateMsg}
-// It shares the uuid
 //
 // @WARN: Don't edit this file.
 `;

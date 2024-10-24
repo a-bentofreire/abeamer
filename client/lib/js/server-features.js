@@ -22,7 +22,7 @@ var ABeamer;
     // ------------------------------------------------------------------------
     //                               Server
     // ------------------------------------------------------------------------
-    var INFO_PER_SERVER = {
+    const INFO_PER_SERVER = {
         _default: {
             map: {},
             features: {
@@ -41,7 +41,7 @@ var ABeamer;
      * Used by `Story.Create` method to assign the server property mapping.
      */
     function _setServer(serverName) {
-        var serverInfo = INFO_PER_SERVER[serverName] || INFO_PER_SERVER._default;
+        const serverInfo = INFO_PER_SERVER[serverName] || INFO_PER_SERVER._default;
         ABeamer._addServerDOMPropMaps(serverInfo.map);
         return serverInfo.features;
     }

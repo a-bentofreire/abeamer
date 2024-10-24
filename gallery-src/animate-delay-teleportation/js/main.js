@@ -3,8 +3,8 @@
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 20, {
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 20, {
         // Uncomment to set into teleportation mode
         //  toTeleport: true, 
         toStartTeleporting: false,
@@ -12,14 +12,14 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
-    var d = story.args.vars.duration || '3s';
-    var json = story.args.vars.json || 'acme';
-    $.getJSON("".concat(json, ".json"), function (data) {
+    const d = story.args.vars.duration || '3s';
+    const json = story.args.vars.json || 'acme';
+    $.getJSON(`${json}.json`, (data) => {
         $('#name').text(data.name);
         // By setting this as the starting point, it allows to inject html code,
         // to be stored in the story to be teleported.
         story.startTeleporting();
-        var scene1 = story.scenes[0];
+        const scene1 = story.scenes[0];
         scene1
             .addAnimations([{
                 selector: 'canvas',

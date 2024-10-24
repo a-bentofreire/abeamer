@@ -4,20 +4,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-var exact_js_1 = require("../exact.js");
-var dev_consts_js_1 = require("../../shared/lib/dev-consts.js");
+const exact_js_1 = require("../exact.js");
+const dev_consts_js_1 = require("../../shared/lib/dev-consts.js");
 var Tests;
 (function (Tests) {
-    var fps = 4;
-    var seconds = 2;
-    var absMin = 50;
-    var elProps = [
+    const fps = 4;
+    const seconds = 2;
+    const absMin = 50;
+    const elProps = [
         { elIndex: 0, prop: 'left', relMin: absMin, startFrame: 0, propType: dev_consts_js_1.DevConsts.PT_PIXEL },
         { elIndex: 0, prop: 'top', relMin: absMin, startFrame: 0, propType: dev_consts_js_1.DevConsts.PT_PIXEL },
         { elIndex: 1, prop: 'left', relMin: absMin, startFrame: 0, propType: dev_consts_js_1.DevConsts.PT_PIXEL },
         { elIndex: 1, prop: 'opacity', relMin: 1, startFrame: 0, propType: dev_consts_js_1.DevConsts.PT_NUMBER },
     ];
-    var tests = [
+    const tests = [
         { elProp: 0, max: 100 },
         { elProp: 0, max: 200, label: 'links to previous' },
         { elProp: 1, max: 100, label: 'disrupts with a different prop' },
@@ -27,16 +27,16 @@ var Tests;
         { elProp: 0, max: 10, label: 'reverses movement' },
         { elProp: 1, max: 150, label: 'resumes 2nd prop' },
         { elProp: 3, max: 0.5, label: 'tests num value' },
-    ].map(function (test) {
-        var elProp = elProps[test.elProp];
-        var v = {
+    ].map(test => {
+        const elProp = elProps[test.elProp];
+        const v = {
             elIndex: elProp.elIndex,
             propName: elProp.prop,
             propType: elProp.propType,
             name: test.toString(),
             min: elProp.relMin,
             max: test.max,
-            label: test.label ? "(".concat(test.label, ") - ") : '',
+            label: test.label ? `(${test.label}) - ` : '',
             startFrame: elProp.startFrame,
             frameCount: fps * seconds,
         };
@@ -44,26 +44,26 @@ var Tests;
         elProp.relMin = test.max;
         return v;
     });
-    var func = function (rd, done, index) {
-        var test = tests[index];
-        var expected = exact_js_1.Exact.interpolateMinMax(test.min, test.max, 2 * rd.fps);
+    const func = (rd, done, index) => {
+        const test = tests[index];
+        const expected = exact_js_1.Exact.interpolateMinMax(test.min, test.max, 2 * rd.fps);
         exact_js_1.Exact.roundToTestDigits(expected);
-        var expectedPA = exact_js_1.Exact.simulateAction(expected, test.propType);
-        rd.actions.isIdPropActions("t".concat(test.elIndex), test.propName, expectedPA, true, true, test.startFrame, test.frameCount);
+        const expectedPA = exact_js_1.Exact.simulateAction(expected, test.propType);
+        rd.actions.isIdPropActions(`t${test.elIndex}`, test.propName, expectedPA, true, true, test.startFrame, test.frameCount);
         done();
     };
-    var testParams = {};
-    tests.forEach(function (test) {
-        testParams["".concat(test.label, "t").concat(test.elIndex, " ").concat(test.propName)
-            + " goes from ".concat(test.min, " to ").concat(test.max)] = func;
+    const testParams = {};
+    tests.forEach((test) => {
+        testParams[`${test.label}t${test.elIndex} ${test.propName}`
+            + ` goes from ${test.min} to ${test.max}`] = func;
     });
     exact_js_1.Exact.runTestSuite(__filename, {
-        fps: fps,
-        css: "#t0,#t1 {left: ".concat(absMin, "px; top: ").concat(absMin, "px;}"),
-        animes: tests.map(function (test) {
+        fps,
+        css: `#t0,#t1 {left: ${absMin}px; top: ${absMin}px;}`,
+        animes: tests.map((test) => {
             return {
-                selector: "#t".concat(test.elIndex),
-                duration: "".concat(seconds, "s"),
+                selector: `#t${test.elIndex}`,
+                duration: `${seconds}s`,
                 props: [{
                         prop: test.propName,
                         value: test.max,

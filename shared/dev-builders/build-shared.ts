@@ -29,7 +29,6 @@ export namespace BuildShared {
 
     const WARN_MSG = `
 // This file was generated via ${generateMsg}
-// It shares the uuid
 //
 // @WARN: Don't edit this file.
 /** @see `;
@@ -91,7 +90,6 @@ export namespace BuildShared {
     sysFs.writeFileSync(`${dstPath}/dev-consts.ts`,
       `"use strict";
 // This file was generated ${generateMsg}
-// It has no uuid
 //
 // @WARN: Don't edit this file.
 

@@ -4,13 +4,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-var exact_js_1 = require("../exact.js");
+const exact_js_1 = require("../exact.js");
 var Tests;
 (function (Tests) {
-    var min = 50;
-    var fps = 4;
-    var divider = 1000 / fps;
-    var tests = [
+    const min = 50;
+    const fps = 4;
+    const divider = 1000 / fps;
+    const tests = [
         {
             scene: 1, element: 0,
             duration: '2s', max: 100,
@@ -22,19 +22,19 @@ var Tests;
             frameCount: 3000 / divider,
         }
     ];
-    var func = function (rd, done, index) {
-        var test = tests[index];
-        rd.actions.isIdPropActions("t".concat(test.element), 'left', exact_js_1.Exact.simulatePixelAction(exact_js_1.Exact.interpolateMinMax(min, test.max, test.frameCount)));
+    const func = (rd, done, index) => {
+        const test = tests[index];
+        rd.actions.isIdPropActions(`t${test.element}`, 'left', exact_js_1.Exact.simulatePixelAction(exact_js_1.Exact.interpolateMinMax(min, test.max, test.frameCount)));
         // @TODO: test if went to a different scene
         done();
     };
-    var testParams = {};
-    tests.forEach(function (test) {
-        testParams["$t".concat(test.element, " on scene").concat(test.scene, " moves for ").concat(test.duration)] = func;
+    const testParams = {};
+    tests.forEach((test) => {
+        testParams[`$t${test.element} on scene${test.scene} moves for ${test.duration}`] = func;
     });
-    var animes = tests.map(function (test) {
-        return ["@@scene:".concat(test.scene), {
-                selector: "#t".concat(test.element),
+    const animes = tests.map((test) => {
+        return [`@@scene:${test.scene}`, {
+                selector: `#t${test.element}`,
                 duration: test.duration,
                 props: [{
                         prop: 'left',
@@ -43,9 +43,9 @@ var Tests;
             }];
     });
     exact_js_1.Exact.runTestSuite(__filename, {
-        fps: fps,
-        css: ".abslf {left: ".concat(min, "px}"),
-        animes: animes,
+        fps,
+        css: `.abslf {left: ${min}px}`,
+        animes,
         html: exact_js_1.Exact.genTestHtml(7, { sceneMarkers: [2, 4, 6] }),
     }, {
         tests: testParams,

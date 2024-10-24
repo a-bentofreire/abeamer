@@ -1,5 +1,30 @@
 ## What's new
 
+## [1.7] -
+- Update to gulp@5
+- Update compilation to es6
+- Updated compile abeamer.js with esbuild
+- Improve README
+
+## [1.6] -
+- Use jquery-3.7.1
+- Add support for arrays in the 1 parameter numerical functions.
+  > With this addition, those functions can process individual elements inside an array,  
+  > and set the result to an array.
+- Add new `statistic-functions` plugin with 8 fundamental functions.
+- Add `get` and `slice` functions for array data extraction to `functions`.
+- Add new `format-functions` plugin to convert numbers to string according to locale.
+- Add `getVars` global function to allow plugins to add init vars.
+- Add support for cli options ending with `__\d+`.
+ > This addition solves slimerjs `--config` option conflict with abeamer `--config`.
+- Add support for default `INFO_PER_SERVER`.
+ > This allows to add more servers without changing `INFO_PER_SERVER`.
+- Add initial support for `slimerjs` server. (alpha version).
+- Add `--server-exec` option to command line.
+- Add `--scale` support for abeamer cli `gif` and `movie` command.
+- Add `--no-default-browser-check` to puppeteer server agent.
+ > This change reduce chrome's the initialization phase.
+
 ## [1.5] -
   
 - New `datetime-functions` plugin.

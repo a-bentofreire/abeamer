@@ -73,7 +73,7 @@ var ABeamer;
     //                               Paths
     // ------------------------------------------------------------------------
     /** List of the built-in paths */
-    var PathName;
+    let PathName;
     (function (PathName) {
         PathName[PathName["line"] = 0] = "line";
         PathName[PathName["rect"] = 1] = "rect";
@@ -93,7 +93,7 @@ var ABeamer;
     ABeamer._pathNumToStr = _pathNumToStr;
     function _expressionPath(t, params, _stage, args) {
         ABeamer._vars.t = t;
-        var v = ABeamer.calcExpr(params._expression, args);
+        const v = ABeamer.calcExpr(params._expression, args);
         return Array.isArray(v) ? v : [parseFloat(v)];
     }
     ABeamer._expressionPath = _expressionPath;
@@ -119,7 +119,7 @@ var ABeamer;
             params._y1 = ABeamer.ExprOrNumToNum(params.y1, 1, args);
             params._dx = params._x1 - params._x0;
             params._dy = params._y1 - params._y0;
-            var divider = 1 / (2 * (params._dx + params._dy));
+            const divider = 1 / (2 * (params._dx + params._dy));
             params._xSlot = params._dx * divider;
             params._ySlot = params._dy * divider;
         }

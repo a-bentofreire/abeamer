@@ -3,18 +3,18 @@
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 10);
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 10);
     // ------------------------------------------------------------------------
     //                               Plots
     // ------------------------------------------------------------------------
-    var duration = 0.6;
-    var f1 = 'exp(8*v/n)';
-    var f2 = 'v*v';
-    var scene = story.scenes[0];
+    const duration = 0.6;
+    const f1 = 'exp(8*v/n)';
+    const f2 = 'v*v';
+    const scene = story.scenes[0];
     scene
         .addAnimations([{
-            selector: "canvas",
+            selector: `canvas`,
             tasks: [{
                     handler: 'chart',
                     params: {
@@ -22,11 +22,11 @@ $(window).on("load", function () {
                         animeSelector: 'plot1-anime',
                         data: [
                             {
-                                expr: "=".concat(f1),
+                                expr: `=${f1}`,
                                 nrPoints: 50,
                             },
                             {
-                                expr: "=".concat(f2),
+                                expr: `=${f2}`,
                             }
                         ],
                         strokeColors: ['#dd5252', 'blue'],
@@ -43,8 +43,8 @@ $(window).on("load", function () {
                 }],
         }])
         .addAnimations([{
-            selector: "%plot1-anime",
-            duration: "".concat(duration, "s"),
+            selector: `%plot1-anime`,
+            duration: `${duration}s`,
             props: [{
                     prop: 'sweep',
                     value: 1,

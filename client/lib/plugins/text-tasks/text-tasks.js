@@ -29,7 +29,7 @@ var ABeamer;
     /**
      * List of the directions that instruct how the text can be revealed.
      */
-    var RevealDir;
+    let RevealDir;
     (function (RevealDir) {
         RevealDir[RevealDir["disabled"] = 0] = "disabled";
         RevealDir[RevealDir["toRight"] = 1] = "toRight";
@@ -53,7 +53,7 @@ var ABeamer;
     //                               Tools
     // ------------------------------------------------------------------------
     function _textSplitter(params) {
-        var text = params.text;
+        const text = params.text;
         return params.splitBy === 'word' ?
             text.replace(/(\s+)/g, '\0$1').split(/\0/) : text.split('');
     }
@@ -65,20 +65,18 @@ var ABeamer;
     function _textSplit(anime, _wkTask, params, stage, args) {
         switch (stage) {
             case ABeamer.TS_INIT:
-                var inTextArray = _textSplitter(params);
-                var elAdapters = args.scene.getElementAdapters(anime.selector);
-                var inTextHtml_1 = inTextArray.map(function (item, index) {
-                    return "<span data-index=\"".concat(index, "\" data=\"").concat(item.replace(/[\n"']/g, ''), "\">")
-                        + "".concat(item.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>'), "</span>");
-                });
-                elAdapters.forEach(function (elAdapter) {
-                    elAdapter.setProp('html', inTextHtml_1.join(''), args);
+                const inTextArray = _textSplitter(params);
+                const elAdapters = args.scene.getElementAdapters(anime.selector);
+                const inTextHtml = inTextArray.map((item, index) => `<span data-index="${index}" data="${item.replace(/[\n"']/g, '')}">`
+                    + `${item.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>')}</span>`);
+                elAdapters.forEach(elAdapter => {
+                    elAdapter.setProp('html', inTextHtml.join(''), args);
                     if (params.realign && !elAdapter.isVirtual) {
-                        var $spans = $(elAdapter.htmlElement).find('span');
-                        var left_1 = 0;
-                        $spans.each(function (_index, domEl) {
-                            domEl.style.left = "".concat(left_1, "px");
-                            left_1 += domEl.clientWidth;
+                        const $spans = $(elAdapter.htmlElement).find('span');
+                        let left = 0;
+                        $spans.each((_index, domEl) => {
+                            domEl.style.left = `${left}px`;
+                            left += domEl.clientWidth;
                         });
                     }
                 });
@@ -93,13 +91,13 @@ var ABeamer;
     function _typewriter(anime, _wkTask, params, stage, _args) {
         switch (stage) {
             case ABeamer.TS_INIT:
-                var textInter = [];
-                var inTextArray = _textSplitter(params);
-                var len = inTextArray.length;
-                var hasCursor = params.cursor !== undefined;
-                var cursorChar = hasCursor ? params.cursorChar || '▐' : '';
-                var accText = '';
-                for (var i = 0; i < len; i++) {
+                const textInter = [];
+                const inTextArray = _textSplitter(params);
+                const len = inTextArray.length;
+                const hasCursor = params.cursor !== undefined;
+                const cursorChar = hasCursor ? params.cursorChar || '▐' : '';
+                let accText = '';
+                for (let i = 0; i < len; i++) {
                     accText += inTextArray[i];
                     textInter.push(accText + cursorChar);
                 }
@@ -120,15 +118,15 @@ var ABeamer;
     /** Implements the Decipher Task */
     function _decipherTask(anime, _wkTask, params, stage, _args) {
         function isInsideRange(code, ranges) {
-            return ranges.findIndex(function (range) { return range[0] <= code && range[1] >= code; })
+            return ranges.findIndex(range => range[0] <= code && range[1] >= code)
                 !== -1 ? ranges : undefined;
         }
         function reveal(textInter, text, _textLen, rangesByIndex, _revealDir, revealCharIterations, i, scale) {
             if (rangesByIndex[i]) {
                 scale++;
-                var textInterPos = textInter.length - 1;
-                var downCounter = revealCharIterations * scale;
-                for (var j = 0; j < downCounter; j++) {
+                let textInterPos = textInter.length - 1;
+                const downCounter = revealCharIterations * scale;
+                for (let j = 0; j < downCounter; j++) {
                     if (textInterPos < 0) {
                         return;
                     }
@@ -140,27 +138,27 @@ var ABeamer;
         }
         switch (stage) {
             case ABeamer.TS_INIT:
-                var cc_A = 'A'.charCodeAt(0);
-                var cc_Z = 'Z'.charCodeAt(0);
-                var cc_a = 'a'.charCodeAt(0);
-                var cc_z = 'z'.charCodeAt(0);
-                var cc_0 = '0'.charCodeAt(0);
-                var cc_9 = '9'.charCodeAt(0);
-                var iterations = params.iterations;
-                var text = params.text;
-                var textLen = text.length;
-                var upperCharRanges = params.upperCharRanges || [[cc_A, cc_Z]];
-                var lowerCharRanges = params.lowerCharRanges || [[cc_a, cc_z]];
-                var digitRanges = [[cc_0, cc_9]];
-                var revealCharIterations = params.revealCharIterations || 1;
-                var revealDir = ABeamer.parseEnum(params.revealDirection, RevealDir, RevealDir.disabled);
+                const cc_A = 'A'.charCodeAt(0);
+                const cc_Z = 'Z'.charCodeAt(0);
+                const cc_a = 'a'.charCodeAt(0);
+                const cc_z = 'z'.charCodeAt(0);
+                const cc_0 = '0'.charCodeAt(0);
+                const cc_9 = '9'.charCodeAt(0);
+                const iterations = params.iterations;
+                const text = params.text;
+                const textLen = text.length;
+                const upperCharRanges = params.upperCharRanges || [[cc_A, cc_Z]];
+                const lowerCharRanges = params.lowerCharRanges || [[cc_a, cc_z]];
+                const digitRanges = [[cc_0, cc_9]];
+                const revealCharIterations = params.revealCharIterations || 1;
+                const revealDir = ABeamer.parseEnum(params.revealDirection, RevealDir, RevealDir.disabled);
                 ABeamer.throwIfI8n(!ABeamer.isPositiveNatural(iterations), ABeamer.Msgs.MustNatPositive, { p: 'iterations' });
                 ABeamer.throwIfI8n(!textLen, ABeamer.Msgs.NoEmptyField, { p: 'text' });
                 // let usableCharsCount = 0;
-                var rangesByIndex = [];
-                for (var charI = 0; charI < textLen; charI++) {
-                    var charCode = text.charCodeAt(charI);
-                    var ranges = isInsideRange(charCode, upperCharRanges)
+                const rangesByIndex = [];
+                for (let charI = 0; charI < textLen; charI++) {
+                    const charCode = text.charCodeAt(charI);
+                    const ranges = isInsideRange(charCode, upperCharRanges)
                         || isInsideRange(charCode, lowerCharRanges)
                         || isInsideRange(charCode, digitRanges);
                     // if (ranges) {
@@ -168,39 +166,39 @@ var ABeamer;
                     // }
                     rangesByIndex.push(ranges);
                 }
-                var textInter = [];
-                for (var i = 0; i < iterations - 1; i++) {
-                    var dText = text.split('');
-                    for (var charI = 0; charI < textLen; charI++) {
-                        var ranges = rangesByIndex[charI];
+                const textInter = [];
+                for (let i = 0; i < iterations - 1; i++) {
+                    const dText = text.split('');
+                    for (let charI = 0; charI < textLen; charI++) {
+                        const ranges = rangesByIndex[charI];
                         if (ranges) {
-                            var charRangesLen = ranges.length;
-                            var charRangesIndex = charRangesLen === 1 ? 0
+                            const charRangesLen = ranges.length;
+                            const charRangesIndex = charRangesLen === 1 ? 0
                                 : Math.floor(Math.random() * charRangesLen);
-                            var charRange = ranges[charRangesIndex];
-                            var range = charRange[1] - charRange[0];
-                            var winnerChar = String.fromCharCode(Math.round(Math.random() * range)
+                            const charRange = ranges[charRangesIndex];
+                            const range = charRange[1] - charRange[0];
+                            const winnerChar = String.fromCharCode(Math.round(Math.random() * range)
                                 + charRange[0]);
                             dText[charI] = winnerChar;
                         }
                     }
                     textInter.push(dText);
                 }
-                var scale = 0;
+                let scale = 0;
                 switch (revealDir) {
                     case RevealDir.toLeft:
-                        for (var i = textLen - 1; i >= 0; i--) {
+                        for (let i = textLen - 1; i >= 0; i--) {
                             scale = reveal(textInter, text, textLen, rangesByIndex, revealDir, revealCharIterations, i, scale);
                         }
                         break;
                     case RevealDir.toRight:
-                        for (var i = 0; i < textLen; i++) {
+                        for (let i = 0; i < textLen; i++) {
                             scale = reveal(textInter, text, textLen, rangesByIndex, revealDir, revealCharIterations, i, scale);
                         }
                         break;
                     case RevealDir.toCenter:
-                        var midLen = Math.floor(textLen / 2);
-                        for (var i = midLen - 1; i >= 0; i--) {
+                        const midLen = Math.floor(textLen / 2);
+                        for (let i = midLen - 1; i >= 0; i--) {
                             scale = reveal(textInter, text, textLen, rangesByIndex, revealDir, revealCharIterations, i, scale);
                             scale = reveal(textInter, text, textLen, rangesByIndex, revealDir, revealCharIterations, textLen - i - 1, scale);
                         }
@@ -210,7 +208,7 @@ var ABeamer;
                 if (!anime.props) {
                     anime.props = [];
                 }
-                anime.props.push({ prop: 'text', valueText: textInter.map(function (inter) { return inter.join(''); }) });
+                anime.props.push({ prop: 'text', valueText: textInter.map(inter => inter.join('')) });
                 return ABeamer.TR_DONE;
         }
     }

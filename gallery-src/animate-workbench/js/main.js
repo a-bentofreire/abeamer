@@ -3,15 +3,15 @@
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 10);
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 10);
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
-    var scene1 = story.scenes[0];
-    var expr = "=iff(t<0.2 or t>0.7, 0, 1)";
-    var pathExpr = '=[x0+(x1-x0)*t, y0-(y0-10)*t*t]';
-    var tests = [{
+    const scene1 = story.scenes[0];
+    const expr = `=iff(t<0.2 or t>0.7, 0, 1)`;
+    const pathExpr = '=[x0+(x1-x0)*t, y0-(y0-10)*t*t]';
+    const tests = [{
             enabled: true,
             label: 'easeInQuart',
             // easing by Id
@@ -51,35 +51,35 @@ $(window).on("load", function () {
             },
         }, {
             enabled: true,
-            label: "path: ".concat(pathExpr),
+            label: `path: ${pathExpr}`,
             path: { handler: pathExpr },
         }, , {
             enabled: true,
-            label: "easing:".concat(expr),
+            label: `easing:${expr}`,
             easing: expr,
         }];
-    var h = story.height;
-    var margin = 10;
-    var d = 2; // duration in seconds
-    var allowMultiple = true;
-    var x0 = margin;
-    var x1 = story.width - 2 * margin;
-    var y0 = h / 2;
-    tests.forEach(function (test, index) {
+    const h = story.height;
+    const margin = 10;
+    const d = 2; // duration in seconds
+    const allowMultiple = true;
+    const x0 = margin;
+    const x1 = story.width - 2 * margin;
+    const y0 = h / 2;
+    tests.forEach((test, index) => {
         if (index && !allowMultiple) {
             return;
         }
-        var props = !test.path
+        const props = !test.path
             ? [{
                     prop: 'left',
                     easing: test.easingX,
-                    valueStart: "".concat(margin, "px"),
+                    valueStart: `${margin}px`,
                     value: x1,
                 }, {
                     prop: 'top',
                     easing: test.easing,
                     oscillator: test.oscillator,
-                    valueStart: "".concat(h / 2, "px"),
+                    valueStart: `${h / 2}px`,
                     value: h / 8,
                 }]
             : [{
@@ -89,19 +89,19 @@ $(window).on("load", function () {
         scene1
             .addAnimations([{
                 selector: '#dot',
-                duration: "".concat(d, "s"),
+                duration: `${d}s`,
                 enabled: test.enabled,
                 tasks: [{
                         handler: 'add-vars',
                         params: {
                             vars: {
-                                x0: x0,
-                                x1: x1,
-                                y0: y0,
+                                x0,
+                                x1,
+                                y0,
                             },
                         },
                     }],
-                props: props,
+                props,
             },
             {
                 selector: '#label',

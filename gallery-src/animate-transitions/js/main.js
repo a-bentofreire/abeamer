@@ -19,13 +19,13 @@
  * For production mode, uncomment the code lines with comments to get the
  * story to teleport.
  */
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 20);
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 20);
     story.metadata.comments = ['My first project'];
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
-    var scene1 = story.scenes[0];
+    const scene1 = story.scenes[0];
     scene1
         .addAnimations([{
             // pac-man
@@ -65,7 +65,7 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Scene2
     // ------------------------------------------------------------------------
-    var scene2 = story.scenes[1];
+    const scene2 = story.scenes[1];
     scene2
         .addAnimations([{
             selector: '#scene2-img1',
@@ -105,7 +105,7 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Scene3
     // ------------------------------------------------------------------------
-    var scene3 = story.scenes[2];
+    const scene3 = story.scenes[2];
     scene3
         .addStills('1s')
         .addAnimations([{
@@ -132,7 +132,7 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Scene3
     // ------------------------------------------------------------------------
-    var scene4 = story.scenes[3];
+    const scene4 = story.scenes[3];
     scene4.addStills('1s');
     // ------------------------------------------------------------------------
     //                               Transitions

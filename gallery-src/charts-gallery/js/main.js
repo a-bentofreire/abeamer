@@ -3,25 +3,25 @@
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 20);
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 20);
     // ------------------------------------------------------------------------
     //                               Charts
     // ------------------------------------------------------------------------
-    var scene1 = story.scenes[0];
-    var duration = 3;
-    var defData0 = [23000, 32000, 45000, 15000, 50400, 60000];
-    var defData = [
+    const scene1 = story.scenes[0];
+    const duration = 3;
+    const defData0 = [23000, 32000, 45000, 15000, 50400, 60000];
+    const defData = [
         defData0,
         [30000, 42000, 50000, 16000, 48400, 65000],
         [20000, 45000, 51000, 18000, 49400, 45000],
     ];
-    var defLabelsX = {
+    const defLabelsX = {
         captions: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     };
-    var firstOnly = false;
-    var viewOnly = undefined;
-    var charts = [{
+    const firstOnly = false;
+    const viewOnly = undefined;
+    const charts = [{
             chartType: ABeamer.ChartTypes.pie,
             // labelsX: defLabelsX,
             title: 'Government expenditure',
@@ -152,9 +152,9 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Factory
     // ------------------------------------------------------------------------
-    var chartCount = !firstOnly ? charts.length : 1;
-    var widths = [];
-    charts.forEach(function (chart) {
+    const chartCount = !firstOnly ? charts.length : 1;
+    const widths = [];
+    charts.forEach((chart) => {
         widths.push(chart.chartWidth || 280);
     });
     scene1
@@ -169,7 +169,7 @@ $(window).on("load", function () {
                         attrs: [
                             {
                                 name: 'width',
-                                value: "=case(i, ".concat(widths.join(','), ")"),
+                                value: `=case(i, ${widths.join(',')})`,
                             },
                             {
                                 name: 'height',
@@ -183,14 +183,14 @@ $(window).on("load", function () {
     // ------------------------------------------------------------------------
     //                               Add Charts
     // ------------------------------------------------------------------------
-    charts.forEach(function (chart, i) {
+    charts.forEach((chart, i) => {
         if (i >= chartCount || (viewOnly !== undefined && i !== viewOnly)) {
             return;
         }
-        chart.animeSelector = "chart-".concat(i, "-anime");
+        chart.animeSelector = `chart-${i}-anime`;
         scene1
             .addAnimations([{
-                selector: "canvas:nth-child(".concat(i + 1, ")"),
+                selector: `canvas:nth-child(${i + 1})`,
                 tasks: [{
                         handler: 'chart',
                         params: chart,
@@ -198,11 +198,11 @@ $(window).on("load", function () {
             }]);
     });
     scene1
-        .addAnimations(charts.map(function (chart, i) { return chart.props ? {
-        selector: "%chart-".concat(i, "-anime"),
-        duration: "".concat(duration, "s"),
+        .addAnimations(charts.map((chart, i) => chart.props ? {
+        selector: `%chart-${i}-anime`,
+        duration: `${duration}s`,
         props: chart.props,
-    } : undefined; }).filter(function (anime) { return anime !== undefined; }));
+    } : undefined).filter(anime => anime !== undefined));
     story.render(story.bestPlaySpeed());
 });
 //# sourceMappingURL=main.js.map

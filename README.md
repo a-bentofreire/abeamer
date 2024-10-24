@@ -1,10 +1,11 @@
 ## Description
-![Target](https://abeamer.devtoix.com/assets/badges/developer-badge.gif)![Target](https://abeamer.devtoix.com/assets/badges/v-1.6.0.gif)  
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-abeamer/story-frames/story.gif)  
-  
+
+![NPM Version](https://img.shields.io/npm/v/abeamer)
+
 [ABeamer](https://abeamer.devtoix.com) is a powerful frame-by-frame animation ecosystem, designed to create an animated story 
-in the web browser and generate the file images of each frame in either a local machine or in the cloud.  
+in the web browser and generate the file images of each frame in either a local machine or in the cloud.
   
 Unlike `VelocityJs` and `JQuery.animate` which were built for real-time user interaction, 
 ABeamer allows you to build complex frame based animations and save them frame-by-frame 
@@ -18,111 +19,7 @@ and special effects to their images or videos by just using the web browser
 and then [teleport](https://abeamer.devtoix.com/docs/latest/end-user/en/site/teleporter/) 
 the story to the company's machine to render the frame images and generate animated gifs or videos.  
 
-## What's new
-  
-ABeamer 1.5:
-  
-- New `datetime-functions` plugin.
-- Added `hsl2Rgb`, `rgb2Hsl`, `hsl` and `hsla` functions to `color-functions` plugin.
-- Support input array parameter in `color-functions`.
-- Added `abs` and `sign` functions.
-- Added `allowExpr` parameter to `add-vars` task.
-- Fixed a bug on the reducing the release version size.
-- Improved command line documentation.
-  
-[read more >>>](https://abeamer.devtoix.com/blog/2018/09/10/abeamer-1.5.0-released.html)  
-  
-***
-ABeamer 1.4:
-  
-![Image](https://abeamer.devtoix.com/gallery/latest/animate-delay-teleportation/story-frames/story.gif)  ![Image](https://abeamer.devtoix.com/gallery/latest/animate-delay-teleportation/story-frames/story-lighthouse.gif)  
-  
-- Teleportation initial snapshot can be delay by using `story.startTeleporting()`. Read about it on the blog [post](https://abeamer.devtoix.com/blog/2018/08/20/how-to-delay-the-teleportation-in-abeamer.html).  
-- Debugging code was removed from `abeamer.min.js`. Use `abeamer-debug.min.js` if you need such information.
-  
-[read more >>>](https://abeamer.devtoix.com/blog/2018/08/20/abeamer-1.4.0-released.html)  
-***
-ABeamer 1.3:
-  
-- Fixes font rendering on `animate-transitions` example.
-- Adds minify to all abeamer release js files.
-- Adds execution scripts (linux and windows) when ABeamer is downloaded as [zip](https://abeamer.devtoix.com/downloads.html) file.  
-  
-[read more >>>](https://abeamer.devtoix.com/blog/2018/08/15/abeamer-1.3.0-released.html)  
-***
-ABeamer 1.2:
-
-- Fixes gif generator bug on Windows.
-- Adds `--gif-background` to `abeamer gif` CLI.  
-  
-[read more >>>](https://abeamer.devtoix.com/blog/2018/08/06/abeamer-1.2.0-released.html)  
-***
-ABeamer 1.1:
-  
-![Image](https://abeamer.devtoix.com/gallery/latest/animate-simple-virtual-animator/story-frames/story.gif)
-  
-- Improves and simplifies the usage of [Virtual Animators](https://abeamer.devtoix.com/blog/2018/07/31/how-to-use-virtual-animators-in-abeamer.html).
-- The CLI has:
-    * a new `check` command to verify the requirements and help to configure puppeteer.
-    * new parameters to fine-tune the generation of movies and gifs.
-    * new environments variables to avoid changing the search path to execute `ffmpeg` and imagemagick `convert`.
-- Better support for paths with spaces.
-- Improved support for windows developers with new batch files.  
-  
-[read more >>>](https://abeamer.devtoix.com/blog/2018/07/31/abeamer-1.1.0-released.html)  
-***
-ABeamer 1.0:
-  
-![Image](https://abeamer.devtoix.com/gallery/latest/animate-badges/story-frames/story.gif)
-  
-ABeamer was raised to production level with the release of ABeamer 1.0.0.  
-This is the first LTS version and it includes many improvements, bug fixes, a few cosmetics changes in the documentation, 
-and better support on Windows platform and Microsoft web browsers.  
-ABeamer 1.0.0 gives great access to the command-line allowing to create stories that can 
-be configure by the server, opening the door to multiple dimension rendering.  
-  
-[read more >>>](https://abeamer.devtoix.com/blog/2018/07/11/abeamer-1.0.0-released.html)  
-  
-The `animated-badges` now are configurable by the server, and don't require the installation of local js/css files.  
-[How to generate an animated badge with ABeamer >>>](https://abeamer.devtoix.com/blog/2018/07/11/how-to-generate-an-animated-badge-with-abeamer.html)  
-***
-ABeamer 0.3.2:
-  
-Now ABeamer has a website and blog. Have a look: [https://abeamer.devtoix.com](https://abeamer.devtoix.com).  
-With the creation of the blog, the project updates will be described in more detail and its information can be used as documentation.  
-In this version includes more detailed documentation and several fixed several documentation bugs.
-The major goal now is to raise the ABeamer to production level.  
-The [roadmap](https://abeamer.devtoix.com/docs/latest/end-user/en/site/roadmap/) was also updated and added many details.   
-***
-ABeamer 0.3.1:
-  
-![Image](https://abeamer.devtoix.com/gallery/latest/animate-plot/story-frames/story.gif)   
-  
-Includes chart series as expressions, allowing to plot mathematical functions.  
-The standard library now also includes `log`, `log10` and `exp`.  
-  
-[read more >>>](https://abeamer.devtoix.com/blog/2018/06/29/abeamer-0.3.1-released.html)  
-***
-ABeamer 0.3.0:
-  
-![Image](https://abeamer.devtoix.com/gallery/latest/animate-charts/story-frames/story.gif) 
-  
-Includes the first implementation of the charts plugin.  
-Although there is still a lot of work for reach production stage, and the API can still change,
-is already usable in projects.  
-This plugin, will now enter a phase of research to ensure all parameters are consistent and their names 
-and specifications are easy to use.  
-Have a look how the charts look in [action](https://abeamer.devtoix.com/gallery/latest/charts-gallery/index-online.html) or 
-play with them in [Code Pen](https://codepen.io/a-bentofreire/pen/mKjQXR).  
-[read more >>>](https://abeamer.devtoix.com/blog/2018/06/25/abeamer-0.3.0-released.html)  
-
-This version also includes:
-* Gallery examples can viewed online without installing.
-* expressions support object variables.
-* expressions support one-dimension indices access to array variable.
-* [Easings gallery](https://abeamer.devtoix.com/gallery/latest/easings-gallery/index-online.html).
-  
-For more details see the [CHANGELOG](https://github.com/a-bentofreire/abeamer/blob/master/CHANGELOG.md).  
+If you find this project useful, please, read the [Support this Project](#support-this-project) on how to contribute.
   
 ## Components
 
@@ -140,52 +37,40 @@ render frames, create animated gifs or movies.
 Read the [requirements](#requirements) for details about the necessary software 
 to install if you need to render, create gifs or movies in the local machine.  
 
-## Donate
-  
-![Image](https://abeamer.devtoix.com/gallery/latest/animate-support/story-frames/story.gif)  
-  
-To build this project, and take it to the next level with the creation of the [Animation Editor](https://abeamer.devtoix.com/docs/latest/end-user/en/site/animation-editor/), it requires a full-time developer, 
-please, consider donating to keep this project
-alive and help to tell your story or to grow your business:  
-
-* ![Image](https://abeamer.devtoix.com/assets/icons/paypal.png) [paypal](https://www.paypal.me/abentofreire) 
-* ![Image](https://abeamer.devtoix.com/assets/icons/bitcoin.png) Bitcoin: `1mH89kWbvffActY7FAke26t2fbJE9U6jv`
-* Add a star to the [github repo](https://github.com/a-bentofreire/abeamer).
-
 ## Features
 
-* Free and Open-source.
-* Simple and intuitive design.
-* Supports rendering in the cloud in a sanitized environment.
-* Extensively documented: [End-User Documentation](https://abeamer.devtoix.com/docs/latest/end-user/en/site/) and
+- Free and Open-source.
+- Simple and intuitive design.
+- Supports rendering in the cloud in a sanitized environment.
+- Extensively documented: [End-User Documentation](https://abeamer.devtoix.com/docs/latest/end-user/en/site/) and
  [Developer Documentation](https://abeamer.devtoix.com/docs/latest/developer/en/site/).
-* Absolutely minimum [dependencies](#requirements).
-* Highly Extensible via [plugins](https://abeamer.devtoix.com/docs/latest/end-user/en/site/plugin-manager/) including [interpolators](#interpolators), functions, flyovers and tasks.
-* [Tasks](https://abeamer.devtoix.com/docs/latest/end-user/en/site/tasks/) to build complex animations 
+- Absolutely minimum [dependencies](#requirements).
+- Highly Extensible via [plugins](https://abeamer.devtoix.com/docs/latest/end-user/en/site/plugin-manager/) including [interpolators](#interpolators), functions, flyovers and tasks.
+- [Tasks](https://abeamer.devtoix.com/docs/latest/end-user/en/site/tasks/) to build complex animations 
 and [F/X](https://abeamer.devtoix.com/docs/latest/end-user/en/site/tasks/#fx).
-* Large gallery of [example projects](https://abeamer.devtoix.com/gallery/latest/).
-* Multiple scenes (only default scenes are teleportable).
-* Scene transitions.
-* [Expressions](https://abeamer.devtoix.com/docs/latest/end-user/en/site/expressions/), functions and variables.
-* Parallel and [off-sync](https://abeamer.devtoix.com/docs/latest/end-user/en/site/glossary/#off-sync) property animations.
-* Teleportable [JQuery-like containers](https://abeamer.devtoix.com/docs/latest/end-user/en/site/pels/).
-* Teleportable [flyovers](https://abeamer.devtoix.com/docs/latest/end-user/en/site/flyovers/).
+- Large gallery of [example projects](https://abeamer.devtoix.com/gallery/latest/).
+- Multiple scenes (only default scenes are teleportable).
+- Scene transitions.
+- [Expressions](https://abeamer.devtoix.com/docs/latest/end-user/en/site/expressions/), functions and variables.
+- Parallel and [off-sync](https://abeamer.devtoix.com/docs/latest/end-user/en/site/glossary/#off-sync) property animations.
+- Teleportable [JQuery-like containers](https://abeamer.devtoix.com/docs/latest/end-user/en/site/pels/).
+- Teleportable [flyovers](https://abeamer.devtoix.com/docs/latest/end-user/en/site/flyovers/).
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-rec-high-res/story-frames/story.gif)  
   
-* Saves frame-by-frame into a file sequence with transparency and at high resolution.
+- Saves frame-by-frame into a file sequence with transparency and at high resolution.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-with-less/story-frames/story.gif)  
   
-* Optional support for SCSS, LESS and TypeScript.
+- Optional support for SCSS, LESS and TypeScript.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-virtual/story-frames/story.gif)  
   
-* DOM and Virtual Elements, Animators and Scenes. [read more >>>](https://abeamer.devtoix.com/blog/2018/07/31/how-to-use-virtual-animators-in-abeamer.html)  
+- DOM and Virtual Elements, Animators and Scenes. [read more >>>](https://abeamer.devtoix.com/blog/2018/07/31/how-to-use-virtual-animators-in-abeamer.html)  
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-localization/story-frames/story.gif)  
   
-* Localization of messages and plugin functionalities, including functions and variables.
+- Localization of messages and plugin functionalities, including functions and variables.
 
 # Property Animation
 
@@ -193,54 +78,56 @@ ABeamer has a complex system that allows to interpolate pixels, numbers,
 text, colors and much more.
 ABeamer guesses the starting value and property type from CSS style information,
 or if that information is given via `valueStart`.
-* General CSS properties:   
+- General CSS properties:
+
 e.g  `prop: 'border-style'; valueText: ['dotted', 'dashed']`.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-pixels/story-frames/story.gif)  
   
-* Pixel properties.  
+- Pixel properties.  
  e.g. `valueStart: 10px; value: 100;`
-* Dual-pixel properties via [paths](https://abeamer.devtoix.com/docs/latest/end-user/en/site/paths/).
+- Dual-pixel properties via [paths](https://abeamer.devtoix.com/docs/latest/end-user/en/site/paths/).
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-colors/story-frames/story.gif)  
   
-* Color properties.  
+- Color properties.  
 e.g. `valueText: ['red', '#FF00AA'];`
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-counter/story-frames/story.gif)  
   
-* Formatted numerical properties.  
+- Formatted numerical properties.  
 e.g. `valueFormat: '%d%'; value: 100;`
-* Unformatted numerical properties.
+- Unformatted numerical properties.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-images/story-frames/story.gif)  
   
-* Image properties.  
+- Image properties.  
 e.g. `prop: 'src'; valueText: ['a.png', 'b.png'];`
-* Text properties.
+- Text properties.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-class-prop/story-frames/story.gif)  
   
-* `class` property.  
+- `class` property.  
 e.g. `prop: 'class'; valueText: ['+class1 -class2'];`
-* `visible` property.  
+- `visible` property.  
 e.g. `prop: 'visible'; duration: 1; value: 1;`
-* `transform` property:  
+- `transform` property:  
 e.g. `prop: 'transform'; valueFormat: 'rotateX(%fdeg)'`;
 
 ## CSS Animations
+
 ABeamer doesn't supports CSS animations, but ABeamer was designed in a way that 
 its animations are similar to CSS animations, therefore it's easy to convert CSS Animations 
 to ABeamer animations.  
 Besides the property interpolation described above, ABeamer also supports:
-   
+
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-item-delay/story-frames/story.gif)  
   
-* Item-delay with `disturbance` to produce random effects.
+- Item-delay with `disturbance` to produce random effects.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-loop/story-frames/story.gif)  
   
-* CSS animation-iteration-count.
+- CSS animation-iteration-count.
 
 ## Interpolators
 
@@ -260,15 +147,15 @@ ABeamer has following interpolators:
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-oscillator/story-frames/story.gif)  
   
-* `harmonic` and `damped` oscillators - Rotation and Balancing motion.
+- `harmonic` and `damped` oscillators - Rotation and Balancing motion.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-pulsar/story-frames/story.gif)  
   
-* `pulsar` oscillator.
+- `pulsar` oscillator.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-paths/story-frames/story.gif)  
   
-* Paths - n-dimension motion.
+- Paths - n-dimension motion.
 
 The interpolators are chained in the following order: easing→oscillator→path.
 
@@ -282,49 +169,49 @@ ABeamer has the following tools:
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-transitions/story-frames/story.gif)  
   
-* Scene transitions.
+- Scene transitions.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-flyovers/story-frames/story.gif)  
   
-* `info` flyover.
+- `info` flyover.
   
 [![Image](https://abeamer.devtoix.com/gallery/latest/animate-video-sync/story-frames/../assets/a-bentofreire/snapshot.jpg)](https://abeamer.devtoix.com/gallery/latest/animate-video-sync/story-frames/../assets/a-bentofreire/view-video.html)  
   
-* `video-sync` flyover [[1]](https://abeamer.devtoix.com/docs/latest/end-user/en/site/flyovers/#video-sync-flyover).
+- `video-sync` flyover [[1]](https://abeamer.devtoix.com/docs/latest/end-user/en/site/flyovers/#video-sync-flyover).
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-wrappers/story-frames/story.gif)  
   
-* Wrappers.
+- Wrappers.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-text-tasks/story-frames/story.gif)  
   
-* Text tasks:
+- Text tasks:
    * `text-split` task.
    * `typewriter` task.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-factory/story-frames/story.gif)  
   
-* `factory` task.
+- `factory` task.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-decipher-text/story-frames/story.gif)  
   
-* `decipher` task.
+- `decipher` task.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-attack-task/story-frames/story.gif)  
   
-* `color-attack` task.
+- `color-attack` task.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-shapes/story-frames/story.gif)  
   
-* `shape` task.
+- `shape` task.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-speech/story-frames/story.gif)  
   
-* `speech` shape task.
+- `speech` shape task.
   
 ![Image](https://abeamer.devtoix.com/gallery/latest/animate-charts/story-frames/story.gif)  
   
-* `charts` task.
+- `charts` task.
 
 and much more [coming soon](https://abeamer.devtoix.com/docs/latest/end-user/en/site/roadmap/).
 
@@ -343,16 +230,16 @@ but it won't execute the command-line utility.
 
 However, in order to render frames, generate gifs and movies, it requires:
 1. [nodejs](https://nodejs.org/en/).
-     
+
 2. To render, it requires [puppeteer](https://www.npmjs.com/package/puppeteer) render server `npm install -g puppeteer`.  
    Puppeteer installs Chromium by default, since Chromium is outdated and it has less features than Chrome,  
    before installing puppeteer, read the following [note](https://abeamer.devtoix.com/docs/latest/end-user/en/site/faq/#can-i-install-puppeteer-without-chromium)
    on how to configure puppeteer to use Chrome instead of Chromium.
    ABeamer also supports `phantomjs` but since its features are outdated it is preferable to use puppeteer.  
-     
+
 3. To generate gifs, it requires to have [imagemagick](https://www.imagemagick.org) on system path.  
-   For Windows users, read the following [note](https://abeamer.devtoix.com/docs/latest/end-user/en/site/faq/#it-doesnt-creates-a-gif-file). 
-     
+   For Windows users, read the following [note](https://abeamer.devtoix.com/docs/latest/end-user/en/site/faq/#it-doesnt-creates-a-gif-file).
+
 4. To create movies, it requires to have [ffmpeg](https://www.ffmpeg.org/) on the system path.
   
 To check if 2-4 points are installed and configured, execute:  
@@ -362,7 +249,7 @@ To check if 2-4 points are installed and configured, execute:
 
 Try these examples online without any installation:
 
-- [Hello world](https://jsfiddle.net/abentofreire/peax4f9n/4/)
+- [Hello world](https://codepen.io/a-bentofreire/pen/rrRMRa)
 - [Image Overlays](https://codepen.io/a-bentofreire/pen/QxMPYR)
 - [Ad Example](https://codepen.io/a-bentofreire/pen/qKPdVo)
 - [E-Commerce](https://codepen.io/a-bentofreire/pen/aKyxyd)
@@ -379,8 +266,9 @@ When you create a story, you define an immutable number of frames per second,
 and all animations are interpolated based on that `fps`.  
   
 on file `js/main.ts`:  
-``` javascript
-  var story = ABeamer.createStory(25); // creates a story with 25 fps
+
+```javascript
+  let story = ABeamer.createStory(25); // creates a story with 25 fps
 ```
   
 The `story` holds a collection of Scenes.  
@@ -388,7 +276,8 @@ Only one scene can be visible at a given moment in time except during the transi
 It represents the natural concept of a scene in a storyline.  
 By using Scenes, ABeamer can speed up the processing speed by reducing the global amount of calculations.   
 
-The bare-bones of a `html` file:   
+The bare-bones of a `html` file:
+
 ```html
   <div class="abeamer-story" id=story>
       <div class=abeamer-scene id=scene1>
@@ -397,13 +286,15 @@ The bare-bones of a `html` file:
   </div>
 ```
   
-The bare-bones of a `abeamer.ini` file:   
+The bare-bones of a `abeamer.ini` file:
+
 ```scss
 $abeamer-width: 200;
 $abeamer-height: 100;
 ```
   
-The bare-bones of a `scss` file:   
+The bare-bones of a `scss` file:
+
 ```scss
 @import "./../abeamer.ini";
 body,
@@ -417,8 +308,9 @@ html,
   
 Html Elements with `abeamer-scene` class are added automatically.  
 Scenes can be added manually with the following code:  
+
 ```javascript
- var newScene = story.AddScene();
+ const newScene = story.AddScene();
 ```
 
 Creating scenes with `abeamer-scene` class is the preferable way.  
@@ -461,13 +353,30 @@ to install if you need to render, create gifs or movies on the local machine.
 
 ## Documentation
 
-* [End-User Documentation](https://abeamer.devtoix.com/docs/latest/end-user/en/site/)
-* [Developer Documentation](https://abeamer.devtoix.com/docs/latest/developer/en/site/)
+- [End-User Documentation](https://abeamer.devtoix.com/docs/latest/end-user/en/site/)
+- [Developer Documentation](https://abeamer.devtoix.com/docs/latest/developer/en/site/)
 
-## Roadmap & Known Issues
+## Known Issues
 
-* [Roadmap](https://abeamer.devtoix.com/docs/latest/end-user/en/site/roadmap/)
-* [Known Issues](https://abeamer.devtoix.com/docs/latest/end-user/en/site/known-issues/)
+- [Known Issues](https://abeamer.devtoix.com/docs/latest/end-user/en/site/known-issues/)
+
+## Support this Project
+
+If you find this project useful, consider supporting it:
+
+- Donate:
+
+[![Donate via PayPal](https://www.paypalobjects.com/webstatic/en_US/i/btn/png/blue-rect-paypal-34px.png)](https://www.paypal.com/donate/?business=MCZDHYSK6TCKJ&no_recurring=0&item_name=Support+Open+Source&currency_code=EUR)
+
+[![Buy me a Coffee](https://www.devtoix.com/assets/buymeacoffee-small.png)](https://buymeacoffee.com/abentofreire)
+
+- Visit the project [homepage](https://www.devtoix.com/en/projects/abeamer)
+- Give the project a ⭐ on [Github](https://github.com/a-bentofreire/abeamer)
+- Spread the word
+- Follow me:
+  - [Github](https://github.com/a-bentofreire)
+  - [LinkedIn](https://www.linkedin.com/in/abentofreire)
+  - [Twitter/X](https://x.com/devtoix)
 
 ## Contribute
 

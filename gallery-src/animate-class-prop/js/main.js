@@ -3,13 +3,13 @@
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-$(window).on("load", function () {
-    var story = ABeamer.createStory(/*FPS:*/ 20);
+$(window).on("load", () => {
+    const story = ABeamer.createStory(/*FPS:*/ 20);
     // ------------------------------------------------------------------------
     //                               Scene1
     // ------------------------------------------------------------------------
-    var scene1 = story.scenes[0];
-    var step = 0.5;
+    const scene1 = story.scenes[0];
+    const step = 0.5;
     scene1
         .addAnimations([{
             selector: '#text',
@@ -21,12 +21,12 @@ $(window).on("load", function () {
                 },
                 {
                     prop: 'class',
-                    position: "+".concat(step, "s"),
+                    position: `+${step}s`,
                     valueText: ['+step2'],
                 },
                 {
                     prop: 'class',
-                    position: "+".concat(step * 2, "s"),
+                    position: `+${step * 2}s`,
                     valueText: ['-step2 +step3'],
                 }
             ],

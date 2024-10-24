@@ -1,19 +1,4 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 // ------------------------------------------------------------------------
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
@@ -64,7 +49,7 @@ var ABeamer;
     /** Value used, if no duration is defined for a fade in/out. */
     ABeamer.DEFAULT_FADE_DURATION = '400ms';
     function _parseInterpolator(handler, params, exprMotionHandler, numToName, mapper, args) {
-        var func;
+        let func;
         params = params || {};
         switch (typeof handler) {
             case 'undefined':
@@ -89,12 +74,12 @@ var ABeamer;
                 break;
         }
         if (!func) {
-            ABeamer.throwI8n("Unknown: ".concat(handler));
+            ABeamer.throwI8n(`Unknown: ${handler}`);
         }
         return {
-            handler: handler,
-            func: func,
-            params: params,
+            handler,
+            func,
+            params,
         };
     }
     // ------------------------------------------------------------------------
@@ -108,17 +93,15 @@ var ABeamer;
      * This class stores the user parameters after being converted into an
      * internal format.
      */
-    var _AbstractWorkAnimation = /** @class */ (function () {
-        function _AbstractWorkAnimation() {
-        }
-        _AbstractWorkAnimation.prototype.assignValues = function (acp, story, parent, nameTag, refOrDef) {
-            var args = story._args;
+    class _AbstractWorkAnimation {
+        assignValues(acp, story, parent, nameTag, refOrDef) {
+            const args = story._args;
             this.framesPerCycle = ABeamer.parseTimeHandler(acp.duration, args, parent ? parent.framesPerCycle : ABeamer.DEFAULT_DURATION, 0);
             this.itemDelay = ABeamer._parseItemDelay(acp, args);
             if (!story._strictMode) {
                 if (this.framesPerCycle < 0 && (parent && !this.framesPerCycle)) {
                     if (story._logLevel >= ABeamer.LL_ERROR) {
-                        story.logMsg("".concat(nameTag, " has invalid duration frames: ").concat(this.framesPerCycle));
+                        story.logMsg(`${nameTag} has invalid duration frames: ${this.framesPerCycle}`);
                     }
                     return false;
                 }
@@ -126,20 +109,20 @@ var ABeamer;
             else {
                 if ((parent && !ABeamer.isPositiveNatural(this.framesPerCycle)) ||
                     (!parent && !ABeamer.isNotNegativeNatural(this.framesPerCycle))) {
-                    ABeamer.throwErr("".concat(nameTag, " has invalid duration frames: ").concat(this.framesPerCycle));
+                    ABeamer.throwErr(`${nameTag} has invalid duration frames: ${this.framesPerCycle}`);
                 }
             }
             this.positionFrame = ABeamer.parseTimeHandler(acp.position, args, refOrDef, refOrDef);
             this.advance = acp.advance;
             if (!story._strictMode) {
                 if (this.positionFrame < 0) {
-                    story.logMsg("".concat(nameTag, " has invalid position: ").concat(this.positionFrame));
+                    story.logMsg(`${nameTag} has invalid position: ${this.positionFrame}`);
                     return false;
                 }
             }
             else {
                 if (!ABeamer.isNotNegativeNatural(this.positionFrame)) {
-                    ABeamer.throwErr("".concat(nameTag, " has invalid position: ").concat(this.positionFrame));
+                    ABeamer.throwErr(`${nameTag} has invalid position: ${this.positionFrame}`);
                 }
             }
             if (acp.easing) {
@@ -161,9 +144,8 @@ var ABeamer;
                 this.path = parent.path;
             }
             return true;
-        };
-        return _AbstractWorkAnimation;
-    }());
+        }
+    }
     ABeamer._AbstractWorkAnimation = _AbstractWorkAnimation;
     // ------------------------------------------------------------------------
     //                               _ElWorkAnimation
@@ -176,19 +158,16 @@ var ABeamer;
      * It stores the the user parameters after being converted into an
      * internal format.
      */
-    var _ElWorkAnimation = /** @class */ (function (_super) {
-        __extends(_ElWorkAnimation, _super);
-        function _ElWorkAnimation() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.elAdapters = [];
-            _this.propInterpolators = [];
-            return _this;
+    class _ElWorkAnimation extends _AbstractWorkAnimation {
+        constructor() {
+            super(...arguments);
+            this.elAdapters = [];
+            this.propInterpolators = [];
         }
-        _ElWorkAnimation.prototype.buildElements = function (story, sceneAdpt, anime) {
+        buildElements(story, sceneAdpt, anime) {
             this.elAdapters = ABeamer._parseInElSelector(story, this.elAdapters, sceneAdpt, anime.selector);
-        };
-        return _ElWorkAnimation;
-    }(_AbstractWorkAnimation));
+        }
+    }
     ABeamer._ElWorkAnimation = _ElWorkAnimation;
     // ------------------------------------------------------------------------
     //                               _WorkAnimationProp
@@ -204,46 +183,43 @@ var ABeamer;
      *
      * This class is abstract because it's always derived by an Interpolator class
      */
-    var _WorkAnimationProp = /** @class */ (function (_super) {
-        __extends(_WorkAnimationProp, _super);
-        function _WorkAnimationProp(animProp) {
-            var _this = _super.call(this) || this;
-            _this.realPropName = animProp.prop;
-            _this.propName = animProp.prop;
-            _this.animProp = animProp;
-            _this.iterationCount = Math.max(animProp.iterationCount || 1, 1);
-            _this.scaleDuration = _this.iterationCount;
-            _this.dirPair = ABeamer._propDirToDirPair(animProp.direction);
-            _this.bypassForwardMode = animProp.bypassForwardMode;
-            _this.bypassBackwardMode = animProp.bypassBackwardMode;
-            _this.roundFunc = ABeamer.parseRoundFunc(animProp.roundFunc);
-            _this.waitFor = !animProp.waitFor ? undefined :
-                animProp.waitFor.map(function (waitItem) {
-                    waitItem.prop = waitItem.prop || _this.propName;
+    class _WorkAnimationProp extends _AbstractWorkAnimation {
+        constructor(animProp) {
+            super();
+            this.realPropName = animProp.prop;
+            this.propName = animProp.prop;
+            this.animProp = animProp;
+            this.iterationCount = Math.max(animProp.iterationCount || 1, 1);
+            this.scaleDuration = this.iterationCount;
+            this.dirPair = ABeamer._propDirToDirPair(animProp.direction);
+            this.bypassForwardMode = animProp.bypassForwardMode;
+            this.bypassBackwardMode = animProp.bypassBackwardMode;
+            this.roundFunc = ABeamer.parseRoundFunc(animProp.roundFunc);
+            this.waitFor = !animProp.waitFor ? undefined :
+                animProp.waitFor.map((waitItem) => {
+                    waitItem.prop = waitItem.prop || this.propName;
                     return waitItem;
                 });
-            return _this;
         }
-        _WorkAnimationProp.prototype.propAssignValues = function (acp, story, ai, elIndex) {
+        propAssignValues(acp, story, ai, elIndex) {
             if (!this.assignValues(acp, story, ai, this.realPropName, ai.nextPropStartFrame !== undefined ? ai.nextPropStartFrame : ai.positionFrame)) {
                 return false;
             }
-            var startFrame = this.positionFrame +
+            const startFrame = this.positionFrame +
                 (this.itemDelay.duration ? ABeamer._computeItemDelay(this.itemDelay, elIndex) : 0);
             this.startFrame = startFrame;
             this.totalDuration = this.framesPerCycle * this.scaleDuration;
             this.endFrame = this.totalDuration + startFrame;
             ai.nextPropStartFrame = this.advance === true ? this.endFrame : undefined;
             return true;
-        };
-        return _WorkAnimationProp;
-    }(_AbstractWorkAnimation));
+        }
+    }
     ABeamer._WorkAnimationProp = _WorkAnimationProp;
     // ------------------------------------------------------------------------
     //                               Teleportation
     // ------------------------------------------------------------------------
     function _prepareAnimationsForTeleporting(animes, args) {
-        animes.forEach(function (anime) {
+        animes.forEach(anime => {
             if (anime.tasks) {
                 ABeamer._prepareTasksForTeleporting(anime, anime.tasks, args);
             }

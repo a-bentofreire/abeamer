@@ -6,7 +6,7 @@ exports.OptsParser = void 0;
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
 // The code shared by the server and cli
-var rel_consts_js_1 = require("../shared/rel-consts.js");
+const rel_consts_js_1 = require("../shared/rel-consts.js");
 var OptsParser;
 (function (OptsParser) {
     OptsParser.DEFAULT_OUT_PATTERN = '__PROJDIR__/story-frames/frame%05d.png';
@@ -26,79 +26,97 @@ var OptsParser;
      * Each key represents an option in both camelCase and Dash format.
      */
     OptsParser.argOpts = {
-        ll: { param: 'int', desc: "log level. 0 has no verbosity" },
-        version: { desc: "version" },
+        ll: { param: 'int', desc: `log level. 0 has no verbosity` },
+        version: { desc: `version` },
         url: {
-            param: 'string', desc: "url of the page containing the animation\n              e.g. http://abeamer.devtoix.com/\n              e.g. file:///home/abeamer/Documents/test/"
+            param: 'string', desc: `url of the page containing the animation
+              e.g. http://abeamer.devtoix.com/
+              e.g. file:///home/abeamer/Documents/test/`
         },
         file: {
-            param: 'string', desc: "for running local files with relative paths\n           if --out isn't defined it sets to ".concat(OptsParser.DEFAULT_OUT_PATTERN, "\n              e.g --file gallery/hello-world/")
+            param: 'string', desc: `for running local files with relative paths
+           if --out isn't defined it sets to ${OptsParser.DEFAULT_OUT_PATTERN}
+              e.g --file gallery/hello-world/`
         },
         out: {
-            param: 'string', desc: "output file pattern. use %(0<n>)d for sequence,\n           creates the destination folder if doesn't exists\n           if it's defined after --file, the macro  will be file value\n             e.g. --out ".concat(OptsParser.DEFAULT_OUT_PATTERN),
+            param: 'string', desc: `output file pattern. use %(0<n>)d for sequence,
+           creates the destination folder if doesn't exists
+           if it's defined after --file, the macro  will be file value
+             e.g. --out ${OptsParser.DEFAULT_OUT_PATTERN}`,
         },
         report: {
-            param: 'string', desc: "output report filename providing information about dimensions and fps\n           default is ".concat(OptsParser.DEFAULT_OUT_REPORT),
+            param: 'string', desc: `output report filename providing information about dimensions and fps
+           default is ${OptsParser.DEFAULT_OUT_REPORT}`,
         },
         allowedPlugins: {
-            param: 'string', desc: "filename of the the list of the allowed plugins",
+            param: 'string', desc: `filename of the the list of the allowed plugins`,
         },
         injectPage: {
-            param: 'string', desc: "filename of the index.html that will receive the injection",
+            param: 'string', desc: `filename of the index.html that will receive the injection`,
         },
         width: {
-            param: 'int', desc: "frame output width. default is ".concat(rel_consts_js_1.RelConsts.DEFAULT_WIDTH),
+            param: 'int', desc: `frame output width. default is ${rel_consts_js_1.RelConsts.DEFAULT_WIDTH}`,
         },
         maxWidth: {
-            param: 'int', desc: "maximum frame output width. default is ".concat(OptsParser.DEFAULT_MAX_WIDTH),
+            param: 'int', desc: `maximum frame output width. default is ${OptsParser.DEFAULT_MAX_WIDTH}`,
         },
         height: {
-            param: 'int', desc: "frame output height. default is ".concat(rel_consts_js_1.RelConsts.DEFAULT_HEIGHT),
+            param: 'int', desc: `frame output height. default is ${rel_consts_js_1.RelConsts.DEFAULT_HEIGHT}`,
         },
         maxHeight: {
-            param: 'int', desc: "maximum frame output height. default is ".concat(OptsParser.DEFAULT_MAX_HEIGHT),
+            param: 'int', desc: `maximum frame output height. default is ${OptsParser.DEFAULT_MAX_HEIGHT}`,
         },
         scale: {
-            param: 'string', desc: "scales to gif or movie movie generators.\n          e.g.\n             --scale 25%\n             --scale 200,400\n             --scale 40%,30%\n          ",
+            param: 'string', desc: `scales to gif or movie movie generators.
+          e.g.
+             --scale 25%
+             --scale 200,400
+             --scale 40%,30%
+          `,
         },
         noframes: {
-            desc: "doesn't render the frames to file nor generates the report.\n           use it only for debugging"
+            desc: `doesn't render the frames to file nor generates the report.
+           use it only for debugging`
         },
         server: {
-            param: 'string', desc: "name of the server. default is ".concat(rel_consts_js_1.RelConsts.DEFAULT_SERVER),
+            param: 'string', desc: `name of the server. default is ${rel_consts_js_1.RelConsts.DEFAULT_SERVER}`,
         },
         serverExec: {
-            param: 'string', desc: "name of the server executable. default puppeteer=node. slimerjs=slimerjs",
+            param: 'string', desc: `name of the server executable. default puppeteer=node. slimerjs=slimerjs`,
         },
         fps: {
-            param: 'int', desc: "overrides frames per second defined on project",
+            param: 'int', desc: `overrides frames per second defined on project`,
         },
         maxFps: {
-            param: 'int', desc: "maximum frame per second. default is ".concat(OptsParser.DEFAULT_MAX_FPS),
+            param: 'int', desc: `maximum frame per second. default is ${OptsParser.DEFAULT_MAX_FPS}`,
         },
         maxFrameCount: {
-            param: 'int', desc: "maximum number of frames. default is ".concat(OptsParser.DEFAULT_MAX_FRAME_COUNT),
+            param: 'int', desc: `maximum number of frames. default is ${OptsParser.DEFAULT_MAX_FRAME_COUNT}`,
         },
         progress: {
-            param: 'int', desc: "number of frames it displays a progress info. if 0 doesn't shows progress. default is ".concat(OptsParser.DEFAULT_PROGRESS),
+            param: 'int', desc: `number of frames it displays a progress info. if 0 doesn't shows progress. default is ${OptsParser.DEFAULT_PROGRESS}`,
         },
         timeout: {
-            param: 'int', desc: "server timeout. default is 0",
+            param: 'int', desc: `server timeout. default is 0`,
         },
-        teleport: { desc: "makes the web browser run on teleport mode, and generates the story on the exit" },
-        dp: { desc: "deletes previous frames" },
+        teleport: { desc: `makes the web browser run on teleport mode, and generates the story on the exit` },
+        dp: { desc: `deletes previous frames` },
         config: {
-            param: 'string', desc: "loads the config from a ini or json file\n           see https://abeamer.devtoix.com/docs/latest/end-user/en/site/config-file/",
+            param: 'string', desc: `loads the config from a ini or json file
+           see https://abeamer.devtoix.com/docs/latest/end-user/en/site/config-file/`,
         },
         var: {
-            param: 'object', desc: "allows to pass multiple variables to client web library.\n         accessible as story.args.vars or in expressions.\n         if the variable name has dashes, it will be converted to camelCase\n           e.g --var name=end-user --var value=1.2.3",
+            param: 'object', desc: `allows to pass multiple variables to client web library.
+         accessible as story.args.vars or in expressions.
+         if the variable name has dashes, it will be converted to camelCase
+           e.g --var name=end-user --var value=1.2.3`,
         },
     };
     // ------------------------------------------------------------------------
     //                               Iterate Arg Options
     // ------------------------------------------------------------------------
     /** Returns true, if the argument is an option */
-    OptsParser.isOption = function (arg) { return arg.indexOf('--') === 0; };
+    OptsParser.isOption = (arg) => arg.indexOf('--') === 0;
     /**
      * Iterates the command line arguments.
      * For each option, it calls callback.
@@ -108,31 +126,31 @@ var OptsParser;
      */
     function iterateArgOpts(toParseValue, getNext, callback) {
         do {
-            var name_1 = (getNext() || '').trim();
-            if (!name_1) {
+            const name = (getNext() || '').trim();
+            if (!name) {
                 break;
             }
-            if (OptsParser.isOption(name_1)) {
-                var optName = name_1.substr(2)
+            if (OptsParser.isOption(name)) {
+                const optName = name.substr(2)
                     // converts part1-part2-part3 => part1Part2Part3
-                    .replace(/-(\w)/g, function (_all, firstLetter) { return firstLetter.toUpperCase(); })
+                    .replace(/-(\w)/g, (_all, firstLetter) => firstLetter.toUpperCase())
                     // removes the suffix to solve the `--config` option conflict on slimerjs
                     .replace(/__\d+$/, '');
-                var opt = OptsParser.argOpts[optName];
+                const opt = OptsParser.argOpts[optName];
                 if (opt === undefined) {
-                    throw "Unknown option ".concat(optName);
+                    throw `Unknown option ${optName}`;
                 }
                 opt.hasOption = true;
                 if (opt.param) {
                     opt.value = getNext();
                     if (!opt.value || (OptsParser.isOption(opt.value) && !opt.allowOption)) {
-                        throw "Missing value for ".concat(name_1);
+                        throw `Missing value for ${name}`;
                     }
                     if (toParseValue) {
                         switch (opt.param) {
                             case 'int':
                                 if (opt.value.match(/[^\d]/)) {
-                                    throw "".concat(name_1, " ").concat(opt.value, " isn't a integer value");
+                                    throw `${name} ${opt.value} isn't a integer value`;
                                 }
                                 opt.value = parseInt(opt.value);
                                 break;
@@ -142,9 +160,9 @@ var OptsParser;
                                 break;
                             case 'object':
                                 opt.multipleValue = opt.multipleValue || {};
-                                var _a = opt.value.match(/^([^=]+)=(.*)$/) || ['', '', ''], key = _a[1], value = _a[2];
+                                const [, key, value] = opt.value.match(/^([^=]+)=(.*)$/) || ['', '', ''];
                                 if (!key) {
-                                    throw "".concat(name_1, " requires the key field");
+                                    throw `${name} requires the key field`;
                                 }
                                 opt.multipleValue[key] = value;
                                 break;
@@ -155,13 +173,13 @@ var OptsParser;
                         }
                     }
                 }
-                var res = callback(optName, opt.value, opt.multipleValue);
+                const res = callback(optName, opt.value, opt.multipleValue);
                 if (res !== undefined) {
                     return res;
                 }
             }
             else {
-                callback('@param', name_1);
+                callback('@param', name);
             }
         } while (true);
     }
@@ -171,19 +189,19 @@ var OptsParser;
     // ------------------------------------------------------------------------
     function computeScale(width, height) {
         function computeScaleItem(item, dim) {
-            var scale = 1;
+            let scale = 1;
             if (item.endsWith('%')) {
                 scale = dim / 100;
                 item = item.substr(0, item.length - 1);
             }
-            var value = parseInt(item, 10) * scale;
+            const value = parseInt(item, 10) * scale;
             return Math.round(value).toString();
         }
-        var sScale = (OptsParser.argOpts.scale.value || '').trim();
+        const sScale = (OptsParser.argOpts.scale.value || '').trim();
         if (!sScale) {
             return undefined;
         }
-        var scaleItems = sScale.split(/\s*,\s*/);
+        const scaleItems = sScale.split(/\s*,\s*/);
         return [
             computeScaleItem(scaleItems[0], width),
             computeScaleItem(scaleItems[1] || scaleItems[0], height)
@@ -198,23 +216,21 @@ var OptsParser;
      * dash + lowercase.
      */
     function _getDashKey(key) {
-        return key.replace(/([A-Z])/g, function (_all, p) {
-            return '-' + p.toLowerCase();
-        });
+        return key.replace(/([A-Z])/g, (_all, p) => '-' + p.toLowerCase());
     }
     /** Outputs to the console the program usage */
     function printUsage() {
-        var names = Object.keys(OptsParser.argOpts);
-        var max = 0;
-        names.forEach(function (key) { max = Math.max(_getDashKey(key).length, max); });
-        var fromKeyToDesc = max + 3;
-        var descPos = 5 + fromKeyToDesc + 2;
-        console.log("\n The options are:\n " + names.map(function (key) {
-            var dashKey = _getDashKey(key);
-            return "   --".concat(dashKey).concat(Array(fromKeyToDesc - dashKey.length).join(' '))
-                + "".concat(OptsParser.argOpts[key].desc.split('\n').map(function (line, lineIndex) {
-                    return Array(lineIndex ? descPos : 0).join(' ') + line.trim();
-                }).join('\n'), "\n\n");
+        const names = Object.keys(OptsParser.argOpts);
+        let max = 0;
+        names.forEach(key => { max = Math.max(_getDashKey(key).length, max); });
+        const fromKeyToDesc = max + 3;
+        const descPos = 5 + fromKeyToDesc + 2;
+        console.log(`
+ The options are:
+ ` + names.map(key => {
+            const dashKey = _getDashKey(key);
+            return `   --${dashKey}${Array(fromKeyToDesc - dashKey.length).join(' ')}`
+                + `${OptsParser.argOpts[key].desc.split('\n').map((line, lineIndex) => Array(lineIndex ? descPos : 0).join(' ') + line.trim()).join('\n')}\n\n`;
         }).join('\n'));
     }
     OptsParser.printUsage = printUsage;

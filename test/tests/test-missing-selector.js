@@ -4,13 +4,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-var exact_js_1 = require("../exact.js");
+const exact_js_1 = require("../exact.js");
 var Tests;
 (function (Tests) {
-    var ERR_EMPTY_SEL = 'Selector #t1 is empty';
+    const ERR_EMPTY_SEL = 'Selector #t1 is empty';
     exact_js_1.Exact.runTestSuite(__filename, {
         fps: 8,
-        css: "#t0 {left:20px}",
+        css: `#t0 {left:20px}`,
         animes: [{
                 selector: '#t1',
                 props: [{
@@ -31,12 +31,12 @@ var Tests;
     }, {
         expectedErrors: [ERR_EMPTY_SEL],
         tests: {
-            'missing t1 is bypass gracefully': function (rd, done) {
+            'missing t1 is bypass gracefully': (rd, done) => {
                 // @TODO: convert to proper tagging
                 exact_js_1.Exact.AssertHasLine(rd, ERR_EMPTY_SEL, true);
                 done();
             },
-            't0 moves as normal': function (rd, done) {
+            't0 moves as normal': (rd, done) => {
                 rd.actions.isIdPropActions('t0', 'left', exact_js_1.Exact.simulatePixelAction(exact_js_1.Exact.interpolateMinMax(20, 140, rd.fps)));
                 done();
             },

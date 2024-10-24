@@ -6,8 +6,7 @@
 
 
 
-// This file was generated via gulp build-shared-lib
-// It shares the uuid
+// This file was generated via gulp build_shared_lib
 //
 // @WARN: Don't edit this file.
 /** @see client/lib/js/server-consts.ts */

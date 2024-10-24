@@ -96,8 +96,8 @@ var ABeamer;
         req.res.numValue = new Date().valueOf();
     }
     function _date(params, req) {
-        var paramCount = params.length;
-        var dt;
+        const paramCount = params.length;
+        let dt;
         if (paramCount === 1 && params[0].paType === 2 /* ExFuncParamType.String */) {
             dt = new Date(params[0].sValue);
         }
@@ -117,21 +117,21 @@ var ABeamer;
         req.res.numValue = dt.valueOf();
     }
     function _formatDateTime(params, req) {
-        var hasLocale = params.length === 3;
+        const hasLocale = params.length === 3;
         req.checkParams(req, hasLocale ? 3 : 2, hasLocale ? [2 /* ExFuncParamType.String */, 1 /* ExFuncParamType.Number */, 2 /* ExFuncParamType.String */] :
             [2 /* ExFuncParamType.String */, 1 /* ExFuncParamType.Number */]);
-        var frmt = params[0].sValue;
-        var dt = new Date(params[1].numValue);
-        var locale = hasLocale ? params[2].sValue : 'en-us';
+        const frmt = params[0].sValue;
+        const dt = new Date(params[1].numValue);
+        const locale = hasLocale ? params[2].sValue : 'en-us';
         req.res.paType = 2 /* ExFuncParamType.String */;
-        req.res.sValue = frmt.replace(/(\w)(\1*)/g, function (p) {
+        req.res.sValue = frmt.replace(/(\w)(\1*)/g, (p) => {
             function pad(v) {
-                var s = v.toString();
+                let s = v.toString();
                 s = (p.length === 2 && s.length < 2) ? '0' + s : s;
                 return s;
             }
             function dayTime() {
-                var hPM = dt.toLocaleString(locale, { hour: '2-digit', hour12: true });
+                const hPM = dt.toLocaleString(locale, { hour: '2-digit', hour12: true });
                 return hPM.substr(hPM.length - 2, 2);
             }
             switch (p) {
@@ -161,26 +161,26 @@ var ABeamer;
         });
     }
     function _year(params, req) {
-        _timeCommon(params, req, function (res, dt) { res.numValue = dt.getFullYear(); });
+        _timeCommon(params, req, (res, dt) => { res.numValue = dt.getFullYear(); });
     }
     function _shortYear(params, req) {
         _year(params, req);
         req.res.numValue = req.res.numValue % 100;
     }
     function _month(params, req) {
-        _timeCommon(params, req, function (res, dt) { res.numValue = dt.getMonth() + 1; });
+        _timeCommon(params, req, (res, dt) => { res.numValue = dt.getMonth() + 1; });
     }
     function _day(params, req) {
-        _timeCommon(params, req, function (res, dt) { res.numValue = dt.getDate(); });
+        _timeCommon(params, req, (res, dt) => { res.numValue = dt.getDate(); });
     }
     function _hour(params, req) {
-        _timeCommon(params, req, function (res, dt) { res.numValue = dt.getHours(); });
+        _timeCommon(params, req, (res, dt) => { res.numValue = dt.getHours(); });
     }
     function _minute(params, req) {
-        _timeCommon(params, req, function (res, dt) { res.numValue = dt.getMinutes(); });
+        _timeCommon(params, req, (res, dt) => { res.numValue = dt.getMinutes(); });
     }
     function _second(params, req) {
-        _timeCommon(params, req, function (res, dt) { res.numValue = dt.getSeconds(); });
+        _timeCommon(params, req, (res, dt) => { res.numValue = dt.getSeconds(); });
     }
     ABeamer.pluginManager.addFunctions([
         ['now', _now], ['date', _date], ['formatDateTime', _formatDateTime],

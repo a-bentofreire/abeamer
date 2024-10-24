@@ -31,10 +31,10 @@ var ABeamer;
      * an ActionRg.
      */
     function _findActionRg(actionRgMaps, elementAdpt, propName, startFrame, endFrame, args) {
-        var propValue = elementAdpt.getProp('uid', args);
-        var index = propValue !== undefined ? parseInt(propValue) : -1;
-        var found = index >= 0;
-        var actionRgMap;
+        const propValue = elementAdpt.getProp('uid', args);
+        let index = propValue !== undefined ? parseInt(propValue) : -1;
+        const found = index >= 0;
+        let actionRgMap;
         if (!found) {
             index = actionRgMaps.length;
             elementAdpt.setProp('uid', index.toString(), args);
@@ -44,28 +44,28 @@ var ABeamer;
         else {
             actionRgMap = actionRgMaps[index];
         }
-        var actionRgList = actionRgMap[propName];
+        let actionRgList = actionRgMap[propName];
         if (!actionRgList) {
             actionRgList = [];
             actionRgMap[propName] = actionRgList;
         }
-        var actionRg = {
-            startFrame: startFrame,
-            endFrame: endFrame,
+        const actionRg = {
+            startFrame,
+            endFrame,
         };
         actionRgList.push(actionRg);
-        var res = {
-            actionRgMap: actionRgMap,
-            actionRgList: actionRgList,
-            actionRg: actionRg,
+        const res = {
+            actionRgMap,
+            actionRgList,
+            actionRg,
             linkIndex: actionRgList.length - 2,
         };
         if (res.linkIndex >= 0) {
-            var lastActionRg = actionRgList[res.linkIndex];
+            const lastActionRg = actionRgList[res.linkIndex];
             actionRg.propType = lastActionRg.propType;
             if (lastActionRg.endFrame >= startFrame) {
-                ABeamer.throwErr("overlapping property animations is not supported." +
-                    "".concat(lastActionRg.endFrame, " must be higher than ").concat(startFrame));
+                ABeamer.throwErr(`overlapping property animations is not supported.` +
+                    `${lastActionRg.endFrame} must be higher than ${startFrame}`);
             }
         }
         return res;

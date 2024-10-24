@@ -5,9 +5,9 @@ exports.BuildDTsFiles = void 0;
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-var sysFs = require("fs");
-var sysPath = require("path");
-var fsix_js_1 = require("../vendor/fsix.js");
+const sysFs = require("fs");
+const sysPath = require("path");
+const fsix_js_1 = require("../vendor/fsix.js");
 /** @module developer | This module won't be part of release version */
 /**
  * ## Description
@@ -42,7 +42,7 @@ var BuildDTsFiles;
     // ------------------------------------------------------------------------
     //                               LinesParser
     // ------------------------------------------------------------------------
-    var IdTypes;
+    let IdTypes;
     (function (IdTypes) {
         IdTypes[IdTypes["ClassName"] = 0] = "ClassName";
         IdTypes[IdTypes["MethodName"] = 1] = "MethodName";
@@ -51,9 +51,8 @@ var BuildDTsFiles;
         IdTypes[IdTypes["ExtendsWords"] = 4] = "ExtendsWords";
         IdTypes[IdTypes["JsDocs"] = 5] = "JsDocs";
     })(IdTypes = BuildDTsFiles.IdTypes || (BuildDTsFiles.IdTypes = {}));
-    var LinesParser = /** @class */ (function () {
-        function LinesParser(inpLines, acceptId, tag, fileName) {
-            var _this = this;
+    class LinesParser {
+        constructor(inpLines, acceptId, tag, fileName) {
             this.inpLines = inpLines;
             this.acceptId = acceptId;
             this.tag = tag;
@@ -64,40 +63,36 @@ var BuildDTsFiles;
             // private queueJsDoc = [];
             this.rules = {};
             // input
-            this.finished = function () { return _this.lineI >= _this.inpLineCount; };
-            this.peek = function (delta) {
-                if (delta === void 0) { delta = 0; }
-                return _this.inpLines[_this.lineI + delta] || '';
-            };
-            this.get = function () { return _this.inpLines[_this.lineI++] || ''; };
-            this.set = function (line) { return _this.inpLines[_this.lineI] = line; };
+            this.finished = () => this.lineI >= this.inpLineCount;
+            this.peek = (delta = 0) => this.inpLines[this.lineI + delta] || '';
+            this.get = () => this.inpLines[this.lineI++] || '';
+            this.set = (line) => this.inpLines[this.lineI] = line;
             this.inpLineCount = inpLines.length;
         }
         // output
-        LinesParser.prototype.addOutLine = function (line) {
+        addOutLine(line) {
             if (this.queueLines.length) {
                 this.outLines.push(this.queueLines.join('\n'));
                 this.queueLines = [];
             }
             this.outLines.push(line);
-        };
-        LinesParser.prototype.addWithJsDocs = function (line, newLines) {
-            if (newLines === void 0) { newLines = ''; }
-            var jsDocsLine = this.peek(-1);
-            var hasJsDocs = jsDocsLine.search(/^\s*\*\//) !== -1;
+        }
+        addWithJsDocs(line, newLines = '') {
+            const jsDocsLine = this.peek(-1);
+            let hasJsDocs = jsDocsLine.search(/^\s*\*\//) !== -1;
             if (hasJsDocs) {
-                var index = -2;
+                let index = -2;
                 while (this.peek(index).search(/^\s*\/\*\*/) === -1) {
                     index--;
                 }
-                var jsDocsLines = [];
+                const jsDocsLines = [];
                 while (index < 0) {
                     jsDocsLines.push(this.peek(index));
                     index++;
                 }
-                var jsDocs = jsDocsLines.join('\n');
+                let jsDocs = jsDocsLines.join('\n');
                 // process jsDocs macros
-                jsDocs = jsDocs.replace(/(.*)#end-user (.*)\b\s*\n/g, function (_all, pre, macro) {
+                jsDocs = jsDocs.replace(/(.*)#end-user (.*)\b\s*\n/g, (_all, pre, macro) => {
                     if (macro === '@readonly') {
                         line = line.replace(/^(\s*)(\w)/, '$1readonly $2');
                     }
@@ -113,66 +108,66 @@ var BuildDTsFiles;
             if (hasJsDocs) {
                 this.addOutLine(newLines);
             }
-        };
-        LinesParser.prototype.parseProperties = function (dataSpaces) {
-            var line = this.peek();
-            var matches = line.match(new RegExp("^".concat(dataSpaces, "(readonly )?(\\w+)(\\?)?\\s*:(.*)$")));
+        }
+        parseProperties(dataSpaces) {
+            const line = this.peek();
+            const matches = line.match(new RegExp(`^${dataSpaces}(readonly )?(\\w+)(\\?)?\\s*:(.*)$`));
             if (matches) {
-                var readonly = matches[1], varName = matches[2], optional = matches[3], typeInfo = matches[4];
-                var outVarName = this.acceptId(varName, IdTypes.VarName);
+                const [, readonly, varName, optional, typeInfo] = matches;
+                const outVarName = this.acceptId(varName, IdTypes.VarName);
                 if (!outVarName) {
                     return;
                 }
-                var outTypeInfo = typeInfo.replace(/ = .*/, ';');
-                var outLine = "".concat(dataSpaces).concat(readonly || '').concat(varName).concat(optional || '', ":").concat(outTypeInfo);
+                const outTypeInfo = typeInfo.replace(/ = .*/, ';');
+                const outLine = `${dataSpaces}${readonly || ''}${varName}${optional || ''}:${outTypeInfo}`;
                 this.addWithJsDocs(outLine, '\n');
             }
-        };
-        LinesParser.prototype.parseFunctions = function () {
-            var line = this.peek();
-            var spaces = '  ';
-            var matches = line.match(new RegExp("^".concat(spaces, "export function\\s*(\\w+)(.*)\\s*$")));
+        }
+        parseFunctions() {
+            const line = this.peek();
+            const spaces = '  ';
+            const matches = line.match(new RegExp(`^${spaces}export function\\s*(\\w+)(.*)\\s*$`));
             if (matches) {
-                var functionName = matches[1], paramsData = matches[2];
+                const [, functionName, paramsData] = matches;
                 this.get();
-                var outFunctionName = this.acceptId(functionName, IdTypes.FunctionName);
+                const outFunctionName = this.acceptId(functionName, IdTypes.FunctionName);
                 if (!outFunctionName) {
                     return;
                 }
-                var params = paramsData;
+                let params = paramsData;
                 while (!params.endsWith('{')) {
-                    var nextLine = this.get().trimRight();
+                    const nextLine = this.get().trimRight();
                     params += '\n' + nextLine;
                 }
                 params = params.replace(/\s*\{$/, ';\n');
-                var outLine = "".concat(spaces, "export function ").concat(outFunctionName).concat(params);
+                const outLine = `${spaces}export function ${outFunctionName}${params}`;
                 this.addWithJsDocs(outLine, '\n');
             }
-        };
-        LinesParser.prototype.parseMethods = function (dataSpaces) {
-            var line = this.peek();
-            var matches = line.match(new RegExp("^".concat(dataSpaces, "(abstract )?(get )?(\\w+)\\(")));
+        }
+        parseMethods(dataSpaces) {
+            let line = this.peek();
+            const matches = line.match(new RegExp(`^${dataSpaces}(abstract )?(get )?(\\w+)\\(`));
             if (matches) {
-                var abstractKeyWord = matches[1], getterKeyword = matches[2], functionName = matches[3];
-                var isGetter = getterKeyword !== undefined;
-                var isAbstract = abstractKeyWord !== undefined;
-                var outFunctionName = this.acceptId(functionName, IdTypes.MethodName);
+                const [, abstractKeyWord, getterKeyword, functionName] = matches;
+                const isGetter = getterKeyword !== undefined;
+                const isAbstract = abstractKeyWord !== undefined;
+                const outFunctionName = this.acceptId(functionName, IdTypes.MethodName);
                 if (!outFunctionName) {
                     return;
                 }
                 // this.docParser.addId(outFunctionName, DocIdType.MethodName);
-                var funcCodeEndRegEx = /\}\s*$/;
+                let funcCodeEndRegEx = /\}\s*$/;
                 // @WARN: The starting \s* is required
-                var funcCodeStartRegEx = /\s*\{\s*$/;
+                let funcCodeStartRegEx = /\s*\{\s*$/;
                 if (isAbstract) {
                     line = line.replace(/abstract /, '');
                     this.set(line);
                     funcCodeEndRegEx = /\;\s*$/;
                     funcCodeStartRegEx = funcCodeEndRegEx;
                 }
-                var outFuncLines = [];
-                var outFuncText = '';
-                var index = 0;
+                const outFuncLines = [];
+                let outFuncText = '';
+                let index = 0;
                 if (line.search(funcCodeEndRegEx) === -1) {
                     // multi-line function
                     while (this.peek(index).search(funcCodeStartRegEx) === -1) {
@@ -198,24 +193,24 @@ var BuildDTsFiles;
                 this.addWithJsDocs(outFuncText, '\n');
                 this.lineI += index;
             }
-        };
-        LinesParser.prototype.parseClassWithImplements = function () {
-            var line = this.peek();
-            var matches = line.match(/^(\s*)export (?:abstract )?class (\w+)\s+(?:\extends\s+(\w+))?\s*implements\s+(\w+)\s*\{/);
+        }
+        parseClassWithImplements() {
+            const line = this.peek();
+            const matches = line.match(/^(\s*)export (?:abstract )?class (\w+)\s+(?:\extends\s+(\w+))?\s*implements\s+(\w+)\s*\{/);
             if (matches) {
-                var spaces = matches[1], className = matches[2], parentClass = matches[3];
-                var outClassName = this.acceptId(className, IdTypes.ClassName);
+                const [, spaces, className, parentClass] = matches;
+                const outClassName = this.acceptId(className, IdTypes.ClassName);
                 if (!outClassName) {
                     return;
                 }
-                console.log("Adding Class \"".concat(outClassName, "\""));
-                var outParentWords = parentClass ? this.acceptId("extends ".concat(parentClass, " "), IdTypes.ExtendsWords) : '';
-                var outLine = "".concat(spaces, "export interface ").concat(outClassName, " ").concat(outParentWords, "{");
+                console.log(`Adding Class "${outClassName}"`);
+                const outParentWords = parentClass ? this.acceptId(`extends ${parentClass} `, IdTypes.ExtendsWords) : '';
+                const outLine = `${spaces}export interface ${outClassName} ${outParentWords}{`;
                 // this.docParser.addId(outClassName.replace(/\s+extends.*$/, ''), DocIdType.InterfaceName);
                 this.addWithJsDocs(outLine, '');
                 this.get();
-                var dataSpaces = spaces + spaces;
-                var endReg = new RegExp('^' + spaces + '}');
+                const dataSpaces = spaces + spaces;
+                const endReg = new RegExp('^' + spaces + '}');
                 while (this.peek().search(endReg) === -1) {
                     this.parseProperties(dataSpaces);
                     this.parseMethods(dataSpaces);
@@ -223,18 +218,18 @@ var BuildDTsFiles;
                 }
                 this.addOutLine(spaces + '}\n');
             }
-        };
+        }
         // @HINT: This code is not used at the moment but it can have future uses
-        LinesParser.prototype.parseRules = function () {
-            var line = this.peek();
-            var matches = line.match(/^\s*\/\/\s*#generator-rule:\s*(\w+)\s+(.*)\s*$/);
+        parseRules() {
+            const line = this.peek();
+            const matches = line.match(/^\s*\/\/\s*#generator-rule:\s*(\w+)\s+(.*)\s*$/);
             if (matches) {
                 this.rules[matches[1]] = matches[2];
             }
-        };
-        LinesParser.prototype.parseGroupSection = function () {
-            var line = this.peek();
-            var matches = line.match(/^\s*\/\/\s*#generate-group-section\s*$/);
+        }
+        parseGroupSection() {
+            const line = this.peek();
+            const matches = line.match(/^\s*\/\/\s*#generate-group-section\s*$/);
             if (matches) {
                 this.get();
                 while (this.peek().trim()) {
@@ -242,20 +237,20 @@ var BuildDTsFiles;
                 }
                 this.queueLines.push('');
             }
-        };
-        LinesParser.prototype.parseExportSection = function () {
-            var line = this.peek();
-            var matches = line.match(/^\s*\/\/\s*#export-section-start\s*:\s*([\w\-]+)\s*$/);
+        }
+        parseExportSection() {
+            const line = this.peek();
+            const matches = line.match(/^\s*\/\/\s*#export-section-start\s*:\s*([\w\-]+)\s*$/);
             if (matches && matches[1] === this.tag) {
-                console.log("Exporting section ".concat(this.tag, " from \"").concat(this.fileName, "\""));
+                console.log(`Exporting section ${this.tag} from "${this.fileName}"`);
                 this.get();
                 while (this.peek().indexOf('#export-section-end') === -1) {
                     this.addOutLine(this.get());
                 }
                 this.addOutLine('');
             }
-        };
-        LinesParser.prototype.parseLine = function () {
+        }
+        parseLine() {
             this.parseRules();
             this.parseGroupSection();
             this.parseFunctions();
@@ -265,21 +260,20 @@ var BuildDTsFiles;
             else {
                 this.parseExportSection();
             }
-        };
-        return LinesParser;
-    }());
+        }
+    }
     function build(fileList, outputFileName, preText, postText, acceptId, tag, docsPath) {
-        var outLines = [];
-        fileList.forEach(function (fileName) {
-            console.log("Parsing ".concat(fileName));
-            var parser = new LinesParser(fsix_js_1.fsix.readUtf8Sync(fileName).split('\n'), acceptId, tag, fileName);
+        let outLines = [];
+        fileList.forEach(fileName => {
+            console.log(`Parsing ${fileName}`);
+            const parser = new LinesParser(fsix_js_1.fsix.readUtf8Sync(fileName).split('\n'), acceptId, tag, fileName);
             while (!parser.finished()) {
                 parser.parseLine();
                 parser.get();
             }
             if (docsPath !== undefined && parser.outLines.length) {
-                var docFileTitle = sysPath.posix.basename(fileName).replace(/\.\w+$/, '');
-                sysFs.writeFileSync("".concat(docsPath, "/").concat(docFileTitle, ".txt"), parser.outLines.join('\n'));
+                const docFileTitle = sysPath.posix.basename(fileName).replace(/\.\w+$/, '');
+                sysFs.writeFileSync(`${docsPath}/${docFileTitle}.txt`, parser.outLines.join('\n'));
             }
             outLines = outLines.concat(parser.outLines);
         });

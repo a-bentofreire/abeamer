@@ -7,8 +7,7 @@ exports.Sprintf = void 0;
 // ------------------------------------------------------------------------
 // This module will generate a node module,
 // therefore it can't contain external references.
-// This file was generated via gulp build-shared-lib
-// It shares the uuid
+// This file was generated via gulp build_shared_lib
 //
 // @WARN: Don't edit this file.
 /** @see client/lib/js/sprintf.ts */
@@ -57,24 +56,14 @@ var Sprintf;
      */
     function sprintf(
     // pattern containing %d formatters
-    format) {
-        // value to replace
-        var values = [];
-        for (
-        // value to replace
-        var _i = 1; 
-        // value to replace
-        _i < arguments.length; 
-        // value to replace
-        _i++) {
-            // value to replace
-            values[_i - 1] = arguments[_i];
-        }
-        var valueIndex = 0;
-        return format.replace(/%(0*)((?:[1-9])?)([dfx])(?:\^([rfcd]))?/g, function (_all, hasZeros, strNumDigits, specifier, roundFunc) {
-            var out;
-            var strNumber;
-            var value = values[valueIndex++];
+    format, 
+    // value to replace
+    ...values) {
+        let valueIndex = 0;
+        return format.replace(/%(0*)((?:[1-9])?)([dfx])(?:\^([rfcd]))?/g, (_all, hasZeros, strNumDigits, specifier, roundFunc) => {
+            let out;
+            let strNumber;
+            let value = values[valueIndex++];
             if (roundFunc) {
                 switch (roundFunc) {
                     case 'r':
@@ -104,7 +93,7 @@ var Sprintf;
             }
             out = strNumber;
             if (strNumDigits) {
-                var numDigits = parseInt(strNumDigits);
+                const numDigits = parseInt(strNumDigits);
                 if (numDigits > strNumber.length) {
                     out = new Array(numDigits - strNumber.length + 1).join(hasZeros ? '0' : ' ') + out;
                 }
