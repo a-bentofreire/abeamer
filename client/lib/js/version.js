@@ -1,8 +1,5 @@
-// This file was generated via gulp bump_version
-//
-// @WARN: Don't edit this file. See the ./package.json
 var ABeamer;
-(function (ABeamer) {
-    ABeamer.VERSION = "1.7.0";
+((ABeamer2) => {
+  ABeamer2.VERSION = "1.7.0";
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=version.js.map

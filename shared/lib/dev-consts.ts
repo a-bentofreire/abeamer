@@ -1,5 +1,5 @@
 "use strict";
-// This file was generated gulp build_shared_lib
+// This file was generated npx gulp build_shared_lib
 //
 // @WARN: Don't edit this file.
 

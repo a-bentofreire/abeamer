@@ -1,4 +1,4 @@
-## Description
+# Description
 
 This is the developer version of the gallery folder.
 
@@ -26,4 +26,4 @@ Each example should have the following:
 
 ## How to generate release version
 
-To generate the release version, execute: `gulp build-gallery-release`
+To generate the release version, execute: `npx gulp build_gallery_release`

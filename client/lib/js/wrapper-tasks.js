@@ -1,113 +1,68 @@
 "use strict";
-// ------------------------------------------------------------------------
-// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License.
-// ------------------------------------------------------------------------
-// Implements a list of built-in wrapper Tasks
-/** @module end-user | The lines bellow convey information for the end-user */
-/**
- * ## Description
- *
- * A wrapper task calls a story or scene method, allowing for a story
- * to be loaded from JSON file or to be [](teleporter).
- *
- * ABeamer has the following built-in wrapper tasks:
- *
- * - `scene-transition` - setup a scene transition.
- *
- * - `add-stills` - adds stills to the scene pipeline.
- *
- * - `add-flyover` - adds a flyover to the story.
- *
- * - `add-vars` - adds variables to be used by expressions.
- */
 var ABeamer;
-(function (ABeamer) {
-    // #generate-group-section
-    // ------------------------------------------------------------------------
-    //                               Text Tasks
-    // ------------------------------------------------------------------------
-    // #export-section-end: release
-    // -------------------------------
-    // ------------------------------------------------------------------------
-    //                               SceneTransition Task
-    // ------------------------------------------------------------------------
-    ABeamer._taskFunctions['scene-transition'] = _SceneTransitionTask;
-    /** Implements the Scene Transition Task */
-    function _SceneTransitionTask(_anime, _wkTask, params, stage, args) {
-        switch (stage) {
-            case ABeamer.TS_TELEPORT:
-                let handler = params.handler;
-                if (typeof handler === 'number') {
-                    handler = ABeamer.StdTransitions[handler];
-                }
-                else {
-                    ABeamer.throwIfI8n(typeof handler === 'function', ABeamer.Msgs.NoCode);
-                }
-                params.handler = handler;
-                return ABeamer.TR_EXIT;
-            case ABeamer.TS_INIT:
-                args.scene.transition = {
-                    handler: params.handler,
-                    duration: params.duration,
-                };
-                return ABeamer.TR_EXIT;
+((ABeamer2) => {
+  _taskFunctions["scene-transition"] = _SceneTransitionTask;
+  function _SceneTransitionTask(_anime, _wkTask, params, stage, args) {
+    switch (stage) {
+      case TS_TELEPORT:
+        let handler = params.handler;
+        if (typeof handler === "number") {
+          handler = StdTransitions[handler];
+        } else {
+          throwIfI8n(typeof handler === "function", Msgs.NoCode);
         }
+        params.handler = handler;
+        return TR_EXIT;
+      case TS_INIT:
+        args.scene.transition = {
+          handler: params.handler,
+          duration: params.duration
+        };
+        return TR_EXIT;
     }
-    // ------------------------------------------------------------------------
-    //                               AddStills
-    // ------------------------------------------------------------------------
-    ABeamer._taskFunctions['add-stills'] = _addStillsTask;
-    /** Implements the Add Stills Task */
-    function _addStillsTask(_anime, _wkTask, params, stage, args) {
-        switch (stage) {
-            case ABeamer.TS_INIT:
-                args.scene.addStills(params.duration);
-                return ABeamer.TR_EXIT;
-        }
+  }
+  _taskFunctions["add-stills"] = _addStillsTask;
+  function _addStillsTask(_anime, _wkTask, params, stage, args) {
+    switch (stage) {
+      case TS_INIT:
+        args.scene.addStills(params.duration);
+        return TR_EXIT;
     }
-    // ------------------------------------------------------------------------
-    //                               AddFlyover
-    // ------------------------------------------------------------------------
-    ABeamer._taskFunctions['add-flyover'] = _addFlyover;
-    /** Implements the Add Flyover Task */
-    function _addFlyover(_anime, _wkTask, params, stage, args) {
-        switch (stage) {
-            case ABeamer.TS_INIT:
-                args.story.addFlyover(params.handler, params.params);
-                return ABeamer.TR_EXIT;
-        }
+  }
+  _taskFunctions["add-flyover"] = _addFlyover;
+  function _addFlyover(_anime, _wkTask, params, stage, args) {
+    switch (stage) {
+      case TS_INIT:
+        args.story.addFlyover(params.handler, params.params);
+        return TR_EXIT;
     }
-    // ------------------------------------------------------------------------
-    //                               AddVars
-    // ------------------------------------------------------------------------
-    ABeamer._taskFunctions['add-vars'] = _addVarsTask;
-    /** Implements the Add Vars Task */
-    function _addVarsTask(_anime, _wkTask, params, stage, args) {
-        switch (stage) {
-            case ABeamer.TS_INIT:
-                const vars = params.vars || {};
-                const overwrite = params.overwrite !== false;
-                const allowExpr = params.allowExpr === true;
-                Object.keys(vars).forEach(varName => {
-                    const varParts = varName.split('.');
-                    let argsPointer = args.vars;
-                    let objPartName = varParts.shift();
-                    while (varParts.length) {
-                        argsPointer[objPartName] = argsPointer[objPartName] || {};
-                        argsPointer = argsPointer[objPartName];
-                        objPartName = varParts.shift();
-                    }
-                    if (overwrite || argsPointer[objPartName] === undefined) {
-                        let varValue = vars[varName];
-                        if (allowExpr && typeof varValue === 'string' && ABeamer.isExpr(varValue)) {
-                            varValue = ABeamer.calcExpr(varValue, args);
-                        }
-                        argsPointer[objPartName] = varValue;
-                    }
-                });
-                return ABeamer.TR_EXIT;
-        }
+  }
+  _taskFunctions["add-vars"] = _addVarsTask;
+  function _addVarsTask(_anime, _wkTask, params, stage, args) {
+    switch (stage) {
+      case TS_INIT:
+        const vars = params.vars || {};
+        const overwrite = params.overwrite !== false;
+        const allowExpr = params.allowExpr === true;
+        Object.keys(vars).forEach((varName) => {
+          const varParts = varName.split(".");
+          let argsPointer = args.vars;
+          let objPartName = varParts.shift();
+          while (varParts.length) {
+            argsPointer[objPartName] = argsPointer[objPartName] || {};
+            argsPointer = argsPointer[objPartName];
+            objPartName = varParts.shift();
+          }
+          if (overwrite || argsPointer[objPartName] === void 0) {
+            let varValue = vars[varName];
+            if (allowExpr && typeof varValue === "string" && isExpr(varValue)) {
+              varValue = calcExpr(varValue, args);
+            }
+            argsPointer[objPartName] = varValue;
+          }
+        });
+        return TR_EXIT;
     }
+  }
 })(ABeamer || (ABeamer = {}));
 //# sourceMappingURL=wrapper-tasks.js.map

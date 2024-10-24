@@ -11,7 +11,7 @@ import * as gulp from "gulp";
 import * as rimraf from "rimraf";
 import * as globule from "globule";
 import { exec as sysExec } from "child_process";
-const { series } = require('gulp');
+const { series, parallel } = require('gulp');
 import { fsix } from "./shared/vendor/fsix.js";
 import { BuildDTsFilesABeamer } from "./shared/dev-builders/build-d-ts-abeamer.js";
 import { BuildShared } from "./shared/dev-builders/build-shared.js";
@@ -39,13 +39,13 @@ sysProcess.chdir(__dirname);
 
 /** List of files and folders to typical preserve on `rm -rf` */
 // const PRESERVE_FILES = ['README.md', 'README-dev.md', '.git', '.gitignore'];
-const CLIENT_UUID = '// \n\n';
-const COPYRIGHTS = '' +
+const COPYRIGHTS = `
+// ------------------------------------------------------------------------
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
+// ------------------------------------------------------------------------
 
-    '// ------------------------------------------------------------------------\n' +
-    '// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.\n' +
-    '// Licensed under the MIT License.\n' +
-    '// ------------------------------------------------------------------------\n\n';
+`;
 
 const gulpMinify = require('gulp-minify');
 const gulpReplace = require('gulp-replace');
@@ -205,67 +205,22 @@ exports.clean = exports.clean_gallery_src;
 
 exports.bump_version = function (cb) {
     const SRC_FILENAME = './package.json';
-    const BADGES_FOLDER = `./${cfg.paths.BADGES_PATH}/`;
     const WARN_MSG = `
-  // This file was generated via gulp bump_version
-    //
+  // This file was generated via npx gulp bump_version
   // @WARN: Don't edit this file. See the ${SRC_FILENAME}
 \n`;
-
-    const matches = fsix.readUtf8Sync(SRC_FILENAME).match(/"version": "([\d\.]+)"/);
-    if (!matches) {
+    const [_, version] = fsix.readUtf8Sync(SRC_FILENAME).match(/"version": "([\d\.]+)"/) || ['', ''];
+    if (!version) {
         throw `Unable to find the ${SRC_FILENAME} version`;
     }
-
-    const version = matches[1];
     const VERSION_OUT = `export const VERSION = "${version}";`;
     console.log(`${SRC_FILENAME} version is ${version}`);
-
-    sysFs.writeFileSync('./shared/version.ts',
-        WARN_MSG + VERSION_OUT + '\n');
-
+    sysFs.writeFileSync('./shared/version.ts', WARN_MSG + VERSION_OUT + '\n');
     sysFs.writeFileSync(`./${cfg.paths.JS_PATH}/version.ts`,
         WARN_MSG + `namespace ABeamer {\n  ${VERSION_OUT}\n}\n`);
 
-    const outBadgeFileBase = `v-${version}.gif`;
-    const outBadgeFileName = `${BADGES_FOLDER}${outBadgeFileBase}`;
-    if (!sysFs.existsSync(outBadgeFileName)) {
-        const path = `${cfg.paths.GALLERY_SRC_PATH}/animate-badges`;
-        const url = `http://localhost:9000/${path}/?var=name%3Dversion&`
-            + `var=value%3D${version}&var=wait%3D2s`;
-        const config = `./${path}/abeamer.ini`;
-
-        // build animated badges
-        const renderCmdLine = `node ./cli/abeamer-cli.js render --dp --url '${url}' --config ${config}`;
-        console.log(renderCmdLine);
-        fsix.runExternal(renderCmdLine, (_error, _stdout, stderr) => {
-            if (stderr) {
-                console.error(stderr);
-                console.error('Animated Gif Badge Creation Failed');
-                console.log('Check out if the live server is running');
-            } else {
-                const gifCmdLine = `node ./cli/abeamer-cli.js gif ./${path}/ --loop 8 --gif ${outBadgeFileName}`;
-                console.log(gifCmdLine);
-                fsix.runExternal(gifCmdLine, (_error2, stdout2, stderr2) => {
-                    if (stderr2) {
-                        console.error(stderr2);
-                        console.error('Animated Gif Badge Creation Failed');
-                    } else {
-                        console.log(stdout2);
-                        console.error('Animated Gif Badge Created!');
-                    }
-                });
-            }
-        });
-    }
-
-    let vREADMEData = fsix.readUtf8Sync(`./README.md`);
-    vREADMEData = vREADMEData.replace(/v-[\d\.]+\.gif/, outBadgeFileBase);
-    sysFs.writeFileSync(`./README.md`, vREADMEData);
-
-
-    fsix.runExternal('gulp build_shared_lib', () => {
-        fsix.runExternal('tsc -p ./', () => {
+    fsix.runExternal('npx gulp build_shared_lib', () => {
+        fsix.runExternal('npm run compile', () => {
             console.log('Version bumped');
             cb();
         });
@@ -290,7 +245,7 @@ const bs_clean = function (cb) {
 }
 
 const bs_copy = function (mode) {
-    return function copy(cb) {
+    return function copy() {
         return gulp.src([
             './client/lib/typings/**',
             '!./client/lib/typings/release/**',
@@ -300,10 +255,9 @@ const bs_copy = function (mode) {
 
 const bs_build_single_ts = function (mode) {
     return function build_single_ts(cb) {
-        const singleLibFile = `${mode.path}/abeamer${mode.suffix}.ts`;
         BuildSingleLibFile.build(libModules, cfg.paths.JS_PATH,
-            `${mode.path}`, singleLibFile,
-            'gulp `build_release_latest`', [
+            `${mode.path}`, `${mode.path}/abeamer${mode.suffix}.ts`,
+            'npx gulp build_release_latest', [
             exports.Story, // story must always be exported
         ], mode.isDebug);
         cb();
@@ -312,16 +266,15 @@ const bs_build_single_ts = function (mode) {
 
 const bs_compile_single_ts = function (mode) {
     return function compile_single_ts(cb) {
-        sysExec(`npm run esbuild -- --format=cjs --sourcemap --outdir=${mode.path} ${mode.path}/**/*.ts`, {}, () => { cb() });
+        sysExec(`npx esbuild --format=cjs --sourcemap --outdir=${mode.path} ${mode.path}/**/*.ts`, {}, () => { cb() });
     }
 }
 
 
 const build_single_lib_internal = series(
     bs_clean,
-    series(...SINGLE_LIB_MODES.map(mode => bs_copy(mode))),
-    series(...SINGLE_LIB_MODES.map(mode => bs_build_single_ts(mode))),
-    series(...SINGLE_LIB_MODES.map(mode => bs_compile_single_ts(mode)))
+    parallel(...SINGLE_LIB_MODES.map(mode => series(bs_copy(mode), bs_build_single_ts(mode),
+        bs_compile_single_ts(mode))))
 );
 
 // ------------------------------------------------------------------------
@@ -339,6 +292,7 @@ const rel_client = function () {
         .pipe(gulpPreserveTime());
 }
 
+// jquery_typings is over 300k. no longer being deployed 
 const rel_jquery_typings = function () {
     return gulp.src(`node_modules/@types/jquery/**`)
         .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/${cfg.paths.TYPINGS_PATH}/vendor/jquery`))
@@ -349,7 +303,7 @@ const rel_client_js_join = function () {
     return gulp.src(`${cfg.paths.SINGLE_LIB_PATH}/*/abeamer*.js`)
         .pipe(gulpMinify({ noSource: true, ext: { min: '.min.js' } }))
         .pipe(gulpRename({ dirname: '' }))
-        .pipe(gulpReplace(/^(.)/, CLIENT_UUID + COPYRIGHTS + '$1'))
+        .pipe(gulpReplace(/^(.)/, COPYRIGHTS + '$1'))
         .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/${cfg.paths.JS_PATH}`));
 }
 
@@ -371,7 +325,6 @@ const rel_root = function () {
 
 const rel_README = function () {
     return gulp.src(['README.md'])
-        .pipe(gulpReplace(/developer-badge\.gif/, 'end-user-badge.gif'))
         .pipe(gulp.dest(cfg.paths.RELEASE_LATEST_PATH))
         .pipe(gulpPreserveTime());
 }
@@ -404,7 +357,6 @@ const rel_add_copyrights = function (cb) {
     cb();
 }
 
-
 // copies package.json cleaning the unnecessary config
 const rel_build_package_json = function (cb) {
     return gulp.src('./package.json')
@@ -429,9 +381,7 @@ const rel_build_package_json = function (cb) {
         }))
         .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}`))
         .pipe(gulpPreserveTime());
-    cb();
 }
-
 
 // copies tsconfig.ts to each demo cleaning the unnecessary config
 const rel_build_tsconfig_ts = function (demo) {
@@ -448,7 +398,6 @@ const rel_build_tsconfig_ts = function (demo) {
     }
 }
 
-
 // creates a plugin list from modules-list.json
 // don't use gulp-file in order to preserve the time-date
 const rel_build_plugins_list_json = function (cb) {
@@ -462,16 +411,13 @@ const rel_build_plugins_list_json = function (cb) {
     cb();
 }
 
-
 // joins abeamer.d.ts and abeamer-release.d.ts in a single file
 const rel_build_abeamer_d_ts = function (cb) {
     return gulp.src(`${cfg.paths.TYPINGS_PATH}/abeamer.d.ts`)
         .pipe(gulpReplace(/declare namespace ABeamer \{/, (all) => {
             const releaseDTs = fsix.readUtf8Sync(`${cfg.paths.TYPINGS_PATH}/release/abeamer-release.d.ts`);
-            return all
-                + releaseDTs
-                    .replace(/^(?:.|\n)*declare namespace ABeamer \{/, '')
-                    .replace(/}(?:\s|\n)*$/, '');
+            return all + releaseDTs
+                .replace(/^(?:.|\n)*declare namespace ABeamer \{/, '').replace(/}(?:\s|\n)*$/, '');
         }))
         .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/${cfg.paths.TYPINGS_PATH}`))
         .pipe(gulpPreserveTime());
@@ -489,7 +435,7 @@ exports.build_release_latest = series(
     rel_README,
     rel_minify,
     rel_add_copyrights,
-    rel_jquery_typings,
+    // rel_jquery_typings,
     rel_build_package_json,
     series(...cfg.release.demos.map(demo => rel_build_tsconfig_ts(demo))),
     rel_build_abeamer_d_ts,
@@ -501,7 +447,7 @@ exports.build_release_latest = series(
 // ------------------------------------------------------------------------
 
 exports.build_shared_lib = function (cb) {
-    BuildShared.build(libModules, cfg.paths.JS_PATH, cfg.paths.SHARED_LIB_PATH, 'gulp build_shared_lib');
+    BuildShared.build(libModules, cfg.paths.JS_PATH, cfg.paths.SHARED_LIB_PATH, 'npx gulp build_shared_lib');
     cb();
 }
 
@@ -510,7 +456,7 @@ exports.build_shared_lib = function (cb) {
 // ------------------------------------------------------------------------
 
 exports.build_definition_files = function (cb) {
-    BuildDTsFilesABeamer.build(libModules, pluginModules, CLIENT_UUID, COPYRIGHTS, cfg);
+    BuildDTsFilesABeamer.build(libModules, pluginModules, '', COPYRIGHTS, cfg);
     cb();
 }
 
@@ -550,12 +496,10 @@ function gal_rel_clear(cb) {
     cb();
 }
 
-
 function gal_rel_get_examples(cb) {
     BuildGalRel.populateReleaseExamples(cfg);
     cb();
 }
-
 
 function gal_rel_copy_files(index) {
     return function rel_copy_files(cb) {
@@ -598,15 +542,16 @@ function gal_rel_online_html_files(index) {
 function gal_rel_create_zip(index) {
     return function rel_create_zip(cb) {
         const ex = BuildGalRel.releaseExamples[index];
-        return gulp.src([
-            `${ex.dstFullPath}/**`,
-            `${ex.dstFullPath}/.allowed-plugins.json`,
-            `!${ex.dstFullPath}/index-online.html`,
-            `!${ex.dstFullPath}/*.zip`,
-            `!${ex.dstFullPath}/story-frames/*.{json,gif,mp4}`,
-        ])
-            .pipe(gulpZip(BuildGalRel.EXAMPLE_ZIP_FILE))
-            .pipe(gulp.dest(ex.dstFullPath));
+        cb();
+        // return gulp.src([
+        //     `${ex.dstFullPath}/**`,
+        //     `${ex.dstFullPath}/.allowed-plugins.json`,
+        //     `!${ex.dstFullPath}/index-online.html`,
+        //     `!${ex.dstFullPath}/*.zip`,
+        //     `!${ex.dstFullPath}/story-frames/*.{json,gif,mp4}`,
+        // ])
+        //     .pipe(gulpZip(BuildGalRel.EXAMPLE_ZIP_FILE))
+        //     .pipe(gulp.dest(ex.dstFullPath));
     }
 }
 
@@ -614,15 +559,13 @@ function gal_rel_create_zip(index) {
 exports.build_gallery_latest = series(
     gal_rel_clear,
     gal_rel_get_examples,
-    series(...exampleArray.map((_, index) => gal_rel_copy_files(index))),
-    series(...exampleArray.map((_, index) => gal_rel_update_html_files(index))),
-    series(...exampleArray.map((_, index) => gal_rel_online_html_files(index))),
-    // series(...exampleArray.map((_, index) => gal_rel_create_zip(index))),
-    function gal_rel_process_readme(cb) {
-        BuildGalRel.buildReadMe(cfg);
-        cb();
-    },
-);
+    parallel(...exampleArray.map((_, index) => series(gal_rel_copy_files(index),
+        gal_rel_update_html_files(index), gal_rel_online_html_files(index), gal_rel_create_zip(index))),
+        function gal_rel_process_readme(cb) {
+            BuildGalRel.buildReadMe(cfg);
+            cb();
+        },
+    ));
 
 // ------------------------------------------------------------------------
 //                               Deletes gallery story-frames folder
@@ -715,8 +658,7 @@ exports.update_test_list = function (cb) {
 exports.list_docs_files_as_links = function (cb) {
     sysFs.readdirSync(`./docs`).forEach(fileBase => {
         if (sysPath.extname(fileBase) !== '.md') { return; }
-        const fileTitle = sysPath.parse(fileBase).name;
-        const title = fileTitle.replace(/-/g, ' ')
+        const title = sysPath.parse(fileBase).name.replace(/-/g, ' ')
             .replace(/\b(\w)/, (_all, firstChar: string) => firstChar.toUpperCase());
         console.log(`- [${title}](${fileBase})`);
     });
@@ -727,7 +669,7 @@ exports.list_docs_files_as_links = function (cb) {
 //                               Lists ./docs Files As Links
 // ------------------------------------------------------------------------
 
-function changeReadmeLinks(toLocal: boolean): void {
+function changeReadmeLinks(toLocal: boolean, cb): void {
     const IN_FILE = './README.md';
     const BAK_FILE = IN_FILE + '.bak.md';
     const srcRegEx = new RegExp('\\]\\(' + (toLocal ? cfg.webLinks.webDomain : '') + '/', exports.g);
@@ -737,14 +679,8 @@ function changeReadmeLinks(toLocal: boolean): void {
     sysFs.writeFileSync(BAK_FILE, content);
     content = content.replace(srcRegEx, dstLink);
     sysFs.writeFileSync(IN_FILE, content);
-}
-
-exports.README_to_online = function (cb) {
-    changeReadmeLinks(false);
     cb();
 }
 
-exports.README_to_local = function (cb) {
-    changeReadmeLinks(true);
-    cb();
-}
+exports.README_to_online = function (cb) { changeReadmeLinks(false, cb); };
+exports.README_to_local = function (cb) { changeReadmeLinks(true, cb); };

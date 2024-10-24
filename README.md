@@ -34,7 +34,7 @@ or in a sanitized environment allowing you to safely to render animations create
 - ABeamer **command line utility** allows you to build new projects, 
 render frames, create animated gifs or movies.  
 
-Read the [requirements](#requirements) for details about the necessary software 
+Read the [requirements](#requirements) for details about the necessary software
 to install if you need to render, create gifs or movies in the local machine.  
 
 ## Features
@@ -46,7 +46,7 @@ to install if you need to render, create gifs or movies in the local machine.
  [Developer Documentation](https://abeamer.devtoix.com/docs/latest/developer/en/site/).
 - Absolutely minimum [dependencies](#requirements).
 - Highly Extensible via [plugins](https://abeamer.devtoix.com/docs/latest/end-user/en/site/plugin-manager/) including [interpolators](#interpolators), functions, flyovers and tasks.
-- [Tasks](https://abeamer.devtoix.com/docs/latest/end-user/en/site/tasks/) to build complex animations 
+- [Tasks](https://abeamer.devtoix.com/docs/latest/end-user/en/site/tasks/) to build complex animations
 and [F/X](https://abeamer.devtoix.com/docs/latest/end-user/en/site/tasks/#fx).
 - Large gallery of [example projects](https://abeamer.devtoix.com/gallery/latest/).
 - Multiple scenes (only default scenes are teleportable).

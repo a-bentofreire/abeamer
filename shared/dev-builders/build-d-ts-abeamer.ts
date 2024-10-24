@@ -129,7 +129,7 @@ export namespace BuildDTsFilesABeamer {
 
       BuildDTsFiles.build(target.srcFiles,
         outFile,
-        CLIENT_UUID + COPYRIGHTS + WARN_MSG + target.description
+        COPYRIGHTS + WARN_MSG + target.description
         + `\n\ndeclare namespace ${target.namespace} {\n\n`, '\n}\n',
         target.acceptId, target.tag, apiPath,
       );

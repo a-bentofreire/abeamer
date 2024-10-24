@@ -1,106 +1,80 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Sprintf = void 0;
-// ------------------------------------------------------------------------
-// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
-// Licensed under the MIT License.
-// ------------------------------------------------------------------------
-// This module will generate a node module,
-// therefore it can't contain external references.
-// This file was generated via gulp build_shared_lib
-//
-// @WARN: Don't edit this file.
-/** @see client/lib/js/sprintf.ts */
-/** @module end-user | The lines bellow convey information for the end-user */
-/**
- * ## Description
- *
- * **sprintf** is minimalist string formatter utility.
- * Supports only `%[flag][width]specifier[^round-func]`.
- *
- * Where 'flag' is:
- * - `0` - to left pad with zeros.
- *
- * Where 'width' is the total number of characters.
- *
- * Where 'specifier' is:
- * - `d` - decimal integer value. (use a round-func to remove the floating part.)
- * - `f` - represents the number as a floating point number.
- * - `x` - converts to hexadecimal number.
- * - `s` - String of characters.
- *
- * Where 'round-func' is:
- *
- * - `r` - rounds to the nearest decimal value.
- * - `d` - rounds to the nearest decimal value but for 0.5 is always rounded down.
- * - `f` - rounds to the lowermost decimal value.
- * - `c` - rounds to the uppermost decimal value.
- */
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var sprintf_exports = {};
+__export(sprintf_exports, {
+  Sprintf: () => Sprintf
+});
+module.exports = __toCommonJS(sprintf_exports);
 var Sprintf;
-(function (Sprintf) {
-    // ------------------------------------------------------------------------
-    //                               Round Functions
-    // ------------------------------------------------------------------------
-    /**
-     * Performs a math round where the 0.5 is always rounded down.
-     */
-    function downRound(v) {
-        return Math.round(v - 0.0001);
-    }
-    Sprintf.downRound = downRound;
-    // ------------------------------------------------------------------------
-    //                               Mini SPrintf
-    // ------------------------------------------------------------------------
-    /**
-     * Minimalist string formatter.
-     */
-    function sprintf(
-    // pattern containing %d formatters
-    format, 
-    // value to replace
-    ...values) {
-        let valueIndex = 0;
-        return format.replace(/%(0*)((?:[1-9])?)([dfx])(?:\^([rfcd]))?/g, (_all, hasZeros, strNumDigits, specifier, roundFunc) => {
-            let out;
-            let strNumber;
-            let value = values[valueIndex++];
-            if (roundFunc) {
-                switch (roundFunc) {
-                    case 'r':
-                        value = Math.round(value);
-                        break;
-                    case 'd':
-                        value = downRound(value);
-                        break;
-                    case 'c':
-                        value = Math.ceil(value);
-                        break;
-                    case 'f':
-                        value = Math.floor(value);
-                        break;
-                }
-            }
-            switch (specifier) {
-                case 'd':
-                    strNumber = (roundFunc ? value : Math.floor(value)).toString();
-                    break;
-                case 'f':
-                    strNumber = value.toString();
-                    break;
-                case 'x':
-                    strNumber = value.toString(16);
-                    break;
-            }
-            out = strNumber;
-            if (strNumDigits) {
-                const numDigits = parseInt(strNumDigits);
-                if (numDigits > strNumber.length) {
-                    out = new Array(numDigits - strNumber.length + 1).join(hasZeros ? '0' : ' ') + out;
-                }
-            }
-            return out;
-        });
-    }
-    Sprintf.sprintf = sprintf;
-})(Sprintf || (exports.Sprintf = Sprintf = {}));
+((Sprintf2) => {
+  function downRound(v) {
+    return Math.round(v - 1e-4);
+  }
+  Sprintf2.downRound = downRound;
+  function sprintf(format, ...values) {
+    let valueIndex = 0;
+    return format.replace(
+      /%(0*)((?:[1-9])?)([dfx])(?:\^([rfcd]))?/g,
+      (_all, hasZeros, strNumDigits, specifier, roundFunc) => {
+        let out;
+        let strNumber;
+        let value = values[valueIndex++];
+        if (roundFunc) {
+          switch (roundFunc) {
+            case "r":
+              value = Math.round(value);
+              break;
+            case "d":
+              value = downRound(value);
+              break;
+            case "c":
+              value = Math.ceil(value);
+              break;
+            case "f":
+              value = Math.floor(value);
+              break;
+          }
+        }
+        switch (specifier) {
+          case "d":
+            strNumber = (roundFunc ? value : Math.floor(value)).toString();
+            break;
+          case "f":
+            strNumber = value.toString();
+            break;
+          case "x":
+            strNumber = value.toString(16);
+            break;
+        }
+        out = strNumber;
+        if (strNumDigits) {
+          const numDigits = parseInt(strNumDigits);
+          if (numDigits > strNumber.length) {
+            out = new Array(numDigits - strNumber.length + 1).join(
+              hasZeros ? "0" : " "
+            ) + out;
+          }
+        }
+        return out;
+      }
+    );
+  }
+  Sprintf2.sprintf = sprintf;
+})(Sprintf || (Sprintf = {}));
 //# sourceMappingURL=sprintf.js.map
