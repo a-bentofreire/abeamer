@@ -2,7 +2,7 @@
     "name": "abeamer",
     "displayName": "abeamer",
     "description": "frame-by-frame Web Animation framework",
-    "version": "1.7.0",
+    "version": "1.7.2",
     "publisher": "a-bentofreire",
     "keywords": [
         "animation",
@@ -33,7 +33,9 @@
     },
     "main": "abeamer.js",
     "scripts": {
-        "compile": "esbuild --format=cjs --sourcemap --outdir=. --outbase=. client/**/*.ts cli/*.ts server/*.ts server/*.ts shared/*.ts shared/**/*.ts gallery-src/**/*.ts test/**/*.ts *.ts && rm client/lib/typings/**/*.js*",
+        "compile": "tsc -p ./",
+        "compile-esbuild": "esbuild --format=cjs --sourcemap --outdir=. --outbase=. client/**/*.ts cli/*.ts server/*.ts server/*.ts shared/*.ts shared/**/*.ts gallery-src/**/*.ts test/**/*.ts *.ts && rm client/lib/typings/**/*.js*",
+        "build-gulp-file": "esbuild gulpfile.ts --format=cjs --outfile=gulpfile.js",
         "abeamer": "node ./cli/abeamer-cli.js",
         "render": "node ./cli/abeamer-cli.js render",
         "gif": "node ./cli/abeamer-cli.js gif",
@@ -106,6 +108,7 @@
         "mocha": "^10.7.3",
         "mocha-image-compare": "^1.0.3",
         "puppeteer": "^23.4.0",
-        "rimraf": "^6.0.1"
+        "rimraf": "^6.0.1",
+        "typescript": "^5.6.3"
     }
 }

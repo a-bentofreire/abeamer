@@ -1,84 +1,78 @@
 "use strict";
-var import_exact = require("../exact.js");
-var import_dev_consts = require("../../shared/lib/dev-consts.js");
+Object.defineProperty(exports, "__esModule", { value: true });
+// ------------------------------------------------------------------------
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
+// ------------------------------------------------------------------------
+var exact_js_1 = require("../exact.js");
+var dev_consts_js_1 = require("../../shared/lib/dev-consts.js");
 var Tests;
-((Tests2) => {
-  const fps = 4;
-  const seconds = 2;
-  const absMin = 50;
-  const elProps = [
-    { elIndex: 0, prop: "left", relMin: absMin, startFrame: 0, propType: import_dev_consts.DevConsts.PT_PIXEL },
-    { elIndex: 0, prop: "top", relMin: absMin, startFrame: 0, propType: import_dev_consts.DevConsts.PT_PIXEL },
-    { elIndex: 1, prop: "left", relMin: absMin, startFrame: 0, propType: import_dev_consts.DevConsts.PT_PIXEL },
-    { elIndex: 1, prop: "opacity", relMin: 1, startFrame: 0, propType: import_dev_consts.DevConsts.PT_NUMBER }
-  ];
-  const tests = [
-    { elProp: 0, max: 100 },
-    { elProp: 0, max: 200, label: "links to previous" },
-    { elProp: 1, max: 100, label: "disrupts with a different prop" },
-    { elProp: 0, max: 250, label: "resumes first prop" },
-    { elProp: 2, max: 150, label: "disrupts with a different element" },
-    { elProp: 0, max: 400, label: "resumes first prop" },
-    { elProp: 0, max: 10, label: "reverses movement" },
-    { elProp: 1, max: 150, label: "resumes 2nd prop" },
-    { elProp: 3, max: 0.5, label: "tests num value" }
-  ].map((test) => {
-    const elProp = elProps[test.elProp];
-    const v = {
-      elIndex: elProp.elIndex,
-      propName: elProp.prop,
-      propType: elProp.propType,
-      name: test.toString(),
-      min: elProp.relMin,
-      max: test.max,
-      label: test.label ? `(${test.label}) - ` : "",
-      startFrame: elProp.startFrame,
-      frameCount: fps * seconds
-    };
-    elProp.startFrame += v.frameCount;
-    elProp.relMin = test.max;
-    return v;
-  });
-  const func = (rd, done, index) => {
-    const test = tests[index];
-    const expected = import_exact.Exact.interpolateMinMax(test.min, test.max, 2 * rd.fps);
-    import_exact.Exact.roundToTestDigits(expected);
-    const expectedPA = import_exact.Exact.simulateAction(expected, test.propType);
-    rd.actions.isIdPropActions(
-      `t${test.elIndex}`,
-      test.propName,
-      expectedPA,
-      true,
-      true,
-      test.startFrame,
-      test.frameCount
-    );
-    done();
-  };
-  const testParams = {};
-  tests.forEach((test) => {
-    testParams[`${test.label}t${test.elIndex} ${test.propName} goes from ${test.min} to ${test.max}`] = func;
-  });
-  import_exact.Exact.runTestSuite(
-    __filename,
-    {
-      fps,
-      css: `#t0,#t1 {left: ${absMin}px; top: ${absMin}px;}`,
-      animes: tests.map((test) => {
-        return {
-          selector: `#t${test.elIndex}`,
-          duration: `${seconds}s`,
-          props: [{
-            prop: test.propName,
-            value: test.max
-          }]
+(function (Tests) {
+    var fps = 4;
+    var seconds = 2;
+    var absMin = 50;
+    var elProps = [
+        { elIndex: 0, prop: 'left', relMin: absMin, startFrame: 0, propType: dev_consts_js_1.DevConsts.PT_PIXEL },
+        { elIndex: 0, prop: 'top', relMin: absMin, startFrame: 0, propType: dev_consts_js_1.DevConsts.PT_PIXEL },
+        { elIndex: 1, prop: 'left', relMin: absMin, startFrame: 0, propType: dev_consts_js_1.DevConsts.PT_PIXEL },
+        { elIndex: 1, prop: 'opacity', relMin: 1, startFrame: 0, propType: dev_consts_js_1.DevConsts.PT_NUMBER },
+    ];
+    var tests = [
+        { elProp: 0, max: 100 },
+        { elProp: 0, max: 200, label: 'links to previous' },
+        { elProp: 1, max: 100, label: 'disrupts with a different prop' },
+        { elProp: 0, max: 250, label: 'resumes first prop' },
+        { elProp: 2, max: 150, label: 'disrupts with a different element' },
+        { elProp: 0, max: 400, label: 'resumes first prop' },
+        { elProp: 0, max: 10, label: 'reverses movement' },
+        { elProp: 1, max: 150, label: 'resumes 2nd prop' },
+        { elProp: 3, max: 0.5, label: 'tests num value' },
+    ].map(function (test) {
+        var elProp = elProps[test.elProp];
+        var v = {
+            elIndex: elProp.elIndex,
+            propName: elProp.prop,
+            propType: elProp.propType,
+            name: test.toString(),
+            min: elProp.relMin,
+            max: test.max,
+            label: test.label ? "(".concat(test.label, ") - ") : '',
+            startFrame: elProp.startFrame,
+            frameCount: fps * seconds,
         };
-      }),
-      html: import_exact.Exact.genTestHtml(2)
-    },
-    {
-      tests: testParams
-    }
-  );
+        elProp.startFrame += v.frameCount;
+        elProp.relMin = test.max;
+        return v;
+    });
+    var func = function (rd, done, index) {
+        var test = tests[index];
+        var expected = exact_js_1.Exact.interpolateMinMax(test.min, test.max, 2 * rd.fps);
+        exact_js_1.Exact.roundToTestDigits(expected);
+        var expectedPA = exact_js_1.Exact.simulateAction(expected, test.propType);
+        rd.actions.isIdPropActions("t".concat(test.elIndex), test.propName, expectedPA, true, true, test.startFrame, test.frameCount);
+        done();
+    };
+    var testParams = {};
+    tests.forEach(function (test) {
+        testParams["".concat(test.label, "t").concat(test.elIndex, " ").concat(test.propName)
+            + " goes from ".concat(test.min, " to ").concat(test.max)] = func;
+    });
+    exact_js_1.Exact.runTestSuite(__filename, {
+        fps: fps,
+        css: "#t0,#t1 {left: ".concat(absMin, "px; top: ").concat(absMin, "px;}"),
+        animes: tests.map(function (test) {
+            return {
+                selector: "#t".concat(test.elIndex),
+                duration: "".concat(seconds, "s"),
+                props: [{
+                        prop: test.propName,
+                        value: test.max,
+                    }],
+            };
+        }),
+        html: exact_js_1.Exact.genTestHtml(2),
+    }, {
+        tests: testParams,
+    });
 })(Tests || (Tests = {}));
 //# sourceMappingURL=test-action-ranges.js.map

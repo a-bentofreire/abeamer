@@ -1,23 +1,24 @@
 "use strict";
-var import_exact = require("../exact.js");
-var import_jquery_easing_node = require("./vendor/jquery.easing.node.js");
+Object.defineProperty(exports, "__esModule", { value: true });
+// ------------------------------------------------------------------------
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
+// ------------------------------------------------------------------------
+var exact_js_1 = require("../exact.js");
+var jquery_easing_node_js_1 = require("./vendor/jquery.easing.node.js");
 var Tests;
-((Tests2) => {
-  const builder = new import_exact.Exact.TestBuilder();
-  builder.min = 50;
-  builder.max = 200;
-  builder.elDuration = "2s";
-  builder.addTests(Object.keys(import_jquery_easing_node.Easings.EasingFunctions).map((easingName) => ({
-    preLabel: `easing ${easingName}: `,
-    easingName,
-    easingFunc: (t) => import_jquery_easing_node.Easings.EasingFunctions[easingName](0, t, 0, 1, 1)
-  })));
-  import_exact.Exact.runTestSuite(
-    __filename,
-    builder.getInMacros(),
-    {
-      tests: builder.runTestParams
-    }
-  );
+(function (Tests) {
+    var builder = new exact_js_1.Exact.TestBuilder();
+    builder.min = 50;
+    builder.max = 200;
+    builder.elDuration = '2s';
+    builder.addTests(Object.keys(jquery_easing_node_js_1.Easings.EasingFunctions).map(function (easingName) { return ({
+        preLabel: "easing ".concat(easingName, ": "),
+        easingName: easingName,
+        easingFunc: function (t) { return (jquery_easing_node_js_1.Easings.EasingFunctions[easingName])(0, t, 0, 1, 1); },
+    }); }));
+    exact_js_1.Exact.runTestSuite(__filename, builder.getInMacros(), {
+        tests: builder.runTestParams,
+    });
 })(Tests || (Tests = {}));
 //# sourceMappingURL=test-easings.js.map

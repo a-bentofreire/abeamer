@@ -1,152 +1,185 @@
 "use strict";
-$(window).on("load", () => {
-  const story = ABeamer.createStory(
-    /*FPS:*/
-    20
-  );
-  const canvas = document.getElementById("canvas");
-  const context = canvas.getContext("2d");
-  const patImg = document.getElementById("pat");
-  const patHeight = 14;
-  class Player {
-    constructor(id, left, height) {
-      this.id = id;
-      this.left = left;
-      this.height = height;
-      this.top = 0;
-      this.img = document.getElementById(this.id);
-    }
-    setProp(name, value) {
-      this[name] = value;
-      console.log(`Set [${this.id}] [${name}]=[${value}]`);
-      if (name === "left" || name === "top") {
-        drawGame();
-      }
-    }
-    getProp(name) {
-      console.log(`Get [${this.id}] [${name}]=[${this[name]}]`);
-      return this[name];
-    }
-    draw() {
-      context.drawImage(this.img, this.left, story.height - this.height - patHeight - this.top);
-    }
-  }
-  const android = new Player("android", 10, 31);
-  const iphone = new Player("iphone", story.width - 30, 44);
-  function drawGame() {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(patImg, 0, story.height - patHeight);
-    android.draw();
-    iphone.draw();
-  }
-  const scene1 = story.scenes[0];
-  story.onGetVirtualElement = (id, args) => {
-    switch (id) {
-      case "android":
-        return android;
-      case "iphone":
-        return iphone;
-      default:
-        ABeamer.throwErr("Unsupported Id");
-    }
-  };
-  scene1.addAnimations(
-    [
-      {
-        selector: "%android",
-        duration: "1s",
-        props: [
-          {
-            prop: "left",
-            value: story.width - 30
-          },
-          {
-            prop: "top",
-            position: "+0.2s",
-            oscillator: {
-              handler: "harmonic",
-              params: {
-                negativeHander: ABeamer.NegativeBuiltInFuncs.abs
-              }
-            },
-            value: 30
-          }
-        ]
-      },
-      {
-        selector: "%iphone",
-        duration: "1s",
-        props: [
-          {
-            prop: "left",
-            value: 0
-          }
-        ]
-      }
-    ]
-  );
-  const infoScene = document.getElementById("info-scene");
-  class PureVirtual extends Player {
-    constructor(id, left) {
-      super(id, left, 0);
-      this.info = document.getElementById(`info-${id}`);
-    }
-    setProp(name, value) {
-      this[name] = value;
-      console.log(`Set [${this.id}] [${name}]=[${value}]`);
-      this.info.textContent = `Set [${this.id}] [${name}]=[${value}]`;
-    }
-  }
-  class myVirtualScene {
-    constructor(id) {
-      this.id = id;
-      this.vElements = {};
-      this.vElements["#field"] = new PureVirtual("field", 60);
-      this.vElements["#popcorn"] = new PureVirtual("popcorn", 20);
-    }
-    setProp(name, value) {
-      this[name] = value;
-      console.log(`Set [${this.id}] [${name}]=[${value}]`);
-      infoScene.textContent = `Set [${this.id}] [${name}]=[${value}]`;
-    }
-    getProp(name) {
-      console.log(`Get [${this.id}] [${name}]=[${this[name]}]`);
-      return this[name];
-    }
-    query(selector, iterator) {
-      let index = 0;
-      selector.split(/\s*,\s*/).forEach((selElement) => {
-        const vElement = this.vElements[selElement];
-        if (vElement) {
-          iterator(vElement, index);
-          index++;
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+// ------------------------------------------------------------------------
+// Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
+// Licensed under the MIT License.
+// ------------------------------------------------------------------------
+$(window).on("load", function () {
+    var story = ABeamer.createStory(/*FPS:*/ 20);
+    // [TOPIC] using a DOM Scene and virtual element
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var patImg = document.getElementById('pat');
+    var patHeight = 14;
+    // ------------------------------------------------------------------------
+    //                               VirtualElement
+    // ------------------------------------------------------------------------
+    var Player = /** @class */ (function () {
+        function Player(id, left, height) {
+            this.id = id;
+            this.left = left;
+            this.height = height;
+            this.top = 0;
+            this.img = document.getElementById(this.id);
         }
-      });
+        Player.prototype.setProp = function (name, value) {
+            this[name] = value;
+            console.log("Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]"));
+            if (name === 'left' || name === 'top') {
+                drawGame();
+            }
+        };
+        Player.prototype.getProp = function (name) {
+            console.log("Get [".concat(this.id, "] [").concat(name, "]=[").concat(this[name], "]"));
+            return this[name];
+        };
+        Player.prototype.draw = function () {
+            context.drawImage(this.img, this.left, story.height - this.height
+                - patHeight - this.top);
+        };
+        return Player;
+    }());
+    var android = new Player('android', 10, 31);
+    var iphone = new Player('iphone', story.width - 30, 44);
+    // ------------------------------------------------------------------------
+    //                               drawGame
+    // ------------------------------------------------------------------------
+    function drawGame() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(patImg, 0, story.height - patHeight);
+        android.draw();
+        iphone.draw();
     }
-  }
-  const scene2 = story.addScene(new myVirtualScene("scene2"));
-  scene2.addAnimations([
-    {
-      selector: "#field",
-      duration: "1s",
-      props: [
+    // // ------------------------------------------------------------------------
+    // //                               Scene1
+    // // ------------------------------------------------------------------------
+    var scene1 = story.scenes[0];
+    story.onGetVirtualElement = function (id, args) {
+        switch (id) {
+            case 'android': return android;
+            case 'iphone': return iphone;
+            default:
+                ABeamer.throwErr('Unsupported Id');
+        }
+    };
+    scene1
+        .addAnimations([{
+            selector: '%android',
+            duration: '1s',
+            props: [
+                {
+                    prop: 'left',
+                    value: story.width - 30,
+                },
+                {
+                    prop: 'top',
+                    position: '+0.2s',
+                    oscillator: {
+                        handler: 'harmonic',
+                        params: {
+                            negativeHander: ABeamer.NegativeBuiltInFuncs.abs,
+                        },
+                    },
+                    value: 30,
+                },
+            ],
+        },
         {
-          prop: "left",
-          value: 200
+            selector: '%iphone',
+            duration: '1s',
+            props: [
+                {
+                    prop: 'left',
+                    value: 0,
+                },
+            ],
+        },
+    ]);
+    // ------------------------------------------------------------------------
+    //                               Scene2
+    // ------------------------------------------------------------------------
+    var infoScene = document.getElementById('info-scene');
+    var PureVirtual = /** @class */ (function (_super) {
+        __extends(PureVirtual, _super);
+        function PureVirtual(id, left) {
+            var _this = _super.call(this, id, left, 0) || this;
+            _this.info = document.getElementById("info-".concat(id));
+            return _this;
         }
-      ]
-    },
-    {
-      selector: "#popcorn",
-      duration: "1s",
-      props: [
+        PureVirtual.prototype.setProp = function (name, value) {
+            this[name] = value;
+            console.log("Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]"));
+            this.info.textContent = "Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]");
+        };
+        return PureVirtual;
+    }(Player));
+    // [TOPIC] Using Virtual scenes and virtual elements
+    var myVirtualScene = /** @class */ (function () {
+        function myVirtualScene(id) {
+            this.id = id;
+            this.vElements = {};
+            this.vElements['#field'] = new PureVirtual('field', 60);
+            this.vElements['#popcorn'] = new PureVirtual('popcorn', 20);
+        }
+        myVirtualScene.prototype.setProp = function (name, value) {
+            this[name] = value;
+            console.log("Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]"));
+            infoScene.textContent = "Set [".concat(this.id, "] [").concat(name, "]=[").concat(value, "]");
+        };
+        myVirtualScene.prototype.getProp = function (name) {
+            console.log("Get [".concat(this.id, "] [").concat(name, "]=[").concat(this[name], "]"));
+            return this[name];
+        };
+        myVirtualScene.prototype.query = function (selector, iterator) {
+            var _this = this;
+            var index = 0;
+            selector.split(/\s*,\s*/).forEach(function (selElement) {
+                var vElement = _this.vElements[selElement];
+                if (vElement) {
+                    iterator(vElement, index);
+                    index++;
+                }
+            });
+        };
+        return myVirtualScene;
+    }());
+    var scene2 = story.addScene(new myVirtualScene('scene2'));
+    scene2
+        .addAnimations([{
+            selector: '#field',
+            duration: '1s',
+            props: [
+                {
+                    prop: 'left',
+                    value: 200,
+                },
+            ],
+        },
         {
-          prop: "left",
-          value: 150
-        }
-      ]
-    }
-  ]);
-  story.render(story.bestPlaySpeed());
+            selector: '#popcorn',
+            duration: '1s',
+            props: [
+                {
+                    prop: 'left',
+                    value: 150,
+                },
+            ],
+        },
+    ]);
+    story.render(story.bestPlaySpeed());
 });
 //# sourceMappingURL=main.js.map

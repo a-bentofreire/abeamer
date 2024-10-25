@@ -247,6 +247,7 @@ const bs_clean = function (cb) {
 const bs_copy = function (mode) {
     return function copy() {
         return gulp.src([
+            './tsconfig.json',
             './client/lib/typings/**',
             '!./client/lib/typings/release/**',
         ], { base: '.' }).pipe(gulp.dest(mode.path))
@@ -266,7 +267,8 @@ const bs_build_single_ts = function (mode) {
 
 const bs_compile_single_ts = function (mode) {
     return function compile_single_ts(cb) {
-        sysExec(`npx esbuild --format=cjs --sourcemap --outdir=${mode.path} ${mode.path}/**/*.ts`, {}, () => { cb() });
+        sysExec('tsc -p ./', { cwd: mode.path }, () => { cb() });
+        // sysExec(`npx esbuild --format=cjs --sourcemap --outdir=${mode.path} ${mode.path}/**/*.ts`, {}, () => { cb() });
     }
 }
 
@@ -339,7 +341,17 @@ const rel_gallery_html = function () {
 const rel_minify = function () {
     // not required to preserve timestamp since `rel_add_copyrights` does the job
     return gulp.src(DevCfg.expandArray(cfg.jsFiles), { base: '.' })
-        .pipe(gulpMinify({ noSource: true, ext: { min: '.js' } }))
+        .pipe(gulpMinify({
+            noSource: true, ext: { min: '.js' },
+            ignoreFiles: ['abeamer-cli.js']
+        }))
+        .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}`));
+}
+
+const rel_minify_cli = function () {
+    // there is a bug on recent version of gulp-minify that has issues with mangle the cli file
+    return gulp.src(DevCfg.expandArray(['cli/*.js']), { base: '.' })
+        .pipe(gulpMinify({ noSource: true, mangle: false, ext: { min: '.js' } }))
         .pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}`));
 }
 
@@ -434,6 +446,7 @@ exports.build_release_latest = series(
     rel_root,
     rel_README,
     rel_minify,
+    rel_minify_cli,
     rel_add_copyrights,
     // rel_jquery_typings,
     rel_build_package_json,

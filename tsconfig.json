@@ -5,7 +5,7 @@
         "noUnusedLocals": false,
         "noUnusedParameters": false,
         "strictNullChecks": false,
-        "target": "es6",
+        "target": "es5",
         "outDir": ".",
         "newLine": "lf",
         "lib": [
