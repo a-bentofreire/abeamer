@@ -2,7 +2,7 @@
     "name": "abeamer",
     "displayName": "abeamer",
     "description": "frame-by-frame Web Animation framework",
-    "version": "1.8.0",
+    "version": "1.8.1",
     "publisher": "a-bentofreire",
     "keywords": [
         "animation",

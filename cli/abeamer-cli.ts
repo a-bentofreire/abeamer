@@ -538,7 +538,7 @@ npm i puppeteer`);
             const plugins = fsix.loadJsonSync(`${ROOT_PATH}/client/lib/plugins/plugins-list.json`);
             let pre = '';
             let post = '';
-            text.replace(/^(.*)js\/abeamer\.min\.js(.*)$/m, (_app, _pre, _post) => {
+            text.replace(/^(.*)js\/abeamer-bundle-en\.min\.js(.*)$/m, (_app, _pre, _post) => {
               pre = _pre;
               post = _post;
               return '';

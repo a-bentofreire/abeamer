@@ -418,7 +418,7 @@ var Cli;
                         var plugins_1 = fsix_js_1.fsix.loadJsonSync("".concat(ROOT_PATH, "/client/lib/plugins/plugins-list.json"));
                         var pre_1 = '';
                         var post_1 = '';
-                        text.replace(/^(.*)js\/abeamer\.min\.js(.*)$/m, function (_app, _pre, _post) {
+                        text.replace(/^(.*)js\/abeamer-bundle-en\.min\.js(.*)$/m, function (_app, _pre, _post) {
                             pre_1 = _pre;
                             post_1 = _post;
                             return '';
