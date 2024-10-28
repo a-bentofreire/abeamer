@@ -42,12 +42,12 @@ const COPYRIGHTS = `
 // Copyright (c) 2018-2024 Alexandre Bento Freire. All rights reserved.
 // Licensed under the MIT License.
 // ------------------------------------------------------------------------
-
 `;
 const gulpMinify = require("gulp-minify");
 const gulpReplace = require("gulp-replace");
 const gulpPreserveTime = require("gulp-preservetime");
 const gulpRename = require("gulp-rename");
+const gulpConcat = require("gulp-concat");
 const cfg = import_dev_config.DevCfg.getConfig(__dirname);
 const modulesList = import_fsix.fsix.loadJsonSync(cfg.paths.MODULES_LIST_FILE);
 const libModules = modulesList.libModules;
@@ -246,7 +246,6 @@ const rel_client_js_join = function() {
 const rel_gallery = function() {
   return gulp.src([
     `${cfg.paths.GALLERY_SRC_PATH}/${cfg.release.demosStr}/**`,
-    `!${cfg.paths.GALLERY_SRC_PATH}/**/*.html`,
     `!${cfg.paths.GALLERY_SRC_PATH}/*/story-frames/*`
   ], { base: cfg.paths.GALLERY_SRC_PATH }).pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/gallery`)).pipe(gulpPreserveTime());
 };
@@ -255,15 +254,6 @@ const rel_root = function() {
 };
 const rel_README = function() {
   return gulp.src(["README.md"]).pipe(gulp.dest(cfg.paths.RELEASE_LATEST_PATH)).pipe(gulpPreserveTime());
-};
-const rel_gallery_html = function() {
-  return updateHtmlPages(
-    `${cfg.paths.GALLERY_SRC_PATH}/${cfg.release.demosStr}/*.html`,
-    `${cfg.paths.RELEASE_LATEST_PATH}/gallery`,
-    [`../../${cfg.paths.JS_PATH}/abeamer.min`],
-    true,
-    { base: cfg.paths.GALLERY_SRC_PATH }
-  ).pipe(gulpPreserveTime());
 };
 const rel_minify = function() {
   return gulp.src(import_dev_config.DevCfg.expandArray(cfg.jsFiles), { base: "." }).pipe(gulpMinify({
@@ -324,23 +314,30 @@ const rel_build_abeamer_d_ts = function(cb) {
   })).pipe(gulp.dest(`${cfg.paths.RELEASE_LATEST_PATH}/${cfg.paths.TYPINGS_PATH}`)).pipe(gulpPreserveTime());
   cb();
 };
+const rel_gen_bundle_en = function() {
+  const JS_PATH = `${cfg.paths.RELEASE_LATEST_PATH}/client/lib/js`;
+  return gulp.src([
+    `${JS_PATH}/vendor/jquery-easing/jquery.easing.min.js`,
+    `${JS_PATH}/../messages/messages-en.js`,
+    `${JS_PATH}/abeamer.min.js`
+  ]).pipe(gulpConcat("abeamer-bundle-en.min.js")).pipe(gulp.dest(JS_PATH));
+};
 exports.build_release_latest = series(
   build_single_lib_internal,
   rel_clean,
   rel_client,
   rel_gallery,
-  rel_gallery_html,
   rel_client_js_join,
   rel_root,
   rel_README,
   rel_minify,
   rel_minify_cli,
   rel_add_copyrights,
-  // rel_jquery_typings,
   rel_build_package_json,
   series(...cfg.release.demos.map((demo) => rel_build_tsconfig_ts(demo))),
   rel_build_abeamer_d_ts,
-  rel_build_plugins_list_json
+  rel_build_plugins_list_json,
+  rel_gen_bundle_en
 );
 exports.build_shared_lib = function(cb) {
   import_build_shared.BuildShared.build(libModules, cfg.paths.JS_PATH, cfg.paths.SHARED_LIB_PATH, "npx gulp build_shared_lib");
@@ -370,7 +367,7 @@ exports.post_build_docs_latest = function(cb) {
   });
   import_build_docs_latest.BuildDocsLatest.postBuild(
     [
-      `{${cfg.paths.DOCS_LATEST_END_USER_PATH},${cfg.paths.DOCS_LATEST_DEVELOPER_PATH}}/en/site{/,/*/}*.html`
+      `{ ${cfg.paths.DOCS_LATEST_END_USER_PATH}, ${cfg.paths.DOCS_LATEST_DEVELOPER_PATH}} / en / site{/,/ */}*.html`
     ],
     cfg.docs.replacePaths,
     wordMap
@@ -442,7 +439,7 @@ exports.build_gallery_latest = series(
   )
 );
 exports.clean_gallery_src = function(cb) {
-  rimraf.sync(`${cfg.paths.GALLERY_SRC_PATH}/*/story-frames`);
+  rimraf.sync(`${cfg.paths.GALLERY_SRC_PATH}/*/story - frames`);
   cb();
 };
 exports.clean_gallery_src_png = function(cb) {
@@ -461,37 +458,37 @@ exports.update_gallery_src_scripts = function() {
 };
 exports.update_test_list = function(cb) {
   const tests = [];
-  sysFs.readdirSync(`./test/tests`).forEach((file) => {
+  sysFs.readdirSync(`./ test / tests`).forEach((file) => {
     file.replace(/(test-.*)\.ts/, (_all, testName) => {
       tests.push(testName);
       return "";
     });
   });
-  const TEST_LIST_FILE = `./test/test-list.json`;
+  const TEST_LIST_FILE = `./ test / test - list.json`;
   const curTestList = import_fsix.fsix.loadJsonSync(TEST_LIST_FILE);
   tests.forEach((test) => {
     if (curTestList.active.indexOf(test) === -1 && curTestList.disabled.indexOf(test) === -1) {
-      console.log(`Adding test ${test} to ${TEST_LIST_FILE}`);
+      console.log(`Adding test ${test} to ${TEST_LIST_FILE} `);
       curTestList.active.push(test);
     }
   });
   import_fsix.fsix.writeJsonSync(TEST_LIST_FILE, curTestList);
-  console.log(`Updated ${TEST_LIST_FILE}`);
-  const PACKAGE_FILE = `./package.json`;
+  console.log(`Updated ${TEST_LIST_FILE} `);
+  const PACKAGE_FILE = `./ package.json`;
   const pkg = import_fsix.fsix.loadJsonSync(PACKAGE_FILE);
   const scripts = pkg.scripts;
   tests.forEach((test) => {
     if (scripts[test] === void 0) {
-      console.log(`Adding test ${test} to ${PACKAGE_FILE}`);
-      scripts[test] = `mocha test/tests/${test}.js`;
+      console.log(`Adding test ${test} to ${PACKAGE_FILE} `);
+      scripts[test] = `mocha test / tests / ${test}.js`;
     }
   });
   import_fsix.fsix.writeJsonSync(PACKAGE_FILE, pkg);
-  console.log(`Updated ${PACKAGE_FILE}`);
+  console.log(`Updated ${PACKAGE_FILE} `);
   cb();
 };
 exports.list_docs_files_as_links = function(cb) {
-  sysFs.readdirSync(`./docs`).forEach((fileBase) => {
+  sysFs.readdirSync(`./ docs`).forEach((fileBase) => {
     if (sysPath.extname(fileBase) !== ".md") {
       return;
     }

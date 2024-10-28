@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] -
+### Updated
+- Update the links to be minimum and online
+
 ## [1.7.0] -
 ### Updated
 - Update to gulp@5
@@ -41,7 +45,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Use `getVars` function instead of `_vars`.
-  > With this change, `_vars` will no longer be used by any plugin, 
+  > With this change, `_vars` will no longer be used by any plugin,
   > allowing to remove `export` from `_vars`.
 
 ### Removed
@@ -49,12 +53,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  > This won't be considered a breaking change, since the use of `_vars` was
  > already discouraged from being used.
 
- ### Fixed
- - Fix a critical bug on phantomjs server agent.
+### Fixed
+- Fix a critical bug on phantomjs server agent.
 
 ### Changed
 - Update ROADMAP.
-
 
 ## [1.5.0] -
 ### Changed
@@ -103,7 +106,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > it will compute the expression, using ABeamer expression parser.  
 - Add `datetime-functions` plugin.
   > This plugin allows to create teleportable expressions with date/time functions.  
-- (DEV) Add `_` to the start of the id of unused function parameters. 
+- (DEV) Add `_` to the start of the id of unused function parameters.
   > Although the tsconfig.json has `"noUnusedParameters": false`,  
   > adding the underscore prevent warnings in case of is set to `true`,  
   > and also helps to understand better unused parameters for future cleanups.  
@@ -115,7 +118,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > Originally it was designed, only to use color arrays,
   > but this addition, the user can also test expressions with rgb/hsl functions.  
 
-
 ## [1.4.0] -
 ### Fixed
 - Fix the bug in `gulp build-release` that forced to have 2 folders in the gallery.
@@ -123,7 +125,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Add abeamer-debug.min.js to release version and both min.js are smaller.
   > To generate the release version, all core .ts files are joined and
-  >  it's removed the inner namespaces and removed the exports from id starting with `_`.  
+  > it's removed the inner namespaces and removed the exports from id starting with `_`.  
   > Then they are compiled again using tsc.  
   > This process makes the minify compress more since there more internal symbols.  
   > The abeamer.min takes one step further by stripping all the code
@@ -132,7 +134,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `story.startTeleporting` to delay the teleportation initial snapshot.
   > This new method allows to teleport any HTML/CSS code injected
   > after the story has been created and before this method was invoked.
-  > Read more on https://abeamer.devtoix.com/blog/2018/08/20/how-to-delay-the-teleportation-in-abeamer.html
+  > Read more on <https://abeamer.devtoix.com/blog/2018/08/20/how-to-delay-the-teleportation-in-abeamer.html>
 
 ### Changed
 - Move gallery, badges, icons file paths to be compatible with the website.
@@ -153,12 +155,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   > there is a color reduction to 256-colors and the previous background image add
   > too many shades.  
 
-
 ## [1.3.0] -
 ### Fixed
 - Fix font rendering bug in `animate-transitions` example.
   > The problem was due a bug in Chrome as described in:
-  > http://abeamer.devtoix.com/blog/2018/08/15/abeamer-1.3.0-released.html
+  > <http://abeamer.devtoix.com/blog/2018/08/15/abeamer-1.3.0-released.html>
 
 ## [1.2.0] -
 ### Fixed
@@ -175,9 +176,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add minify to all js files during the `build-release` phase.
 
 ### Changed
-- Move documentation from github repo to https://abeamer.devtoix.com/docs.
+- Move documentation from github repo to <https://abeamer.devtoix.com/docs>.
 - Update links and generators to move docs, gallery and release to abeamer website.
-  > The github repos are replaced with folders on https://abeamer.devtoix.com.  
+  > The github repos are replaced with folders on <https://abeamer.devtoix.com>.  
   >
   > - docs/build/(target)/versions/latest/en ----> docs/release/latest/(target)/en
   > - git repo abeamer-release ----> release/latest
@@ -259,14 +260,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Update cdn.rawgit.com links with a-bentofreire.github.io.
   > Using `cdn.rawgit.com` didn't guarantee the updated links to `abeamer-release` files.  
 
-
 ## [1.0.0] -
 ### Breaking changes
 - `abeamer render` `--width` and `--height` parameter override abeamer.ini/story.json definition
   and override story CSS dimension properties.
 - Remove hide the story when the render starts, and then show it again to avoid first frame problem.
   It best method is author the way it is, and when authoring is finished hide the story on CSS.
-
 
 ### Changed
 - Documentation breadcrumbs points to new links.
@@ -310,7 +309,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improve documentation.
 - Add website information.
 
-
 ## [0.3.1] -
 ### Fixed
 - (DEV) Fix the `gulp README-to-local` and `gulp README-to-online`.
@@ -326,7 +324,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add links for property and method classes to `gulp build-docs`.
 - Add functions: `log`, `log10` and `exp`.
 - Add expression series in `chart-tasks`.
-
 
 ## [0.3.0] -
 ### Breaking changes
@@ -352,7 +349,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.2.13] -
 - A version bump was required due using npm publish with `npm@5.6.0`. See [0.2.10].
 
-
 ## [0.2.12] -
 ### Fixed
 - Fix `abeamer create .` and `abeamer create`.
@@ -373,7 +369,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Update `teleporter` documentation.
 - Improve the `README.md` files.
 
-
 ## [0.2.11] -
 ### Changed
 - Improve `README.md`.
@@ -384,14 +379,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `virtualAnimators`.
 - First version of `chart-tasks`.
 
-
 ## [0.2.10] -
 - This version was used to overcome a critical bug on `npm publish` in `npm@5.6.0`
 that fails to find the README.md, and it's not possible to update to
 npm@6.1.0 because it has a critical bug on `npm update`, plus countless false positives
 in `npm audit`.  
 Until npm team finds an acceptable solution it will be used `npm@5.6.0` for all except for `npm publish`.
-
 
 ## [0.2.9] -
 ### Added
@@ -402,7 +395,6 @@ Until npm team finds an acceptable solution it will be used `npm@5.6.0` for all 
 ### Fixed
 - Paths support expression paths.
 
-
 ## [0.2.8] -
 ### Fixed
 - Fix running in JSFiddle by executing `_initBrowser();` during `story.constructor`.
@@ -410,7 +402,6 @@ Until npm team finds an acceptable solution it will be used `npm@5.6.0` for all 
 ### Added
 - Add the `playground` to `README.md`.
 - Add `normalize.css` to `hello-world` example.
-
 
 ## [0.2.7] -
 ### Changed
@@ -426,7 +417,6 @@ Until npm team finds an acceptable solution it will be used `npm@5.6.0` for all 
 
 ### Fixed
 - Fix web links.
-
 
 ## [0.2.6] -
 ### Fixed
@@ -452,11 +442,9 @@ Until npm team finds an acceptable solution it will be used `npm@5.6.0` for all 
 - Add badges to the `README.md`.
 - Add `color-functions` to documentation.
 
-
 ## [0.2.4] -
 ### Fixed
 - Created a workaround to overcome `github` and `npm` striping `video` tag.
-
 
 ## [0.2.3] -
 ### Fixed
@@ -474,7 +462,6 @@ Until npm team finds an acceptable solution it will be used `npm@5.6.0` for all 
 
 ### Changed
 - Set default movie name generated by `abeamer-cli movie` to `story.mp4`.
-
 
 ## [0.2.2] -
 ### Fixed
@@ -495,7 +482,6 @@ Until npm team finds an acceptable solution it will be used `npm@5.6.0` for all 
 - Improve `build-docs`: remove README.md, generate logs, improve generation of `api-header`.
 - Remove `TransitionFuncHandler`.
 
-
 ## [0.2.1] -
 ### Added
 - Raise an exception if `value` parameter isn't number nor expression.
@@ -511,7 +497,6 @@ Until npm team finds an acceptable solution it will be used `npm@5.6.0` for all 
 - Fix `gulp build-docs` link parser.
 - Fix `server-agent-phantomjs`.
 - Minor cosmetic improvements on gallery examples.
-
 
 ## [0.2.0] -
 ### Breaking changes
@@ -546,14 +531,12 @@ Until npm team finds an acceptable solution it will be used `npm@5.6.0` for all 
 - Fix `gulp build-gallery-gifs` links.
 - Improve CSS properties teleportation.
 
-
 ## [0.1.6] -
 ### Changed
 - Improve the `gulp bump-version`.
 
 ### Added
 - Add `npm before-*` commands to reduce the errors when abeamer is published.
-
 
 ## [0.1.5] -
 ### Added
@@ -569,26 +552,21 @@ Until npm team finds an acceptable solution it will be used `npm@5.6.0` for all 
 ### Fixed
 - Fix `gallery/localization` text label.
 
-
 ## [0.1.4] -
 ### Fixed
 - Fix typings.
-
 
 ## [0.1.3] -
 ### Fixed
 - Fix `hello-world/main.scss` clip-path.
 
-
 ## [0.1.2] -
 ### Fixed
 - Fix `.npmignore`.
 
-
 ## [0.1.1] -
 ### Fixed
 - Fix links and fixed phrases in documentation.
-
 
 ## [0.1.0] -
 - First Release

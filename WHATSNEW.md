@@ -1,5 +1,8 @@
 ## What's new
 
+## [1.8] -
+- Update the links to be minimum and online
+
 ## [1.7] -
 - Update to gulp@5
 - Update compilation to es6
