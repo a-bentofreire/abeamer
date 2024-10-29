@@ -9,8 +9,8 @@ gallery-src/**/story-frames/
 test/tests.run/
 test/log/
 shared/dev-builders/output
-docs/*.*/
 docs/latest/
+docs/ts/
 gallery/
 release/
 *.js.map

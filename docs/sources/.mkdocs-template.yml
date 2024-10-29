@@ -1,5 +1,0 @@
-site_name: ABeamer %version% - %target% - English
-extra_css:
-  - './custom.css'
-theme: readthedocs
-nav: []

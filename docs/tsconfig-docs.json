@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "noImplicitAny": false,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "strictNullChecks": false,
+        "target": "es5",
+        "outDir": ".",
+        "newLine": "lf",
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "sourceMap": true,
+        "rootDir": "developer"
+    },
+    "tslint.exclude": "client/lib/typings/vendor/*.ts",
+    "exclude": [
+        ".git/",
+        ".private/",
+        "docs/",
+        "release/",
+        "gallery-release/",
+        "node_modules/",
+        "shared/dev-builders/output/",
+        "client/lib/typings/release/abeamer-release.d.ts",
+        "client/lib/typings/dev"
+    ]
+}

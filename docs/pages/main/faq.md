@@ -1,4 +1,8 @@
-// @doc-name FAQ
+---
+title: FAQ
+group: main
+category: Pages
+---
 <!--- @ -->
 <!--- @author: Alexandre Bento Freire -->
 # Description
@@ -55,12 +59,12 @@ via [teleporting](teleporter.md) then you don't need to install nodejs.
 ### Can I download just the animation library?
 
 Yes, you can.  
-Download from [here](https://abeamer.devtoix.com/downloads.html).  
+Download from [here](https://abeamer.a-bentofreire.com/downloads.html).  
 
 ### I can't install puppeteer.   
 
 `puppeteer` is a node package just like abeamer.  
-For details, read the question above [I can't install ABeamer!](#i-cant-install-abeamer).
+For details, read the question above [I can't install ABeamer!](faq.md#i-cant-install-abeamer).
 
 ### Can I install puppeteer without chromium?
 

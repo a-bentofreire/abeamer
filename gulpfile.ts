@@ -80,10 +80,10 @@ exports.default = function (cb) {
       when: every time a module tagged with @module shared or
             constants that are useful for server and cli are modified
 
-    build_docs_latest - builds both the end-user and developer documentation
+    build_docs_latest_deprecated - builds both the end-user and developer documentation
       when: before publishing a new **stable** version and after testing
 
-    post_build_docs_latest - changes links for offline testing and adds other improvements
+    post_build_docs_latest_deprecated - changes links for offline testing and adds other improvements
 
     build_definition_files - builds definition files for end-user and developer
       when: after any public or shared member of a class is modified
@@ -476,26 +476,26 @@ exports.build_definition_files = function (cb) {
 //                               Builds the documentation
 // ------------------------------------------------------------------------
 
-exports.build_docs_latest = function (cb) {
-    BuildDocsLatest.build(libModules, pluginModules, cfg);
+exports.build_docs_latest_deprecated = function (cb) {
+    // BuildDocsLatest.build(libModules, pluginModules, cfg);
     cb();
 }
 
-exports.post_build_docs_latest = function (cb) {
+exports.post_build_docs_latest_deprecated = function (cb) {
 
-    const wordMap: DevCfg.DevDocsWordMap = {};
-    cfg.docs.keywords.forEach(word => { wordMap[word] = { wordClass: exports.keyword }; });
-    cfg.docs.jsTypes.forEach(word => { wordMap[word] = { wordClass: exports.type }; });
-    cfg.docs.customTypes.forEach(wordPair => {
-        wordMap[wordPair[0]] = {
-            wordClass: exports.type,
-            title: wordPair[1],
-        };
-    });
+    // const wordMap: DevCfg.DevDocsWordMap = {};
+    // cfg.docs.keywords.forEach(word => { wordMap[word] = { wordClass: exports.keyword }; });
+    // cfg.docs.jsTypes.forEach(word => { wordMap[word] = { wordClass: exports.type }; });
+    // cfg.docs.customTypes.forEach(wordPair => {
+    //     wordMap[wordPair[0]] = {
+    //         wordClass: exports.type,
+    //         title: wordPair[1],
+    //     };
+    // });
 
-    BuildDocsLatest.postBuild([
-        `{ ${cfg.paths.DOCS_LATEST_END_USER_PATH}, ${cfg.paths.DOCS_LATEST_DEVELOPER_PATH}} / en / site{/,/ */}*.html`],
-        cfg.docs.replacePaths, wordMap);
+    // BuildDocsLatest.postBuild([
+    //     `{${cfg.paths.DOCS_LATEST_END_USER_PATH},${cfg.paths.DOCS_LATEST_DEVELOPER_PATH}}/en/site{/,/*/}*.html`],
+    //     cfg.docs.replacePaths, wordMap);
     cb();
 }
 
@@ -584,7 +584,7 @@ exports.build_gallery_latest = series(
 // ------------------------------------------------------------------------
 
 exports.clean_gallery_src = function (cb) {
-    rimraf.sync(`${cfg.paths.GALLERY_SRC_PATH}/*/story - frames`);
+    rimraf.sync(`${cfg.paths.GALLERY_SRC_PATH}/*/story-frames`);
     cb();
 }
 
@@ -620,7 +620,7 @@ exports.update_gallery_src_scripts = function () {
 exports.update_test_list = function (cb) {
     const tests = [];
 
-    sysFs.readdirSync(`./ test / tests`).forEach(file => {
+    sysFs.readdirSync(`./test/tests`).forEach(file => {
         file.replace(/(test-.*)\.ts/, (_all, testName) => {
             tests.push(testName);
             return '';
@@ -633,32 +633,33 @@ exports.update_test_list = function (cb) {
         active: string[];
     }
 
-    const TEST_LIST_FILE = `./ test / test - list.json`;
+    const TEST_LIST_FILE = `./test/test-list.json`;
     const curTestList: TestListFile = fsix.loadJsonSync(TEST_LIST_FILE);
 
     tests.forEach(test => {
         if (curTestList.active.indexOf(test) === -1 &&
             curTestList.disabled.indexOf(test) === -1) {
-            console.log(`Adding test ${test} to ${TEST_LIST_FILE} `);
+            console.log(`Adding test ${test} to ${TEST_LIST_FILE}`);
             curTestList.active.push(test);
         }
     });
     fsix.writeJsonSync(TEST_LIST_FILE, curTestList);
-    console.log(`Updated ${TEST_LIST_FILE} `);
+    console.log(`Updated ${TEST_LIST_FILE}`);
 
-    const PACKAGE_FILE = `./ package.json`;
-    const pkg: { scripts: { [script: string]: string } } = fsix.loadJsonSync(PACKAGE_FILE);
+    const PACKAGE_FILE = `./package.json`;
+    const pkg: { scripts: { [script: string]: string } } =
+        fsix.loadJsonSync(PACKAGE_FILE);
     const scripts = pkg.scripts;
 
     tests.forEach(test => {
         if (scripts[test] === undefined) {
-            console.log(`Adding test ${test} to ${PACKAGE_FILE} `);
-            scripts[test] = `mocha test / tests / ${test}.js`;
+            console.log(`Adding test ${test} to ${PACKAGE_FILE}`);
+            scripts[test] = `mocha test/tests/${test}.js`;
         }
     });
 
     fsix.writeJsonSync(PACKAGE_FILE, pkg);
-    console.log(`Updated ${PACKAGE_FILE} `);
+    console.log(`Updated ${PACKAGE_FILE}`);
     cb();
 }
 
@@ -667,12 +668,39 @@ exports.update_test_list = function (cb) {
 // ------------------------------------------------------------------------
 
 exports.list_docs_files_as_links = function (cb) {
-    sysFs.readdirSync(`./ docs`).forEach(fileBase => {
+    sysFs.readdirSync(`./docs`).forEach(fileBase => {
         if (sysPath.extname(fileBase) !== '.md') { return; }
         const title = sysPath.parse(fileBase).name.replace(/-/g, ' ')
             .replace(/\b(\w)/, (_all, firstChar: string) => firstChar.toUpperCase());
         console.log(`- [${title}](${fileBase})`);
     });
+    cb();
+}
+
+// ------------------------------------------------------------------------
+//                               Lists ./docs Files As Links
+// ------------------------------------------------------------------------
+
+exports.prepare_docs = function (cb) {
+    const pluginsFolders = sysFs.readdirSync(cfg.paths.PLUGINS_PATH)
+        .map(fileBase => sysPath.join(cfg.paths.PLUGINS_PATH, fileBase));
+    for (const path of [...[cfg.paths.JS_PATH, 'cli', 'server',
+    cfg.paths.SHARED_LIB_PATH], ...pluginsFolders]) {
+        sysFs.readdirSync(path).forEach(fileBase => {
+            if (sysPath.extname(fileBase) !== '.ts') { return; }
+            const fileName = sysPath.join(path, fileBase);
+            let content = fsix.readUtf8Sync(fileName);
+            const matches = content.match(/\/\*\* @module ([\w-]+)/);
+            if (matches) {
+                const folder = matches[1].replace('internal', 'developer');
+                content = content
+                    .replace(/^(.|\n)+?\/\*\*\s*\n \* #/, '/**\n * #')
+                    .replace(/\*\/\n(export )*namespace \w+ \{/, '* @packageDocumentation\n*/\nconst module = 0;')
+                    .replace(/\}(\n|\s)*$/, '');
+                sysFs.writeFileSync(sysPath.join(`docs/ts`, `API - ${folder}`, fileBase), content);
+            }
+        });
+    }
     cb();
 }
 

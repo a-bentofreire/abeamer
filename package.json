@@ -2,7 +2,7 @@
     "name": "abeamer",
     "displayName": "abeamer",
     "description": "frame-by-frame Web Animation framework",
-    "version": "1.8.1",
+    "version": "1.8.2",
     "publisher": "a-bentofreire",
     "keywords": [
         "animation",
@@ -45,9 +45,7 @@
         "---- start: before commands ----": "----",
         "before-commit-dev": "gulp README-to-online && gulp build-definition-files && gulp build-shared-lib && gulp bump-version",
         "---- end: before commands ----": "----",
-        "mkdocs-build-developer": "cd docs/latest/developer/en && mkdocs build",
-        "mkdocs-build-end-user": "cd docs/latest/end-user/en && mkdocs build",
-        "build-docs-latest-and-mkdocs": "gulp build_docs_latest && npm run mkdocs-build-developer && npm run mkdocs-build-end-user && gulp post_build_docs_latest",
+        "build-docs": "rm -rf docs/latest && rm -f docs/ts/**/*.ts && npx gulp prepare_docs && typedoc --tsconfig docs/tsconfig-docs.json --skipErrorChecking --out docs/latest --categorizeByGroup --projectDocuments docs/pages/main docs/ts/**/**/*.ts",
         "build-release-latest": "npm run before-commit-dev && gulp build-release-latest-internal",
         "---- start: render gallery commands ----": "----",
         "g:animate-colors": "npm run abeamer -- render --ll 3 --dp gallery/latest/animate-colors",
@@ -110,6 +108,8 @@
         "mocha-image-compare": "^1.0.3",
         "puppeteer": "^23.4.0",
         "rimraf": "^6.0.1",
+        "typedoc": "^0.26.10",
+        "typedoc-plugin-pages": "^1.1.0",
         "typescript": "^5.6.3"
     }
 }

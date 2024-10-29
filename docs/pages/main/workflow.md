@@ -1,3 +1,8 @@
+---
+title: Workflow
+group: main
+category: Pages
+---
 <!--- @ -->
 <!--- @author: Alexandre Bento Freire -->
 # Description
@@ -7,7 +12,7 @@ To archive this goal, it splits the story, representing the whole animation, int
 Each scene has its own animation pipeline, which it will be later rendered.   
 
 If you know already the basics of adding animations, jump into  
-[Understanding the pipeline](#understanding-the-pipeline)
+[Understanding the pipeline](workflow.md#understanding-the-pipeline)
 
 ## Animation Pipeline
 

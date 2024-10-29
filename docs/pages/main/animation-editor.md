@@ -1,3 +1,8 @@
+---
+title: Animation Editor
+group: main
+category: Pages
+---
 <!--- @ -->
 <!--- @author: Alexandre Bento Freire -->
 ## Description

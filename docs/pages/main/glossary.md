@@ -1,3 +1,8 @@
+---
+title: Glossary
+group: main
+category: Pages
+---
 <!--- @ -->
 <!--- @author: Alexandre Bento Freire -->
 ## Action
@@ -42,23 +47,23 @@ get and set numerical values.
 ## Animation
 
 Defines how a list of [elements](#Element) (HTML Element, SVG element and Virtual Element),
-inside a [](#Scene) defined by [](#Selector) will have a list of
+inside a [Scene](glossary.md#scene) defined by [Selector](#Selector) will have a list of
 [properties](#Animation Properties) (left, src, color, font-size, ...) modified over time.   
 
 Animations are added in parallel, via `addAnimation`, and in series via `addSerialAnimations`.   
-Although, the animations that are added in parallel, they can be [](#Off-Sync)
+Although, the animations that are added in parallel, they can be [Off-Sync](glossary.md#off-sync)
 via `position` parameter.   
 
-An animation has an [](#Animation Interpolator) that passes a `t` parameter from
-[Start Value](animations#animationpropvaluestart) to [Value](animations#animationpropvalue) through the
-[](#Animation Pipeline).   
+An animation has an [Animation Interpolator](#Animation Interpolator) that passes a `t` parameter from
+[Start Value](animations.md#animationpropvaluestart) to [Value](animations.md#animationpropvalue) through the
+[Animation Pipeline](glossary.md#animation-pipeline).   
 
 An animation doesn't communicates direct with an HTML Element attributes, instead
-uses an [](#Adapter) to use as an interface, allowing for an
-[](#Animation Property) to map into different type of Elements
-and to map an animation property into multiple element properties such [](#Dual Properties).   
+uses an [Adapter](glossary.md#adapter) to use as an interface, allowing for an
+[Animation Property](glossary.md#animation-property) to map into different type of Elements
+and to map an animation property into multiple element properties such [Dual Properties](#Dual Properties).   
 
-[](#Tasks) which are also added via `addAnimation` and
+[Tasks](tasks.md) which are also added via `addAnimation` and
 allow to create complex animations and special effects.   
 
 
@@ -75,13 +80,13 @@ to known what kind of unit is it.
 <a name="animation-properties"></a>
 
 List of parameters that are part of an animation, and define how an
-[](#Adapter Property) will change over time.  
-An Animation property besides its own parameters can override the [](#Animation) parameters.  
+[Adapter Property](#Adapter Property) will change over time.  
+An Animation property besides its own parameters can override the [Animation](glossary.md#animation) parameters.  
 
 ## Code Handler
 
 A **code handler** is a TypeScript/JavaScript function that interacts with ABeamer during
-the build of the [](#Animation Pipeline) or during the [](#Rendering) process.
+the build of the [Animation Pipeline](glossary.md#animation-pipeline) or during the [Rendering](faq.md#rendering) process.
 Code Handlers provide great flexibility in providing interpolators, transitions, 
 flyovers and tasks but for security reasons aren't teleported.
 They can only be used in local rendering.
@@ -91,10 +96,10 @@ They can only be used in local rendering.
 The **Animation Pipeline** is a multi step process that every `t` 
 running from `0` to `1` will go through.  
 The steps are the following:  
-1. [](#Easing) - An interpolator that will set the motion speed.  
-2. [](#Oscillator) - An optional interpolator used for rotational motion or pulsars.  
+1. [Easing](glossary.md#easing) - An interpolator that will set the motion speed.  
+2. [Oscillator](glossary.md#oscillator) - An optional interpolator used for rotational motion or pulsars.  
 3. `v = startValue + (value - startValue) * oscillator(easing(t))`.  
-4. [](#Path) - An optional interpolator that transforms `v` into a multi-dimension value.  
+4. [Path](glossary.md#path) - An optional interpolator that transforms `v` into a multi-dimension value.  
 5. `valueText` - transforms into a textual value. Use only for textual properties.  
   Not supported by paths.  
 6. `valueFormat` - An `sprintf` that formats numeric values, paths, and `valueText`.  
@@ -117,7 +122,7 @@ An **easing**  is a interpolator runs `t` from [0, 1], where
 `t=0` is the first frame and `t=1` the last frame of the animation.  
 This interpolator can be viewed as the speed interpolator and its the
 first one in the Animation Pipeline.  
-The output value will be used to feed the [](#oscillator).  
+The output value will be used to feed the [oscillator](glossary.md#oscillator).  
 Usually outputs a value from [0, 1] but other values are also possible.  
 
 This interpolator can be used outside physical motion (left/right/top/bottom).  
@@ -133,7 +138,7 @@ of multi-parameter properties, such as `text-shadow`, by using as an input
 of a `valueFormat`.  
 
 This is the first stage of the Animation Pipeline.  
-The output value will be used to feed the [](#oscillator).  
+The output value will be used to feed the [oscillator](glossary.md#oscillator).  
 
 ABeamer includes a list of the most common easings by
 bundling the jquery.easing plugin.   
@@ -144,13 +149,13 @@ An easing can be defined by:
 2. Expression - It evaluate the expression for each frame, passing the variable `t`.   
 3. Code Handler - This function will receive the variable `t`.   
 
-**WARNING** Code Handlers aren't [teleported](#teleporter),
+**WARNING** Code Handlers aren't [teleported](teleporter.md),
 therefore it can't be used in remote rendering.   
 
 
 ## Flushing
 
-Flushing means [](#consuming the pipeline) until the last frame.
+Flushing means [consuming the pipeline](glossary.md#consuming-the-pipeline) until the last frame.
 
 
 ## Off-Sync
@@ -178,7 +183,7 @@ and these values oscillate between [0, 1].
 3. Uni-dimensional paths. Unlike paths, the oscillators have their value stored
 in the Action Link, allowing to link the end value to the next animation.   
 
-The oscillators shares the namespace with [](easings), allowing any easing function
+The oscillators shares the namespace with [easings](easings.md), allowing any easing function
 to operate also as a oscillator.   
 Since the main function of an oscillator is to return to its original position
 at the end of the animation cycle, when an easing is used as an oscillator the
@@ -214,20 +219,20 @@ A multi-dimension path can be used in the following ways:
 
 ## Scene
 
-Represents a segment inside a [](#Story).   
-Two scenes don't overlap, except during a [](#Scene Transition).   
-Every scene, has its own animation pipeline, which is created by adding [](#Animations).   
+Represents a segment inside a [Story](story.md#story).   
+Two scenes don't overlap, except during a [Scene Transition](glossary.md#scene-transition).   
+Every scene, has its own animation pipeline, which is created by adding [Animations](animations.md#animations).   
 
 
 ## Scene Transition
 
-Defines how will a [](#Scene) leave the story, and how the next scene will enter the story.   
+Defines how will a [Scene](glossary.md#scene) leave the story, and how the next scene will enter the story.   
 
 
 ## Remote rendering
 
 Is the process of rendering images into the disk from a story that was created
-in a different machine. Usually it's done via [](#teleporting).  
+in a different machine. Usually it's done via [teleporting](glossary.md#teleporting).  
 
 
 ## Teleporting

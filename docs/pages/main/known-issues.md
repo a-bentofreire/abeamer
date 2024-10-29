@@ -1,3 +1,8 @@
+---
+title: Known Issues
+group: main
+category: Pages
+---
 ## Release Version
 
 - Some CSS vendor prefixes aren't being correctly being applied when is rendered in a different browser.

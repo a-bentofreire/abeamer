@@ -1,3 +1,8 @@
+---
+title: History
+group: main
+category: Pages
+---
 <!--- @ -->
 <!--- @author: Alexandre Bento Freire -->
 ## History

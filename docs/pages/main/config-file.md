@@ -1,3 +1,8 @@
+---
+title: Config File
+group: main
+category: Pages
+---
 <!--- @ -->
 <!--- @author: Alexandre Bento Freire -->
 ## Synopsis

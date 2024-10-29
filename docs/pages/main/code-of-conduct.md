@@ -1,3 +1,8 @@
+---
+title: Code Of Conduct
+group: main
+category: Pages
+---
 <!--- @ -->
 <!--- @author: Alexandre Bento Freire -->
 # Description

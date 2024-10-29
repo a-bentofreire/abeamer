@@ -4,9 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.8.2] -
+### Updated
+- Update README.
+### Changed
+- Change Documentation to TypeDocs.
+### Deleted
+- Deleted core-js and JQuery from package.
+
 ## [1.8.0] -
 ### Updated
 - Update the links to be minimum and online
+### Deleted
+- Deleted links to core-js.
 
 ## [1.7.0] -
 ### Updated
